@@ -117,7 +117,7 @@ def load_model(
         )
         kwargs["quantization_config"] = bnb_config
     else:
-        kwargs["torch_dtype"] = torch.bfloat16
+        kwargs["dtype"] = torch.bfloat16
 
     model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
     model.eval()

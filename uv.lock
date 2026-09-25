@@ -66,7 +66,7 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.0.0" },
     { name = "requests", specifier = ">=2.31.0" },
     { name = "torch", specifier = ">=2.1.0" },
-    { name = "transformers", specifier = ">=4.45.0" },
+    { name = "transformers", specifier = ">=4.56.0" },
 ]
 
 [package.metadata.requires-dev]

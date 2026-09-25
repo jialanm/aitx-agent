@@ -6,7 +6,7 @@ readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
 dependencies = [
-    "transformers>=4.45.0",
+    "transformers>=4.56.0",
     "torch>=2.1.0",
     "bitsandbytes>=0.43.0",
     "accelerate>=0.30.0",
