@@ -1,0 +1,421 @@
+[
+  {
+    "id": "AITX-00001",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "DMD",
+          "transcript": "NM_004006.2",
+          "variant_cdna": "c.7544_9286del",
+          "variant_protein": "p.(Thr2516_Ala3096del)",
+          "zygosity": "hemizygous"
+        }
+      ],
+      "clinical_context": "Progressive muscle weakness"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "multiple_choice",
+      "prompt": "To which of the following targeted therapies would this variant be most likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "Eteplirsen",
+    "answer_explanation": "Variant results in deletion of exons 52-63, which is listed as amenable to exon 51 skipping",
+    "difficulty_rationale": "",
+    "sources": ["GeneReviews", "PubMed/Literature"],
+    "citations": []
+  },
+  {
+    "id": "AITX-00002",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "DMD",
+          "transcript": "NM_004006.2",
+          "variant_cdna": "c.10453_10454delinsTA",
+          "variant_protein": "p.(Leu3485Ter)",
+          "zygosity": "hemizygous"
+        }
+      ],
+      "clinical_context": "Progressive muscle weakness"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "multiple_choice",
+      "prompt": "To which of the following targeted therapies would this variant be most likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "Ataluren",
+    "answer_explanation": "Variant results in a nonsense in exon 74, which is amenable to nonsense readthrough",
+    "difficulty_rationale": "",
+    "sources": [],
+    "citations": []
+  },
+  {
+    "id": "AITX-00003",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "DMD",
+          "transcript": "NM_004006.2",
+          "variant_cdna": "c.70T>C",
+          "variant_protein": "p.(Trp24Arg)",
+          "zygosity": "hemizygous"
+        }
+      ],
+      "clinical_context": "Progressive muscle weakness"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "multiple_choice",
+      "prompt": "To which of the following targeted therapies would this variant be most likely amenable: Eteplirsen, Golodirsen, Viltolarsen, Casimersen, Ataluren, or None?",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "None",
+    "answer_explanation": "Results in a missense in exon 2, which is not amenable to nonsense readthrough and is upstream from skippable exons",
+    "difficulty_rationale": "",
+    "sources": [],
+    "citations": []
+  },
+  {
+    "id": "AITX-00004",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "AGXT",
+          "transcript": "NM_000030.3",
+          "variant_cdna": "c.508G>A",
+          "variant_protein": "p.(Gly170Arg)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "Recurrent nephrocalcinosis and chronic kidney disease"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "string_match",
+      "prompt": "What targeted, small molecule therapy is available for this patient? Provide the generic name or None.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "Pyridoxine",
+    "answer_explanation": "Missense variants are amenable to pyridoxine treatment",
+    "difficulty_rationale": "",
+    "sources": ["GeneReviews"],
+    "citations": ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]
+  },
+  {
+    "id": "AITX-00005",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "AGXT",
+          "transcript": "NM_000030.3",
+          "variant_cdna": "c.33dup",
+          "variant_protein": "p.(Lys12GlnfsTer156)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "Recurrent nephrocalcinosis and chronic kidney disease"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "binary",
+      "prompt": "Is this patient predicted to be responsive to pyridoxine? Answer yes or no.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "No",
+    "answer_explanation": "Pyridoxine is not effective for patients with null variants",
+    "difficulty_rationale": "",
+    "sources": ["GeneReviews"],
+    "citations": ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]
+  },
+  {
+    "id": "AITX-00006",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "AGXT",
+          "transcript": "NM_000030.3",
+          "variant_cdna": "c.33dup",
+          "variant_protein": "p.(Lys12GlnfsTer156)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "7 year old with recurrent nephrocalcinosis and chronic kidney disease"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "string_match",
+      "prompt": "What targeted, genetic therapies are approved for this patient in the US? Provide the generic name.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "Lumasiran",
+    "answer_explanation": "Lumasiran is approved for patients of all ages whereas Nedosiran is only approved for patients age >9.",
+    "difficulty_rationale": "slight change in patient age changes the answer",
+    "sources": ["GeneReviews"],
+    "citations": ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]
+  },
+  {
+    "id": "AITX-00007",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "DDC",
+          "transcript": "NM_001082971.2",
+          "variant_cdna": "c.286G>A",
+          "variant_protein": "p.(Gly96Arg)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "Global developmental delay"
+    },
+    "question": {
+      "category": "Established_Targeted",
+      "answer_format": "string_match",
+      "prompt": "What is the youngest age for which a gene therapy is approved for this patient's genetic condition in the united kingdom? Answer with the format \"X months\".",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "18 months",
+    "answer_explanation": "specified on GeneReviews",
+    "difficulty_rationale": "",
+    "sources": ["GeneReviews"],
+    "citations": ["https://www.ncbi.nlm.nih.gov/books/NBK595821/"]
+  },
+  {
+    "id": "AITX-00008",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "COL1A1",
+          "transcript": "NM_000088.4",
+          "variant_cdna": "c.1678G>A",
+          "variant_protein": "p.(Gly560Ser)",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "joint hypermobility, skin hyperextensibility, and easy bruising"
+    },
+    "question": {
+      "category": "Established_Supportive",
+      "answer_format": "string_match",
+      "prompt": "What two medications are most established for decreasing bruising? List generic names in alphabetical order",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "ascorbic acid, desmopressin",
+    "answer_explanation": "specified in management on GeneReviews",
+    "difficulty_rationale": "",
+    "sources": ["GeneReviews"],
+    "citations": ["https://www.ncbi.nlm.nih.gov/books/NBK1244/#eds.Management"]
+  },
+  {
+    "id": "AITX-00009",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "SLC35A2",
+          "transcript": "NM_005660.3",
+          "variant_cdna": "c.3G>A",
+          "variant_protein": "p.Met1Ile",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "Patient with SLC35A2-CDG who is experiencing seizures and global developmental delay"
+    },
+    "question": {
+      "category": "Clinical_Trials",
+      "answer_format": "string_match",
+      "prompt": "What clinical trial developing a new therapeutic for this condition is recruiting or listed as upcoming/not yet recruiting? Return a clinical trials ID",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "NCT05402384",
+    "answer_explanation": "search for SLC35A2 on ClinicalTrials.gov returns only 2 trials, 1 of which is upcoming",
+    "difficulty_rationale": "",
+    "sources": ["ClinicalTrials.gov"],
+    "citations": ["https://clinicaltrials.gov/study/NCT05402384"]
+  },
+  {
+    "id": "AITX-00010",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "SLC35A2",
+          "transcript": "NM_005660.3",
+          "variant_cdna": "c.3G>A",
+          "variant_protein": "p.Met1Ile",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "seizures and global developmental delay. Age 2 months, Hemoglobin 5, Normal liver labs, Not enrolled in other trials"
+    },
+    "question": {
+      "category": "Clinical_Trials",
+      "answer_format": "binary",
+      "prompt": "Is this patient eligible for clinical trial NCT05402384? Answer yes or no.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "No",
+    "answer_explanation": "Exclusion criteria lists hemoglobin <7",
+    "difficulty_rationale": "",
+    "sources": ["ClinicalTrials.gov"],
+    "citations": ["https://clinicaltrials.gov/study/NCT05402384"]
+  },
+  {
+    "id": "AITX-00011",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "KCNT1",
+          "transcript": "NM_020822.3",
+          "variant_cdna": "c.2849G>A",
+          "variant_protein": "p.Arg950Gln",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "early-onset seizures and developmental delays"
+    },
+    "question": {
+      "category": "Clinical_Trials",
+      "answer_format": "string_match",
+      "prompt": "For which clinical trials evaluating new therapeutics is this patient eligible? Provide a clinical trial ID or answer None.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "None",
+    "answer_explanation": "Only a natural history study is listed.",
+    "difficulty_rationale": "",
+    "sources": ["ClinicalTrials.gov"],
+    "citations": ["https://clinicaltrials.gov/search?cond=KCNT1"]
+  },
+  {
+    "id": "AITX-00012",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "GRIN2B",
+          "transcript": "NM_000834.5",
+          "variant_cdna": "c.2755C>T",
+          "variant_protein": "p.Gln919Ter",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "intellectual disability, seizures, and developmental delays"
+    },
+    "question": {
+      "category": "Drug_Development_and_Repurposing",
+      "answer_format": "multiple_choice",
+      "prompt": "Is it more likely amenable to treatment with Memantine, L-serine, or Radiprodil",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "L-Serine",
+    "answer_explanation": "Variant is a LOF variant. L-serine is being used for LOF variants whereas the others are being used for GOF variants",
+    "difficulty_rationale": "",
+    "sources": ["PubMed/Literature"],
+    "citations": ["https://academic.oup.com/brain/article/147/5/1653/7611854?login=false"]
+  },
+  {
+    "id": "AITX-00013",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "ANO10",
+          "transcript": "NM_018075.5",
+          "variant_cdna": "c.289del",
+          "variant_protein": "p.(Met97Ter)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "progressive cerebellar ataxia and peripheral neuropathy"
+    },
+    "question": {
+      "category": "Variant_Assessment",
+      "answer_format": "numeric_match",
+      "prompt": "How many amino acids are coded for by the exon in which this variant occurs? Answer with a number",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "66",
+    "answer_explanation": "visual inspection on Ensembl",
+    "difficulty_rationale": "",
+    "sources": ["Other"],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00014",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "ANO10",
+          "transcript": "NM_018075.5",
+          "variant_cdna": "c.289del",
+          "variant_protein": "p.(Met97Ter)",
+          "zygosity": "homozygous"
+        }
+      ],
+      "clinical_context": "progressive cerebellar ataxia and peripheral neuropathy"
+    },
+    "question": {
+      "category": "Variant_Assessment",
+      "answer_format": "numeric_match",
+      "prompt": "What percentage of the total coding transcript for this gene are encoded by the exon in which this variant occurs? Answer with a decimal to nearest tenth.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "0.1",
+    "answer_explanation": "66/660 = 0.1",
+    "difficulty_rationale": "",
+    "sources": ["Other"],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00015",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "KMT2B",
+          "transcript": "NM_014727.3",
+          "variant_cdna": "c.8079delC",
+          "variant_protein": "p.(Ile2694SerfsTer44)",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "childhood-onset generalized dystonia"
+    },
+    "question": {
+      "category": "Variant_Assessment",
+      "answer_format": "binary",
+      "prompt": "Based on typical prediction rules, is this variant likely to result in nonsense mediated decay? Answer yes or no.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "No",
+    "answer_explanation": "At the end of the last exon, after the main domain",
+    "difficulty_rationale": "",
+    "sources": ["Other"],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00016",
+    "patient": {
+      "genotype": [
+        {
+          "gene": "NF1",
+          "transcript": "NM_001042492.3",
+          "variant_cdna": "c.3728T>C",
+          "variant_protein": "p.(Leu1243Pro)",
+          "zygosity": "heterozygous"
+        }
+      ],
+      "clinical_context": "Malignant Peripheral Nerve Sheath Tumor and Pheochromocytoma"
+    },
+    "question": {
+      "category": "Variant_Assessment",
+      "answer_format": "multiple_choice",
+      "prompt": "In which functional domain does this variant occur? Answer choices: CSRD, TBD, GRD, Sec14-PH, HLR, NLS, SBR.",
+      "date_submitted": "2025-08-01"
+    },
+    "answer_expected": "GRD",
+    "answer_explanation": "GRD, GAP related domain (1198–1549 residues)",
+    "difficulty_rationale": "",
+    "sources": ["PubMed/Literature"],
+    "citations": ["https://www.mdpi.com/2073-4425/13/7/1130#"]
+  }
+]

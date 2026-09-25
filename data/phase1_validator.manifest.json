@@ -1,0 +1,11 @@
+{
+  "file": "phase1_validator.json",
+  "source": "https://huggingface.co/datasets/aitxchallenge/Phase1_Model_Validator",
+  "source_file": "sample_questions.json",
+  "revision": "be415c5fd48844f98deb45d8ad2370c02a9a77e9",
+  "source_last_modified": "2025-08-29T15:50:12Z",
+  "license": "MIT",
+  "sha256": "edd933a89c36ad46b0074de64bcaf51a45cc467e28f367e8dea7cacbdc1c2bde",
+  "fetched": "2026-09-25",
+  "n_records": 16
+}

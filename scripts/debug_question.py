@@ -83,7 +83,7 @@ if __name__ == "__main__":
         # Default: load first validation question
         print("Usage: python scripts/debug_question.py <question_json_or_index>")
         print("No argument provided, loading first validation question...")
-        with open("data/validation.json") as f:
+        with open("data/phase1_validator.json") as f:
             questions = json.load(f)
         debug_question(questions[0])
     else:
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         try:
             # Try as index into validation set
             idx = int(arg)
-            with open("data/validation.json") as f:
+            with open("data/phase1_validator.json") as f:
                 questions = json.load(f)
             if 0 <= idx < len(questions):
                 debug_question(questions[idx])

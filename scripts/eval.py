@@ -1,22 +1,26 @@
-"""Run validation set and report accuracy.
+"""Run a question set through the agent and report exact-match accuracy.
 
-Outputs spec-compliant TaskOutput JSON for each question, matching the
-format in project.md: {id, response, evidence: [{source, time_accessed, justification}]}
+Defaults to the challenge's Phase 1 validator set (data/phase1_validator.json),
+whose records carry their own answer key. Outputs spec-compliant TaskOutput JSON
+per question: {id, response, evidence: [{source, time_accessed, justification}]}.
 """
 
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 import time
 from collections import defaultdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agent import Agent
-from src.model import load_model
+from src.evaluation import file_sha256, is_exact_match, load_questions, reference_answers
+from src.model import MODEL_ID, load_model
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
 from src.tools.clinical_trials import ClinicalTrialsTool
@@ -29,10 +33,25 @@ from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
 
 
-def load_validation_data(path: str = "data/validation.json") -> list[dict]:
-    """Load validation dataset."""
-    with open(path) as f:
-        return json.load(f)
+DEFAULT_QUESTIONS = "data/phase1_validator.json"
+
+
+def run_metadata(questions_path: str) -> dict:
+    """What is needed to reproduce or compare this run."""
+    try:
+        commit = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"], text=True, stderr=subprocess.DEVNULL
+        ).strip()
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        commit = None
+    return {
+        "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "git_commit": commit,
+        "model_id": MODEL_ID,
+        "decoding": "greedy (do_sample=False)",
+        "questions_path": questions_path,
+        "questions_sha256": file_sha256(questions_path),
+    }
 
 
 def validate_output(output_dict: dict) -> list[str]:
@@ -68,7 +87,7 @@ def validate_output(output_dict: dict) -> list[str]:
 
 
 def run_evaluation(
-    validation_path: str = "data/validation.json",
+    validation_path: str = DEFAULT_QUESTIONS,
     reference_path: str | None = None,
     output_path: str = "data/eval_results.json",
     outputs_path: str = "data/eval_outputs.json",
@@ -97,15 +116,18 @@ def run_evaluation(
     ]
     agent = Agent(model, tokenizer, tools)
 
-    print("Loading validation data...")
-    validation_data = load_validation_data(validation_path)
+    print("Loading questions...")
+    validation_data = load_questions(validation_path)
+    metadata = run_metadata(validation_path)
 
-    # Load reference answers if available
-    reference = {}
+    # Answer keys come from the records themselves (challenge format). A
+    # separate reference file overrides them, for sets that lack a key.
+    reference = reference_answers(validation_data)
     if reference_path:
         with open(reference_path) as f:
             ref_data = json.load(f)
             reference = {item["id"]: item["response"] for item in ref_data}
+    print(f"{len(validation_data)} questions, {len(reference)} with reference answers")
 
     task_outputs = []  # Spec-compliant TaskOutput dicts
     results = []       # Internal eval results
@@ -154,7 +176,7 @@ def run_evaluation(
             # Check against reference if available
             if task_id in reference:
                 expected = reference[task_id]
-                is_correct = output.response.strip().lower() == expected.strip().lower()
+                is_correct = is_exact_match(output.response, expected)
                 result["expected"] = expected
                 result["correct"] = is_correct
 
@@ -233,7 +255,10 @@ def run_evaluation(
 
     # Save evaluation stats
     with open(output_path, "w") as f:
-        json.dump({"results": results, "stats": dict(stats)}, f, indent=2, default=dict)
+        json.dump(
+            {"metadata": metadata, "results": results, "stats": dict(stats)},
+            f, indent=2, default=dict,
+        )
     print(f"Evaluation stats saved to {output_path}")
 
     # Print example output for verification
@@ -246,8 +271,9 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Run AI-Tx evaluation")
-    parser.add_argument("--validation", default="data/validation.json", help="Path to validation JSON")
-    parser.add_argument("--reference", default=None, help="Path to reference answers JSON")
+    parser.add_argument("--validation", default=DEFAULT_QUESTIONS, help="Path to question set JSON")
+    parser.add_argument("--reference", default=None,
+                        help="Optional {id, response} JSON overriding answers embedded in the question set")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
     args = parser.parse_args()

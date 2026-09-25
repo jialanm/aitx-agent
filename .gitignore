@@ -29,3 +29,6 @@ Archive.zip
 # Reference docs (planning notes, working agreement) stay local; README is the only committed .md
 *.md
 !README.md
+
+# March 2026 stand-in question set: no answer key, IDs collide with the challenge set
+data/validation.json

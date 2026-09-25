@@ -78,14 +78,18 @@ Input follows the Phase 1 task schema: `id`, `patient` (`genotype` list and
 ## Evaluation
 
 ```bash
-uv run python scripts/eval.py            # runs data/validation.json, reports format validity
-uv run python scripts/debug_question.py  # trace a single question
+uv run python scripts/eval.py              # runs the Phase 1 validator set, reports exact-match accuracy
+uv run python scripts/debug_question.py 0  # trace a single question by index
+uv run python scripts/fetch_validator.py   # re-download the set at its pinned revision and verify checksum
 ```
 
-The validation set and eval outputs are not committed. The challenge's public
-sixteen-question set with reference answers is
-[aitxchallenge/Phase1_Model_Validator](https://huggingface.co/datasets/aitxchallenge/Phase1_Model_Validator)
-on Hugging Face. Accuracy on it has not been measured yet.
+The question set is the challenge's public
+[Phase1_Model_Validator](https://huggingface.co/datasets/aitxchallenge/Phase1_Model_Validator)
+(MIT, 16 questions with reference answers), committed at `data/phase1_validator.json`
+with its source revision and checksum in the manifest beside it. Accuracy on it has
+not been measured yet. Each eval run records the git commit, model id, decoding
+settings, and question-set checksum in its results file. Eval outputs are not
+committed.
 
 ## License
 
