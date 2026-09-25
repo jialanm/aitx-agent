@@ -108,7 +108,10 @@ class PharmGKBTool(BaseTool):
         try:
             resp = requests.get(
                 f"{PHARMGKB_API}/clinicalAnnotation",
-                params={"location.genes.accessionId": gene_id, "view": "max"},
+                # view=max returns the full evidence tree (9.6 MB, ~26 s for
+                # CYP2D6) and always exceeded the timeout; the default view
+                # returns the same records in about a second.
+                params={"location.genes.accessionId": gene_id},
                 timeout=TIMEOUT,
             )
             if resp.status_code != 200:
