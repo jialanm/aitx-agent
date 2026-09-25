@@ -53,3 +53,12 @@ def test_requests_clinpgx_and_cites_clinpgx(recorded_api):
     assert "PharmGKB Gene: RYR1 (PA34896)" in summary
     assert evidence[0].url == "https://www.clinpgx.org/gene/PA34896"
     assert all(e.url.startswith("https://www.clinpgx.org/") for e in evidence)
+
+
+def test_clinical_annotations_use_default_view(recorded_api):
+    summary, _ = PharmGKBTool().execute(gene="RYR1")
+
+    params = [p for url, p in recorded_api if url.endswith("/clinicalAnnotation")]
+    assert params == [{"location.genes.accessionId": "PA34896"}]
+    assert "## Clinical Annotations" in summary
+    assert summary.count("| Drugs: desflurane") == 5
