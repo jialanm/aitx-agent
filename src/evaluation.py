@@ -65,6 +65,9 @@ def is_exact_match(response: str, expected: str) -> bool:
 
     This is deliberately the only leniency. The challenge auto-scored by exact
     match; anything looser here would inflate our number relative to theirs.
+    The site never states whether case mattered. Ignoring it is inferred from
+    the organizers' own answer key, which writes "No" against prompts that say
+    "Answer yes or no" and "L-Serine" against an option spelled "L-serine".
     """
     return response.strip().lower() == expected.strip().lower()
 
