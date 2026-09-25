@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 # one. The key is a personal credential: read from the environment on
 # every call, never stored in code, fixtures or committed files.
 NCBI_API_KEY_ENV = "NCBI_API_KEY"
+NCBI_KEY_PLACEHOLDER = "[NCBI_API_KEY]"
 
 
 @dataclass
@@ -61,3 +62,16 @@ def ncbi_params(**params) -> dict:
     if key:
         params["api_key"] = key
     return params
+
+
+def redact_ncbi_key(text: str) -> str:
+    """Replace the API key wherever it appears in text.
+
+    requests puts the full request URL, query string included, into
+    HTTPError messages, and the adapters return those messages as tool
+    results that reach the model context and the saved eval outputs.
+    """
+    key = os.environ.get(NCBI_API_KEY_ENV)
+    if key:
+        text = text.replace(key, NCBI_KEY_PLACEHOLDER)
+    return text
