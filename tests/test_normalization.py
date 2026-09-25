@@ -168,11 +168,52 @@ class TestOptionVerification:
         options, reason = verify_options(["ascorbic acid", "acid", "desmopressin"], prompt)
         assert options == [] and "contained in" in reason
 
-    def test_dropped_option_still_passes(self):
-        # Verification proves presence, not completeness. Documented limitation.
+    def test_rejects_dropped_middle_option(self):
+        from src.normalization import verify_options
+        cands = ["Golodirsen", "Viltolarsen", "Eteplirsen", "Ataluren", "None"]  # Casimersen missing
+        options, reason = verify_options(cands, self.DMD)
+        assert options == [] and "dropped option" in reason and "Casimersen" in reason
+
+    def test_rejects_dropped_last_option(self):
+        from src.normalization import verify_options
+        cands = ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren"]  # None missing
+        options, reason = verify_options(cands, self.DMD)
+        assert options == [] and "dropped option" in reason and "None" in reason
+
+    def test_rejects_dropped_last_option_without_oxford_comma(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["Memantine", "L-serine"], self.GRIN2B)  # Radiprodil missing
+        assert options == [] and "Radiprodil" in reason
+
+    def test_rejects_dropped_first_option(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"], self.NF1)
+        assert options == [] and "dropped option before" in reason
+
+    def test_rejects_truncated_list(self):
         from src.normalization import verify_options
         options, reason = verify_options(["CSRD", "TBD", "GRD"], self.NF1)
-        assert reason is None and options == ["CSRD", "TBD", "GRD"]
+        assert options == [] and "Sec14-PH" in reason
+
+    def test_complete_lists_pass_for_every_challenge_prompt(self):
+        from src.normalization import verify_options
+        cases = [
+            (self.DMD, ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"]),
+            (self.GRIN2B, ["Memantine", "L-serine", "Radiprodil"]),
+            (self.NF1, ["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]),
+            ("Which is more likely: gain of function, loss of function, or dominant negative?",
+             ["gain of function", "loss of function", "dominant negative"]),
+            ("Choose between eteplirsen and ataluren.", ["eteplirsen", "ataluren"]),
+        ]
+        for prompt, cands in cases:
+            options, reason = verify_options(cands, prompt)
+            assert reason is None, (prompt, reason)
+            assert options == cands
+
+    def test_order_in_json_does_not_matter(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["Radiprodil", "Memantine", "L-serine"], self.GRIN2B)
+        assert reason is None
 
 
 class TestOptionJsonParsing:

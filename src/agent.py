@@ -41,13 +41,22 @@ class Agent:
         context = preprocess_input(task_input)
         parsed_variants = context["parsed_variants"]
 
-        # Step 2: Build initial messages
+        # Step 2: For multiple choice, learn the options up front. They go
+        # into the system prompt and later check the final answer. Empty
+        # list means extraction was rejected: the model gets the generic
+        # instruction and the answer passes through unchecked.
+        options: list[str] = []
+        if context["answer_format"] == "multiple_choice":
+            options = self._extract_options(context["prompt"])
+
+        # Step 3: Build initial messages
         system_prompt = build_system_prompt(
             category=context["category"],
             parsed_variants=parsed_variants,
             clinical_context=context["clinical_context"],
             answer_format=context["answer_format"],
             date_submitted=context["date_submitted"],
+            options=options,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
@@ -56,14 +65,7 @@ class Agent:
             {"role": "user", "content": user_message},
         ]
 
-        # Step 2b: For multiple choice, learn the options up front so the
-        # final answer can be checked against them. Empty list means the
-        # extraction was rejected and the answer will pass through unchecked.
-        options: list[str] = []
-        if context["answer_format"] == "multiple_choice":
-            options = self._extract_options(context["prompt"])
-
-        # Step 3: ReAct loop
+        # Step 4: ReAct loop
         all_evidence: list[EvidenceRecord] = []
         final_text = ""
 
@@ -173,7 +175,7 @@ class Agent:
             if not final_text:
                 final_text = "Unable to determine answer."
 
-        # Step 4: Normalize the answer
+        # Step 5: Normalize the answer
         normalized = normalize_answer(
             final_text,
             context["answer_format"],
@@ -181,19 +183,19 @@ class Agent:
             options,
         )
 
-        # Step 5: Answer validation gate — retry once if invalid
+        # Step 6: Answer validation gate — retry once if invalid
         if not self._is_valid_answer(normalized, context["answer_format"], options):
             logger.warning(f"Invalid answer '{normalized}' for format {context['answer_format']}, retrying...")
             normalized = self._retry_for_valid_answer(
                 messages, context["answer_format"], context["prompt"], options
             )
 
-        # Step 6: Build evidence items
+        # Step 7: Build evidence items
         evidence_items = self._build_evidence(
             all_evidence, normalized, task_input, messages
         )
 
-        # Step 7: Return output
+        # Step 8: Return output
         return TaskOutput(
             id=task_input.id,
             response=normalized,

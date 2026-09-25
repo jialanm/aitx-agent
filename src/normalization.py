@@ -104,33 +104,66 @@ def parse_option_json(text: str) -> list[str] | None:
     return [x.strip() for x in data]
 
 
-def _find_in_prompt(option: str, prompt: str) -> str | None:
-    """Return the option as spelled in the prompt, or None if it is not there.
+def _find_in_prompt(option: str, prompt: str) -> re.Match | None:
+    """Locate the option in the prompt, or None if it is not there.
 
     Match is case-insensitive and bounded so "GRD" does not match "upgrade".
     Hyphens count as word characters so "L-serine" is one token.
     """
-    m = re.search(r"(?<![\w-])" + re.escape(option) + r"(?![\w-])", prompt, flags=re.I)
-    return m.group(0) if m else None
+    return re.search(r"(?<![\w-])" + re.escape(option) + r"(?![\w-])", prompt, flags=re.I)
+
+
+# Text allowed between two options in a list: optional comma, optional or/and.
+_LIST_GAP = re.compile(r"^\s*(?:,\s*)?(?:(?:or|and)\s+)?$", re.I)
+# A short fragment after the last option that looks like one more list item.
+_TAIL_ITEM = re.compile(r"^\s*(?:,\s*(?:or|and)?|or|and)\s+([^,.?;:]+?)\s*(?:[,.?;:]|$)", re.I)
+# Text before the first option that implies an earlier list item was skipped.
+_HEAD_SEP = re.compile(r"(?:,|\bor|\band)\s*$", re.I)
+
+
+def _completeness_reason(matches: list[re.Match], prompt: str) -> str | None:
+    """Use the prompt's list structure to detect a dropped option.
+
+    Options in a question are written as one contiguous list. Every gap
+    between consecutive verified options must be only a separator; a
+    leftover fragment is a dropped option. The text just after the last
+    option and just before the first are checked the same way.
+    """
+    ordered = sorted(matches, key=lambda m: m.start())
+    for a, b in zip(ordered, ordered[1:]):
+        gap = prompt[a.end():b.start()]
+        if not _LIST_GAP.match(gap):
+            return f"possible dropped option between {a.group(0)!r} and {b.group(0)!r}: {gap.strip(' ,')!r}"
+
+    tail = _TAIL_ITEM.match(prompt[ordered[-1].end():])
+    if tail and len(tail.group(1).split()) <= 4:
+        return f"possible dropped option after {ordered[-1].group(0)!r}: {tail.group(1)!r}"
+
+    if _HEAD_SEP.search(prompt[: ordered[0].start()]):
+        return f"possible dropped option before {ordered[0].group(0)!r}"
+
+    return None
 
 
 def verify_options(candidates: list[str], prompt: str) -> tuple[list[str], str | None]:
     """Accept a model-proposed option list only if the prompt backs every item.
 
     Rules: each item appears verbatim in the prompt (case-insensitive, word
-    bounded); at least two items; no duplicates; no item contained in another.
+    bounded); at least two items; no duplicates; no item contained in another;
+    and the prompt's list structure shows no item the model left out.
     Returns (options as spelled in the prompt, None) on success or
     ([], reason) on rejection. The caller logs the reason.
     """
     if len(candidates) < 2:
         return [], f"fewer than two options: {candidates}"
 
-    found = []
+    matches = []
     for c in candidates:
-        spelled = _find_in_prompt(c, prompt)
-        if spelled is None:
+        m = _find_in_prompt(c, prompt)
+        if m is None:
             return [], f"option not in prompt: {c!r}"
-        found.append(spelled)
+        matches.append(m)
+    found = [m.group(0) for m in matches]
 
     lowered = [f.lower() for f in found]
     if len(set(lowered)) != len(lowered):
@@ -139,6 +172,10 @@ def verify_options(candidates: list[str], prompt: str) -> tuple[list[str], str |
         for j, b in enumerate(lowered):
             if i != j and a in b:
                 return [], f"option {found[i]!r} is contained in {found[j]!r}"
+
+    reason = _completeness_reason(matches, prompt)
+    if reason:
+        return [], reason
 
     return found, None
 

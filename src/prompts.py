@@ -65,11 +65,22 @@ def build_system_prompt(
     clinical_context: str,
     answer_format: str,
     date_submitted: str,
+    options: list[str] | None = None,
 ) -> str:
-    """Build the system prompt for the ReAct agent."""
+    """Build the system prompt for the ReAct agent.
+
+    For multiple choice, verified options are spelled out in the format
+    instruction so the model sees them exactly as the scorer expects.
+    """
 
     variant_summary = _format_variant_summary(parsed_variants)
     format_instruction = ANSWER_FORMAT_INSTRUCTIONS.get(answer_format, "")
+    if answer_format == "multiple_choice" and options:
+        format_instruction = (
+            "You MUST respond with exactly one of these options, spelled as given: "
+            + "; ".join(options)
+            + ". Do not include any other text in your final answer."
+        )
     tool_order = TOOL_PRIORITY.get(category, ["search_pubmed"])
     tool_order_str = " → ".join(tool_order)
 
