@@ -1,0 +1,25 @@
+{
+ "header": {
+  "type": "elink",
+  "version": "0.3"
+ },
+ "linksets": [
+  {
+   "dbfrom": "pubmed",
+   "ids": [
+    "24624459",
+    "20301428"
+   ],
+   "linksetdbs": [
+    {
+     "dbto": "books",
+     "linkname": "pubmed_books",
+     "links": [
+      "3075968",
+      "1461110"
+     ]
+    }
+   ]
+  }
+ ]
+}

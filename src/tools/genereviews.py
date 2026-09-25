@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -74,12 +74,12 @@ class GeneReviewsTool(BaseTool):
 
             resp = requests.get(
                 ESEARCH_URL,
-                params={
-                    "db": "pubmed",
-                    "term": search_term,
-                    "retmode": "json",
-                    "retmax": 3,
-                },
+                params=ncbi_params(
+                    db="pubmed",
+                    term=search_term,
+                    retmode="json",
+                    retmax=3,
+                ),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -93,12 +93,12 @@ class GeneReviewsTool(BaseTool):
             if condition:
                 resp2 = requests.get(
                     ESEARCH_URL,
-                    params={
-                        "db": "pubmed",
-                        "term": f"{condition} AND GeneReviews[book]",
-                        "retmode": "json",
-                        "retmax": 3,
-                    },
+                    params=ncbi_params(
+                        db="pubmed",
+                        term=f"{condition} AND GeneReviews[book]",
+                        retmode="json",
+                        retmax=3,
+                    ),
                     timeout=TIMEOUT,
                 )
                 resp2.raise_for_status()
@@ -112,7 +112,7 @@ class GeneReviewsTool(BaseTool):
             )
 
         except requests.RequestException as e:
-            return f"GeneReviews API error: {e}", evidence
+            return redact_ncbi_key(f"GeneReviews API error: {e}"), evidence
 
     def _process_pubmed_results(
         self,
@@ -124,11 +124,11 @@ class GeneReviewsTool(BaseTool):
         # Get PubMed summaries for titles
         resp = requests.get(
             ESUMMARY_URL,
-            params={
-                "db": "pubmed",
-                "id": ",".join(pmids[:3]),
-                "retmode": "json",
-            },
+            params=ncbi_params(
+                db="pubmed",
+                id=",".join(pmids[:3]),
+                retmode="json",
+            ),
             timeout=TIMEOUT,
         )
         resp.raise_for_status()
@@ -168,12 +168,12 @@ class GeneReviewsTool(BaseTool):
             try:
                 resp2 = requests.get(
                     EFETCH_URL,
-                    params={
-                        "db": "pubmed",
-                        "id": best_uid,
-                        "rettype": "abstract",
-                        "retmode": "text",
-                    },
+                    params=ncbi_params(
+                        db="pubmed",
+                        id=best_uid,
+                        rettype="abstract",
+                        retmode="text",
+                    ),
                     timeout=TIMEOUT,
                 )
                 resp2.raise_for_status()
@@ -226,12 +226,12 @@ class GeneReviewsTool(BaseTool):
         try:
             resp = requests.get(
                 ELINK_URL,
-                params={
-                    "dbfrom": "pubmed",
-                    "db": "books",
-                    "id": ",".join(pmids),
-                    "retmode": "json",
-                },
+                params=ncbi_params(
+                    dbfrom="pubmed",
+                    db="books",
+                    id=",".join(pmids),
+                    retmode="json",
+                ),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()

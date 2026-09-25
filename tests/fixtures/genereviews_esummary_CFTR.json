@@ -1,0 +1,302 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "24624459",
+   "20301428"
+  ],
+  "24624459": {
+   "uid": "24624459",
+   "pubdate": "1993",
+   "epubdate": "",
+   "source": "",
+   "authors": [
+    {
+     "name": "Adam MP",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Bick S",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Mirzaa GM",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Wallace SE",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Amemiya A",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Vallente R",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Whitcomb DC",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Whitcomb DC",
+   "title": "Pancreatitis Overview.",
+   "sorttitle": "pancreatitis overview",
+   "volume": "",
+   "issue": "",
+   "pages": "",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "",
+   "issn": "",
+   "essn": "",
+   "pubtype": [
+    "Review"
+   ],
+   "recordstatus": "PubMed",
+   "pubstatus": "ppublish",
+   "articleids": [
+    {
+     "idtype": "bookaccession",
+     "idtypen": 8,
+     "value": "NBK190101"
+    },
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "24624459"
+    }
+   ],
+   "history": [],
+   "references": [],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": "",
+   "fulljournalname": "",
+   "elocationid": "",
+   "doctype": "chapter",
+   "srccontriblist": [
+    {
+     "name": "Adam MP",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Bick S",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Mirzaa GM",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Wallace SE",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Amemiya A",
+     "authtype": "Editor",
+     "clusterid": ""
+    }
+   ],
+   "booktitle": "GeneReviews(\u00ae)",
+   "medium": "Internet",
+   "edition": "",
+   "publisherlocation": "Seattle (WA)",
+   "publishername": "University of Washington, Seattle",
+   "srcdate": "1993-2026",
+   "reportnumber": "",
+   "availablefromurl": "http://www.ncbi.nlm.nih.gov/books/NBK190101/",
+   "locationlabel": "",
+   "doccontriblist": [
+    {
+     "name": "Vallente R",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Whitcomb DC",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "docdate": "2014 Mar 13 [updated 2026 Apr 23]",
+   "bookname": "gene",
+   "chapter": "pancreatitis-ov",
+   "sortpubdate": "2026/04/23 00:00",
+   "sortfirstauthor": "Vallente R",
+   "vernaculartitle": ""
+  },
+  "20301428": {
+   "uid": "20301428",
+   "pubdate": "1993",
+   "epubdate": "",
+   "source": "",
+   "authors": [
+    {
+     "name": "Adam MP",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Bick S",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Mirzaa GM",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Wallace SE",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Amemiya A",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Savant A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lyman B",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Bojanowski C",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Upadia J",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Upadia J",
+   "title": "Cystic Fibrosis.",
+   "sorttitle": "cystic fibrosis",
+   "volume": "",
+   "issue": "",
+   "pages": "",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "",
+   "issn": "",
+   "essn": "",
+   "pubtype": [
+    "Review"
+   ],
+   "recordstatus": "PubMed",
+   "pubstatus": "ppublish",
+   "articleids": [
+    {
+     "idtype": "bookaccession",
+     "idtypen": 8,
+     "value": "NBK1250"
+    },
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "20301428"
+    }
+   ],
+   "history": [],
+   "references": [],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": "",
+   "fulljournalname": "",
+   "elocationid": "",
+   "doctype": "chapter",
+   "srccontriblist": [
+    {
+     "name": "Adam MP",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Bick S",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Mirzaa GM",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Wallace SE",
+     "authtype": "Editor",
+     "clusterid": ""
+    },
+    {
+     "name": "Amemiya A",
+     "authtype": "Editor",
+     "clusterid": ""
+    }
+   ],
+   "booktitle": "GeneReviews(\u00ae)",
+   "medium": "Internet",
+   "edition": "",
+   "publisherlocation": "Seattle (WA)",
+   "publishername": "University of Washington, Seattle",
+   "srcdate": "1993-2026",
+   "reportnumber": "",
+   "availablefromurl": "http://www.ncbi.nlm.nih.gov/books/NBK1250/",
+   "locationlabel": "",
+   "doccontriblist": [
+    {
+     "name": "Savant A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lyman B",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Bojanowski C",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Upadia J",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "docdate": "2001 Mar 26 [updated 2024 Aug 8]",
+   "bookname": "gene",
+   "chapter": "cf",
+   "sortpubdate": "2024/08/08 00:00",
+   "sortfirstauthor": "Savant A",
+   "vernaculartitle": ""
+  }
+ }
+}

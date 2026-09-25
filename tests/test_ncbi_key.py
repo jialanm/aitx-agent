@@ -37,18 +37,23 @@ from pathlib import Path
 import pytest
 import requests
 
-from src.tools import clinvar, pubmed
+from src.tools import clinvar, genereviews, pubmed
 
 FIXTURES = Path(__file__).parent / "fixtures"
 FAKE_KEY = "0123456789abcdef0123456789abcdef0123"
 
 
 class _Recorded:
+    """A recorded reply: JSON for .json fixtures, plain text for .txt ones."""
+
     def __init__(self, path: Path):
         self.status_code = 200
-        self._body = json.loads(path.read_text())
+        self.text = path.read_text()
+        self._body = json.loads(self.text) if path.suffix == ".json" else None
 
     def json(self):
+        if self._body is None:
+            raise ValueError("fixture is not JSON")
         return self._body
 
     def raise_for_status(self):
@@ -186,6 +191,61 @@ def test_clinvar_keeps_key_out_of_rate_limit_error(clinvar_eutils, monkeypatch):
     summary, evidence = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
 
     assert summary.startswith("ClinVar API error: 429")
+    assert FAKE_KEY not in summary
+    assert NCBI_KEY_PLACEHOLDER in summary
+    assert evidence == []
+
+
+GENEREVIEWS_REPLIES = {
+    "esearch": "genereviews_esearch_CFTR.json",
+    "esummary": "genereviews_esummary_CFTR.json",
+    "elink": "genereviews_elink_CFTR.json",
+    "efetch": "genereviews_efetch_24624459.txt",
+}
+
+
+@pytest.fixture
+def genereviews_eutils(monkeypatch):
+    server = _Server(GENEREVIEWS_REPLIES)
+    monkeypatch.setattr(genereviews.requests, "get", server.get)
+    return server
+
+
+def test_genereviews_sends_key_on_every_request(genereviews_eutils, monkeypatch):
+    monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
+    # First search misses so the condition-based fallback search runs as well.
+    genereviews_eutils.replies["esearch"] = [
+        "genereviews_esearch_no_hits.json",
+        "genereviews_esearch_CFTR.json",
+    ]
+
+    summary, evidence = genereviews.GeneReviewsTool().execute(
+        gene="CFTR", condition="cystic fibrosis"
+    )
+
+    assert genereviews_eutils.endpoints() == [
+        "esearch", "esearch", "esummary", "elink", "efetch"
+    ]
+    assert all(p["api_key"] == FAKE_KEY for _, p in genereviews_eutils.calls)
+    assert len(evidence) == 2
+
+
+def test_genereviews_sends_no_key_when_unset(genereviews_eutils, monkeypatch):
+    monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
+
+    genereviews.GeneReviewsTool().execute(gene="CFTR")
+
+    assert len(genereviews_eutils.calls) == 4
+    assert not any("api_key" in p for _, p in genereviews_eutils.calls)
+
+
+def test_genereviews_keeps_key_out_of_rate_limit_error(genereviews_eutils, monkeypatch):
+    monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
+    genereviews_eutils.rate_limit_first = True
+
+    summary, evidence = genereviews.GeneReviewsTool().execute(gene="CFTR")
+
+    assert summary.startswith("GeneReviews API error: 429")
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []

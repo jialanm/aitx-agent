@@ -1,0 +1,22 @@
+{
+ "header": {
+  "type": "esearch",
+  "version": "0.3"
+ },
+ "esearchresult": {
+  "count": "2",
+  "retmax": "2",
+  "retstart": "0",
+  "idlist": [
+   "24624459",
+   "20301428"
+  ],
+  "translationset": [
+   {
+    "from": "CFTR",
+    "to": "\"cftr protein, human\"[Supplementary Concept] OR \"cftr protein, human\"[All Fields] OR \"cftr\"[All Fields]"
+   }
+  ],
+  "querytranslation": "(\"cftr protein human\"[Supplementary Concept] OR \"cftr protein human\"[All Fields] OR \"cftr\"[All Fields]) AND \"GeneReviews\"[Book]"
+ }
+}
