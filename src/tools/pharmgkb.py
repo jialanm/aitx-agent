@@ -2,9 +2,13 @@
 
 from __future__ import annotations
 
+import logging
+
 import requests
 
 from .base import BaseTool, EvidenceRecord
+
+logger = logging.getLogger(__name__)
 
 PHARMGKB_API = "https://api.clinpgx.org/v1/data"
 PHARMGKB_WEB = "https://www.clinpgx.org"
@@ -157,8 +161,17 @@ class PharmGKBTool(BaseTool):
         """Format clinical annotations."""
         parts = ["## Clinical Annotations"]
         for ann in annotations:
-            level = ann.get("level", "")
-            phenotype_cat = ann.get("phenotypeCategory", "")
+            # ClinPGx nests the level under levelOfEvidence.term (1A, 1B, 2A,
+            # 2B, 3, 4) and lists phenotype categories under types; a record
+            # without a level is malformed and is reported rather than hidden.
+            level_obj = ann.get("levelOfEvidence")
+            if not level_obj or not level_obj.get("term"):
+                logger.warning(
+                    f"ClinPGx clinical annotation {ann.get('id')} has no "
+                    f"levelOfEvidence.term; keys: {sorted(ann)}"
+                )
+            level = (level_obj or {}).get("term", "")
+            phenotype_cat = ", ".join(ann.get("types", []))
 
             related_chemicals = []
             for chem in ann.get("relatedChemicals", []):

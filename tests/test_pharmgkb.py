@@ -75,3 +75,24 @@ def test_guidelines_come_from_guideline_annotation_endpoint(recorded_api):
     assert "https://www.clinpgx.org/guidelineAnnotation/PA166303941" in [
         e.url for e in evidence
     ]
+
+
+def test_clinical_annotation_level_and_category_are_read(recorded_api, caplog):
+    summary, _ = PharmGKBTool().execute(gene="RYR1")
+
+    assert summary.count("- Level 1A | Drugs: desflurane") == 5
+    assert summary.count("| Category: Toxicity") == 5
+    assert "levelOfEvidence" not in caplog.text
+
+
+def test_missing_level_is_logged_not_hidden(recorded_api, caplog):
+    record = json.loads(
+        (FIXTURES / "clinpgx_clinicalAnnotation_RYR1.json").read_text()
+    )["data"][0]
+    del record["levelOfEvidence"]
+
+    text = PharmGKBTool()._format_annotations([record], drug_filter="")
+
+    assert "- Level  | Drugs: desflurane" in text
+    assert "levelOfEvidence.term" in caplog.text
+    assert str(record["id"]) in caplog.text
