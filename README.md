@@ -85,11 +85,12 @@ uv run python scripts/fetch_validator.py   # re-download the set at its pinned r
 
 The question set is the challenge's public
 [Phase1_Model_Validator](https://huggingface.co/datasets/aitxchallenge/Phase1_Model_Validator)
-(MIT, 16 questions with reference answers), committed at `data/phase1_validator.json`
-with its source revision and checksum in the manifest beside it. Accuracy on it has
-not been measured yet. Each eval run records the git commit, model id, decoding
-settings, and question-set checksum in its results file. Eval outputs are not
-committed.
+(MIT, 16 questions with reference answers), split into `data/phase1_questions.json`,
+which is all the agent ever sees, and `data/phase1_answers.json`, which the harness
+consults only after the agent has answered. The manifest beside them records the
+source revision and a checksum for each file. Accuracy has not been measured yet.
+Each eval run records the git commit, model id, decoding settings, and file
+checksums in its results file. Eval outputs are not committed.
 
 ## License
 

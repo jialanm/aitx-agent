@@ -1,8 +1,9 @@
 """Run a question set through the agent and report exact-match accuracy.
 
-Defaults to the challenge's Phase 1 validator set (data/phase1_validator.json),
-whose records carry their own answer key. Outputs spec-compliant TaskOutput JSON
-per question: {id, response, evidence: [{source, time_accessed, justification}]}.
+Defaults to the challenge's Phase 1 validator set, split into a questions file
+the agent sees and an answers file it never does. Outputs spec-compliant
+TaskOutput JSON per question: {id, response, evidence: [{source, time_accessed,
+justification}]}.
 """
 
 from __future__ import annotations
@@ -19,7 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agent import Agent
-from src.evaluation import file_sha256, is_exact_match, load_questions, reference_answers
+from src.evaluation import file_sha256, is_exact_match, load_answers, load_questions
 from src.model import MODEL_ID, load_model
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
@@ -33,10 +34,11 @@ from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
 
 
-DEFAULT_QUESTIONS = "data/phase1_validator.json"
+DEFAULT_QUESTIONS = "data/phase1_questions.json"
+DEFAULT_ANSWERS = "data/phase1_answers.json"
 
 
-def run_metadata(questions_path: str) -> dict:
+def run_metadata(questions_path: str, answers_path: str | None) -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -51,6 +53,8 @@ def run_metadata(questions_path: str) -> dict:
         "decoding": "greedy (do_sample=False)",
         "questions_path": questions_path,
         "questions_sha256": file_sha256(questions_path),
+        "answers_path": answers_path,
+        "answers_sha256": file_sha256(answers_path) if answers_path else None,
     }
 
 
@@ -88,7 +92,7 @@ def validate_output(output_dict: dict) -> list[str]:
 
 def run_evaluation(
     validation_path: str = DEFAULT_QUESTIONS,
-    reference_path: str | None = None,
+    answers_path: str | None = DEFAULT_ANSWERS,
     output_path: str = "data/eval_results.json",
     outputs_path: str = "data/eval_outputs.json",
 ):
@@ -96,7 +100,7 @@ def run_evaluation(
 
     Args:
         validation_path: Path to validation JSON.
-        reference_path: Optional path to reference answers JSON.
+        answers_path: Path to the answers JSON, or None to run unscored.
         output_path: Path to save evaluation stats.
         outputs_path: Path to save spec-compliant TaskOutput JSONs.
     """
@@ -118,15 +122,11 @@ def run_evaluation(
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
-    metadata = run_metadata(validation_path)
+    metadata = run_metadata(validation_path, answers_path)
 
-    # Answer keys come from the records themselves (challenge format). A
-    # separate reference file overrides them, for sets that lack a key.
-    reference = reference_answers(validation_data)
-    if reference_path:
-        with open(reference_path) as f:
-            ref_data = json.load(f)
-            reference = {item["id"]: item["response"] for item in ref_data}
+    # Answers are loaded separately and consulted only after the agent has
+    # answered. The question records passed to the agent never contain them.
+    reference = load_answers(answers_path) if answers_path else {}
     print(f"{len(validation_data)} questions, {len(reference)} with reference answers")
 
     task_outputs = []  # Spec-compliant TaskOutput dicts
@@ -272,10 +272,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Run AI-Tx evaluation")
     parser.add_argument("--validation", default=DEFAULT_QUESTIONS, help="Path to question set JSON")
-    parser.add_argument("--reference", default=None,
-                        help="Optional {id, response} JSON overriding answers embedded in the question set")
+    parser.add_argument("--answers", default=DEFAULT_ANSWERS,
+                        help="Path to answers JSON ({id, answer_expected} records); pass '' to run unscored")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.reference, args.output, args.outputs)
+    run_evaluation(args.validation, args.answers or None, args.output, args.outputs)

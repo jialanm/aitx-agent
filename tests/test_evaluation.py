@@ -1,4 +1,4 @@
-"""Tests for question loading and scoring, using the committed validator set."""
+"""Tests for question and answer loading, the question/answer split, and scoring."""
 
 import json
 from pathlib import Path
@@ -6,35 +6,42 @@ from pathlib import Path
 import pytest
 
 from src.evaluation import (
+    INPUT_FIELDS,
     REFERENCE_FIELD,
     file_sha256,
     is_exact_match,
+    load_answers,
     load_questions,
     reference_answers,
+    split_records,
 )
 from src.schemas import TaskInput
 
 DATA_DIR = Path(__file__).parent.parent / "data"
-VALIDATOR = DATA_DIR / "phase1_validator.json"
-MANIFEST = DATA_DIR / "phase1_validator.manifest.json"
+MANIFEST = json.loads((DATA_DIR / "phase1_validator.manifest.json").read_text())
+QUESTIONS = DATA_DIR / MANIFEST["questions"]["file"]
+ANSWERS = DATA_DIR / MANIFEST["answers"]["file"]
 
 
-class TestValidatorFile:
-    def test_matches_manifest_checksum(self):
-        manifest = json.loads(MANIFEST.read_text())
-        assert file_sha256(VALIDATOR) == manifest["sha256"]
-        assert len(load_questions(VALIDATOR)) == manifest["n_records"]
+class TestCommittedFiles:
+    def test_match_manifest_checksums(self):
+        assert file_sha256(QUESTIONS) == MANIFEST["questions"]["sha256"]
+        assert file_sha256(ANSWERS) == MANIFEST["answers"]["sha256"]
+        assert len(load_questions(QUESTIONS)) == MANIFEST["n_records"]
 
-    def test_every_record_has_a_reference_answer(self):
-        questions = load_questions(VALIDATOR)
-        refs = reference_answers(questions)
-        assert set(refs) == {q["id"] for q in questions}
+    def test_questions_file_carries_no_answer_material(self):
+        # The agent reads this file. Nothing beyond the input fields may be in it.
+        for q in load_questions(QUESTIONS):
+            assert set(q) <= set(INPUT_FIELDS), f"{q['id']} leaks fields {set(q) - set(INPUT_FIELDS)}"
+
+    def test_every_question_has_an_answer_and_vice_versa(self):
+        ids = {q["id"] for q in load_questions(QUESTIONS)}
+        refs = load_answers(ANSWERS)
+        assert set(refs) == ids
         assert all(refs.values())
 
-    def test_records_parse_as_task_input_despite_extra_fields(self):
-        # The challenge records carry answer_expected, citations, etc. alongside
-        # the input fields. The agent must accept them without modification.
-        for q in load_questions(VALIDATOR):
+    def test_questions_parse_as_task_input(self):
+        for q in load_questions(QUESTIONS):
             task = TaskInput(**q)
             assert task.id == q["id"]
             assert task.question.answer_format in {
@@ -42,13 +49,30 @@ class TestValidatorFile:
             }
 
 
+class TestSplitRecords:
+    RECORD = {
+        "id": "X", "patient": {"genotype": []}, "question": {"prompt": "?"},
+        REFERENCE_FIELD: "Yes", "answer_explanation": "because", "citations": [],
+    }
+
+    def test_questions_side_keeps_only_input_fields(self):
+        questions, _ = split_records([self.RECORD])
+        assert questions == [{"id": "X", "patient": {"genotype": []}, "question": {"prompt": "?"}}]
+
+    def test_answers_side_keeps_id_and_everything_else(self):
+        _, answers = split_records([self.RECORD])
+        assert answers == [{"id": "X", REFERENCE_FIELD: "Yes", "answer_explanation": "because", "citations": []}]
+
+    def test_unknown_upstream_field_goes_to_answers_not_questions(self):
+        record = {**self.RECORD, "new_hint_field": "spoiler"}
+        questions, answers = split_records([record])
+        assert "new_hint_field" not in questions[0]
+        assert answers[0]["new_hint_field"] == "spoiler"
+
+
 class TestReferenceAnswers:
     def test_skips_records_without_reference(self):
-        questions = [
-            {"id": "A", REFERENCE_FIELD: "Yes"},
-            {"id": "B"},
-        ]
-        assert reference_answers(questions) == {"A": "Yes"}
+        assert reference_answers([{"id": "A", REFERENCE_FIELD: "Yes"}, {"id": "B"}]) == {"A": "Yes"}
 
     def test_coerces_non_string_reference(self):
         assert reference_answers([{"id": "A", REFERENCE_FIELD: 66}]) == {"A": "66"}

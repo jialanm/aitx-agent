@@ -1,0 +1,182 @@
+[
+  {
+    "id": "AITX-00001",
+    "answer_expected": "Eteplirsen",
+    "answer_explanation": "Variant results in deletion of exons 52-63, which is listed as amenable to exon 51 skipping",
+    "difficulty_rationale": "",
+    "sources": [
+      "GeneReviews",
+      "PubMed/Literature"
+    ],
+    "citations": []
+  },
+  {
+    "id": "AITX-00002",
+    "answer_expected": "Ataluren",
+    "answer_explanation": "Variant results in a nonsense in exon 74, which is amenable to nonsense readthrough",
+    "difficulty_rationale": "",
+    "sources": [],
+    "citations": []
+  },
+  {
+    "id": "AITX-00003",
+    "answer_expected": "None",
+    "answer_explanation": "Results in a missense in exon 2, which is not amenable to nonsense readthrough and is upstream from skippable exons",
+    "difficulty_rationale": "",
+    "sources": [],
+    "citations": []
+  },
+  {
+    "id": "AITX-00004",
+    "answer_expected": "Pyridoxine",
+    "answer_explanation": "Missense variants are amenable to pyridoxine treatment",
+    "difficulty_rationale": "",
+    "sources": [
+      "GeneReviews"
+    ],
+    "citations": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
+    ]
+  },
+  {
+    "id": "AITX-00005",
+    "answer_expected": "No",
+    "answer_explanation": "Pyridoxine is not effective for patients with null variants",
+    "difficulty_rationale": "",
+    "sources": [
+      "GeneReviews"
+    ],
+    "citations": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
+    ]
+  },
+  {
+    "id": "AITX-00006",
+    "answer_expected": "Lumasiran",
+    "answer_explanation": "Lumasiran is approved for patients of all ages whereas Nedosiran is only approved for patients age >9.",
+    "difficulty_rationale": "slight change in patient age changes the answer",
+    "sources": [
+      "GeneReviews"
+    ],
+    "citations": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
+    ]
+  },
+  {
+    "id": "AITX-00007",
+    "answer_expected": "18 months",
+    "answer_explanation": "specified on GeneReviews",
+    "difficulty_rationale": "",
+    "sources": [
+      "GeneReviews"
+    ],
+    "citations": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK595821/"
+    ]
+  },
+  {
+    "id": "AITX-00008",
+    "answer_expected": "ascorbic acid, desmopressin",
+    "answer_explanation": "specified in management on GeneReviews",
+    "difficulty_rationale": "",
+    "sources": [
+      "GeneReviews"
+    ],
+    "citations": [
+      "https://www.ncbi.nlm.nih.gov/books/NBK1244/#eds.Management"
+    ]
+  },
+  {
+    "id": "AITX-00009",
+    "answer_expected": "NCT05402384",
+    "answer_explanation": "search for SLC35A2 on ClinicalTrials.gov returns only 2 trials, 1 of which is upcoming",
+    "difficulty_rationale": "",
+    "sources": [
+      "ClinicalTrials.gov"
+    ],
+    "citations": [
+      "https://clinicaltrials.gov/study/NCT05402384"
+    ]
+  },
+  {
+    "id": "AITX-00010",
+    "answer_expected": "No",
+    "answer_explanation": "Exclusion criteria lists hemoglobin <7",
+    "difficulty_rationale": "",
+    "sources": [
+      "ClinicalTrials.gov"
+    ],
+    "citations": [
+      "https://clinicaltrials.gov/study/NCT05402384"
+    ]
+  },
+  {
+    "id": "AITX-00011",
+    "answer_expected": "None",
+    "answer_explanation": "Only a natural history study is listed.",
+    "difficulty_rationale": "",
+    "sources": [
+      "ClinicalTrials.gov"
+    ],
+    "citations": [
+      "https://clinicaltrials.gov/search?cond=KCNT1"
+    ]
+  },
+  {
+    "id": "AITX-00012",
+    "answer_expected": "L-Serine",
+    "answer_explanation": "Variant is a LOF variant. L-serine is being used for LOF variants whereas the others are being used for GOF variants",
+    "difficulty_rationale": "",
+    "sources": [
+      "PubMed/Literature"
+    ],
+    "citations": [
+      "https://academic.oup.com/brain/article/147/5/1653/7611854?login=false"
+    ]
+  },
+  {
+    "id": "AITX-00013",
+    "answer_expected": "66",
+    "answer_explanation": "visual inspection on Ensembl",
+    "difficulty_rationale": "",
+    "sources": [
+      "Other"
+    ],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00014",
+    "answer_expected": "0.1",
+    "answer_explanation": "66/660 = 0.1",
+    "difficulty_rationale": "",
+    "sources": [
+      "Other"
+    ],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00015",
+    "answer_expected": "No",
+    "answer_explanation": "At the end of the last exon, after the main domain",
+    "difficulty_rationale": "",
+    "sources": [
+      "Other"
+    ],
+    "otherSource": "Ensembl",
+    "citations": []
+  },
+  {
+    "id": "AITX-00016",
+    "answer_expected": "GRD",
+    "answer_explanation": "GRD, GAP related domain (1198–1549 residues)",
+    "difficulty_rationale": "",
+    "sources": [
+      "PubMed/Literature"
+    ],
+    "citations": [
+      "https://www.mdpi.com/2073-4425/13/7/1130#"
+    ]
+  }
+]
