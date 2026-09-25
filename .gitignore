@@ -32,3 +32,6 @@ Archive.zip
 
 # March 2026 stand-in question set: no answer key, IDs collide with the challenge set
 data/validation.json
+
+# Local decision log, kept out of the public repo
+decision_logs.md
