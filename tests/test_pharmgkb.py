@@ -62,3 +62,16 @@ def test_clinical_annotations_use_default_view(recorded_api):
     assert params == [{"location.genes.accessionId": "PA34896"}]
     assert "## Clinical Annotations" in summary
     assert summary.count("| Drugs: desflurane") == 5
+
+
+def test_guidelines_come_from_guideline_annotation_endpoint(recorded_api):
+    summary, evidence = PharmGKBTool().execute(gene="RYR1")
+
+    endpoints = [url.rsplit("/", 1)[-1] for url, _ in recorded_api]
+    assert "guidelineAnnotation" in endpoints
+    assert "guideline" not in endpoints
+    assert "## Dosing Guidelines" in summary
+    assert "Annotation of CPIC Guideline" in summary
+    assert "https://www.clinpgx.org/guidelineAnnotation/PA166303941" in [
+        e.url for e in evidence
+    ]
