@@ -56,26 +56,25 @@ class TestBinaryNormalization:
 
 
 class TestMultipleChoiceNormalization:
-    def test_letter_match(self):
-        prompt = "Which drug? (A) DrugA (B) DrugB (C) DrugC (D) DrugD"
-        assert normalize_answer("(C) DrugC", "multiple_choice", prompt) == "DrugC"
+    PROMPT = "Which drug? (A) DrugA (B) DrugB (C) DrugC (D) DrugD"
+    OPTIONS = ["DrugA", "DrugB", "DrugC", "DrugD"]
 
-    def test_letter_only(self):
-        prompt = "Which drug? (A) DrugA (B) DrugB (C) DrugC (D) DrugD"
-        assert normalize_answer("C", "multiple_choice", prompt) == "DrugC"
+    def test_letter_with_text(self):
+        assert normalize_answer("(C) DrugC", "multiple_choice", self.PROMPT, self.OPTIONS) == "DrugC"
+
+    def test_letter_only_maps_through_lettered_prompt(self):
+        assert normalize_answer("C", "multiple_choice", self.PROMPT, self.OPTIONS) == "DrugC"
 
     def test_text_match(self):
         prompt = "Which drug? (A) DrugA (B) DrugB (C) Carbamazepine (D) DrugD"
-        assert normalize_answer("Carbamazepine", "multiple_choice", prompt) == "Carbamazepine"
+        options = ["DrugA", "DrugB", "Carbamazepine", "DrugD"]
+        assert normalize_answer("Carbamazepine", "multiple_choice", prompt, options) == "Carbamazepine"
 
     def test_option_with_explanation(self):
-        prompt = "Which drug? (A) DrugA (B) DrugB (C) DrugC (D) DrugD"
-        assert normalize_answer("A) DrugA because it is effective", "multiple_choice", prompt) == "DrugA"
+        assert normalize_answer("A) DrugA because it is effective", "multiple_choice", self.PROMPT, self.OPTIONS) == "DrugA"
 
-    def test_full_option_text(self):
-        prompt = "Which gene therapy? (A) Onasemnogene abeparvovec (Zolgensma) (B) Nusinersen (Spinraza) (C) Risdiplam (Evrysdi) (D) Valoctocogene roxaparvovec (Roctavian)"
-        result = normalize_answer("A", "multiple_choice", prompt)
-        assert "Onasemnogene abeparvovec" in result
+    def test_no_options_leaves_text_alone(self):
+        assert normalize_answer("C", "multiple_choice", self.PROMPT, []) == "C"
 
 
 class TestNumericNormalization:
@@ -124,67 +123,119 @@ class TestStringNormalization:
         assert normalize_answer("beta-blockers.", "string_match") == "beta-blockers"
 
 
-class TestInlineMultipleChoice:
-    """Option lists as they appear in the challenge's Phase 1 validator set."""
+class TestOptionVerification:
+    """Model-proposed option lists are accepted only when the prompt backs them."""
 
     DMD = ("To which of the following targeted therapies would this variant be most "
            "likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?")
     GRIN2B = "Is it more likely amenable to treatment with Memantine, L-serine, or Radiprodil"
     NF1 = "In which functional domain does this variant occur? Answer choices: CSRD, TBD, GRD, Sec14-PH, HLR, NLS, SBR."
 
-    def test_extract_colon_or_list(self):
-        from src.normalization import extract_options
-        assert extract_options(self.DMD) == [
-            "Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"
-        ]
+    def test_accepts_list_backed_by_prompt(self):
+        from src.normalization import verify_options
+        cands = ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"]
+        assert verify_options(cands, self.DMD) == (cands, None)
 
-    def test_extract_uncolon_list_strips_question_stem(self):
-        from src.normalization import extract_options
-        assert extract_options(self.GRIN2B) == ["Memantine", "L-serine", "Radiprodil"]
+    def test_returns_prompt_spelling(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["memantine", "L-Serine", "RADIPRODIL"], self.GRIN2B)
+        assert reason is None
+        assert options == ["Memantine", "L-serine", "Radiprodil"]
 
-    def test_extract_answer_choices_leadin(self):
-        from src.normalization import extract_options
-        assert extract_options(self.NF1) == ["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]
+    def test_rejects_option_not_in_prompt(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["CSRD", "TBD", "Nusinersen"], self.NF1)
+        assert options == [] and "not in prompt" in reason
 
-    def test_extract_multiword_options_keep_stem_words_inside_items(self):
-        from src.normalization import extract_options
-        prompt = "Which is more likely: gain of function, loss of function, or dominant negative?"
-        assert extract_options(prompt) == ["gain of function", "loss of function", "dominant negative"]
+    def test_rejects_partial_word_match(self):
+        from src.normalization import verify_options
+        # "GRD" is in the prompt; "RD" is only inside other words.
+        options, reason = verify_options(["GRD", "RD"], self.NF1)
+        assert options == [] and "not in prompt" in reason
 
-    def test_yes_no_prompt_yields_no_options(self):
-        from src.normalization import extract_options
-        assert extract_options("Is this variant pathogenic? Answer yes or no.") == []
+    def test_rejects_single_option(self):
+        from src.normalization import verify_options
+        assert verify_options(["GRD"], self.NF1)[0] == []
+
+    def test_rejects_duplicates(self):
+        from src.normalization import verify_options
+        options, reason = verify_options(["GRD", "grd", "TBD"], self.NF1)
+        assert options == [] and "duplicate" in reason
+
+    def test_rejects_overlapping_options(self):
+        from src.normalization import verify_options
+        prompt = "Which two? Answer choices: ascorbic acid, acid, desmopressin."
+        options, reason = verify_options(["ascorbic acid", "acid", "desmopressin"], prompt)
+        assert options == [] and "contained in" in reason
+
+    def test_dropped_option_still_passes(self):
+        # Verification proves presence, not completeness. Documented limitation.
+        from src.normalization import verify_options
+        options, reason = verify_options(["CSRD", "TBD", "GRD"], self.NF1)
+        assert reason is None and options == ["CSRD", "TBD", "GRD"]
+
+
+class TestOptionJsonParsing:
+    def test_plain_array(self):
+        from src.normalization import parse_option_json
+        assert parse_option_json('["CSRD", "TBD"]') == ["CSRD", "TBD"]
+
+    def test_code_fence_and_preamble(self):
+        from src.normalization import parse_option_json
+        text = 'Here are the choices:\n```json\n["Memantine", "L-serine", "Radiprodil"]\n```'
+        assert parse_option_json(text) == ["Memantine", "L-serine", "Radiprodil"]
+
+    def test_no_array(self):
+        from src.normalization import parse_option_json
+        assert parse_option_json("The choices are CSRD and TBD.") is None
+
+    def test_non_string_items(self):
+        from src.normalization import parse_option_json
+        assert parse_option_json('[1, 2]') is None
+
+    def test_empty_string_item(self):
+        from src.normalization import parse_option_json
+        assert parse_option_json('["GRD", ""]') is None
+
+
+class TestInlineMultipleChoice:
+    """Mapping model output onto verified inline options from the challenge set."""
+
+    DMD = TestOptionVerification.DMD
+    GRIN2B = TestOptionVerification.GRIN2B
+    NF1 = TestOptionVerification.NF1
+    DMD_OPTS = ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"]
+    GRIN2B_OPTS = ["Memantine", "L-serine", "Radiprodil"]
+    NF1_OPTS = ["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]
 
     def test_exact_option(self):
-        assert normalize_answer("Eteplirsen", "multiple_choice", self.DMD) == "Eteplirsen"
+        assert normalize_answer("Eteplirsen", "multiple_choice", self.DMD, self.DMD_OPTS) == "Eteplirsen"
 
     def test_case_and_punctuation(self):
-        assert normalize_answer("eteplirsen.", "multiple_choice", self.DMD) == "Eteplirsen"
+        assert normalize_answer("eteplirsen.", "multiple_choice", self.DMD, self.DMD_OPTS) == "Eteplirsen"
 
     def test_none_option(self):
-        assert normalize_answer("None", "multiple_choice", self.DMD) == "None"
+        assert normalize_answer("None", "multiple_choice", self.DMD, self.DMD_OPTS) == "None"
 
     def test_option_inside_sentence(self):
         text = "This exon 51 skipping variant is amenable to Eteplirsen."
-        assert normalize_answer(text, "multiple_choice", self.DMD) == "Eteplirsen"
+        assert normalize_answer(text, "multiple_choice", self.DMD, self.DMD_OPTS) == "Eteplirsen"
 
     def test_earliest_mention_wins(self):
         text = "Ataluren, not Eteplirsen, because this is a nonsense variant"
-        assert normalize_answer(text, "multiple_choice", self.DMD) == "Ataluren"
+        assert normalize_answer(text, "multiple_choice", self.DMD, self.DMD_OPTS) == "Ataluren"
 
     def test_returns_prompt_spelling(self):
-        assert normalize_answer("L-Serine", "multiple_choice", self.GRIN2B) == "L-serine"
+        assert normalize_answer("L-Serine", "multiple_choice", self.GRIN2B, self.GRIN2B_OPTS) == "L-serine"
 
     def test_answer_choices_form(self):
-        assert normalize_answer("GRD (GAP-related domain)", "multiple_choice", self.NF1) == "GRD"
+        assert normalize_answer("GRD (GAP-related domain)", "multiple_choice", self.NF1, self.NF1_OPTS) == "GRD"
 
     def test_letter_answer_ignored_without_lettered_prompt(self):
-        # "C" is not an option here; do not map it to the third item.
-        assert normalize_answer("C", "multiple_choice", self.NF1) == "C"
+        assert normalize_answer("C", "multiple_choice", self.NF1, self.NF1_OPTS) == "C"
 
     def test_unmatched_answer_passes_through(self):
-        assert normalize_answer("Nusinersen", "multiple_choice", self.DMD) == "Nusinersen"
+        assert normalize_answer("Nusinersen", "multiple_choice", self.DMD, self.DMD_OPTS) == "Nusinersen"
 
     def test_partial_word_does_not_match(self):
-        # "TBD" must not match inside "outbound"; nothing matches, text passes through.
-        assert normalize_answer("outbound", "multiple_choice", self.NF1) == "outbound"
+        assert normalize_answer("outbound", "multiple_choice", self.NF1, self.NF1_OPTS) == "outbound"

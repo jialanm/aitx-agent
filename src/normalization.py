@@ -2,16 +2,24 @@
 
 from __future__ import annotations
 
+import json
 import re
 
 
-def normalize_answer(raw_answer: str, answer_format: str, prompt: str = "") -> str:
+def normalize_answer(
+    raw_answer: str,
+    answer_format: str,
+    prompt: str = "",
+    options: list[str] | None = None,
+) -> str:
     """Normalize model output to match expected answer format.
 
     Args:
         raw_answer: Raw text from the model.
         answer_format: One of binary, multiple_choice, numeric_match, string_match.
-        prompt: The original question prompt (needed for multiple_choice).
+        prompt: The original question prompt (used to map lettered answers).
+        options: Verified answer options for multiple_choice; empty means the
+            answer is left as written.
 
     Returns:
         Normalized answer string.
@@ -27,7 +35,7 @@ def normalize_answer(raw_answer: str, answer_format: str, prompt: str = "") -> s
     if answer_format == "binary":
         return _normalize_binary(cleaned)
     elif answer_format == "multiple_choice":
-        return _normalize_multiple_choice(cleaned, prompt)
+        return _normalize_multiple_choice(cleaned, prompt, options or [])
     elif answer_format == "numeric_match":
         return _normalize_numeric(cleaned)
     elif answer_format == "string_match":
@@ -75,56 +83,72 @@ def _normalize_binary(text: str) -> str:
 
 
 _LETTERED_OPTIONS = re.compile(r"\(([A-Z])\)\s*(.+?)(?=\s*\([A-Z]\)|$)")
-_LEADIN_LIST = re.compile(
-    r"(?:answer\s+choices|choices|options)\s*:\s*(.+?)\s*[.?]?\s*$", re.I | re.S
-)
-# A trailing comma list whose last item is introduced by "or": "X, Y, or Z".
-_OR_LIST = re.compile(r"((?:[^,:?]+,\s*)+(?:or\s+)?[^,?]+?)\s*[?.]?\s*$", re.S)
-# When the list is not introduced by a colon, the first item still carries the
-# question stem ("...treatment with Memantine"); cut at the last such word.
-_STEM_WORDS = re.compile(r"\b(?:with|to|of|between|among|following)\b\s*", re.I)
 
 
-def _split_list_items(text: str) -> list[str]:
-    items = [i.strip() for i in text.split(",")]
-    items = [re.sub(r"^(?:or|and)\s+", "", i, flags=re.I).strip(" .?\"'") for i in items]
-    return [i for i in items if i]
+def parse_option_json(text: str) -> list[str] | None:
+    """Read a JSON array of strings out of model output, or None if absent.
 
-
-def extract_options(prompt: str) -> list[str]:
-    """Pull the answer options out of a multiple-choice prompt.
-
-    Handles the three shapes seen in the challenge set: a colon-introduced
-    list ending in "or X", a bare list after "Answer choices:", and an
-    un-introduced list ("...with Memantine, L-serine, or Radiprodil"), plus
-    the lettered "(A) text (B) text" form. Returns [] when no list is found,
-    so the caller can leave the answer untouched rather than guess.
+    Tolerates a surrounding code fence or a sentence before the array, since
+    small models add those even when told not to. Anything that is not a
+    flat list of non-empty strings is treated as unparseable.
     """
-    lettered = _LETTERED_OPTIONS.findall(prompt)
-    if lettered:
-        return [text.strip() for _, text in lettered]
-
-    m = _LEADIN_LIST.search(prompt)
-    if m:
-        return _split_list_items(m.group(1))
-
-    m = _OR_LIST.search(prompt)
-    if m and re.search(r"\bor\b", m.group(1)):
-        items = _split_list_items(m.group(1))
-        if ":" not in prompt[: m.start(1)]:
-            items[0] = _STEM_WORDS.split(items[0])[-1].strip()
-        return items
-
-    return []
+    m = re.search(r"\[.*?\]", text, flags=re.S)
+    if not m:
+        return None
+    try:
+        data = json.loads(m.group(0))
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(data, list) or not all(isinstance(x, str) and x.strip() for x in data):
+        return None
+    return [x.strip() for x in data]
 
 
-def _normalize_multiple_choice(text: str, prompt: str) -> str:
-    """Map model output onto one of the prompt's options, in the prompt's spelling.
+def _find_in_prompt(option: str, prompt: str) -> str | None:
+    """Return the option as spelled in the prompt, or None if it is not there.
+
+    Match is case-insensitive and bounded so "GRD" does not match "upgrade".
+    Hyphens count as word characters so "L-serine" is one token.
+    """
+    m = re.search(r"(?<![\w-])" + re.escape(option) + r"(?![\w-])", prompt, flags=re.I)
+    return m.group(0) if m else None
+
+
+def verify_options(candidates: list[str], prompt: str) -> tuple[list[str], str | None]:
+    """Accept a model-proposed option list only if the prompt backs every item.
+
+    Rules: each item appears verbatim in the prompt (case-insensitive, word
+    bounded); at least two items; no duplicates; no item contained in another.
+    Returns (options as spelled in the prompt, None) on success or
+    ([], reason) on rejection. The caller logs the reason.
+    """
+    if len(candidates) < 2:
+        return [], f"fewer than two options: {candidates}"
+
+    found = []
+    for c in candidates:
+        spelled = _find_in_prompt(c, prompt)
+        if spelled is None:
+            return [], f"option not in prompt: {c!r}"
+        found.append(spelled)
+
+    lowered = [f.lower() for f in found]
+    if len(set(lowered)) != len(lowered):
+        return [], f"duplicate options: {found}"
+    for i, a in enumerate(lowered):
+        for j, b in enumerate(lowered):
+            if i != j and a in b:
+                return [], f"option {found[i]!r} is contained in {found[j]!r}"
+
+    return found, None
+
+
+def _normalize_multiple_choice(text: str, prompt: str, options: list[str]) -> str:
+    """Map model output onto one of the verified options, in the prompt's spelling.
 
     Falls through to the raw text when nothing matches: an unmatched answer
     should score as wrong and be visible in the eval output, not be repaired.
     """
-    options = extract_options(prompt)
     cleaned = text.strip()
     if not options:
         return cleaned
@@ -135,14 +159,13 @@ def _normalize_multiple_choice(text: str, prompt: str) -> str:
         if lower == opt.lower():
             return opt
 
-    # Letter answers only mean something when the prompt lettered its options.
-    lettered = _LETTERED_OPTIONS.findall(prompt)
-    if lettered:
-        m = re.match(r"^\(?([a-z])\)?[.):]?(?:\s|$)", lower)
-        if m:
-            for letter, opt_text in lettered:
-                if letter == m.group(1).upper():
-                    return opt_text.strip()
+    # A bare letter answer only means something when the prompt lettered its
+    # options; map it through the "(A) text" pattern in the prompt.
+    m = re.match(r"^\(?([a-z])\)?[.):]?(?:\s|$)", lower)
+    if m:
+        for letter, opt_text in _LETTERED_OPTIONS.findall(prompt):
+            if letter == m.group(1).upper() and opt_text.strip() in options:
+                return opt_text.strip()
 
     # Option mentioned inside a longer answer: take the earliest mention,
     # preferring the longer option when two start at the same place.

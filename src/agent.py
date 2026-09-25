@@ -7,9 +7,14 @@ import re
 import time
 
 from .model import ModelResponse, format_tool_result, generate, parse_response
-from .normalization import extract_options, normalize_answer
+from .normalization import normalize_answer, parse_option_json, verify_options
 from .preprocessing import preprocess_input
-from .prompts import TOOL_PRIORITY, build_system_prompt, build_user_message
+from .prompts import (
+    OPTION_EXTRACTION_INSTRUCTION,
+    TOOL_PRIORITY,
+    build_system_prompt,
+    build_user_message,
+)
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
 
@@ -50,6 +55,13 @@ class Agent:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message},
         ]
+
+        # Step 2b: For multiple choice, learn the options up front so the
+        # final answer can be checked against them. Empty list means the
+        # extraction was rejected and the answer will pass through unchecked.
+        options: list[str] = []
+        if context["answer_format"] == "multiple_choice":
+            options = self._extract_options(context["prompt"])
 
         # Step 3: ReAct loop
         all_evidence: list[EvidenceRecord] = []
@@ -166,13 +178,14 @@ class Agent:
             final_text,
             context["answer_format"],
             context["prompt"],
+            options,
         )
 
         # Step 5: Answer validation gate — retry once if invalid
-        if not self._is_valid_answer(normalized, context["answer_format"], context["prompt"]):
+        if not self._is_valid_answer(normalized, context["answer_format"], options):
             logger.warning(f"Invalid answer '{normalized}' for format {context['answer_format']}, retrying...")
             normalized = self._retry_for_valid_answer(
-                messages, context["answer_format"], context["prompt"]
+                messages, context["answer_format"], context["prompt"], options
             )
 
         # Step 6: Build evidence items
@@ -346,12 +359,12 @@ class Agent:
                 continue
 
     @staticmethod
-    def _is_valid_answer(answer: str, answer_format: str, prompt: str = "") -> bool:
+    def _is_valid_answer(answer: str, answer_format: str, options: list[str] | None = None) -> bool:
         """Check if a normalized answer is valid for its format.
 
-        For multiple choice the answer must be one of the prompt's options when
-        the options can be parsed; a prompt with no parseable options accepts
-        any non-empty string, since there is nothing to check against.
+        For multiple choice the answer must be one of the verified options when
+        there are any; with no verified options any non-empty string is
+        accepted, since there is nothing to check against.
         """
         if not answer or not answer.strip():
             return False
@@ -362,20 +375,52 @@ class Agent:
                 float(answer)
             except ValueError:
                 return False
-        if answer_format == "multiple_choice":
-            options = extract_options(prompt)
-            if options and answer not in options:
-                return False
+        if answer_format == "multiple_choice" and options and answer not in options:
+            return False
         return True
+
+    def _extract_options(self, prompt: str) -> list[str]:
+        """Ask the model to list a multiple-choice prompt's options, then verify them.
+
+        The model proposes; code checks every item against the prompt text.
+        A rejected or unparseable list is logged with the raw output and
+        yields [], so the question proceeds without option validation.
+        """
+        try:
+            response = generate(
+                self.model,
+                self.tokenizer,
+                [{"role": "user", "content": OPTION_EXTRACTION_INSTRUCTION + prompt}],
+                tools=None,
+                max_new_tokens=256,
+                enable_thinking=False,
+            )
+        except Exception as e:
+            logger.error(f"Option extraction failed: {e}")
+            return []
+
+        candidates = parse_option_json(response.text)
+        if candidates is None:
+            logger.warning(f"Option extraction rejected: unparseable output {response.text!r} for prompt {prompt!r}")
+            return []
+
+        options, reason = verify_options(candidates, prompt)
+        if reason:
+            logger.warning(f"Option extraction rejected: {reason}; raw output {response.text!r} for prompt {prompt!r}")
+            return []
+
+        logger.info(f"Verified options: {options}")
+        return options
 
     def _retry_for_valid_answer(
         self,
         messages: list[dict],
         answer_format: str,
         prompt: str,
+        options: list[str] | None = None,
     ) -> str:
         """Re-prompt the model once with thinking disabled to get a valid answer."""
-        options = extract_options(prompt) if answer_format == "multiple_choice" else []
+        options = options or []
         format_hint = {
             "binary": "Respond with exactly 'Yes' or 'No'.",
             "multiple_choice": (
@@ -405,8 +450,8 @@ class Agent:
                 max_new_tokens=256,
                 enable_thinking=False,
             )
-            normalized = normalize_answer(response.text, answer_format, prompt)
-            if self._is_valid_answer(normalized, answer_format, prompt):
+            normalized = normalize_answer(response.text, answer_format, prompt, options)
+            if self._is_valid_answer(normalized, answer_format, options):
                 return normalized
         except Exception as e:
             logger.error(f"Answer validation retry failed: {e}")

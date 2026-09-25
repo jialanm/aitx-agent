@@ -139,21 +139,58 @@ class TestAnswerValidation:
     def test_whitespace_only(self):
         assert Agent._is_valid_answer("   ", "string_match") is False
 
-    DMD_PROMPT = ("To which of the following targeted therapies would this variant be most "
-                  "likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?")
+    DMD_OPTS = ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"]
 
     def test_multiple_choice_option_is_valid(self):
-        assert Agent._is_valid_answer("Ataluren", "multiple_choice", self.DMD_PROMPT) is True
+        assert Agent._is_valid_answer("Ataluren", "multiple_choice", self.DMD_OPTS) is True
 
     def test_multiple_choice_none_option_is_valid(self):
-        assert Agent._is_valid_answer("None", "multiple_choice", self.DMD_PROMPT) is True
+        assert Agent._is_valid_answer("None", "multiple_choice", self.DMD_OPTS) is True
 
     def test_multiple_choice_non_option_is_invalid(self):
         # A drug that is real but not offered must trigger the retry, not pass.
-        assert Agent._is_valid_answer("Nusinersen", "multiple_choice", self.DMD_PROMPT) is False
+        assert Agent._is_valid_answer("Nusinersen", "multiple_choice", self.DMD_OPTS) is False
 
-    def test_multiple_choice_without_parseable_options_accepts_text(self):
-        assert Agent._is_valid_answer("anything", "multiple_choice", "Pick the best therapy.") is True
+    def test_multiple_choice_without_verified_options_accepts_text(self):
+        assert Agent._is_valid_answer("anything", "multiple_choice", []) is True
+
+
+class TestOptionExtraction:
+    """The model call is stubbed; these test the parsing and verification around it."""
+
+    NF1 = "In which functional domain does this variant occur? Answer choices: CSRD, TBD, GRD, Sec14-PH, HLR, NLS, SBR."
+
+    @staticmethod
+    def _stub(monkeypatch, text):
+        import src.agent as agent_module
+        monkeypatch.setattr(
+            agent_module, "generate",
+            lambda *a, **k: ModelResponse(text=text, tool_calls=[], raw=text, thinking=""),
+        )
+        return Agent(model=None, tokenizer=None, tools=[])
+
+    def test_verified_list_is_returned(self, monkeypatch):
+        agent = self._stub(monkeypatch, '["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]')
+        assert agent._extract_options(self.NF1) == ["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]
+
+    def test_hallucinated_option_is_rejected_and_logged(self, monkeypatch, caplog):
+        agent = self._stub(monkeypatch, '["CSRD", "TBD", "Nusinersen"]')
+        with caplog.at_level("WARNING", logger="src.agent"):
+            assert agent._extract_options(self.NF1) == []
+        assert "rejected" in caplog.text and "Nusinersen" in caplog.text
+
+    def test_unparseable_output_is_rejected_and_logged(self, monkeypatch, caplog):
+        agent = self._stub(monkeypatch, "The choices are CSRD, TBD and GRD.")
+        with caplog.at_level("WARNING", logger="src.agent"):
+            assert agent._extract_options(self.NF1) == []
+        assert "unparseable" in caplog.text
+
+    def test_model_error_yields_no_options(self, monkeypatch):
+        import src.agent as agent_module
+        def boom(*a, **k):
+            raise RuntimeError("cuda")
+        monkeypatch.setattr(agent_module, "generate", boom)
+        assert Agent(model=None, tokenizer=None, tools=[])._extract_options(self.NF1) == []
 
 
 class TestExtractCondition:

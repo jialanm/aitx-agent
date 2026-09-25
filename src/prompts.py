@@ -13,6 +13,14 @@ TOOL_PRIORITY = {
     "Variant_Assessment": ["query_ensembl", "search_clinvar", "query_uniprot", "search_pubmed"],
 }
 
+# Asked once per multiple-choice question, with thinking off, before the
+# answering loop. The result is verified against the prompt text by code.
+OPTION_EXTRACTION_INSTRUCTION = (
+    "List the answer choices offered in the following question as a JSON array "
+    "of strings, copying each choice exactly as written. Output only the JSON "
+    "array, nothing else.\n\nQuestion: "
+)
+
 ANSWER_FORMAT_INSTRUCTIONS = {
     "binary": (
         "You MUST respond with EXACTLY 'Yes' or 'No' as your final answer. "
