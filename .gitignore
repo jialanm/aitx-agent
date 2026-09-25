@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+*.egg-info/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Local tooling
+.claude/settings.local.json
+
+# Secrets — keys come from the environment only
+.env
+.env.*
+
+# Eval artifacts and cached API responses are committed only deliberately
+# (some contain patient-adjacent vignettes). Add specific files with `git add -f`.
+data/eval_outputs*.json
+data/eval_results*.json
+data/cache/
+
+# Stale snapshots
+Archive.zip
+
+# Reference docs (planning notes, working agreement) stay local; README is the only committed .md
+*.md
+!README.md
