@@ -1,0 +1,923 @@
+{
+ "data": [
+  {
+   "id": 1445400894,
+   "accessionId": "PA166136363",
+   "allelePhenotypes": [
+    {
+     "id": 1452327268,
+     "allele": "AA",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs28933396 AA genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the GG genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327269,
+     "allele": "AG",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs28933396 AG genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the GG genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327270,
+     "allele": "GG",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs28933396 GG genotype may have a decreased, but not absent, risk for malignant hyperthermia based on this variant when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the AG and AA genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    }
+   ],
+   "conflictingVariantAnnotationIds": [],
+   "history": [
+    {
+     "id": 1445400895,
+     "date": "2015-07-31T14:04:49.916-07:00",
+     "type": "Create",
+     "version": 0
+    },
+    {
+     "id": 1447992335,
+     "date": "2016-05-27T13:54:38.528-07:00",
+     "description": "changed wording from \"may be associated with increased/decreased risk of MH\" to \"may/may not develop MH\" and updated publications",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1450043833,
+     "date": "2018-11-29T18:20:10.117-08:00",
+     "description": "Assigned LOE 1A since variant listed in recommendation of CPIC guideline",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451287946,
+     "date": "2020-11-03T13:35:42.671-08:00",
+     "description": "Drugs kept combined based on specifics of Malignant Hyperthermia diagnostics and CPIC guideline/EMHG inclusion.",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451392080,
+     "date": "2021-03-24T20:00:52.216-07:00",
+     "description": "CA score added as part of scoring system release. LOE assigned following curator review.",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "levelOfEvidence": {
+    "id": 827923052,
+    "resource": "Level of Evidence",
+    "synonyms": [],
+    "term": "1A",
+    "termId": "levelsOfEvidence:827923052",
+    "valid": true
+   },
+   "location": {
+    "id": 1452327267,
+    "buildVersion": "GRCh38",
+    "chromosomeId": "PA520",
+    "chromosomeName": "chr19",
+    "copyNumber": "1",
+    "diplotypes": [],
+    "displayName": "rs28933396",
+    "genes": [
+     {
+      "objCls": "Gene",
+      "id": "PA34896",
+      "symbol": "RYR1",
+      "name": "ryanodine receptor 1"
+     }
+    ],
+    "gpPosition": 38499997,
+    "haplotypes": [],
+    "linkedObjects": [
+     {
+      "objCls": "Variant",
+      "id": "PA166155481",
+      "symbol": "rs28933396",
+      "name": "rs28933396"
+     }
+    ],
+    "refSeqCrossReference": {
+     "id": 1446906626,
+     "name": "[GRCh38]chr19",
+     "resource": "RefSeq DNA",
+     "resourceId": "NC_000019.10",
+     "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000019.10"
+    },
+    "refSeqPosition": 38499997,
+    "rsid": "rs28933396",
+    "tagGene": false,
+    "type": "SNP",
+    "variant": {
+     "objCls": "Variant",
+     "id": "PA166155481",
+     "symbol": "rs28933396",
+     "name": "rs28933396"
+    }
+   },
+   "name": "rs28933396 (RYR1); desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane or succinylcholine; Malignant Hyperthermia (level 1A Toxicity)",
+   "objCls": "Clinical Annotation",
+   "overrideLevel": false,
+   "pediatric": false,
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449461",
+     "name": "enflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449845",
+     "name": "halothane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450434",
+     "name": "methoxyflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedChemicalsLogic": "Or",
+   "relatedDiseases": [
+    {
+     "objCls": "Disease",
+     "id": "PA444863",
+     "name": "Malignant Hyperthermia"
+    }
+   ],
+   "relatedGuidelines": [
+    {
+     "objCls": "Guideline Annotation",
+     "id": "PA166303941",
+     "name": "Annotation of CPIC Guideline for desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane, succinylcholine and CACNA1S, RYR1"
+    }
+   ],
+   "relatedLabels": [],
+   "relatedVariations": [
+    {
+     "objCls": "Allele",
+     "id": "PA166375343",
+     "symbol": "CA024750",
+     "name": "NM_000540.3(RYR1):c.7304G>A (p.Arg2435His)"
+    },
+    {
+     "objCls": "Allele",
+     "id": "PA166375344",
+     "symbol": "CA2335053045",
+     "name": "NM_000540.3(RYR1):c.7304G= (p.Arg2435=)"
+    }
+   ],
+   "score": 102.25,
+   "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1445124426, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.510-08:00\", \"variantAnnotationId\": 1445124420}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447521974, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1445296975}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1445400851, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.75, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1445400849}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447634955, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447634953}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672299, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447672297}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672463, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447672461}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672541, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447672539}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673867, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447673865}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673906, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.511-08:00\", \"variantAnnotationId\": 1447673900}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675325, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447675323}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675771, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447675740}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447947744, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447947742}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952539, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447952537}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960616, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447960614}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960993, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447960991}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447987539, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:24:06.512-08:00\", \"variantAnnotationId\": 1447987537}], \"totalScore\": 102.25, \"vaScoreTotal\": 2.25, \"generatedDate\": \"2023-12-14T10:24:07.126-08:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 100.0}",
+   "types": [
+    "Toxicity"
+   ]
+  },
+  {
+   "id": 1183705822,
+   "accessionId": "PA166135470",
+   "allelePhenotypes": [
+    {
+     "id": 1452327241,
+     "allele": "CC",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs121918595 CC genotype may have a decreased, but not absent, risk for malignant hyperthermia based on this variant when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the TT or CT genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327242,
+     "allele": "CT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs121918595 CT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327243,
+     "allele": "TT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs121918595 TT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    }
+   ],
+   "conflictingVariantAnnotationIds": [],
+   "history": [
+    {
+     "id": 1447992472,
+     "date": "2016-05-27T16:42:22.609-07:00",
+     "type": "Approve",
+     "version": 0
+    },
+    {
+     "id": 1450043895,
+     "date": "2018-11-29T22:28:42.665-08:00",
+     "description": "Assigned LOE 1A since variant listed in recommendation of CPIC guideline",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451287844,
+     "date": "2020-11-03T13:08:04.749-08:00",
+     "description": "Drugs kept combined based on specifics of Malignant Hyperthermia diagnostics and CPIC guideline/EMHG inclusion.",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451392052,
+     "date": "2021-03-24T20:00:51.912-07:00",
+     "description": "CA score added as part of scoring system release. LOE assigned following curator review.",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "levelOfEvidence": {
+    "id": 827923052,
+    "resource": "Level of Evidence",
+    "synonyms": [],
+    "term": "1A",
+    "termId": "levelsOfEvidence:827923052",
+    "valid": true
+   },
+   "location": {
+    "id": 1452327240,
+    "buildVersion": "GRCh38",
+    "chromosomeId": "PA520",
+    "chromosomeName": "chr19",
+    "copyNumber": "1",
+    "diplotypes": [],
+    "displayName": "rs121918595",
+    "genes": [
+     {
+      "objCls": "Gene",
+      "id": "PA34896",
+      "symbol": "RYR1",
+      "name": "ryanodine receptor 1"
+     }
+    ],
+    "gpPosition": 38580094,
+    "haplotypes": [],
+    "linkedObjects": [
+     {
+      "objCls": "Variant",
+      "id": "PA166155546",
+      "symbol": "rs121918595",
+      "name": "rs121918595"
+     }
+    ],
+    "refSeqCrossReference": {
+     "id": 1446906626,
+     "name": "[GRCh38]chr19",
+     "resource": "RefSeq DNA",
+     "resourceId": "NC_000019.10",
+     "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000019.10"
+    },
+    "refSeqPosition": 38580094,
+    "rsid": "rs121918595",
+    "tagGene": false,
+    "type": "SNP",
+    "variant": {
+     "objCls": "Variant",
+     "id": "PA166155546",
+     "symbol": "rs121918595",
+     "name": "rs121918595"
+    }
+   },
+   "name": "rs121918595 (RYR1); desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane or succinylcholine; Malignant Hyperthermia (level 1A Toxicity)",
+   "objCls": "Clinical Annotation",
+   "overrideLevel": false,
+   "pediatric": true,
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449461",
+     "name": "enflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449845",
+     "name": "halothane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450434",
+     "name": "methoxyflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedChemicalsLogic": "Or",
+   "relatedDiseases": [
+    {
+     "objCls": "Disease",
+     "id": "PA444863",
+     "name": "Malignant Hyperthermia"
+    }
+   ],
+   "relatedGuidelines": [
+    {
+     "objCls": "Guideline Annotation",
+     "id": "PA166303941",
+     "name": "Annotation of CPIC Guideline for desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane, succinylcholine and CACNA1S, RYR1"
+    }
+   ],
+   "relatedLabels": [],
+   "relatedVariations": [
+    {
+     "objCls": "Allele",
+     "id": "PA166375376",
+     "symbol": "CA024154",
+     "name": "NM_000540.3(RYR1):c.14477C>T (p.Thr4826Ile)"
+    },
+    {
+     "objCls": "Allele",
+     "id": "PA166375377",
+     "symbol": "CA2335092299",
+     "name": "NM_000540.3(RYR1):c.14477C= (p.Thr4826=)"
+    }
+   ],
+   "score": 100.75,
+   "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1184511899, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.631-08:00\", \"variantAnnotationId\": 1184511833}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675401, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.633-08:00\", \"variantAnnotationId\": 1447675399}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675496, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.633-08:00\", \"variantAnnotationId\": 1447675494}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952566, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.633-08:00\", \"variantAnnotationId\": 1447952564}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960632, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.633-08:00\", \"variantAnnotationId\": 1447960630}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447987630, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:19:25.633-08:00\", \"variantAnnotationId\": 1447987628}], \"totalScore\": 100.75, \"vaScoreTotal\": 0.75, \"generatedDate\": \"2023-12-14T10:19:26.252-08:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 100.0}",
+   "types": [
+    "Toxicity"
+   ]
+  },
+  {
+   "id": 1183705698,
+   "accessionId": "PA166135458",
+   "allelePhenotypes": [
+    {
+     "id": 1452327351,
+     "allele": "CC",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs118192172 CC genotype may have a decreased, but not absent, risk for malignant hyperthermia based on this variant when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the TT or CT genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327352,
+     "allele": "CT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs118192172 CT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327353,
+     "allele": "TT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs118192172 TT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    }
+   ],
+   "conflictingVariantAnnotationIds": [],
+   "history": [
+    {
+     "id": 1449160157,
+     "date": "2017-12-21T05:23:42.687-08:00",
+     "description": "Added PMID 27646467, 25268394, 27382027",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1450043717,
+     "date": "2018-11-29T14:18:08.176-08:00",
+     "description": "Assigned LOE 1A since variant listed in recommendation of CPIC guideline",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451287884,
+     "date": "2020-11-03T13:22:48.266-08:00",
+     "description": "Drugs kept combined based on specifics of Malignant Hyperthermia diagnostics and CPIC guideline/EMHG inclusion.",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451392040,
+     "date": "2021-03-24T20:00:51.792-07:00",
+     "description": "CA score added as part of scoring system release. LOE assigned following curator review.",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "levelOfEvidence": {
+    "id": 827923052,
+    "resource": "Level of Evidence",
+    "synonyms": [],
+    "term": "1A",
+    "termId": "levelsOfEvidence:827923052",
+    "valid": true
+   },
+   "location": {
+    "id": 1452327350,
+    "buildVersion": "GRCh38",
+    "chromosomeId": "PA520",
+    "chromosomeName": "chr19",
+    "copyNumber": "1",
+    "diplotypes": [],
+    "displayName": "rs118192172",
+    "genes": [
+     {
+      "objCls": "Gene",
+      "id": "PA34896",
+      "symbol": "RYR1",
+      "name": "ryanodine receptor 1"
+     }
+    ],
+    "gpPosition": 38457545,
+    "haplotypes": [],
+    "linkedObjects": [
+     {
+      "objCls": "Variant",
+      "id": "PA166155537",
+      "symbol": "rs118192172",
+      "name": "rs118192172"
+     }
+    ],
+    "refSeqCrossReference": {
+     "id": 1446906626,
+     "name": "[GRCh38]chr19",
+     "resource": "RefSeq DNA",
+     "resourceId": "NC_000019.10",
+     "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000019.10"
+    },
+    "refSeqPosition": 38457545,
+    "rsid": "rs118192172",
+    "tagGene": false,
+    "type": "SNP",
+    "variant": {
+     "objCls": "Variant",
+     "id": "PA166155537",
+     "symbol": "rs118192172",
+     "name": "rs118192172"
+    }
+   },
+   "name": "rs118192172 (RYR1); desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane or succinylcholine; Malignant Hyperthermia (level 1A Toxicity)",
+   "objCls": "Clinical Annotation",
+   "overrideLevel": false,
+   "pediatric": true,
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449461",
+     "name": "enflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449845",
+     "name": "halothane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450434",
+     "name": "methoxyflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedChemicalsLogic": "Or",
+   "relatedDiseases": [
+    {
+     "objCls": "Disease",
+     "id": "PA444863",
+     "name": "Malignant Hyperthermia"
+    }
+   ],
+   "relatedGuidelines": [
+    {
+     "objCls": "Guideline Annotation",
+     "id": "PA166303941",
+     "name": "Annotation of CPIC Guideline for desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane, succinylcholine and CACNA1S, RYR1"
+    }
+   ],
+   "relatedLabels": [],
+   "relatedVariations": [
+    {
+     "objCls": "Allele",
+     "id": "PA166375064",
+     "symbol": "CA024311",
+     "name": "NM_000540.3(RYR1):c.1840C>T (p.Arg614Cys)"
+    },
+    {
+     "objCls": "Allele",
+     "id": "PA166375065",
+     "symbol": "CA2335032402",
+     "name": "NM_000540.3(RYR1):c.1840C= (p.Arg614=)"
+    }
+   ],
+   "score": 106.75,
+   "scoreDetails": "{\"vaScores\": [{\"step5A\": 0.0, \"step5B\": 0.0, \"chosenSpId\": null, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"N/A\", \"generatedDate\": \"2023-12-14T10:33:52.884-08:00\", \"variantAnnotationId\": 1447673611}, {\"step5A\": 0.0, \"step5B\": 1.0, \"chosenSpId\": 1447674763, \"step1Score\": 0.0, \"step2Score\": 1.5, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 2\", \"generatedDate\": \"2023-12-14T10:33:52.884-08:00\", \"variantAnnotationId\": 1447674761}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447953148, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.885-08:00\", \"variantAnnotationId\": 981419447}, {\"step5A\": 1.0, \"step5B\": 1.0, \"chosenSpId\": 1184510573, \"step1Score\": 0.0, \"step2Score\": 1.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 1.5, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1184510571}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1444697821, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.5, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1444697819}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675914, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1445124440}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447521959, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1445297022}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1445400827, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.75, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1445400825}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1446900686, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1446900676}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447629642, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1447626893}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447635003, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.886-08:00\", \"variantAnnotationId\": 1447635001}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447649966, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447649391}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447651294, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447651288}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447672417, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.25, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447672415}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672491, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447672484}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447672520, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 1.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447672514}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672574, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447672572}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447672848, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447672846}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447673063, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.25, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.887-08:00\", \"variantAnnotationId\": 1447673042}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673104, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673095}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673649, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673643}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673653, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673651}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673828, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673826}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673928, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673922}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673946, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673940}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447673990, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447673982}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447674293, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.888-08:00\", \"variantAnnotationId\": 1447674291}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447674359, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447674357}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447674406, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447674400}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675264, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675262}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675368, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675366}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675375, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675373}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675434, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675432}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675689, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675649}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675660, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675654}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447675674, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447675666}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447944053, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447944035}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447948612, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447948514}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447951941, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447951935}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447951944, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447951942}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952212, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.889-08:00\", \"variantAnnotationId\": 1447952206}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952446, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447952426}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952496, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447952494}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952710, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447952704}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447952782, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447952756}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960697, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447960695}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960911, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447960905}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447960969, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447960967}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447961041, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.890-08:00\", \"variantAnnotationId\": 1447961035}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1447961273, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.891-08:00\", \"variantAnnotationId\": 1447961271}, {\"step5A\": 1.0, \"step5B\": 0.0, \"chosenSpId\": 1447987409, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.25, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.891-08:00\", \"variantAnnotationId\": 1447987407}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449158228, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.891-08:00\", \"variantAnnotationId\": 1449158220}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449160120, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.891-08:00\", \"variantAnnotationId\": 1449160118}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449160147, \"step1Score\": 1.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.25, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:33:52.891-08:00\", \"variantAnnotationId\": 1449160141}], \"totalScore\": 106.75, \"vaScoreTotal\": 6.75, \"generatedDate\": \"2023-12-14T10:33:53.516-08:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 100.0}",
+   "types": [
+    "Toxicity"
+   ]
+  },
+  {
+   "id": 1449747643,
+   "accessionId": "PA166180795",
+   "allelePhenotypes": [
+    {
+     "id": 1452327231,
+     "allele": "CC",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922748 CC genotype may have a decreased, but not absent, risk for malignant hyperthermia based on this variant when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CT or TT genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327232,
+     "allele": "CT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922748 CT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327233,
+     "allele": "TT",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922748 TT genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the CC genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    }
+   ],
+   "conflictingVariantAnnotationIds": [],
+   "history": [
+    {
+     "id": 1449747644,
+     "date": "2018-10-09T14:35:13.500-07:00",
+     "type": "Create",
+     "version": 0
+    },
+    {
+     "id": 1450043603,
+     "date": "2018-11-29T12:36:59.047-08:00",
+     "description": "Assigned LOE 1A since variant listed in recommendation of CPIC guideline",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451287802,
+     "date": "2020-11-03T12:58:13.627-08:00",
+     "description": "Drugs kept combined based on specifics of Malignant Hyperthermia diagnostics and CPIC guideline/EMHG inclusion.",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451392139,
+     "date": "2021-03-24T20:00:52.846-07:00",
+     "description": "CA score added as part of scoring system release. LOE assigned following curator review.",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "levelOfEvidence": {
+    "id": 827923052,
+    "resource": "Level of Evidence",
+    "synonyms": [],
+    "term": "1A",
+    "termId": "levelsOfEvidence:827923052",
+    "valid": true
+   },
+   "location": {
+    "id": 1452327230,
+    "buildVersion": "GRCh38",
+    "chromosomeId": "PA520",
+    "chromosomeName": "chr19",
+    "copyNumber": "1",
+    "diplotypes": [],
+    "displayName": "rs193922748",
+    "genes": [
+     {
+      "objCls": "Gene",
+      "id": "PA34896",
+      "symbol": "RYR1",
+      "name": "ryanodine receptor 1"
+     }
+    ],
+    "gpPosition": 38440829,
+    "haplotypes": [],
+    "linkedObjects": [
+     {
+      "objCls": "Variant",
+      "id": "PA166180322",
+      "symbol": "rs193922748",
+      "name": "rs193922748"
+     }
+    ],
+    "refSeqCrossReference": {
+     "id": 1446906626,
+     "name": "[GRCh38]chr19",
+     "resource": "RefSeq DNA",
+     "resourceId": "NC_000019.10",
+     "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000019.10"
+    },
+    "refSeqPosition": 38440829,
+    "rsid": "rs193922748",
+    "tagGene": false,
+    "type": "SNP",
+    "variant": {
+     "objCls": "Variant",
+     "id": "PA166180322",
+     "symbol": "rs193922748",
+     "name": "rs193922748"
+    }
+   },
+   "name": "rs193922748 (RYR1); desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane or succinylcholine; Malignant Hyperthermia (level 1A Toxicity)",
+   "objCls": "Clinical Annotation",
+   "overrideLevel": false,
+   "pediatric": false,
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449461",
+     "name": "enflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449845",
+     "name": "halothane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450434",
+     "name": "methoxyflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedChemicalsLogic": "Or",
+   "relatedDiseases": [
+    {
+     "objCls": "Disease",
+     "id": "PA444863",
+     "name": "Malignant Hyperthermia"
+    }
+   ],
+   "relatedGuidelines": [
+    {
+     "objCls": "Guideline Annotation",
+     "id": "PA166303941",
+     "name": "Annotation of CPIC Guideline for desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane, succinylcholine and CACNA1S, RYR1"
+    }
+   ],
+   "relatedLabels": [],
+   "relatedVariations": [
+    {
+     "objCls": "Allele",
+     "id": "PA166369218",
+     "symbol": "CA024034",
+     "name": "NM_000540.3(RYR1):c.130C>T (p.Arg44Cys)"
+    },
+    {
+     "objCls": "Allele",
+     "id": "PA166369217",
+     "symbol": "CA2335024372",
+     "name": "NM_000540.3(RYR1):c.130C= (p.Arg44=)"
+    }
+   ],
+   "score": 100.0,
+   "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449733360, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:17:52.407-08:00\", \"variantAnnotationId\": 1449733354}, {\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449733376, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:17:52.408-08:00\", \"variantAnnotationId\": 1449733370}], \"totalScore\": 100.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2023-12-14T10:17:53.029-08:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 100.0}",
+   "types": [
+    "Toxicity"
+   ]
+  },
+  {
+   "id": 1449310249,
+   "accessionId": "PA166178722",
+   "allelePhenotypes": [
+    {
+     "id": 1452327174,
+     "allele": "AA",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922832 AA genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the GG genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327175,
+     "allele": "AG",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922832 AG genotype may develop malignant hyperthermia when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine as compared to patients with the GG genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    },
+    {
+     "id": 1452327176,
+     "allele": "GG",
+     "limitedEvidence": false,
+     "phenotype": "Patients with the rs193922832 GG genotype may have a decreased, but not absent, risk for malignant hyperthermia based on this variant when treated with volatile anesthetics (desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane) and/or succinylcholine  as compared to patients with AA or AG genotype. Other genetic or clinical factors may also influence the risk for malignant hyperthermia."
+    }
+   ],
+   "conflictingVariantAnnotationIds": [],
+   "history": [
+    {
+     "id": 1449310250,
+     "date": "2018-04-30T10:17:48.049-07:00",
+     "type": "Create",
+     "version": 0
+    },
+    {
+     "id": 1450043880,
+     "date": "2018-11-29T22:18:59.777-08:00",
+     "description": "Assigned LOE 1A since variant listed in recommendation of CPIC guideline",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451287812,
+     "date": "2020-11-03T12:59:58.348-08:00",
+     "description": "Drugs kept combined based on specifics of Malignant Hyperthermia diagnostics and CPIC guideline/EMHG inclusion.",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1451392132,
+     "date": "2021-03-24T20:00:52.769-07:00",
+     "description": "CA score added as part of scoring system release. LOE assigned following curator review.",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "levelOfEvidence": {
+    "id": 827923052,
+    "resource": "Level of Evidence",
+    "synonyms": [],
+    "term": "1A",
+    "termId": "levelsOfEvidence:827923052",
+    "valid": true
+   },
+   "location": {
+    "id": 1452327173,
+    "buildVersion": "GRCh38",
+    "chromosomeId": "PA520",
+    "chromosomeName": "chr19",
+    "copyNumber": "1",
+    "diplotypes": [],
+    "displayName": "rs193922832",
+    "genes": [
+     {
+      "objCls": "Gene",
+      "id": "PA34896",
+      "symbol": "RYR1",
+      "name": "ryanodine receptor 1"
+     }
+    ],
+    "gpPosition": 38512321,
+    "haplotypes": [],
+    "linkedObjects": [
+     {
+      "objCls": "Variant",
+      "id": "PA166163667",
+      "symbol": "rs193922832",
+      "name": "rs193922832"
+     }
+    ],
+    "refSeqCrossReference": {
+     "id": 1446906626,
+     "name": "[GRCh38]chr19",
+     "resource": "RefSeq DNA",
+     "resourceId": "NC_000019.10",
+     "_url": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000019.10"
+    },
+    "refSeqPosition": 38512321,
+    "rsid": "rs193922832",
+    "tagGene": false,
+    "type": "SNP",
+    "variant": {
+     "objCls": "Variant",
+     "id": "PA166163667",
+     "symbol": "rs193922832",
+     "name": "rs193922832"
+    }
+   },
+   "name": "rs193922832 (RYR1); desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane or succinylcholine; Malignant Hyperthermia (level 1A Toxicity)",
+   "objCls": "Clinical Annotation",
+   "overrideLevel": false,
+   "pediatric": false,
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449461",
+     "name": "enflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA449845",
+     "name": "halothane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA450434",
+     "name": "methoxyflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    },
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedChemicalsLogic": "Or",
+   "relatedDiseases": [
+    {
+     "objCls": "Disease",
+     "id": "PA444863",
+     "name": "Malignant Hyperthermia"
+    }
+   ],
+   "relatedGuidelines": [
+    {
+     "objCls": "Guideline Annotation",
+     "id": "PA166303941",
+     "name": "Annotation of CPIC Guideline for desflurane, enflurane, halothane, isoflurane, methoxyflurane, sevoflurane, succinylcholine and CACNA1S, RYR1"
+    }
+   ],
+   "relatedLabels": [],
+   "relatedVariations": [
+    {
+     "objCls": "Allele",
+     "id": "PA166392631",
+     "symbol": "CA024976",
+     "name": "NM_000540.3(RYR1):c.9310G>A (p.Glu3104Lys)"
+    },
+    {
+     "objCls": "Allele",
+     "id": "PA166392630",
+     "symbol": "CA2335059634",
+     "name": "NM_000540.3(RYR1):c.9310G= (p.Glu3104=)"
+    }
+   ],
+   "score": 100.0,
+   "scoreDetails": "{\"vaScores\": [{\"step5A\": 1.0, \"step5B\": 0.25, \"chosenSpId\": 1449160889, \"step1Score\": 0.0, \"step2Score\": 0.0, \"step3Score\": 0.0, \"step4Score\": 0.0, \"totalScore\": 0.0, \"chosenSpIndex\": \"1 of 1\", \"generatedDate\": \"2023-12-14T10:12:44.284-08:00\", \"variantAnnotationId\": 1449160887}], \"totalScore\": 100.0, \"vaScoreTotal\": 0.0, \"generatedDate\": \"2023-12-14T10:12:44.924-08:00\", \"labelScoreTotal\": 0.0, \"guidelineScoreTotal\": 100.0}",
+   "types": [
+    "Toxicity"
+   ]
+  }
+ ],
+ "_note": "truncated to first 5 of 48 records; adapter uses at most 5"
+}

@@ -1,0 +1,622 @@
+{
+ "data": [
+  {
+   "objCls": "Label Annotation",
+   "id": "PA166129520",
+   "name": "Annotation of HCSC Label for sevoflurane and CACNA1S, RYR1",
+   "alternateDrugAvailable": true,
+   "cancerGenome": false,
+   "crossReferences": [],
+   "dosingInformation": false,
+   "history": [
+    {
+     "id": 1452055841,
+     "date": "2023-04-01T20:21:25.498-07:00",
+     "description": "updated text",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1452598822,
+     "date": "2024-09-19T14:06:00.493-07:00",
+     "description": "added Pediatric tag and info",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "indication": false,
+   "labelApplications": [],
+   "labelDocumentAvailable": true,
+   "literature": [
+    {
+     "id": 15166022,
+     "title": "Drugs@HCSC: Drug Product Sevoflurane, Baxter Corporation",
+     "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=75141",
+     "crossReferences": [
+      {
+       "id": 1452598820,
+       "resource": "URL",
+       "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=75141",
+       "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=75141"
+      }
+     ],
+     "objCls": "Literature",
+     "terms": [
+      {
+       "id": 1452267780,
+       "resource": "ClinPGx Tags",
+       "term": "Has PGx",
+       "termId": "pgkbTags:1452267780"
+      }
+     ],
+     "type": "Drug Label"
+    }
+   ],
+   "otherPrescribingGuidance": false,
+   "pediatric": true,
+   "pediatricMarkdown": {
+    "id": 1452598821,
+    "html": "<p>Sevoflurane is HCSC-indicated for pediatric use.</p>\n<blockquote class=\"blockquote\">\n<p><strong>7.1.3 Pediatrics</strong>\nThe concentration of SEVOFLURANE required for maintenance of general anesthesia is age-dependent. See 4.2 Recommended Dose and Dosage Adjustment.</p>\n</blockquote>\n"
+   },
+   "pgxRelated": true,
+   "prescribingGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "prescribingMarkdown": {
+    "id": 1452055840,
+    "html": "<blockquote class=\"blockquote\">\n<p>SEVOFLURANE is contraindicated in patients with known or suspected genetic susceptibility to malignant hyperthermia, or in patients with a known or suspected history of malignant hyperthermia.</p>\n</blockquote>\n"
+   },
+   "relatedAlleles": [],
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA451341",
+     "name": "sevoflurane"
+    }
+   ],
+   "relatedGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "source": "HCSC",
+   "summaryMarkdown": {
+    "id": 1447982393,
+    "html": "<p>Sevoflurane is a potent (volatile) inhalational anesthetic used to induce or maintain general anesthesia.</p>\n"
+   },
+   "testing": {
+    "id": 1183672111,
+    "resource": "Genetic Testing Level",
+    "synonyms": [],
+    "term": "Actionable PGx",
+    "termId": "geneTestLevel:1183672111",
+    "valid": true
+   },
+   "textMarkdown": {
+    "id": 1447982392,
+    "html": "<p>The HCSC product monograph warns that individuals with a genetic predisposition to malignant hyperthermia are at an elevated risk of developing malignant hyperthermia, and that patients with Duchenne's Muscular Dystrophy are at an elevated risk of developing hyperkaelemia if administered sevoflurane, or other potent inhalational anesthetics.</p>\n<p>Specific variants in the <em>RYR1</em> and <em>CACNA1S</em> genes are associated with risk of malignant hyperthermia in individuals administered potent inhalational anesthetics, such as sevoflurane. Although the product monograph for sevoflurane does not specifically mention genetic testing, it states that sevoflurane is contraindicated in individuals with known to have a genetic predisposition to malignant hyperthermia.</p>\n<p>Excerpts from the sevoflurane product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Contraindications SEVOFLURANE is contraindicated in patients with known or suspected genetic susceptibility to malignant hyperthermia, or in patients with a known or suspected history of malignant hyperthermia.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Malignant Hyperthermia: In susceptible individuals, potent inhalation anesthetic agents, including sevoflurane, may trigger a skeletal muscle hypermetabolic state leading to high oxygen demand and the clinical syndrome known as malignant hyperthermia.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Use of inhaled anesthetic agents has been associated with rare increases in serum potassium levels that have resulted in cardiac arrhythmias and death in pediatric patients during the postoperative period. Patients with latent as well as overt neuromuscular disease, particularly Duchenne muscular dystrophy, appear to be most vulnerable.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"sevoflurane_20230402_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/sevoflurane_20230402_HCSC.pdf\">sevoflurane product monograph</a></p>\n"
+   }
+  },
+  {
+   "objCls": "Label Annotation",
+   "id": "PA166129516",
+   "name": "Annotation of HCSC Label for desflurane and CACNA1S, RYR1",
+   "alternateDrugAvailable": true,
+   "cancerGenome": false,
+   "crossReferences": [],
+   "dosingInformation": false,
+   "history": [
+    {
+     "id": 1452055241,
+     "date": "2023-03-31T17:25:25.552-07:00",
+     "description": "updated text",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1452595304,
+     "date": "2024-09-19T11:59:24.444-07:00",
+     "description": "replaced label, added Pediatric tag and info",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "indication": false,
+   "labelApplications": [],
+   "labelDocumentAvailable": true,
+   "literature": [
+    {
+     "id": 15165962,
+     "title": "Drugs@HCSC: Drug Product SUPRANE (desflurane), Baxter Corporation",
+     "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=43455",
+     "crossReferences": [
+      {
+       "id": 1452595320,
+       "resource": "URL",
+       "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=43455",
+       "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=43455"
+      }
+     ],
+     "objCls": "Literature",
+     "terms": [
+      {
+       "id": 1452267780,
+       "resource": "ClinPGx Tags",
+       "term": "Has PGx",
+       "termId": "pgkbTags:1452267780"
+      }
+     ],
+     "type": "Drug Label"
+    }
+   ],
+   "otherPrescribingGuidance": false,
+   "pediatric": true,
+   "pediatricMarkdown": {
+    "id": 1452595303,
+    "html": "<blockquote class=\"blockquote\">\n<p>SUPRANE (desflurane) is indicated as an inhalation agent for maintenance of general anesthesia following induction with agents other than SUPRANE (desflurane) and subsequent endotracheal intubation in pediatric patients.</p>\n</blockquote>\n"
+   },
+   "pgxRelated": true,
+   "prescribingGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "prescribingMarkdown": {
+    "id": 1452055240,
+    "html": "<blockquote class=\"blockquote\">\n<p><strong>SUPRANE (desflurane) anesthesia is contraindicated in subjects known to be susceptible to MH.</strong> In susceptible individuals, SUPRANE (desflurane) anesthesia may trigger a skeletal muscle hypermetabolic state leading to high oxygen demand and the clinical syndrome known as malignant hyperthermia. [...] Fatal outcome of malignant hyperthermia has been reported with desflurane.</p>\n</blockquote>\n"
+   },
+   "relatedAlleles": [],
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA164749136",
+     "name": "desflurane"
+    }
+   ],
+   "relatedGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "source": "HCSC",
+   "summaryMarkdown": {
+    "id": 1447982381,
+    "html": "<p>Desflurane (SUPRANE) is a potent (volatile) inhalational anesthetic used to induce or maintain general anesthesia. The HCSC-approved product monograph warns that individuals with a genetic predisposition to malignant hyperthermia, or patients with Duchenne Muscular Dystrophy, are at greater risk of developing malignant hyperthermia or hyperkaelemia, respectively, if administered desflurane.</p>\n<p>Specific variants in the <em>RYR1</em> and <em>CACNA1S</em> genes are associated with risk of malignant hyperthermia in individuals administered potent inhalational anesthetics, such as desflurane. Although the product monograph for desflurane (SUPRANE) does not specifically mention genetic testing, it states that desflurane is contraindicated in individuals with a genetic predisposition to malignant hyperthermia.</p>\n"
+   },
+   "testing": {
+    "id": 1183672111,
+    "resource": "Genetic Testing Level",
+    "synonyms": [],
+    "term": "Actionable PGx",
+    "termId": "geneTestLevel:1183672111",
+    "valid": true
+   },
+   "textMarkdown": {
+    "id": 1447982380,
+    "html": "<p>The HCSC product monograph warns that individuals with a genetic predisposition to malignant hyperthermia are at an elevated risk of developing malignant hyperthermia, and that patients with Duchenne's Muscular Dystrophy are at an elevated risk of developing hyperkaelemia if administered desflurane, or other potent inhalational anesthetics.</p>\n<p>Excerpts from the desflurane (SUPRANE) product monograph:</p>\n<blockquote class=\"blockquote\">\n<p><strong>CONTRAINDICATIONS</strong> [...]</p>\n<ul>\n<li>Known or suspected genetic susceptibility to malignant hyperthermia or in patients with a history of malignant hyperthermia</li>\n</ul>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>SUPRANE (desflurane) may trigger Malignant Hyperthermia in susceptible individuals and fatal outcomes have been reported</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>SUPRANE (desflurane) use may lead to Perioperative Hyperkalemia in patients with neuromuscular disorders</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p><strong>Perioperative Hyperkalemia:</strong> Use of inhaled anesthetic agents, including desflurane, has been associated with rare increases in serum potassium levels that have resulted in cardiac arrhythmias, some fatal, in patients during the postoperative period. Patients with latent as well as overt muscular dystrophies, particularly Duchenne Muscular Dystrophy, appear to be most vulnerable.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"Desflurane_2024_09_19_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Desflurane_2024_09_19_HCSC.pdf\">desflurane product monograph</a>.</p>\n"
+   }
+  },
+  {
+   "objCls": "Label Annotation",
+   "id": "PA166129518",
+   "name": "Annotation of HCSC Label for isoflurane and CACNA1S, RYR1",
+   "alternateDrugAvailable": true,
+   "cancerGenome": false,
+   "crossReferences": [],
+   "dosingInformation": false,
+   "history": [
+    {
+     "id": 1452055902,
+     "date": "2023-04-01T21:01:20.902-07:00",
+     "description": "updated text",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1452595308,
+     "date": "2024-09-19T12:08:05.143-07:00",
+     "description": "added Pediatric tag and info",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "indication": false,
+   "labelApplications": [],
+   "labelDocumentAvailable": true,
+   "literature": [
+    {
+     "id": 15165982,
+     "title": "Drugs@HCSC: Drug Product Isoflurane USP (isoflurane), Fresenius Kabi Canada Ltd.",
+     "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=51381",
+     "crossReferences": [
+      {
+       "id": 1452595306,
+       "resource": "URL",
+       "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=51381",
+       "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=51381"
+      }
+     ],
+     "objCls": "Literature",
+     "terms": [
+      {
+       "id": 1452267780,
+       "resource": "ClinPGx Tags",
+       "term": "Has PGx",
+       "termId": "pgkbTags:1452267780"
+      }
+     ],
+     "type": "Drug Label"
+    }
+   ],
+   "otherPrescribingGuidance": false,
+   "pediatric": true,
+   "pediatricMarkdown": {
+    "id": 1452595307,
+    "html": "<blockquote class=\"blockquote\">\n<p><strong>INDICATIONS AND CLINICAL USE</strong></p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Isoflurane is indicated for:</p>\n<ul>\n<li>induction and maintenance of general anesthesia. [...]</li>\n</ul>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p><strong>Pediatrics (0 \u2012 16 years of age):</strong>\nMAC values for children up to 5 years of age, including those for preterm neonates, are available. Isoflurane MAC decreases with increasing age, except for both term and preterm neonates, measured approximately at 1 month of age. See table in DOSAGE AND ADMINISTRATION.</p>\n</blockquote>\n"
+   },
+   "pgxRelated": true,
+   "prescribingGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "prescribingMarkdown": {
+    "id": 1452055901,
+    "html": "<blockquote class=\"blockquote\">\n<p>Isoflurane is contraindicated in patients with known or suspected genetic susceptibility to malignant hyperthermia, or with a history of malignant hyperthermia.</p>\n</blockquote>\n"
+   },
+   "relatedAlleles": [],
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA450106",
+     "name": "isoflurane"
+    }
+   ],
+   "relatedGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "source": "HCSC",
+   "summaryMarkdown": {
+    "id": 1447982431,
+    "html": "<p>Isoflurane is a potent (volatile) inhalational anesthetic used to induce or maintain general anesthesia.  It is contraindicated in patients with known or suspected genetic susceptibility to malignant hyperthermia, or with a history of malignant hyperthermia.</p>\n"
+   },
+   "testing": {
+    "id": 1183672111,
+    "resource": "Genetic Testing Level",
+    "synonyms": [],
+    "term": "Actionable PGx",
+    "termId": "geneTestLevel:1183672111",
+    "valid": true
+   },
+   "textMarkdown": {
+    "id": 1447982430,
+    "html": "<p>The HCSC product monograph warns that individuals with a genetic predisposition to malignant hyperthermia are at an elevated risk of developing malignant hyperthermia, and that patients with Duchenne's Muscular Dystrophy are at an elevated risk of developing hyperkaelemia if administered isoflurane, or other potent inhalational anesthetics.</p>\n<p>Specific variants in the <em>RYR1</em> and <em>CACNA1S</em> genes are associated with risk of malignant hyperthermia in individuals administered potent inhalational anesthetics, such as isoflurane. Although the product monograph for isoflurane does not specifically mention genetic testing, it states that isoflurane is contraindicated in individuals with known to have a genetic predisposition to malignant hyperthermia.</p>\n<p>Excerpts from the isoflurane product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>CONTRAINDICATIONS: Isoflurane is contraindicated in patients with known or suspected genetic susceptibility to malignant hyperthermia, or with a history of malignant hyperthermia.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>In susceptible individuals, ISOFLURANE anesthesia may trigger a skeletal muscle hypermetabolic state leading to high oxygen demand and the clinical syndrome known as malignant hyperthermia.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Use of inhaled anesthetic agents has been associated with rare increases in serum potassium levels that have resulted in cardiac arrhythmias and death in pediatric patients during the postoperative period. Patients with latent as well as overt neuromuscular disease, particularly Duchenne muscular dystrophy, appear to be most vulnerable.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"isoflurane_20230402_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/isoflurane_20230402_HCSC.pdf\">isoflurane product monograph</a></p>\n"
+   }
+  },
+  {
+   "objCls": "Label Annotation",
+   "id": "PA166122970",
+   "name": "Annotation of FDA Label for succinylcholine and BCHE, CACNA1S, RYR1",
+   "alternateDrugAvailable": true,
+   "biomarkerStatus": "On FDA Biomarker List",
+   "cancerGenome": false,
+   "crossReferences": [],
+   "dosingInformation": false,
+   "highlightedLabelLink": "Succinylcholine_20230402_FDA.pdf",
+   "history": [
+    {
+     "id": 1452011314,
+     "date": "2023-02-16T20:59:08.558-08:00",
+     "description": "added prescribing genes",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1452055860,
+     "date": "2023-04-01T20:34:46.580-07:00",
+     "description": "updated text",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1454728200,
+     "date": "2026-04-06T10:54:31.451-07:00",
+     "description": "Added the rs number for atypical cholinesterase",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "indication": false,
+   "labelApplications": [],
+   "labelDocumentAvailable": true,
+   "literature": [
+    {
+     "id": 15101932,
+     "title": "Drugs@FDA: Drug Product Anectine (Succinylcholine Chloride), NDA008453, Sandoz Inc",
+     "_sameAs": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=008453",
+     "crossReferences": [
+      {
+       "id": 1449790301,
+       "resource": "FDA Application",
+       "resourceId": "NDA008453",
+       "_url": "https://www.accessdata.fda.gov/scripts/cder/daf/index.cfm?event=overview.process&varApplNo=008453"
+      }
+     ],
+     "objCls": "Literature",
+     "terms": [
+      {
+       "id": 1452267780,
+       "resource": "ClinPGx Tags",
+       "term": "Has PGx",
+       "termId": "pgkbTags:1452267780"
+      }
+     ],
+     "type": "Drug Label"
+    }
+   ],
+   "otherPrescribingGuidance": true,
+   "pediatric": false,
+   "pgxRelated": true,
+   "prescribingGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA25294",
+     "symbol": "BCHE",
+     "name": "butyrylcholinesterase"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "prescribingMarkdown": {
+    "id": 1450399729,
+    "html": "<p>Excerpts from the succinylcholine chloride (QUELICIN) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is contraindicated in persons with personal or familial history of malignant hyperthermia, skeletal muscle myopathies, and known hypersensitivity to the drug.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is metabolized by plasma cholinesterase and should be used with caution, if at all, in patients known to be or suspected of being homozygous for the atypical plasma cholinesterase gene.</p>\n</blockquote>\n"
+   },
+   "relatedAlleles": [
+    {
+     "objCls": "Variant",
+     "id": "PA166156327",
+     "symbol": "rs1799807",
+     "name": "rs1799807"
+    }
+   ],
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA25294",
+     "symbol": "BCHE",
+     "name": "butyrylcholinesterase"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "source": "FDA",
+   "summaryMarkdown": {
+    "id": 1447982091,
+    "html": "<p>Succinylcholine (QUELICIN) is rapid acting, depolarizing skeletal muscle relaxant indicated as an adjunct to general anesthesia. The label warns that individuals who are carriers of the atypical variant of the plasma cholinesterase gene (<em>BCHE</em>) are at risk of prolonged apnea if administered succinylcholine. The label also notes the risk for malignant hyperthermia.</p>\n"
+   },
+   "testing": {
+    "id": 1183672111,
+    "resource": "Genetic Testing Level",
+    "synonyms": [],
+    "term": "Actionable PGx",
+    "termId": "geneTestLevel:1183672111",
+    "valid": true
+   },
+   "textMarkdown": {
+    "id": 1447982090,
+    "html": "<p>Specific variants in the <em>RYR1</em> and <em>CACNA1S</em> genes are associated with risk of malignant hyperthermia in individuals administered succinylcholine.</p>\n<p>Excerpts from the succinylcholine chloride (QUELICIN) drug label:</p>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is contraindicated in persons with personal or familial history of malignant hyperthermia, skeletal muscle myopathies, and known hypersensitivity to the drug.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>WARNINGS...Succinylcholine is metabolized by plasma cholinesterase and should be used with caution, if at all, in patients known to be or suspected of being homozygous for the atypical plasma cholinesterase gene.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Patients homozygous for atypical plasma cholinesterase gene (1 in 2500 patients) are extremely sensitive to the neuromuscular blocking effect of succinylcholine. In these patients, a 5- to 10-mg test dose of succinylcholine may be administered to evaluate sensitivity to succinylcholine, or neuromuscular blockade may be produced by the cautious administration of a 1-mg/mL solution of succinylcholine by slow IV infusion. Apnea or prolonged muscle paralysis should be treated with controlled respiration.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>The risk of developing malignant hyperthermia increases with the concomitant administration of succinylcholine and volatile anesthetic agents. Anectine can induce malignant hyperthermia in patients with known or suspected susceptibility based on genetic factors or family history, including those with certain inherited ryanodine receptor (RYR1) or dihydropyridine receptor (CACNA1S) variants.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Pharmacogenomics: RYR1 and CACNA1S are polymorphic genes, and multiple pathogenic variants have been associated with malignant hyperthermia susceptibility (MHS) in patients receiving succinylcholine, including Anectine. Case reports as well as ex-vivo studies have identified multiple variants in RYR1 and CACNA1S associated with MHS. Variant pathogenicity should be assessed based on prior clinical experience, functional studies, prevalence information, or other evidence.</p>\n</blockquote>\n<p>For the complete drug label text with sections containing pharmacogenetic information highlighted, see the <a download=\"Succinylcholine_20230402_FDA.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/Succinylcholine_20230402_FDA.pdf\">succinylcholine drug label</a>.</p>\n"
+   }
+  },
+  {
+   "objCls": "Label Annotation",
+   "id": "PA166127713",
+   "name": "Annotation of HCSC Label for succinylcholine and BCHE, CACNA1S, RYR1",
+   "alternateDrugAvailable": true,
+   "cancerGenome": false,
+   "crossReferences": [],
+   "dosingInformation": false,
+   "history": [
+    {
+     "id": 1452055863,
+     "date": "2023-04-01T20:44:44.604-07:00",
+     "description": "updated text",
+     "type": "Update",
+     "version": 0
+    },
+    {
+     "id": 1452599120,
+     "date": "2024-09-19T14:14:30.798-07:00",
+     "description": "added label document, Other Guidance tag",
+     "type": "Update",
+     "version": 0
+    }
+   ],
+   "indication": false,
+   "labelApplications": [],
+   "labelDocumentAvailable": true,
+   "literature": [
+    {
+     "id": 15166042,
+     "title": "Drugs@HCSC: Drug Product Succinylcholine Chloride Injection USP, Hikma Canada Limited",
+     "_sameAs": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=90702",
+     "crossReferences": [
+      {
+       "id": 1452599080,
+       "resource": "URL",
+       "resourceId": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=90702",
+       "_url": "https://health-products.canada.ca/dpd-bdpp/info?lang=eng&code=90702"
+      }
+     ],
+     "objCls": "Literature",
+     "terms": [
+      {
+       "id": 1452267780,
+       "resource": "ClinPGx Tags",
+       "term": "Has PGx",
+       "termId": "pgkbTags:1452267780"
+      }
+     ],
+     "type": "Drug Label"
+    }
+   ],
+   "otherPrescribingGuidance": true,
+   "pediatric": false,
+   "pgxRelated": true,
+   "prescribingGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA25294",
+     "symbol": "BCHE",
+     "name": "butyrylcholinesterase"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "prescribingMarkdown": {
+    "id": 1452055862,
+    "html": "<blockquote class=\"blockquote\">\n<p>Succinylcholine is contraindicated in persons with personal or familial history of malignant hyperthermia, skeletal muscle myopathies, and known hypersensitivity to the drug.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is metabolized by plasma cholinesterase and should be used with caution, if at all, in patients known to be or suspected of being homozygous for the atypical plasma cholinesterase gene.</p>\n</blockquote>\n"
+   },
+   "relatedAlleles": [],
+   "relatedChemicals": [
+    {
+     "objCls": "Chemical",
+     "id": "PA451522",
+     "name": "succinylcholine"
+    }
+   ],
+   "relatedGenes": [
+    {
+     "objCls": "Gene",
+     "id": "PA25294",
+     "symbol": "BCHE",
+     "name": "butyrylcholinesterase"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA85",
+     "symbol": "CACNA1S",
+     "name": "calcium voltage-gated channel subunit alpha1 S"
+    },
+    {
+     "objCls": "Gene",
+     "id": "PA34896",
+     "symbol": "RYR1",
+     "name": "ryanodine receptor 1"
+    }
+   ],
+   "source": "HCSC",
+   "summaryMarkdown": {
+    "id": 1447982349,
+    "html": "<p>The product monograph for succinylcholine notes that it should be used with caution, if at all, in patients know or suspected of being homozygous for the atypical plasma cholinesterase gene (<em>BCHE</em>), due to the risk for prolonged muscle paralysis. It is also contraindicated in persons with personal or familial history of malignant hyperthermia, skeletal muscle myopathies, and known hypersensitivity to the drug.</p>\n"
+   },
+   "testing": {
+    "id": 1183672111,
+    "resource": "Genetic Testing Level",
+    "synonyms": [],
+    "term": "Actionable PGx",
+    "termId": "geneTestLevel:1183672111",
+    "valid": true
+   },
+   "textMarkdown": {
+    "id": 1447982348,
+    "html": "<p>Succinylcholine is a neuromuscular blocking agent indicated as an adjunct to general anesthesia. Specific variants in the RYR1 and CACNA1S genes are associated with risk of malignant hyperthermia in individuals administered potent inhalational anesthetics, such as succinylcholine. Although the product monograph for succinylcholine does not specifically mention genetic testing, it states that succinylcholine is contraindicated in individuals with known to have a genetic predisposition to malignant hyperthermia.</p>\n<p>Excerpts from the succinylcholine product monograph:</p>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is contraindicated in persons with personal or familial history of malignant hyperthermia, skeletal muscle myopathies, and known hypersensitivity to the drug.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine administration has been associated with acute onset of malignant hyperthermia, a potentially fatal hypermetabolic state of skeletal muscle. The risk of developing malignant hyperthermia following succinylcholine administration increases with the concomitant administration of volatile anesthetics. Malignant hyperthermia frequently presents as intractable spasm of the jaw muscles (masseter spasm) which may progress to generalized rigidity, increased oxygen demand, tachycardia, tachypnea and profound hyperpyrexia.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Succinylcholine is metabolized by plasma cholinesterase and should be used with caution, if at all, in patients known to be or suspected of being homozygous for the atypical plasma cholinesterase gene.</p>\n</blockquote>\n<blockquote class=\"blockquote\">\n<p>Patients homozygous for atypical plasma cholinesterase gene (1 in 2500 patients) are extremely sensitive to the neuromuscular blocking effect of succinylcholine. In these patients, a 5 to 10 mg test dose of succinylcholine may be administered, or neuromuscular blockade may be produced by the cautious administration of a 1 mg/mL solution of succinylcholine by intravenous drip. Apnea or prolonged muscle paralysis should be treated with controlled respiration.</p>\n</blockquote>\n<p>For the complete product monograph text with sections containing pharmacogenetic information highlighted, see the <a download=\"succinylcholine_20230402_HCSC.pdf\" href=\"https://api.clinpgx.org/v1/download/file/attachment/succinylcholine_20230402_HCSC.pdf\">succinylcholine product monograph</a>.</p>\n"
+   }
+  }
+ ],
+ "_note": "truncated to first 5 of 8 records; adapter uses at most 5"
+}

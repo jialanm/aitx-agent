@@ -1,0 +1,96 @@
+{
+ "data": [
+  {
+   "objCls": "Gene",
+   "id": "PA34896",
+   "symbol": "RYR1",
+   "name": "ryanodine receptor 1",
+   "alleleFunctionSource": "CPIC",
+   "alleleType": "Named Variants",
+   "amp": false,
+   "buildVersion": "GRCh38.p7",
+   "cbStart": "q13.2",
+   "cbStop": "q13.2",
+   "chr": {
+    "objCls": "Chromosome",
+    "id": "PA520",
+    "name": "chr19"
+   },
+   "chrStartPosB37": 38924340,
+   "chrStartPosB38": 38433700,
+   "chrStopPosB37": 39078204,
+   "chrStopPosB38": 38587564,
+   "cpicGene": true,
+   "hasNonStandardHaplotypes": false,
+   "hideHaplotypes": true,
+   "history": [],
+   "pharmVarGene": false,
+   "strand": "plus",
+   "vipCitation": {
+    "id": 15096439,
+    "title": "PharmGKB summary: very important pharmacogene information for RYR1.",
+    "_sameAs": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4738161",
+    "authors": [
+     "Alvarellos Maria L",
+     "Krauss Ronald M",
+     "Wilke Russell A",
+     "Altman Russ B",
+     "Klein Teri E"
+    ],
+    "crossReferences": [
+     {
+      "id": 1449283817,
+      "resource": "PubMed Central",
+      "resourceId": "PMC4738161",
+      "_url": "https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4738161"
+     },
+     {
+      "id": 1449283816,
+      "resource": "PubMed",
+      "resourceId": "26709912",
+      "_url": "https://www.ncbi.nlm.nih.gov/pubmed/26709912"
+     },
+     {
+      "id": 1449283818,
+      "resource": "DOI",
+      "resourceId": "10.1097/FPC.0000000000000198",
+      "_url": "http://dx.doi.org/10.1097%2FFPC.0000000000000198"
+     }
+    ],
+    "day": -1,
+    "journal": "Pharmacogenetics and genomics",
+    "month": 3,
+    "objCls": "Literature",
+    "page": "138-44",
+    "pediatric": false,
+    "pgkbPublication": true,
+    "pubDate": "2016-03-01T00:00:00-08:00",
+    "pubmedMeshTerms": [],
+    "terms": [
+     {
+      "id": 1454108640,
+      "resource": "ClinPGx Tags",
+      "term": "PharmGKB",
+      "termId": "pgkbTags:1454108640"
+     },
+     {
+      "id": 1451577482,
+      "resource": "PGx Paper Types",
+      "term": "Review",
+      "termId": "pgxPaperTypes:1451577482"
+     }
+    ],
+    "type": "Literature",
+    "volume": "26",
+    "year": 2016
+   },
+   "vipId": "PA166169452",
+   "vipSummary": {
+    "id": 1448639409,
+    "html": "<p><em>RYR1</em> encodes the ryanodine receptor isoform 1, a calcium channel. It plays a critical role in calcium release and muscle contraction in skeletal muscle and is the primary locus for malignant hyperthermia susceptibility, a pharmacogenetic condition.</p>\n"
+   },
+   "vipTier": "Tier 1"
+  }
+ ],
+ "status": "success"
+}
