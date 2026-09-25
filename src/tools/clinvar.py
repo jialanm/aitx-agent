@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -57,12 +57,12 @@ class ClinVarTool(BaseTool):
             # Step 1: search for variant IDs
             resp = requests.get(
                 ESEARCH_URL,
-                params={
-                    "db": "clinvar",
-                    "term": query,
-                    "retmode": "json",
-                    "retmax": 5,
-                },
+                params=ncbi_params(
+                    db="clinvar",
+                    term=query,
+                    retmode="json",
+                    retmax=5,
+                ),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -73,12 +73,12 @@ class ClinVarTool(BaseTool):
                 # Try broader search with just gene
                 resp2 = requests.get(
                     ESEARCH_URL,
-                    params={
-                        "db": "clinvar",
-                        "term": f"{gene}[gene] AND {variant.split('.')[0] if '.' in variant else variant}",
-                        "retmode": "json",
-                        "retmax": 5,
-                    },
+                    params=ncbi_params(
+                        db="clinvar",
+                        term=f"{gene}[gene] AND {variant.split('.')[0] if '.' in variant else variant}",
+                        retmode="json",
+                        retmax=5,
+                    ),
                     timeout=TIMEOUT,
                 )
                 resp2.raise_for_status()
@@ -94,11 +94,11 @@ class ClinVarTool(BaseTool):
             # Step 2: get summaries
             resp3 = requests.get(
                 ESUMMARY_URL,
-                params={
-                    "db": "clinvar",
-                    "id": ",".join(id_list[:5]),
-                    "retmode": "json",
-                },
+                params=ncbi_params(
+                    db="clinvar",
+                    id=",".join(id_list[:5]),
+                    retmode="json",
+                ),
                 timeout=TIMEOUT,
             )
             resp3.raise_for_status()
@@ -142,4 +142,4 @@ class ClinVarTool(BaseTool):
             return summary[:2000], evidence
 
         except requests.RequestException as e:
-            return f"ClinVar API error: {e}", evidence
+            return redact_ncbi_key(f"ClinVar API error: {e}"), evidence

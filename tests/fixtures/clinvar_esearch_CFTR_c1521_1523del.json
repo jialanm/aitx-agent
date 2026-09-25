@@ -1,0 +1,35 @@
+{
+ "header": {
+  "type": "esearch",
+  "version": "0.3"
+ },
+ "esearchresult": {
+  "count": "14",
+  "retmax": "5",
+  "retstart": "0",
+  "idlist": [
+   "1705126",
+   "634837",
+   "550500",
+   "517253",
+   "495928"
+  ],
+  "translationset": [],
+  "translationstack": [
+   {
+    "term": "CFTR[gene]",
+    "field": "gene",
+    "count": "6494",
+    "explode": "N"
+   },
+   {
+    "term": "c0x2e15210x5f1523del[All Fields]",
+    "field": "All Fields",
+    "count": "17",
+    "explode": "N"
+   },
+   "AND"
+  ],
+  "querytranslation": "CFTR[gene] AND c0x2e15210x5f1523del[All Fields]"
+ }
+}

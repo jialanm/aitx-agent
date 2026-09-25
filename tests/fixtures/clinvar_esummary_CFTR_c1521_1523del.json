@@ -1,0 +1,1234 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "1705126",
+   "634837",
+   "550500",
+   "517253",
+   "495928"
+  ],
+  "1705126": {
+   "uid": "1705126",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV001705126",
+   "accession_version": "VCV001705126.12",
+   "title": "NM_000492.4(CFTR):c.4264C>T (p.Arg1422Trp)",
+   "variation_set": [
+    {
+     "measure_id": "68602",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA327471"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "373172017"
+      }
+     ],
+     "variation_name": "NM_000492.4(CFTR):c.4264C>T (p.Arg1422Trp)",
+     "cdna_change": "c.4264C>T",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117666929",
+       "stop": "117666929",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117666929",
+       "display_stop": "117666929",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117306983",
+       "stop": "117306983",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117306983",
+       "display_stop": "117306983",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00005",
+       "minor_allele": ""
+      },
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00003",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "NHLBI Exome Sequencing Project (ESP) Exome Variant Server",
+       "value": "0.00008",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000007.14:117666928:C:T",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV003781918",
+     "SCV002627784",
+     "SCV005625715",
+     "SCV007332005",
+     "SCV002572114"
+    ],
+    "rcv": [
+     "RCV002281756",
+     "RCV002332956",
+     "RCV004999685"
+    ]
+   },
+   "germline_classification": {
+    "description": "Uncertain significance",
+    "last_evaluated": "2026/05/19 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "CN169374"
+       }
+      ],
+      "trait_name": "not specified"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "CFTR",
+   "chr_sort": "07",
+   "location_sort": "00000000000117666929",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    },
+    {
+     "symbol": "LOC111674477",
+     "geneid": "111674477",
+     "strand": "+",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "missense variant"
+   ],
+   "protein_change": "R1422W",
+   "fda_recognized_database": ""
+  },
+  "634837": {
+   "uid": "634837",
+   "obj_type": "Haplotype",
+   "accession": "VCV000634837",
+   "accession_version": "VCV000634837.2",
+   "title": "NM_000492.3(CFTR):c.[1521_1523delCTT;3080T>C]",
+   "variation_set": [
+    {
+     "measure_id": "22144",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinPGx Clinical Annotation",
+       "db_id": "981755820"
+      },
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA118639"
+      },
+      {
+       "db_source": "Genetic Testing Registry (GTR)",
+       "db_id": "GTR000028916"
+      },
+      {
+       "db_source": "Genetic Testing Registry (GTR)",
+       "db_id": "GTR000074114"
+      },
+      {
+       "db_source": "Genetic Testing Registry (GTR)",
+       "db_id": "GTR000500233"
+      },
+      {
+       "db_source": "Genetic Testing Registry (GTR)",
+       "db_id": "GTR000562170"
+      },
+      {
+       "db_source": "Genetic Testing Registry (GTR)",
+       "db_id": "GTR000597400"
+      },
+      {
+       "db_source": "OMIM",
+       "db_id": "602421.0001"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "113993960"
+      },
+      {
+       "db_source": "ClinVar",
+       "db_id": "634837"
+      }
+     ],
+     "variation_name": "NM_000492.3(CFTR):c.1521_1523del (p.Phe508del)",
+     "cdna_change": "c.1521_1523del",
+     "aliases": [
+      "F508del",
+      "deltaF508",
+      "F508delF",
+      "DF508",
+      "Phe508del",
+      "DeltaF508",
+      "[delta]F508"
+     ],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117559591",
+       "stop": "117559593",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117559591",
+       "display_stop": "117559593",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117199645",
+       "stop": "117199647",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117199645",
+       "display_stop": "117199647",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "1000 Genomes Project",
+       "value": "0.00399",
+       "minor_allele": "T"
+      }
+     ],
+     "variant_type": "Deletion",
+     "canonical_spdi": "NC_000007.14:117559590:TCTT:T",
+     "common_name": ""
+    },
+    {
+     "measure_id": "44524",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinVar",
+       "db_id": "634837"
+      },
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA146697"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "1800112"
+      }
+     ],
+     "variation_name": "NM_000492.4(CFTR):c.3080T>C (p.Ile1027Thr)",
+     "cdna_change": "c.3080T>C",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117610610",
+       "stop": "117610610",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117610610",
+       "display_stop": "117610610",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117250664",
+       "stop": "117250664",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117250664",
+       "display_stop": "117250664",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00019",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00025",
+       "minor_allele": ""
+      },
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00033",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00038",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00039",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00054",
+       "minor_allele": ""
+      },
+      {
+       "source": "NHLBI Exome Sequencing Project (ESP) Exome Variant Server",
+       "value": "0.00315",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000007.14:117610609:T:C",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV000924263"
+    ],
+    "rcv": [
+     "RCV000785641"
+    ]
+   },
+   "germline_classification": {
+    "description": "Pathogenic",
+    "last_evaluated": "2019/03/11 00:00",
+    "review_status": "reviewed by expert panel",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "CFTR",
+   "chr_sort": "07",
+   "location_sort": "00000000000117559591",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    },
+    {
+     "symbol": "CFTR-AS1",
+     "geneid": "111082987",
+     "strand": "-",
+     "source": "submitted"
+    },
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    },
+    {
+     "symbol": "CFTR-AS2",
+     "geneid": "140577507",
+     "strand": "-",
+     "source": "submitted"
+    },
+    {
+     "symbol": "LOC111674472",
+     "geneid": "111674472",
+     "strand": "+",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "inframe_deletion",
+    "missense variant"
+   ],
+   "protein_change": "",
+   "fda_recognized_database": ""
+  },
+  "550500": {
+   "uid": "550500",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV000550500",
+   "accession_version": "VCV000550500.27",
+   "title": "NM_000492.4(CFTR):c.2057C>A (p.Ser686Tyr)",
+   "variation_set": [
+    {
+     "measure_id": "544451",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA4451135"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "201444561"
+      }
+     ],
+     "variation_name": "NM_000492.4(CFTR):c.2057C>A (p.Ser686Tyr)",
+     "cdna_change": "c.2057C>A",
+     "aliases": [
+      "p.Ser686Tyr"
+     ],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117592224",
+       "stop": "117592224",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117592224",
+       "display_stop": "117592224",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117232278",
+       "stop": "117232278",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117232278",
+       "display_stop": "117232278",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00005",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00007",
+       "minor_allele": ""
+      },
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00008",
+       "minor_allele": ""
+      },
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00008",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00009",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000007.14:117592223:C:A",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV001325750",
+     "SCV002027437",
+     "SCV002080705",
+     "SCV000886360",
+     "SCV004224076",
+     "SCV001174947",
+     "SCV005195613",
+     "SCV003263368",
+     "SCV000789349",
+     "SCV000917186",
+     "SCV007702636"
+    ],
+    "rcv": [
+     "RCV000665258",
+     "RCV000780141",
+     "RCV001163687",
+     "RCV003480750"
+    ]
+   },
+   "germline_classification": {
+    "description": "Uncertain significance",
+    "last_evaluated": "2025/08/15 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C5924204"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:7770004"
+       }
+      ],
+      "trait_name": "CFTR-related disorder"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "CN169374"
+       }
+      ],
+      "trait_name": "not specified"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "CFTR",
+   "chr_sort": "07",
+   "location_sort": "00000000000117592224",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "missense variant"
+   ],
+   "protein_change": "S686Y",
+   "fda_recognized_database": ""
+  },
+  "517253": {
+   "uid": "517253",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV000517253",
+   "accession_version": "VCV000517253.23",
+   "title": "NM_000492.4(CFTR):c.3238A>C (p.Lys1080Gln)",
+   "variation_set": [
+    {
+     "measure_id": "496487",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA4451411"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "766126240"
+      }
+     ],
+     "variation_name": "NM_000492.4(CFTR):c.3238A>C (p.Lys1080Gln)",
+     "cdna_change": "c.3238A>C",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117611679",
+       "stop": "117611679",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117611679",
+       "display_stop": "117611679",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117251733",
+       "stop": "117251733",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117251733",
+       "display_stop": "117251733",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00001",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000007.14:117611678:A:C",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV000731437",
+     "SCV001461257",
+     "SCV002027489",
+     "SCV005362414",
+     "SCV000835645",
+     "SCV001470496",
+     "SCV002611346",
+     "SCV005185398",
+     "SCV007702738"
+    ],
+    "rcv": [
+     "RCV000616712",
+     "RCV000706586",
+     "RCV001284617",
+     "RCV004735677"
+    ]
+   },
+   "germline_classification": {
+    "description": "Uncertain significance",
+    "last_evaluated": "2026/02/16 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "CN169374"
+       }
+      ],
+      "trait_name": "not specified"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "LOC111674472",
+   "chr_sort": "07",
+   "location_sort": "00000000000117611679",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "LOC111674472",
+     "geneid": "111674472",
+     "strand": "+",
+     "source": "submitted"
+    },
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    },
+    {
+     "symbol": "CFTR-AS2",
+     "geneid": "140577507",
+     "strand": "-",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "missense variant"
+   ],
+   "protein_change": "K1080Q",
+   "fda_recognized_database": ""
+  },
+  "495928": {
+   "uid": "495928",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV000495928",
+   "accession_version": "VCV000495928.44",
+   "title": "NM_000492.4(CFTR):c.31G>A (p.Val11Ile)",
+   "variation_set": [
+    {
+     "measure_id": "487224",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA4450601"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "1800072"
+      }
+     ],
+     "variation_name": "NM_000492.4(CFTR):c.31G>A (p.Val11Ile)",
+     "cdna_change": "c.31G>A",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117480125",
+       "stop": "117480125",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117480125",
+       "display_stop": "117480125",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "7",
+       "band": "7q31.2",
+       "start": "117120179",
+       "stop": "117120179",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "117120179",
+       "display_stop": "117120179",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00018",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00019",
+       "minor_allele": ""
+      },
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00024",
+       "minor_allele": ""
+      },
+      {
+       "source": "NHLBI Exome Sequencing Project (ESP) Exome Variant Server",
+       "value": "0.00031",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000007.14:117480124:G:A",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV001160188",
+     "SCV001464000",
+     "SCV002027322",
+     "SCV002529712",
+     "SCV002794171",
+     "SCV004213515",
+     "SCV002046411",
+     "SCV005201946",
+     "SCV004722559",
+     "SCV000751416",
+     "SCV001180474",
+     "SCV001714820",
+     "SCV000696956",
+     "SCV006583098",
+     "SCV007708310"
+    ],
+    "rcv": [
+     "RCV000630460",
+     "RCV001002302",
+     "RCV001508582",
+     "RCV002255467",
+     "RCV002491166",
+     "RCV004530642",
+     "RCV003471941"
+    ]
+   },
+   "germline_classification": {
+    "description": "Uncertain significance",
+    "last_evaluated": "2026/06/01 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "CN169374"
+       }
+      ],
+      "trait_name": "not specified"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "60033"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C2749757"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0008887"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "211400"
+       }
+      ],
+      "trait_name": "Bronchiectasis with or without elevated sweat chloride 1"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "676"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0238339"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0008185"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "167800"
+       }
+      ],
+      "trait_name": "Hereditary pancreatitis"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "48"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0403814"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0010178"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "277180"
+       }
+      ],
+      "trait_name": "Congenital bilateral aplasia of vas deferens from CFTR mutation"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "676"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0238339"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0008185"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "167800"
+       }
+      ],
+      "trait_name": "Hereditary pancreatitis"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "60033"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C2749757"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0008887"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "211400"
+       }
+      ],
+      "trait_name": "Bronchiectasis with or without elevated sweat chloride 1"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "586"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0010674"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009061"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "219700"
+       }
+      ],
+      "trait_name": "Cystic fibrosis"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "CFTR",
+   "chr_sort": "07",
+   "location_sort": "00000000000117480125",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "CFTR",
+     "geneid": "1080",
+     "strand": "+",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "missense variant"
+   ],
+   "protein_change": "V11I",
+   "fda_recognized_database": ""
+  }
+ }
+}
