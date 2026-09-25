@@ -11,6 +11,9 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 MODEL_ID = "Qwen/Qwen3-8B"
 
+# Human-readable precision labels, recorded in eval run metadata.
+PRECISION_LABELS = {False: "bfloat16", True: "nf4 4-bit (bitsandbytes, double quant)"}
+
 # Regex for extracting tool calls from model output
 _TOOL_CALL_RE = re.compile(
     r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL
@@ -87,9 +90,13 @@ class RepetitionStoppingCriteria(StoppingCriteria):
 
 def load_model(
     model_id: str = MODEL_ID,
-    quantize: bool = True,
+    quantize: bool = False,
 ) -> tuple:
-    """Load Qwen3-8B with optional 4-bit quantization.
+    """Load the model in bfloat16, or in 4-bit NF4 if quantize is set.
+
+    Full precision is the default so that eval numbers reflect the model
+    itself, not rounding from quantization. The 4-bit path is kept for a
+    measured comparison and for hardware that cannot hold the full weights.
 
     Returns:
         (model, tokenizer) tuple

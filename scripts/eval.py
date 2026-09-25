@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agent import Agent
 from src.evaluation import file_sha256, is_exact_match, load_answers, load_questions
-from src.model import MODEL_ID, load_model
+from src.model import MODEL_ID, PRECISION_LABELS, load_model
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
 from src.tools.clinical_trials import ClinicalTrialsTool
@@ -38,7 +38,7 @@ DEFAULT_QUESTIONS = "data/phase1_questions.json"
 DEFAULT_ANSWERS = "data/phase1_answers.json"
 
 
-def run_metadata(questions_path: str, answers_path: str | None) -> dict:
+def run_metadata(questions_path: str, answers_path: str | None, quantize: bool = False) -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -50,6 +50,7 @@ def run_metadata(questions_path: str, answers_path: str | None) -> dict:
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "git_commit": commit,
         "model_id": MODEL_ID,
+        "precision": PRECISION_LABELS[quantize],
         "decoding": "greedy (do_sample=False)",
         "questions_path": questions_path,
         "questions_sha256": file_sha256(questions_path),
@@ -93,6 +94,7 @@ def validate_output(output_dict: dict) -> list[str]:
 def run_evaluation(
     validation_path: str = DEFAULT_QUESTIONS,
     answers_path: str | None = DEFAULT_ANSWERS,
+    quantize: bool = False,
     output_path: str = "data/eval_results.json",
     outputs_path: str = "data/eval_outputs.json",
 ):
@@ -105,7 +107,7 @@ def run_evaluation(
         outputs_path: Path to save spec-compliant TaskOutput JSONs.
     """
     print("Loading model...")
-    model, tokenizer = load_model()
+    model, tokenizer = load_model(quantize=quantize)
 
     tools = [
         ClinVarTool(),
@@ -122,7 +124,7 @@ def run_evaluation(
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
-    metadata = run_metadata(validation_path, answers_path)
+    metadata = run_metadata(validation_path, answers_path, quantize)
 
     # Answers are loaded separately and consulted only after the agent has
     # answered. The question records passed to the agent never contain them.
@@ -274,8 +276,10 @@ if __name__ == "__main__":
     parser.add_argument("--validation", default=DEFAULT_QUESTIONS, help="Path to question set JSON")
     parser.add_argument("--answers", default=DEFAULT_ANSWERS,
                         help="Path to answers JSON ({id, answer_expected} records); pass '' to run unscored")
+    parser.add_argument("--quantize", action="store_true",
+                        help="Load the model in 4-bit NF4 instead of bfloat16 (recorded in run metadata)")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.answers or None, args.output, args.outputs)
+    run_evaluation(args.validation, args.answers or None, args.quantize, args.output, args.outputs)

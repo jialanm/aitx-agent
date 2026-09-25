@@ -46,7 +46,8 @@ No API keys are required. All calls run at each service's unauthenticated rate l
 ## Setup
 
 Requires [uv](https://docs.astral.sh/uv/) and Python 3.10 or newer. Running the
-agent needs a GPU with roughly 6 GB of VRAM for the 4-bit model; the unit tests do not.
+agent loads Qwen3-8B in bfloat16, which needs a GPU with at least 24 GB of memory
+(about 16.4 GB for the weights plus working memory). The unit tests need no GPU.
 
 ```bash
 uv sync                      # creates .venv and installs dependencies
