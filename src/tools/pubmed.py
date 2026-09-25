@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -56,13 +56,13 @@ class PubMedTool(BaseTool):
             # Step 1: search for PMIDs
             resp = requests.get(
                 ESEARCH_URL,
-                params={
-                    "db": "pubmed",
-                    "term": query,
-                    "retmode": "json",
-                    "retmax": max_results,
-                    "sort": "relevance",
-                },
+                params=ncbi_params(
+                    db="pubmed",
+                    term=query,
+                    retmode="json",
+                    retmax=max_results,
+                    sort="relevance",
+                ),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -77,11 +77,11 @@ class PubMedTool(BaseTool):
             # Step 2: get summaries
             resp2 = requests.get(
                 ESUMMARY_URL,
-                params={
-                    "db": "pubmed",
-                    "id": ",".join(id_list),
-                    "retmode": "json",
-                },
+                params=ncbi_params(
+                    db="pubmed",
+                    id=",".join(id_list),
+                    retmode="json",
+                ),
                 timeout=TIMEOUT,
             )
             resp2.raise_for_status()
@@ -117,4 +117,4 @@ class PubMedTool(BaseTool):
             return summary[:2000], evidence
 
         except requests.RequestException as e:
-            return f"PubMed API error: {e}", evidence
+            return redact_ncbi_key(f"PubMed API error: {e}"), evidence

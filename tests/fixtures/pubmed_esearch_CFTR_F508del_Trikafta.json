@@ -1,0 +1,33 @@
+{
+ "header": {
+  "type": "esearch",
+  "version": "0.3"
+ },
+ "esearchresult": {
+  "count": "106",
+  "retmax": "5",
+  "retstart": "0",
+  "idlist": [
+   "34268058",
+   "38870301",
+   "39756424",
+   "34266939",
+   "39693469"
+  ],
+  "translationset": [
+   {
+    "from": "CFTR",
+    "to": "\"cftr protein, human\"[Supplementary Concept] OR \"cftr protein, human\"[All Fields] OR \"cftr\"[All Fields]"
+   },
+   {
+    "from": "Trikafta",
+    "to": "\"elexacaftor, ivacaftor, tezacaftor drug combination\"[Supplementary Concept] OR \"elexacaftor, ivacaftor, tezacaftor drug combination\"[All Fields] OR \"trikafta\"[All Fields]"
+   },
+   {
+    "from": "treatment",
+    "to": "\"therapeutics\"[MeSH Terms] OR \"therapeutics\"[All Fields] OR \"treatments\"[All Fields] OR \"therapy\"[Subheading] OR \"therapy\"[All Fields] OR \"treatment\"[All Fields] OR \"treatment's\"[All Fields]"
+   }
+  ],
+  "querytranslation": "(\"cftr protein human\"[Supplementary Concept] OR \"cftr protein human\"[All Fields] OR \"cftr\"[All Fields]) AND \"F508del\"[All Fields] AND (\"elexacaftor ivacaftor tezacaftor drug combination\"[Supplementary Concept] OR \"elexacaftor ivacaftor tezacaftor drug combination\"[All Fields] OR \"trikafta\"[All Fields]) AND (\"therapeutics\"[MeSH Terms] OR \"therapeutics\"[All Fields] OR \"treatments\"[All Fields] OR \"therapy\"[MeSH Subheading] OR \"therapy\"[All Fields] OR \"treatment\"[All Fields] OR \"treatment s\"[All Fields])"
+ }
+}

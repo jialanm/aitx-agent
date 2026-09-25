@@ -1,0 +1,852 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "34268058",
+   "38870301",
+   "39756424",
+   "34266939",
+   "39693469"
+  ],
+  "34268058": {
+   "uid": "34268058",
+   "pubdate": "2021 Jul",
+   "epubdate": "2021 Jul 3",
+   "source": "Cureus",
+   "authors": [
+    {
+     "name": "Zaher A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "ElSaygh J",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Elsori D",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "ElSaygh H",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sanni A",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Sanni A",
+   "title": "A Review of Trikafta: Triple Cystic Fibrosis Transmembrane Conductance Regulator (CFTR) Modulator Therapy.",
+   "sorttitle": "review of trikafta triple cystic fibrosis transmembrane conductance regulator cftr modulator therapy",
+   "volume": "13",
+   "issue": "7",
+   "pages": "e16144",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "101596737",
+   "issn": "2168-8184",
+   "essn": "2168-8184",
+   "pubtype": [
+    "Journal Article",
+    "Review"
+   ],
+   "recordstatus": "PubMed",
+   "pubstatus": "258",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "34268058"
+    },
+    {
+     "idtype": "pmc",
+     "idtypen": 8,
+     "value": "PMC8266292"
+    },
+    {
+     "idtype": "pmcid",
+     "idtypen": 5,
+     "value": "pmc-id: PMC8266292;"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.7759/cureus.16144"
+    }
+   ],
+   "history": [
+    {
+     "pubstatus": "accepted",
+     "date": "2021/07/03 00:00"
+    },
+    {
+     "pubstatus": "entrez",
+     "date": "2021/07/16 06:39"
+    },
+    {
+     "pubstatus": "pubmed",
+     "date": "2021/07/17 06:00"
+    },
+    {
+     "pubstatus": "medline",
+     "date": "2021/07/17 06:01"
+    },
+    {
+     "pubstatus": "pmc-release",
+     "date": "2021/07/03 00:00"
+    }
+   ],
+   "references": [],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": 25,
+   "fulljournalname": "Cureus",
+   "elocationid": "doi: 10.7759/cureus.16144",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2021/07/03 00:00",
+   "sortfirstauthor": "Zaher A",
+   "vernaculartitle": ""
+  },
+  "38870301": {
+   "uid": "38870301",
+   "pubdate": "2024 Jun 14",
+   "epubdate": "2024 Jun 13",
+   "source": "Science",
+   "authors": [
+    {
+     "name": "Sun Y",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Chatterjee S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lian X",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Traylor Z",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sattiraju SR",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Xiao Y",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Dilliard SA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sung YC",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Kim M",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lee SM",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Moore S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wang X",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Zhang D",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wu S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Basak P",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wang J",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Liu J",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Mann RJ",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "LePage DF",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Jiang W",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Abid S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Hennig M",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Martinez A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Wustman BA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lockhart DJ",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Jain R",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Conlon RA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Drumm ML",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Hodges CA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Siegwart DJ",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Siegwart DJ",
+   "title": "In vivo editing of lung stem cells for durable gene correction in mice.",
+   "sorttitle": "in vivo editing of lung stem cells for durable gene correction in mice",
+   "volume": "384",
+   "issue": "6701",
+   "pages": "1196-1202",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "0404511",
+   "issn": "0036-8075",
+   "essn": "1095-9203",
+   "pubtype": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't",
+    "Research Support, N.I.H., Extramural"
+   ],
+   "recordstatus": "PubMed - indexed for MEDLINE",
+   "pubstatus": "256",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "38870301"
+    },
+    {
+     "idtype": "mid",
+     "idtypen": 8,
+     "value": "NIHMS2061075"
+    },
+    {
+     "idtype": "pmc",
+     "idtypen": 8,
+     "value": "PMC12208706"
+    },
+    {
+     "idtype": "pmcid",
+     "idtypen": 5,
+     "value": "pmc-id: PMC12208706;manuscript-id: NIHMS2061075;"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.1126/science.adk9428"
+    }
+   ],
+   "history": [
+    {
+     "pubstatus": "medline",
+     "date": "2024/06/13 18:43"
+    },
+    {
+     "pubstatus": "pubmed",
+     "date": "2024/06/13 18:42"
+    },
+    {
+     "pubstatus": "entrez",
+     "date": "2024/06/13 14:03"
+    },
+    {
+     "pubstatus": "pmc-release",
+     "date": "2025/06/30 00:00"
+    }
+   ],
+   "references": [
+    {
+     "refsource": "Science. 2024 Jun 14;384(6701):1175-1176. doi: 10.1126/science.adq0059.",
+     "reftype": "Comment in",
+     "pmid": 38870313,
+     "note": ""
+    },
+    {
+     "refsource": "Nat Rev Drug Discov. 2024 Aug;23(8):580. doi: 10.1038/d41573-024-00117-0.",
+     "reftype": "Comment in",
+     "pmid": 38987628,
+     "note": ""
+    }
+   ],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": 79,
+   "fulljournalname": "Science (New York, N.Y.)",
+   "elocationid": "doi: 10.1126/science.adk9428",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2024/06/14 00:00",
+   "sortfirstauthor": "Sun Y",
+   "vernaculartitle": ""
+  },
+  "39756424": {
+   "uid": "39756424",
+   "pubdate": "2025 Mar",
+   "epubdate": "2025 Jan 2",
+   "source": "Lancet Respir Med",
+   "authors": [
+    {
+     "name": "Keating C",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Yonker LM",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Vermeulen F",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Prais D",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Linnemann RW",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Trimble A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Kotsimbos T",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Mermis J",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Braun AT",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "O'Carroll M",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sutharsan S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Ramsey B",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Mall MA",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Taylor-Cousar JL",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "McKone EF",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Tullis E",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Floreth T",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Michelson P",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sosnay PR",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Nair N",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Zahigian R",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Martin H",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Ahluwalia N",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Lam A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Horsley A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "VX20-121-102 Study Group",
+     "authtype": "CollectiveName",
+     "clusterid": ""
+    },
+    {
+     "name": "VX20-121-103 Study Group",
+     "authtype": "CollectiveName",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Horsley A",
+   "title": "Vanzacaftor-tezacaftor-deutivacaftor versus elexacaftor-tezacaftor-ivacaftor in individuals with cystic fibrosis aged 12 years and older (SKYLINE Trials VX20-121-102 and VX20-121-103): results from two randomised, active-controlled, phase 3 trials.",
+   "sorttitle": "vanzacaftor tezacaftor deutivacaftor versus elexacaftor tezacaftor ivacaftor in individuals with cystic fibrosis aged 12 years and older skyline trials vx20 121 102 and vx20 121 103 results from two randomised active controlled phase 3 trials",
+   "volume": "13",
+   "issue": "3",
+   "pages": "256-271",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "101605555",
+   "issn": "2213-2600",
+   "essn": "2213-2619",
+   "pubtype": [
+    "Journal Article",
+    "Randomized Controlled Trial",
+    "Clinical Trial, Phase III",
+    "Comparative Study",
+    "Multicenter Study"
+   ],
+   "recordstatus": "PubMed - indexed for MEDLINE",
+   "pubstatus": "256",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "39756424"
+    },
+    {
+     "idtype": "mid",
+     "idtypen": 8,
+     "value": "NIHMS2081037"
+    },
+    {
+     "idtype": "pmc",
+     "idtypen": 8,
+     "value": "PMC12184100"
+    },
+    {
+     "idtype": "pmcid",
+     "idtypen": 5,
+     "value": "pmc-id: PMC12184100;manuscript-id: NIHMS2081037;"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.1016/S2213-2600(24)00411-9"
+    },
+    {
+     "idtype": "pii",
+     "idtypen": 4,
+     "value": "S2213-2600(24)00411-9"
+    }
+   ],
+   "history": [
+    {
+     "pubstatus": "received",
+     "date": "2024/10/25 00:00"
+    },
+    {
+     "pubstatus": "revised",
+     "date": "2024/12/03 00:00"
+    },
+    {
+     "pubstatus": "accepted",
+     "date": "2024/12/04 00:00"
+    },
+    {
+     "pubstatus": "medline",
+     "date": "2025/03/07 00:21"
+    },
+    {
+     "pubstatus": "pubmed",
+     "date": "2025/01/06 10:07"
+    },
+    {
+     "pubstatus": "entrez",
+     "date": "2025/01/05 18:52"
+    },
+    {
+     "pubstatus": "pmc-release",
+     "date": "2025/06/23 00:00"
+    }
+   ],
+   "references": [
+    {
+     "refsource": "Lancet Respir Med. 2025 Mar;13(3):e19. doi: 10.1016/S2213-2600(25)00011-6.",
+     "reftype": "Erratum in",
+     "pmid": 40049936,
+     "note": ""
+    }
+   ],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": 40,
+   "fulljournalname": "The Lancet. Respiratory medicine",
+   "elocationid": "doi: 10.1016/S2213-2600(24)00411-9",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2025/03/01 00:00",
+   "sortfirstauthor": "Keating C",
+   "vernaculartitle": ""
+  },
+  "34266939": {
+   "uid": "34266939",
+   "pubdate": "2022 Feb",
+   "epubdate": "2022 Feb 24",
+   "source": "Eur Respir J",
+   "authors": [
+    {
+     "name": "Becq F",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Mirval S",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Carrez T",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "L\u00e9v\u00eaque M",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Billet A",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Coraux C",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Sage E",
+     "authtype": "Author",
+     "clusterid": ""
+    },
+    {
+     "name": "Cantereau A",
+     "authtype": "Author",
+     "clusterid": ""
+    }
+   ],
+   "lastauthor": "Cantereau A",
+   "title": "The rescue of F508del-CFTR by elexacaftor/tezacaftor/ivacaftor (Trikafta) in human airway epithelial cells is underestimated due to the presence of ivacaftor.",
+   "sorttitle": "rescue of f508del cftr by elexacaftor tezacaftor ivacaftor trikafta in human airway epithelial cells is underestimated due to the presence of ivacaftor",
+   "volume": "59",
+   "issue": "2",
+   "pages": "",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "8803460",
+   "issn": "0903-1936",
+   "essn": "1399-3003",
+   "pubtype": [
+    "Journal Article",
+    "Research Support, Non-U.S. Gov't"
+   ],
+   "recordstatus": "PubMed - indexed for MEDLINE",
+   "pubstatus": "257",
+   "articleids": [
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "34266939"
+    },
+    {
+     "idtype": "doi",
+     "idtypen": 3,
+     "value": "10.1183/13993003.00671-2021"
+    },
+    {
+     "idtype": "pii",
+     "idtypen": 4,
+     "value": "13993003.00671-2021"
+    }
+   ],
+   "history": [
+    {
+     "pubstatus": "received",
+     "date": "2021/03/05 00:00"
+    },
+    {
+     "pubstatus": "accepted",
+     "date": "2021/06/25 00:00"
+    },
+    {
+     "pubstatus": "pubmed",
+     "date": "2021/07/17 06:00"
+    },
+    {
+     "pubstatus": "medline",
+     "date": "2022/04/07 06:00"
+    },
+    {
+     "pubstatus": "entrez",
+     "date": "2021/07/16 05:52"
+    }
+   ],
+   "references": [
+    {
+     "refsource": "Eur Respir J. 2022 Feb 24;59(2):2102380. doi: 10.1183/13993003.02380-2021.",
+     "reftype": "Comment in",
+     "pmid": 35210304,
+     "note": ""
+    }
+   ],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": "",
+   "fulljournalname": "The European respiratory journal",
+   "elocationid": "pii: 2100671. doi: 10.1183/13993003.00671-2021",
+   "doctype": "citation",
+   "srccontriblist": [],
+   "booktitle": "",
+   "medium": "",
+   "edition": "",
+   "publisherlocation": "",
+   "publishername": "",
+   "srcdate": "",
+   "reportnumber": "",
+   "availablefromurl": "",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "",
+   "chapter": "",
+   "sortpubdate": "2022/02/24 00:00",
+   "sortfirstauthor": "Becq F",
+   "vernaculartitle": ""
+  },
+  "39693469": {
+   "uid": "39693469",
+   "pubdate": "2024 Nov",
+   "epubdate": "",
+   "source": "",
+   "authors": [],
+   "lastauthor": "",
+   "title": "",
+   "sorttitle": "elexacaftor tezacaftor ivacaftor and ivacaftor trikafta indication treatment of cystic fibrosis in patients aged 2 years and older who have at least one mutation in the cftr gene that is responsive based on clinical and or in vitro data reimbursement recommendation",
+   "volume": "",
+   "issue": "",
+   "pages": "",
+   "lang": [
+    "eng"
+   ],
+   "nlmuniqueid": "",
+   "issn": "",
+   "essn": "",
+   "pubtype": [
+    "Review"
+   ],
+   "recordstatus": "PubMed",
+   "pubstatus": "ppublish",
+   "articleids": [
+    {
+     "idtype": "bookaccession",
+     "idtypen": 8,
+     "value": "NBK610228"
+    },
+    {
+     "idtype": "pubmed",
+     "idtypen": 1,
+     "value": "39693469"
+    }
+   ],
+   "history": [],
+   "references": [],
+   "attributes": [
+    "Has Abstract"
+   ],
+   "pmcrefcount": "",
+   "fulljournalname": "",
+   "elocationid": "",
+   "doctype": "book",
+   "srccontriblist": [],
+   "booktitle": "Elexacaftor-Tezacaftor-Ivacaftor and Ivacaftor (Trikafta): Indication: Treatment of cystic fibrosis in patients aged 2 years and older who have at least one mutation in the CFTR gene that is responsive based on clinical and/or in vitro data: Reimbursement Recommendation",
+   "medium": "Internet",
+   "edition": "",
+   "publisherlocation": "Ottawa (ON)",
+   "publishername": "Canadian Agency for Drugs and Technologies in Health",
+   "srcdate": "2024 Nov",
+   "reportnumber": "Report No.: SR0837",
+   "availablefromurl": "http://www.ncbi.nlm.nih.gov/books/NBK610228/",
+   "locationlabel": "",
+   "doccontriblist": [],
+   "docdate": "",
+   "bookname": "ht8269678382083782",
+   "chapter": "",
+   "sortpubdate": "2024/11/01 00:00",
+   "sortfirstauthor": "",
+   "vernaculartitle": ""
+  }
+ }
+}

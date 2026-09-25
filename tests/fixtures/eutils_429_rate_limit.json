@@ -1,0 +1,6 @@
+{
+ "error": "API rate limit exceeded",
+ "api-key": "REDACTED_IP",
+ "count": "4",
+ "limit": "3"
+}
