@@ -6,10 +6,10 @@ app_file: app.py
 license: apache-2.0
 ---
 
-# AI-Tx Agent: Precision Medicine QA
+# AI-Tx Agent: Rare Disease Therapeutics QA
 
 ReAct agent built on Qwen3-8B for the [AI-Tx Challenge](https://aitxchallenge.org/),
-Tier 1 (open weights). Given a patient's genotype and clinical context, the agent
+Tier 1 (open weights). Given a rare disease patient's genotype and clinical context, the agent
 retrieves evidence from live biomedical APIs and answers with verifiable source URLs.
 
 **Status (September 2026).** The code implements the challenge's Phase 1
