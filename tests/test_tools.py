@@ -138,7 +138,7 @@ class TestPharmGKBTool:
         summary, evidence = tool.execute(gene="CYP2D6")
         assert summary
         assert len(evidence) > 0
-        assert any("pharmgkb" in e.url.lower() for e in evidence)
+        assert any("clinpgx.org" in e.url for e in evidence)
 
     @pytest.mark.slow
     def test_dpyd_with_drug(self):
