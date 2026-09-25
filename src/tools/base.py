@@ -2,9 +2,15 @@
 
 from __future__ import annotations
 
+import os
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+
+# NCBI E-utilities allow 3 requests/s per IP without a key and 10/s with
+# one. The key is a personal credential: read from the environment on
+# every call, never stored in code, fixtures or committed files.
+NCBI_API_KEY_ENV = "NCBI_API_KEY"
 
 
 @dataclass
@@ -47,3 +53,11 @@ class BaseTool(ABC):
     def name(self) -> str:
         """Tool name extracted from schema."""
         return self.schema()["function"]["name"]
+
+
+def ncbi_params(**params) -> dict:
+    """Build E-utilities query parameters, adding the API key when one is set."""
+    key = os.environ.get(NCBI_API_KEY_ENV)
+    if key:
+        params["api_key"] = key
+    return params
