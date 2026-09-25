@@ -7,7 +7,7 @@ import re
 import time
 
 from .model import ModelResponse, format_tool_result, generate, parse_response
-from .normalization import normalize_answer
+from .normalization import extract_options, normalize_answer
 from .preprocessing import preprocess_input
 from .prompts import TOOL_PRIORITY, build_system_prompt, build_user_message
 from .schemas import EvidenceItem, TaskInput, TaskOutput
@@ -169,7 +169,7 @@ class Agent:
         )
 
         # Step 5: Answer validation gate — retry once if invalid
-        if not self._is_valid_answer(normalized, context["answer_format"]):
+        if not self._is_valid_answer(normalized, context["answer_format"], context["prompt"]):
             logger.warning(f"Invalid answer '{normalized}' for format {context['answer_format']}, retrying...")
             normalized = self._retry_for_valid_answer(
                 messages, context["answer_format"], context["prompt"]
@@ -346,8 +346,13 @@ class Agent:
                 continue
 
     @staticmethod
-    def _is_valid_answer(answer: str, answer_format: str) -> bool:
-        """Check if a normalized answer is valid for its format."""
+    def _is_valid_answer(answer: str, answer_format: str, prompt: str = "") -> bool:
+        """Check if a normalized answer is valid for its format.
+
+        For multiple choice the answer must be one of the prompt's options when
+        the options can be parsed; a prompt with no parseable options accepts
+        any non-empty string, since there is nothing to check against.
+        """
         if not answer or not answer.strip():
             return False
         if answer_format == "binary" and answer not in ("Yes", "No"):
@@ -357,7 +362,10 @@ class Agent:
                 float(answer)
             except ValueError:
                 return False
-        # string_match and multiple_choice: any non-empty string is valid
+        if answer_format == "multiple_choice":
+            options = extract_options(prompt)
+            if options and answer not in options:
+                return False
         return True
 
     def _retry_for_valid_answer(
@@ -367,9 +375,14 @@ class Agent:
         prompt: str,
     ) -> str:
         """Re-prompt the model once with thinking disabled to get a valid answer."""
+        options = extract_options(prompt) if answer_format == "multiple_choice" else []
         format_hint = {
             "binary": "Respond with exactly 'Yes' or 'No'.",
-            "multiple_choice": "Respond with the exact text of one option.",
+            "multiple_choice": (
+                "Respond with exactly one of these options, spelled as given: "
+                + "; ".join(options) + "."
+                if options else "Respond with the exact text of one option."
+            ),
             "numeric_match": "Respond with exactly one number.",
             "string_match": "Respond with a concise, exact term.",
         }.get(answer_format, "Respond concisely.")
@@ -393,7 +406,7 @@ class Agent:
                 enable_thinking=False,
             )
             normalized = normalize_answer(response.text, answer_format, prompt)
-            if self._is_valid_answer(normalized, answer_format):
+            if self._is_valid_answer(normalized, answer_format, prompt):
                 return normalized
         except Exception as e:
             logger.error(f"Answer validation retry failed: {e}")

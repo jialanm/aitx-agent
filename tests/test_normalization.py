@@ -122,3 +122,69 @@ class TestStringNormalization:
 
     def test_trailing_period(self):
         assert normalize_answer("beta-blockers.", "string_match") == "beta-blockers"
+
+
+class TestInlineMultipleChoice:
+    """Option lists as they appear in the challenge's Phase 1 validator set."""
+
+    DMD = ("To which of the following targeted therapies would this variant be most "
+           "likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?")
+    GRIN2B = "Is it more likely amenable to treatment with Memantine, L-serine, or Radiprodil"
+    NF1 = "In which functional domain does this variant occur? Answer choices: CSRD, TBD, GRD, Sec14-PH, HLR, NLS, SBR."
+
+    def test_extract_colon_or_list(self):
+        from src.normalization import extract_options
+        assert extract_options(self.DMD) == [
+            "Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"
+        ]
+
+    def test_extract_uncolon_list_strips_question_stem(self):
+        from src.normalization import extract_options
+        assert extract_options(self.GRIN2B) == ["Memantine", "L-serine", "Radiprodil"]
+
+    def test_extract_answer_choices_leadin(self):
+        from src.normalization import extract_options
+        assert extract_options(self.NF1) == ["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]
+
+    def test_extract_multiword_options_keep_stem_words_inside_items(self):
+        from src.normalization import extract_options
+        prompt = "Which is more likely: gain of function, loss of function, or dominant negative?"
+        assert extract_options(prompt) == ["gain of function", "loss of function", "dominant negative"]
+
+    def test_yes_no_prompt_yields_no_options(self):
+        from src.normalization import extract_options
+        assert extract_options("Is this variant pathogenic? Answer yes or no.") == []
+
+    def test_exact_option(self):
+        assert normalize_answer("Eteplirsen", "multiple_choice", self.DMD) == "Eteplirsen"
+
+    def test_case_and_punctuation(self):
+        assert normalize_answer("eteplirsen.", "multiple_choice", self.DMD) == "Eteplirsen"
+
+    def test_none_option(self):
+        assert normalize_answer("None", "multiple_choice", self.DMD) == "None"
+
+    def test_option_inside_sentence(self):
+        text = "This exon 51 skipping variant is amenable to Eteplirsen."
+        assert normalize_answer(text, "multiple_choice", self.DMD) == "Eteplirsen"
+
+    def test_earliest_mention_wins(self):
+        text = "Ataluren, not Eteplirsen, because this is a nonsense variant"
+        assert normalize_answer(text, "multiple_choice", self.DMD) == "Ataluren"
+
+    def test_returns_prompt_spelling(self):
+        assert normalize_answer("L-Serine", "multiple_choice", self.GRIN2B) == "L-serine"
+
+    def test_answer_choices_form(self):
+        assert normalize_answer("GRD (GAP-related domain)", "multiple_choice", self.NF1) == "GRD"
+
+    def test_letter_answer_ignored_without_lettered_prompt(self):
+        # "C" is not an option here; do not map it to the third item.
+        assert normalize_answer("C", "multiple_choice", self.NF1) == "C"
+
+    def test_unmatched_answer_passes_through(self):
+        assert normalize_answer("Nusinersen", "multiple_choice", self.DMD) == "Nusinersen"
+
+    def test_partial_word_does_not_match(self):
+        # "TBD" must not match inside "outbound"; nothing matches, text passes through.
+        assert normalize_answer("outbound", "multiple_choice", self.NF1) == "outbound"

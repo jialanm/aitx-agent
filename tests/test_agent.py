@@ -139,6 +139,22 @@ class TestAnswerValidation:
     def test_whitespace_only(self):
         assert Agent._is_valid_answer("   ", "string_match") is False
 
+    DMD_PROMPT = ("To which of the following targeted therapies would this variant be most "
+                  "likely amenable: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren, or None?")
+
+    def test_multiple_choice_option_is_valid(self):
+        assert Agent._is_valid_answer("Ataluren", "multiple_choice", self.DMD_PROMPT) is True
+
+    def test_multiple_choice_none_option_is_valid(self):
+        assert Agent._is_valid_answer("None", "multiple_choice", self.DMD_PROMPT) is True
+
+    def test_multiple_choice_non_option_is_invalid(self):
+        # A drug that is real but not offered must trigger the retry, not pass.
+        assert Agent._is_valid_answer("Nusinersen", "multiple_choice", self.DMD_PROMPT) is False
+
+    def test_multiple_choice_without_parseable_options_accepts_text(self):
+        assert Agent._is_valid_answer("anything", "multiple_choice", "Pick the best therapy.") is True
+
 
 class TestExtractCondition:
     """Test the _extract_condition static method."""

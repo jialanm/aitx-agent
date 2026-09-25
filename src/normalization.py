@@ -74,46 +74,87 @@ def _normalize_binary(text: str) -> str:
     return text.strip()
 
 
+_LETTERED_OPTIONS = re.compile(r"\(([A-Z])\)\s*(.+?)(?=\s*\([A-Z]\)|$)")
+_LEADIN_LIST = re.compile(
+    r"(?:answer\s+choices|choices|options)\s*:\s*(.+?)\s*[.?]?\s*$", re.I | re.S
+)
+# A trailing comma list whose last item is introduced by "or": "X, Y, or Z".
+_OR_LIST = re.compile(r"((?:[^,:?]+,\s*)+(?:or\s+)?[^,?]+?)\s*[?.]?\s*$", re.S)
+# When the list is not introduced by a colon, the first item still carries the
+# question stem ("...treatment with Memantine"); cut at the last such word.
+_STEM_WORDS = re.compile(r"\b(?:with|to|of|between|among|following)\b\s*", re.I)
+
+
+def _split_list_items(text: str) -> list[str]:
+    items = [i.strip() for i in text.split(",")]
+    items = [re.sub(r"^(?:or|and)\s+", "", i, flags=re.I).strip(" .?\"'") for i in items]
+    return [i for i in items if i]
+
+
+def extract_options(prompt: str) -> list[str]:
+    """Pull the answer options out of a multiple-choice prompt.
+
+    Handles the three shapes seen in the challenge set: a colon-introduced
+    list ending in "or X", a bare list after "Answer choices:", and an
+    un-introduced list ("...with Memantine, L-serine, or Radiprodil"), plus
+    the lettered "(A) text (B) text" form. Returns [] when no list is found,
+    so the caller can leave the answer untouched rather than guess.
+    """
+    lettered = _LETTERED_OPTIONS.findall(prompt)
+    if lettered:
+        return [text.strip() for _, text in lettered]
+
+    m = _LEADIN_LIST.search(prompt)
+    if m:
+        return _split_list_items(m.group(1))
+
+    m = _OR_LIST.search(prompt)
+    if m and re.search(r"\bor\b", m.group(1)):
+        items = _split_list_items(m.group(1))
+        if ":" not in prompt[: m.start(1)]:
+            items[0] = _STEM_WORDS.split(items[0])[-1].strip()
+        return items
+
+    return []
+
+
 def _normalize_multiple_choice(text: str, prompt: str) -> str:
-    """Match model output to one of the provided options."""
-    # Extract options from prompt: (A) text (B) text ...
-    options = re.findall(r"\(([A-Z])\)\s*(.+?)(?=\s*\([A-Z]\)|$)", prompt)
+    """Map model output onto one of the prompt's options, in the prompt's spelling.
 
+    Falls through to the raw text when nothing matches: an unmatched answer
+    should score as wrong and be visible in the eval output, not be repaired.
+    """
+    options = extract_options(prompt)
+    cleaned = text.strip()
     if not options:
-        return text.strip()
+        return cleaned
 
-    lower = text.lower().strip()
+    lower = cleaned.lower()
 
-    # Check for letter match: "(A)", "A)", "A.", just "A"
-    letter_match = re.match(r"^\(?([a-z])\)?[\.\):]?\s*", lower)
-    if letter_match:
-        letter = letter_match.group(1).upper()
-        for opt_letter, opt_text in options:
-            if opt_letter == letter:
-                return opt_text.strip()
+    for opt in options:
+        if lower == opt.lower():
+            return opt
 
-    # Check for exact option text match
-    for opt_letter, opt_text in options:
-        opt_clean = opt_text.strip()
-        if opt_clean.lower() in lower:
-            return opt_clean
+    # Letter answers only mean something when the prompt lettered its options.
+    lettered = _LETTERED_OPTIONS.findall(prompt)
+    if lettered:
+        m = re.match(r"^\(?([a-z])\)?[.):]?(?:\s|$)", lower)
+        if m:
+            for letter, opt_text in lettered:
+                if letter == m.group(1).upper():
+                    return opt_text.strip()
 
-    # Fuzzy: check if the model output contains key words from an option
-    best_match = None
-    best_score = 0
-    for opt_letter, opt_text in options:
-        opt_clean = opt_text.strip()
-        opt_words = set(opt_clean.lower().split())
-        text_words = set(lower.split())
-        overlap = len(opt_words & text_words)
-        if overlap > best_score:
-            best_score = overlap
-            best_match = opt_clean
+    # Option mentioned inside a longer answer: take the earliest mention,
+    # preferring the longer option when two start at the same place.
+    hits = []
+    for opt in options:
+        m = re.search(r"(?<![\w-])" + re.escape(opt.lower()) + r"(?![\w-])", lower)
+        if m:
+            hits.append((m.start(), -len(opt), opt))
+    if hits:
+        return min(hits)[2]
 
-    if best_match and best_score > 0:
-        return best_match
-
-    return text.strip()
+    return cleaned
 
 
 def _normalize_numeric(text: str) -> str:
