@@ -6,8 +6,8 @@ import requests
 
 from .base import BaseTool, EvidenceRecord
 
-PHARMGKB_API = "https://api.pharmgkb.org/v1/data"
-PHARMGKB_WEB = "https://www.pharmgkb.org"
+PHARMGKB_API = "https://api.clinpgx.org/v1/data"
+PHARMGKB_WEB = "https://www.clinpgx.org"
 
 TIMEOUT = 15
 
