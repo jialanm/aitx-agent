@@ -140,7 +140,9 @@ class PharmGKBTool(BaseTool):
         """Get dosing guideline annotations for a gene."""
         try:
             resp = requests.get(
-                f"{PHARMGKB_API}/guideline",
+                # /guideline is a different object type and rejects the
+                # relatedGenes filter with HTTP 400; annotations live here.
+                f"{PHARMGKB_API}/guidelineAnnotation",
                 params={"relatedGenes.accessionId": gene_id},
                 timeout=TIMEOUT,
             )
