@@ -1,3 +1,5 @@
+# Hugging Face Spaces installs from this file; pyproject.toml is the source of
+# truth for local development with uv. Keep the two lists identical.
 transformers>=4.45.0
 torch>=2.1.0
 bitsandbytes>=0.43.0

@@ -1,3 +1,24 @@
+[project]
+name = "aitx-agent"
+version = "0.1.0"
+description = "Agentic precision-medicine QA over nine biomedical APIs (AI-Tx Challenge)"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+dependencies = [
+    "transformers>=4.45.0",
+    "torch>=2.1.0",
+    "bitsandbytes>=0.43.0",
+    "accelerate>=0.30.0",
+    "gradio>=4.0.0",
+    "requests>=2.31.0",
+    "pydantic>=2.0.0",
+    "jinja2>=3.1.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.0"]
+
 [tool.pytest.ini_options]
 markers = [
     "slow: marks tests as slow (require network calls)",

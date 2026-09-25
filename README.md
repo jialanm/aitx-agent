@@ -1,27 +1,31 @@
 ---
 title: AI-Tx Challenge
-emoji: "\U0001F9EC"
-colorFrom: blue
-colorTo: green
 sdk: gradio
 sdk_version: "4.44.1"
 app_file: app.py
-pinned: false
 license: apache-2.0
-hardware: l4
 ---
 
-# AI-Tx Challenge: Precision Medicine QA
+# AI-Tx Agent: Precision Medicine QA
 
-ReAct agent built on Qwen3-8B (Tier 1, ≤8B parameters) for precision medicine question answering.
+ReAct agent built on Qwen3-8B for the [AI-Tx Challenge](https://aitxchallenge.org/),
+Tier 1 (open weights). Given a patient's genotype and clinical context, the agent
+retrieves evidence from live biomedical APIs and answers with verifiable source URLs.
+
+**Status (September 2026).** The code implements the challenge's Phase 1
+question-answering task, which closed on June 30, 2026. The final task,
+[Actionability Report Generation](https://aitxchallenge.org/#markdown-report-template),
+takes the same patient input without a question and returns a structured markdown
+report. That task is not implemented yet. No accuracy numbers are claimed here;
+see the evaluation section.
 
 ## How it works
 
-Given a patient's genotype, clinical context, and a therapeutic question, the agent:
-1. Parses HGVS variant notation and clinical context
-2. Routes to relevant biomedical APIs based on question category
-3. Iteratively retrieves and reasons over evidence (ReAct loop, max 5 iterations)
-4. Returns an exact-match answer with verifiable evidence URLs
+1. Parses HGVS variant notation and clinical context deterministically.
+2. Routes to biomedical APIs in a category-specific priority order.
+3. Iteratively retrieves and reasons over evidence (ReAct loop, max 5 iterations).
+4. Normalises the answer to the requested format and validates it, re-prompting once if invalid.
+5. Returns the answer with evidence records built only from URLs the tools actually fetched.
 
 ## Tools (9)
 
@@ -37,18 +41,57 @@ Given a patient's genotype, clinical context, and a therapeutic question, the ag
 | OMIM | NCBI E-utilities | Gene-disease relationships, inheritance patterns |
 | FDA Labels | openFDA API | Approved drug indications, contraindications |
 
-## API Endpoint
+No API keys are required. All calls run at each service's unauthenticated rate limit.
 
-```
-POST /api/predict
-Content-Type: application/json
+## Setup
 
-{"data": ["<task_input_json_string>"]}
-```
-
-## Local Development
+Requires [uv](https://docs.astral.sh/uv/) and Python 3.10 or newer. Running the
+agent needs a GPU with roughly 6 GB of VRAM for the 4-bit model; the unit tests do not.
 
 ```bash
-pip install -r requirements.txt
-python app.py
+uv sync                      # creates .venv and installs dependencies
+uv run pytest -m "not slow"  # unit tests, no GPU or network
+uv run pytest -m slow        # integration tests against the live APIs
+uv run python app.py         # Gradio app on http://localhost:7860
 ```
+
+`requirements.txt` duplicates the dependency list because Hugging Face Spaces
+installs from it; `pyproject.toml` is the source of truth.
+
+## API
+
+The Gradio app exposes one named endpoint, `/predict`, which takes and returns
+JSON strings. With `gradio_client`:
+
+```python
+from gradio_client import Client
+
+client = Client("http://localhost:7860")
+output_json = client.predict(input_json, api_name="/predict")
+```
+
+Input follows the Phase 1 task schema: `id`, `patient` (`genotype` list and
+`clinical_context`), and `question` (`category`, `answer_format`, `prompt`,
+`date_submitted`). Output is `id`, `response`, and an `evidence` list of
+`source`, `time_accessed`, and `justification` records.
+
+## Evaluation
+
+```bash
+uv run python scripts/eval.py            # runs data/validation.json, reports format validity
+uv run python scripts/debug_question.py  # trace a single question
+```
+
+The validation set and eval outputs are not committed. The challenge's public
+sixteen-question set with reference answers is
+[aitxchallenge/Phase1_Model_Validator](https://huggingface.co/datasets/aitxchallenge/Phase1_Model_Validator)
+on Hugging Face. Accuracy on it has not been measured yet.
+
+## License
+
+Apache-2.0. See [LICENSE](LICENSE).
+
+## Acknowledgements
+
+Claude Code was used as a coding assistant during development. Design
+decisions, clinical review, and the evaluation are the author's own.
