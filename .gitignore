@@ -21,6 +21,7 @@ __pycache__/
 # (some contain patient-adjacent vignettes). Add specific files with `git add -f`.
 data/eval_outputs*.json
 data/eval_results*.json
+data/eval_trace*.json
 data/cache/
 
 # Stale snapshots

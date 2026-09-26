@@ -38,6 +38,18 @@ DEFAULT_QUESTIONS = "data/phase1_questions.json"
 DEFAULT_ANSWERS = "data/phase1_answers.json"
 
 
+def trace_path_for(output_path: str) -> str:
+    """Name the trace file after the results file it belongs to.
+
+    data/eval_results_baseline.json -> data/eval_trace_baseline.json;
+    any other name gets a _trace suffix.
+    """
+    path = Path(output_path)
+    if "eval_results" in path.name:
+        return str(path.with_name(path.name.replace("eval_results", "eval_trace")))
+    return str(path.with_name(f"{path.stem}_trace{path.suffix}"))
+
+
 def run_metadata(questions_path: str, answers_path: str | None, quantize: bool = False) -> dict:
     """What is needed to reproduce or compare this run."""
     try:
@@ -133,6 +145,7 @@ def run_evaluation(
 
     task_outputs = []  # Spec-compliant TaskOutput dicts
     results = []       # Internal eval results
+    traces = []        # Per-question tool trace from the agent
     stats = {
         "total": 0,
         "correct": 0,
@@ -152,6 +165,7 @@ def run_evaluation(
         try:
             output = agent.run(task_input)
             elapsed = time.time() - start_time
+            traces.append(agent.last_trace)
 
             # Serialize to spec-compliant dict
             output_dict = json.loads(output.model_dump_json())
@@ -202,6 +216,8 @@ def run_evaluation(
             import traceback
             print(f"  ERROR: {e}")
             traceback.print_exc()
+            # Whatever the agent recorded before failing is still worth keeping.
+            traces.append(agent.last_trace)
             results.append({
                 "id": task_id,
                 "category": category,
@@ -262,6 +278,13 @@ def run_evaluation(
             f, indent=2, default=dict,
         )
     print(f"Evaluation stats saved to {output_path}")
+
+    # Save the tool trace: what each question's run actually did, so a
+    # failure can be classified from the run's own artifacts.
+    trace_path = trace_path_for(output_path)
+    with open(trace_path, "w") as f:
+        json.dump({"metadata": metadata, "traces": traces}, f, indent=2, default=str)
+    print(f"Tool traces saved to {trace_path}")
 
     # Print example output for verification
     if task_outputs:
