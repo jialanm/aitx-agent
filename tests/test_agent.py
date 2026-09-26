@@ -10,6 +10,7 @@ import pytest
 from src.agent import Agent
 from src.model import ToolCall, ModelResponse, parse_response
 from src.schemas import TaskInput, TaskOutput
+from src.tools.base import BaseTool, EvidenceRecord
 from src.tools.genereviews import GeneReviewsTool
 
 
@@ -243,3 +244,75 @@ class TestGeneReviewsTitleRelevance:
             "Beckwith-Wiedemann Syndrome", "KCNQ1"
         )
         assert score < 0
+
+
+class TestTrace:
+    """run() keeps its working notes on last_trace; the model is scripted."""
+
+    TASK = {
+        "id": "AITX-TEST",
+        "patient": {
+            "genotype": [{"gene": "CFTR", "transcript": "NM_000492.4",
+                          "variant_cdna": "c.1521_1523del",
+                          "variant_protein": "p.Phe508del", "zygosity": "homozygous"}],
+            "clinical_context": "A 15-year-old with cystic fibrosis.",
+        },
+        "question": {"category": "Established_Targeted", "answer_format": "binary",
+                     "prompt": "Is this variant eligible?", "date_submitted": "2024-12-10"},
+    }
+
+    class _Tool(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_clinvar", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return "one record", [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/clinvar/variation/1/")]
+
+    @staticmethod
+    def _scripted(monkeypatch, turns):
+        """generate() returns the scripted turns in order, then plain 'Yes'."""
+        import src.agent as agent_module
+        queue = list(turns)
+
+        def fake_generate(*a, **k):
+            if queue:
+                return queue.pop(0)
+            return ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking="")
+
+        monkeypatch.setattr(agent_module, "generate", fake_generate)
+
+    def test_model_tool_call_is_recorded_with_arguments_and_evidence(self, monkeypatch):
+        call = ToolCall(name="search_clinvar", arguments={"gene": "CFTR", "variant": "c.1521_1523del"})
+        self._scripted(monkeypatch, [
+            ModelResponse(text="", tool_calls=[call], raw="<tool_call>...</tool_call>", thinking=""),
+        ])
+        agent = Agent(model=None, tokenizer=None, tools=[self._Tool()])
+
+        output = agent.run(TaskInput(**self.TASK))
+
+        assert output.response == "Yes"
+        trace = agent.last_trace
+        assert trace["id"] == "AITX-TEST"
+        assert trace["events"] == []
+        assert len(trace["tool_calls"]) == 1
+        recorded = trace["tool_calls"][0]
+        assert recorded["tool"] == "search_clinvar"
+        assert recorded["arguments"] == {"gene": "CFTR", "variant": "c.1521_1523del"}
+        assert recorded["origin"] == "model"
+        assert recorded["evidence_urls"] == ["https://www.ncbi.nlm.nih.gov/clinvar/variation/1/"]
+        assert recorded["summary"] == "one record"
+        assert recorded["seconds"] >= 0
+        assert trace["messages"][0]["role"] == "system"
+        assert any(m["role"] == "user" and "one record" in m["content"] for m in trace["messages"])
+
+    def test_forced_first_tool_is_recorded_as_an_event(self, monkeypatch):
+        # Model answers without calling a tool, so the agent forces one.
+        self._scripted(monkeypatch, [
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""),
+        ])
+        agent = Agent(model=None, tokenizer=None, tools=[self._Tool()])
+
+        agent.run(TaskInput(**self.TASK))
+
+        assert "forced_first_tool" in agent.last_trace["events"]
+        assert agent.last_trace["tool_calls"][0]["origin"] == "forced"

@@ -31,12 +31,24 @@ class Agent:
         self.tokenizer = tokenizer
         self.tools = {tool.name: tool for tool in tools}
         self.tool_schemas = [tool.schema() for tool in tools]
+        self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:
         """Run the agent on a single task input.
 
-        Returns a TaskOutput with the answer and evidence.
+        Returns a TaskOutput with the answer and evidence. The run's working
+        notes are kept on self.last_trace afterwards: every tool call with
+        its arguments, timing and evidence, every point where the code
+        stepped in (forced call, auto-chain, retries), and the final
+        conversation as the model saw it.
         """
+        self.last_trace = {
+            "id": task_input.id,
+            "tool_calls": [],
+            "events": [],
+            "messages": [],
+        }
+
         # Step 1: Preprocess
         context = preprocess_input(task_input)
         parsed_variants = context["parsed_variants"]
@@ -91,6 +103,7 @@ class Agent:
                         context, task_input, messages, all_evidence
                     )
                     if forced:
+                        self.last_trace["events"].append("forced_first_tool")
                         # Re-prompt the model with tool results now available
                         messages.append({
                             "role": "user",
@@ -104,6 +117,7 @@ class Agent:
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
                     logger.warning("Empty answer after think-loop, re-prompting...")
+                    self.last_trace["events"].append("empty_answer_retry")
                     messages.append({
                         "role": "user",
                         "content": (
@@ -135,6 +149,7 @@ class Agent:
                 if tool is None:
                     # Unknown tool — inject error
                     logger.warning(f"Unknown tool: {tc.name}")
+                    self.last_trace["events"].append(f"unknown_tool:{tc.name}")
                     messages.append({
                         "role": "assistant",
                         "content": response.raw,
@@ -147,7 +162,7 @@ class Agent:
 
                 logger.info(f"Executing tool: {tc.name}({tc.arguments})")
                 try:
-                    summary, evidence = tool.execute(**tc.arguments)
+                    summary, evidence = self._call_tool(tool, tc.name, tc.arguments, "model")
                     all_evidence.extend(evidence)
                 except Exception as e:
                     logger.error(f"Tool execution error: {e}")
@@ -163,6 +178,7 @@ class Agent:
 
             # Auto-chain: if tool returned no evidence, try next priority tool
             if not all_evidence and iteration < MAX_ITERATIONS - 1:
+                self.last_trace["events"].append("auto_chain")
                 self._auto_chain_next_tool(
                     context, task_input, messages, all_evidence,
                     used_tools={tc.name for tc in response.tool_calls},
@@ -186,6 +202,7 @@ class Agent:
         # Step 6: Answer validation gate — retry once if invalid
         if not self._is_valid_answer(normalized, context["answer_format"], options):
             logger.warning(f"Invalid answer '{normalized}' for format {context['answer_format']}, retrying...")
+            self.last_trace["events"].append("validation_retry")
             normalized = self._retry_for_valid_answer(
                 messages, context["answer_format"], context["prompt"], options
             )
@@ -196,11 +213,39 @@ class Agent:
         )
 
         # Step 8: Return output
+        self.last_trace["messages"] = messages
         return TaskOutput(
             id=task_input.id,
             response=normalized,
             evidence=evidence_items,
         )
+
+    def _call_tool(
+        self,
+        tool: BaseTool,
+        name: str,
+        kwargs: dict,
+        origin: str,
+    ) -> tuple[str, list[EvidenceRecord]]:
+        """Run a tool and record the call in the trace.
+
+        origin says who asked for it: "model", "forced" or "auto_chain".
+        An exception is recorded, then re-raised so each call site keeps
+        its own handling.
+        """
+        entry = {"tool": name, "arguments": kwargs, "origin": origin}
+        start = time.time()
+        try:
+            summary, evidence = tool.execute(**kwargs)
+        except Exception as e:
+            entry["error"] = str(e)
+            raise
+        finally:
+            entry["seconds"] = round(time.time() - start, 2)
+            self.last_trace["tool_calls"].append(entry)
+        entry["evidence_urls"] = [r.url for r in evidence]
+        entry["summary"] = summary
+        return summary, evidence
 
     def _force_first_tool_call(
         self,
@@ -228,7 +273,7 @@ class Agent:
             logger.info(f"Forcing tool call: {tool_name}({kwargs})")
 
             try:
-                summary, evidence = tool.execute(**kwargs)
+                summary, evidence = self._call_tool(tool, tool_name, kwargs, "forced")
                 all_evidence.extend(evidence)
                 messages.append(format_tool_result(tool_name, summary))
                 return True
@@ -351,7 +396,7 @@ class Agent:
             logger.info(f"Auto-chaining to next tool: {tool_name}({kwargs})")
 
             try:
-                summary, evidence = tool.execute(**kwargs)
+                summary, evidence = self._call_tool(tool, tool_name, kwargs, "auto_chain")
                 all_evidence.extend(evidence)
                 messages.append(format_tool_result(tool_name, summary))
                 if evidence:
