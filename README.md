@@ -41,7 +41,11 @@ see the evaluation section.
 | OMIM | NCBI E-utilities | Gene-disease relationships, inheritance patterns |
 | FDA Labels | openFDA API | Approved drug indications, contraindications |
 
-No API keys are required. All calls run at each service's unauthenticated rate limit.
+No API keys are required. The three NCBI tools (ClinVar, GeneReviews, PubMed)
+share E-utilities' limit of three requests per second per address, which a single
+question can exceed and surface as an API error with no evidence. Setting
+`NCBI_API_KEY` in the environment raises that limit to ten; the key is read on each
+request and never written to output, logs, or error text.
 
 ## Setup
 
