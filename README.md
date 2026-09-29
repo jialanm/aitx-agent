@@ -95,7 +95,11 @@ which is all the agent ever sees, and `data/phase1_answers.json`, which the harn
 consults only after the agent has answered. The manifest beside them records the
 source revision and a checksum for each file. Accuracy has not been measured yet.
 Each eval run records the git commit, model id, decoding settings, and file
-checksums in its results file. Eval outputs are not committed.
+checksums in its results file, and writes a trace file beside it
+(`eval_results_X.json` pairs with `eval_trace_X.json`) holding, per question,
+every tool call with its arguments, timing, and evidence, each point where the
+loop intervened (forced first tool, auto-chain, empty-answer retry, validation
+retry), and the final conversation. Eval outputs and traces are not committed.
 
 ## License
 
