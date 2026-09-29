@@ -37,7 +37,7 @@ see the evaluation section.
 | ClinicalTrials.gov | CT.gov v2 API | Active clinical trials for gene/condition |
 | PubMed | NCBI E-utilities | Biomedical literature search |
 | UniProt | UniProt REST | Protein domains, functional annotations |
-| PharmGKB | PharmGKB API | Drug-gene interactions, pharmacogenomics |
+| PharmGKB | ClinPGx API (formerly PharmGKB) | Drug-gene interactions, pharmacogenomics |
 | OMIM | NCBI E-utilities | Gene-disease relationships, inheritance patterns |
 | FDA Labels | openFDA API | Approved drug indications, contraindications |
 
