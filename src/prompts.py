@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .preprocessing import ParsedVariant
+from .variant_validation import ValidatedVariant
 
 # Tool routing per category
 TOOL_PRIORITY = {
@@ -41,10 +42,19 @@ ANSWER_FORMAT_INSTRUCTIONS = {
 }
 
 
-def _format_variant_summary(variants: list[ParsedVariant]) -> str:
-    """Format parsed variants into a readable summary."""
+def _format_variant_summary(
+    variants: list[ParsedVariant],
+    validated: list[ValidatedVariant] | None = None,
+) -> str:
+    """Format parsed variants into a readable summary.
+
+    When validation results are given (one per variant, same order), each
+    variant also shows its current transcript form, genomic position, any
+    superseded transcript version, and the validator's warnings, so the
+    model reasons from the checked form rather than the submitted string.
+    """
     parts = []
-    for v in variants:
+    for i, v in enumerate(variants):
         desc = (
             f"Gene: {v.gene}\n"
             f"Transcript: {v.transcript}\n"
@@ -55,8 +65,29 @@ def _format_variant_summary(variants: list[ParsedVariant]) -> str:
         )
         if v.protein_position:
             desc += f"\nProtein position: {v.protein_position}"
+        if validated and i < len(validated):
+            desc += "\n" + _format_validation(validated[i])
         parts.append(desc)
     return "\n---\n".join(parts)
+
+
+def _format_validation(val: ValidatedVariant) -> str:
+    if not val.valid:
+        return (
+            f"VALIDATION FAILED for {val.submitted}: " + "; ".join(val.warnings)
+        )
+    lines = [
+        f"Validated (VariantValidator, GRCh38): {val.transcript_variant}",
+        f"Genomic position: {val.genomic_variant}",
+    ]
+    if val.superseded_transcript:
+        lines.append(
+            f"Note: submitted transcript {val.superseded_transcript} is superseded; "
+            f"the current version is used above"
+        )
+    if val.warnings:
+        lines.append("Validator warnings: " + "; ".join(val.warnings))
+    return "\n".join(lines)
 
 
 def build_system_prompt(
@@ -66,6 +97,7 @@ def build_system_prompt(
     answer_format: str,
     date_submitted: str,
     options: list[str] | None = None,
+    validated: list[ValidatedVariant] | None = None,
 ) -> str:
     """Build the system prompt for the ReAct agent.
 
@@ -73,7 +105,7 @@ def build_system_prompt(
     instruction so the model sees them exactly as the scorer expects.
     """
 
-    variant_summary = _format_variant_summary(parsed_variants)
+    variant_summary = _format_variant_summary(parsed_variants, validated)
     format_instruction = ANSWER_FORMAT_INSTRUCTIONS.get(answer_format, "")
     if answer_format == "multiple_choice" and options:
         format_instruction = (

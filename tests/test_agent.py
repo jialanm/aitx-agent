@@ -272,6 +272,12 @@ class TestTrace:
     def _scripted(monkeypatch, turns):
         """generate() returns the scripted turns in order, then plain 'Yes'."""
         import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(
+            agent_module, "validate_variant",
+            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                          genomic_variant="NC_000007.14:g.117559592_117559594del", gene_symbol="CFTR"),
+        )
         queue = list(turns)
 
         def fake_generate(*a, **k):
@@ -316,3 +322,17 @@ class TestTrace:
 
         assert "forced_first_tool" in agent.last_trace["events"]
         assert agent.last_trace["tool_calls"][0]["origin"] == "forced"
+
+    def test_validation_result_reaches_trace_and_prompt(self, monkeypatch):
+        self._scripted(monkeypatch, [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_clinvar", arguments={})], raw="", thinking=""),
+        ])
+        agent = Agent(model=None, tokenizer=None, tools=[self._Tool()])
+
+        agent.run(TaskInput(**self.TASK))
+
+        validation = agent.last_trace["validation"]
+        assert [v["transcript_variant"] for v in validation] == ["NM_000492.4:c.1521_1523del"]
+        system_prompt = agent.last_trace["messages"][0]["content"]
+        assert "Validated (VariantValidator, GRCh38): NM_000492.4:c.1521_1523del" in system_prompt
+        assert "Genomic position: NC_000007.14:g.117559592_117559594del" in system_prompt

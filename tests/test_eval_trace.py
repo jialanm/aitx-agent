@@ -65,6 +65,13 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
     results = tmp_path / "eval_results_test.json"
     outputs = tmp_path / "eval_outputs_test.json"
 
+    # No validator network call either.
+    from src.variant_validation import ValidatedVariant
+    monkeypatch.setattr(
+        agent_module, "validate_variant",
+        lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                      genomic_variant="NC_000007.14:g.117559592_117559594del", gene_symbol="CFTR"),
+    )
     # No model: generate() is scripted to call one tool, then answer.
     monkeypatch.setattr(eval_script, "load_model", lambda quantize=False: (None, None))
     call = ToolCall(name="search_clinvar", arguments={"gene": "CFTR", "variant": "c.1521_1523del"})

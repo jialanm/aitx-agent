@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 import re
 import time
+from dataclasses import asdict
 
 from .model import ModelResponse, format_tool_result, generate, parse_response
 from .normalization import normalize_answer, parse_option_json, verify_options
@@ -17,6 +18,7 @@ from .prompts import (
 )
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
+from .variant_validation import validate_variant
 
 logger = logging.getLogger(__name__)
 
@@ -47,11 +49,19 @@ class Agent:
             "tool_calls": [],
             "events": [],
             "messages": [],
+            "validation": [],
         }
 
-        # Step 1: Preprocess
+        # Step 1: Preprocess, then validate each variant and rewrite it onto
+        # its current transcript version. Runs before the model so the prompt
+        # and every later lookup use the checked form.
         context = preprocess_input(task_input)
         parsed_variants = context["parsed_variants"]
+        validated = [
+            validate_variant(g.transcript, g.variant_cdna)
+            for g in task_input.patient.genotype
+        ]
+        self.last_trace["validation"] = [asdict(v) for v in validated]
 
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
@@ -69,6 +79,7 @@ class Agent:
             answer_format=context["answer_format"],
             date_submitted=context["date_submitted"],
             options=options,
+            validated=validated,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
