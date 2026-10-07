@@ -1,13 +1,30 @@
-"""Ensembl REST API tool for variant annotation and transcript info."""
+"""Ensembl REST API tool for variant effect prediction and transcript info."""
 
 from __future__ import annotations
+
+import logging
+import time
 
 import requests
 
 from .base import BaseTool, EvidenceRecord
 
+logger = logging.getLogger(__name__)
+
 ENSEMBL_REST = "https://rest.ensembl.org"
+# Browser page for a genomic region on GRCh38, cited as evidence for the VEP
+# result; the region comes from VEP's own reply. Reused by the report task.
+ENSEMBL_LOCATION_URL = "https://www.ensembl.org/Homo_sapiens/Location/View?r={chrom}:{start}-{end}"
+
 TIMEOUT = 15
+# VEP took up to 66 s for a 1.7 kb deletion on 2026-10-07; timeouts are
+# retried because the service answers the same request on a later try.
+VEP_TIMEOUT = 90
+VEP_TIMEOUT_RETRIES = 5
+VEP_RETRY_INTERVAL_SECONDS = 5
+# Fields the model needs from the entry for the patient's transcript. A
+# missing one is logged by name and shown as "not returned", never blank.
+VEP_REQUIRED_FIELDS = ("consequence_terms", "impact", "exon", "protein_start", "amino_acids", "hgvsp")
 
 
 class EnsemblTool(BaseTool):
@@ -19,25 +36,33 @@ class EnsemblTool(BaseTool):
             "function": {
                 "name": "query_ensembl",
                 "description": (
-                    "Query the Ensembl REST API to get variant effect predictions "
-                    "(VEP), transcript information, and exon mapping for a variant. "
-                    "Provide the transcript ID and HGVS cDNA notation."
+                    "Query the Ensembl Variant Effect Predictor (VEP) for a variant's "
+                    "consequence on the patient's transcript: consequence terms, "
+                    "impact, exon, protein position and amino acid change. Prefer the "
+                    "genomic HGVS form from the validated variant block."
                 ),
                 "parameters": {
                     "type": "object",
                     "properties": {
+                        "genomic_hgvs": {
+                            "type": "string",
+                            "description": (
+                                "Genomic HGVS on GRCh38 from the validated variant block "
+                                "(e.g., NC_000023.11:g.33020162A>G)"
+                            ),
+                        },
                         "transcript": {
                             "type": "string",
                             "description": (
-                                "RefSeq or Ensembl transcript ID "
-                                "(e.g., NM_000492.4, ENST00000003084)"
+                                "Transcript to report on, current version "
+                                "(e.g., NM_004006.3)"
                             ),
                         },
                         "hgvs_cdna": {
                             "type": "string",
                             "description": (
-                                "HGVS cDNA notation including transcript "
-                                "(e.g., NM_000492.4:c.1521_1523del)"
+                                "Fallback when no genomic form is available: transcript "
+                                "HGVS cDNA (e.g., NM_000492.4:c.1521_1523del)"
                             ),
                         },
                         "gene": {
@@ -45,21 +70,22 @@ class EnsemblTool(BaseTool):
                             "description": "HGNC gene symbol (e.g., CFTR)",
                         },
                     },
-                    "required": ["hgvs_cdna"],
+                    "required": [],
                 },
             },
         }
 
     def execute(self, **kwargs) -> tuple[str, list[EvidenceRecord]]:
+        genomic_hgvs = kwargs.get("genomic_hgvs", "")
         hgvs_cdna = kwargs.get("hgvs_cdna", "")
-        transcript = kwargs.get("transcript", "")
+        transcript = kwargs.get("transcript", "") or hgvs_cdna.split(":")[0]
         gene = kwargs.get("gene", "")
         evidence: list[EvidenceRecord] = []
         results = []
 
-        # VEP analysis
-        vep_result = self._query_vep(hgvs_cdna, evidence)
-        if vep_result:
+        notation = genomic_hgvs or hgvs_cdna
+        if notation:
+            vep_result = self._query_vep(notation, transcript, evidence)
             results.append(vep_result)
 
         # Transcript lookup if we have a gene
@@ -69,67 +95,109 @@ class EnsemblTool(BaseTool):
                 results.append(tx_result)
 
         if not results:
-            return f"No Ensembl data found for {hgvs_cdna}.", evidence
+            return "No Ensembl data found: no variant or gene given.", evidence
 
         summary = "\n\n".join(results)
         return summary[:2000], evidence
 
     def _query_vep(
-        self, hgvs_notation: str, evidence: list[EvidenceRecord]
-    ) -> str | None:
-        """Query VEP for variant consequences."""
-        try:
-            url = f"{ENSEMBL_REST}/vep/human/hgvs/{hgvs_notation}"
-            resp = requests.get(
-                url,
-                headers={"Content-Type": "application/json"},
-                params={"content-type": "application/json"},
-                timeout=TIMEOUT,
-            )
-            if resp.status_code != 200:
-                return None
+        self, notation: str, transcript: str, evidence: list[EvidenceRecord]
+    ) -> str:
+        """Query VEP and report the consequence on the given transcript.
 
-            data = resp.json()
-            if not data:
-                return None
-
-            entry = data[0]
-            evidence.append(
-                EvidenceRecord(
-                    url=f"https://www.ensembl.org/Homo_sapiens/Tools/VEP"
+        Always returns text: either the consequence block or a line saying
+        VEP returned nothing and why, so the model never sees a silent gap.
+        """
+        url = f"{ENSEMBL_REST}/vep/human/hgvs/{notation}"
+        # refseq=1 lets VEP parse NM_ transcripts and report on them; numbers
+        # adds exon/intron numbers; hgvs adds the HGVS protein string.
+        params = {"refseq": 1, "numbers": 1, "hgvs": 1}
+        resp = None
+        for attempt in range(1, VEP_TIMEOUT_RETRIES + 1):
+            try:
+                resp = requests.get(
+                    url,
+                    headers={"Content-Type": "application/json"},
+                    params=params,
+                    timeout=VEP_TIMEOUT,
                 )
+                break
+            except requests.Timeout:
+                logger.warning(f"VEP timeout (attempt {attempt}/{VEP_TIMEOUT_RETRIES}): {url}")
+                if attempt < VEP_TIMEOUT_RETRIES:
+                    time.sleep(VEP_RETRY_INTERVAL_SECONDS)
+            except requests.RequestException as e:
+                logger.warning(f"VEP request failed: {url}: {e}")
+                return f"VEP returned nothing for {notation}: request failed ({e})"
+        if resp is None:
+            return f"VEP returned nothing for {notation}: timeout after {VEP_TIMEOUT_RETRIES} attempts"
+
+        if resp.status_code != 200 or "json" not in resp.headers.get("content-type", ""):
+            reason = f"HTTP {resp.status_code}, content-type {resp.headers.get('content-type', '')!r}"
+            logger.warning(f"VEP error: {url}: {reason}: {resp.text[:200]!r}")
+            return f"VEP returned nothing for {notation}: {reason}"
+        data = resp.json()
+        if not data:
+            logger.warning(f"VEP empty reply: {url}")
+            return f"VEP returned nothing for {notation}: empty reply"
+
+        entry = data[0]
+        chrom, start, end = entry.get("seq_region_name"), entry.get("start"), entry.get("end")
+        if chrom and start and end:
+            evidence.append(
+                EvidenceRecord(url=ENSEMBL_LOCATION_URL.format(chrom=chrom, start=start, end=end))
+            )
+        else:
+            logger.warning(f"VEP reply lacks seq_region_name/start/end: {url}")
+
+        tc = self._transcript_entry(entry.get("transcript_consequences", []), transcript)
+        if tc is None:
+            have = [t.get("transcript_id") for t in entry.get("transcript_consequences", [])]
+            logger.warning(f"VEP reply has no entry for transcript {transcript!r}: {url}; has {have[:8]}")
+            return (
+                f"VEP for {notation}: most severe consequence across transcripts: "
+                f"{entry.get('most_severe_consequence', 'unknown')}; no entry for transcript "
+                f"{transcript or '(none given)'}"
             )
 
-            consequences = []
-            for tc in entry.get("transcript_consequences", [])[:3]:
-                cons = ", ".join(tc.get("consequence_terms", []))
-                impact = tc.get("impact", "")
-                biotype = tc.get("biotype", "")
-                protein_pos = tc.get("protein_start", "")
-                amino_acids = tc.get("amino_acids", "")
-                sift = tc.get("sift_prediction", "")
-                polyphen = tc.get("polyphen_prediction", "")
+        missing = [f for f in VEP_REQUIRED_FIELDS if tc.get(f) in (None, "", [])]
+        if missing:
+            logger.warning(f"VEP entry for {transcript} lacks {missing}: {url}")
 
-                parts = [f"Consequence: {cons}", f"Impact: {impact}"]
-                if biotype:
-                    parts.append(f"Biotype: {biotype}")
-                if protein_pos:
-                    parts.append(f"Protein position: {protein_pos}")
-                if amino_acids:
-                    parts.append(f"Amino acid change: {amino_acids}")
-                if sift:
-                    parts.append(f"SIFT: {sift}")
-                if polyphen:
-                    parts.append(f"PolyPhen: {polyphen}")
+        def show(field: str) -> str:
+            value = tc.get(field)
+            if value in (None, "", []):
+                return "not returned"
+            if isinstance(value, list):
+                return ", ".join(value)
+            text = str(value)
+            return text if len(text) <= 60 else text[:57] + "..."
 
-                consequences.append("\n".join(parts))
+        lines = [
+            f"VEP (Ensembl, GRCh38) for {notation} on transcript {tc.get('transcript_id')}:",
+            f"Consequence: {show('consequence_terms')}",
+            f"Impact: {show('impact')}",
+            f"Exon: {show('exon')}" + (f" | Intron: {show('intron')}" if tc.get("intron") else ""),
+            f"Protein position: {show('protein_start')}"
+            + (f"-{tc['protein_end']}" if tc.get("protein_end") not in (None, tc.get("protein_start")) else ""),
+            f"Amino acid change: {show('amino_acids')}",
+            f"HGVS protein: {show('hgvsp')}",
+            f"HGVS cDNA: {show('hgvsc')}",
+            f"Most severe consequence across all transcripts: {entry.get('most_severe_consequence', 'unknown')}",
+        ]
+        return "\n".join(lines)
 
-            most_severe = entry.get("most_severe_consequence", "unknown")
-            header = f"VEP Analysis for {hgvs_notation}:\nMost severe consequence: {most_severe}"
-            return header + "\n\n" + "\n---\n".join(consequences)
-
-        except requests.RequestException:
+    @staticmethod
+    def _transcript_entry(consequences: list[dict], transcript: str) -> dict | None:
+        """The VEP entry for the given transcript: exact ID, else same accession any version."""
+        if not transcript:
             return None
+        exact = [t for t in consequences if t.get("transcript_id") == transcript]
+        if exact:
+            return exact[0]
+        accession = transcript.split(".")[0]
+        same = [t for t in consequences if str(t.get("transcript_id", "")).split(".")[0] == accession]
+        return same[0] if same else None
 
     def _lookup_gene(
         self, gene: str, evidence: list[EvidenceRecord]
@@ -144,6 +212,7 @@ class EnsemblTool(BaseTool):
                 timeout=TIMEOUT,
             )
             if resp.status_code != 200:
+                logger.warning(f"Ensembl gene lookup HTTP {resp.status_code}: {url}")
                 return None
 
             data = resp.json()
@@ -171,5 +240,6 @@ class EnsemblTool(BaseTool):
                 f"URL: {gene_url}"
             )
 
-        except requests.RequestException:
+        except requests.RequestException as e:
+            logger.warning(f"Ensembl gene lookup failed: {gene}: {e}")
             return None

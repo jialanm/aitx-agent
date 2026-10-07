@@ -1,0 +1,128 @@
+[
+ {
+  "end": 31235630,
+  "most_severe_consequence": "missense_variant",
+  "transcript_consequences": [
+   {
+    "protein_start": 1243,
+    "variant_allele": "C",
+    "codons": "cTg/cCg",
+    "sift_score": 0,
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "gene_id": "4763",
+    "gene_symbol": "NF1",
+    "protein_end": 1243,
+    "polyphen_prediction": "probably_damaging",
+    "used_ref": "T",
+    "given_ref": "T",
+    "biotype": "protein_coding",
+    "cdna_end": 4061,
+    "cds_start": 3728,
+    "gene_symbol_source": "EntrezGene",
+    "polyphen_score": 0.991,
+    "strand": 1,
+    "sift_prediction": "deleterious_low_confidence",
+    "transcript_id": "NM_000267.4",
+    "impact": "MODERATE",
+    "hgvsc": "NM_000267.4:c.3728T>C",
+    "amino_acids": "L/P",
+    "cdna_start": 4061,
+    "cds_end": 3728,
+    "exon": "28/57",
+    "hgvsp": "NP_000258.1:p.Leu1243Pro"
+   },
+   {
+    "used_ref": "T",
+    "given_ref": "T",
+    "biotype": "protein_coding",
+    "cdna_end": 4061,
+    "cds_start": 3728,
+    "polyphen_score": 0.221,
+    "strand": 1,
+    "gene_symbol_source": "EntrezGene",
+    "transcript_id": "NM_001042492.3",
+    "impact": "MODERATE",
+    "sift_prediction": "deleterious_low_confidence",
+    "cdna_start": 4061,
+    "amino_acids": "L/P",
+    "hgvsc": "NM_001042492.3:c.3728T>C",
+    "hgvsp": "NP_001035957.1:p.Leu1243Pro",
+    "exon": "28/58",
+    "cds_end": 3728,
+    "variant_allele": "C",
+    "codons": "cTg/cCg",
+    "protein_start": 1243,
+    "sift_score": 0,
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "gene_id": "4763",
+    "gene_symbol": "NF1",
+    "protein_end": 1243,
+    "polyphen_prediction": "benign"
+   }
+  ],
+  "id": "NC_000017.11:g.31235630T>C",
+  "seq_region_name": "17",
+  "allele_string": "T/C",
+  "input": "NC_000017.11:g.31235630T>C",
+  "colocated_variants": [
+   {
+    "seq_region_name": "17",
+    "start": 31235630,
+    "strand": 1,
+    "end": 31235630,
+    "id": "CD972353",
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION"
+   },
+   {
+    "strand": 1,
+    "start": 31235630,
+    "seq_region_name": "17",
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION",
+    "end": 31235630,
+    "id": "CM043031"
+   },
+   {
+    "start": 31235630,
+    "strand": 1,
+    "clin_sig_allele": "G:likely_pathogenic;C:likely_pathogenic;C:pathogenic",
+    "seq_region_name": "17",
+    "pubmed": [
+     15520408
+    ],
+    "phenotype_or_disease": 1,
+    "allele_string": "T/C/G",
+    "clin_sig": [
+     "likely_pathogenic",
+     "pathogenic"
+    ],
+    "clin_sig_ref_allele": "T",
+    "id": "rs137854564",
+    "end": 31235630,
+    "var_synonyms": {
+     "UniProt": [
+      "VAR_032472"
+     ],
+     "ClinVar": [
+      "RCV000680822",
+      "RCV000000402",
+      "VCV000000371",
+      "RCV002005965",
+      "VCV001484658"
+     ],
+     "OMIM": [
+      613113.0041
+     ]
+    }
+   }
+  ],
+  "start": 31235630,
+  "strand": 1,
+  "assembly_name": "GRCh38"
+ }
+]

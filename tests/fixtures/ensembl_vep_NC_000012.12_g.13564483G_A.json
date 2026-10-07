@@ -1,0 +1,118 @@
+[
+ {
+  "most_severe_consequence": "stop_gained",
+  "input": "NC_000012.12:g.13564483G>A",
+  "end": 13564483,
+  "transcript_consequences": [
+   {
+    "given_ref": "G",
+    "transcript_id": "NM_000834.5",
+    "hgvsp": "NP_000825.2:p.Gln919Ter",
+    "variant_allele": "A",
+    "gene_id": "2904",
+    "cds_start": 2755,
+    "cdna_start": 3463,
+    "strand": -1,
+    "used_ref": "G",
+    "biotype": "protein_coding",
+    "consequence_terms": [
+     "stop_gained"
+    ],
+    "cds_end": 2755,
+    "codons": "Cag/Tag",
+    "protein_start": 919,
+    "amino_acids": "Q/*",
+    "impact": "HIGH",
+    "gene_symbol": "GRIN2B",
+    "protein_end": 919,
+    "hgvsc": "NM_000834.5:c.2755C>T",
+    "gene_symbol_source": "EntrezGene",
+    "exon": "14/14",
+    "cdna_end": 3463
+   },
+   {
+    "cds_end": 2755,
+    "consequence_terms": [
+     "stop_gained"
+    ],
+    "protein_start": 919,
+    "codons": "Cag/Tag",
+    "biotype": "protein_coding",
+    "amino_acids": "Q/*",
+    "protein_end": 919,
+    "hgvsc": "NM_001413992.1:c.2755C>T",
+    "impact": "HIGH",
+    "gene_symbol": "GRIN2B",
+    "gene_symbol_source": "EntrezGene",
+    "cdna_end": 3656,
+    "exon": "15/15",
+    "transcript_id": "NM_001413992.1",
+    "given_ref": "G",
+    "hgvsp": "NP_001400921.1:p.Gln919Ter",
+    "cdna_start": 3656,
+    "variant_allele": "A",
+    "gene_id": "2904",
+    "cds_start": 2755,
+    "strand": -1,
+    "used_ref": "G"
+   },
+   {
+    "gene_symbol_source": "EntrezGene",
+    "exon": "4/4",
+    "cdna_end": 661,
+    "impact": "HIGH",
+    "gene_symbol": "GRIN2B",
+    "protein_end": 181,
+    "hgvsc": "XM_005253351.3:c.541C>T",
+    "amino_acids": "Q/*",
+    "biotype": "protein_coding",
+    "consequence_terms": [
+     "stop_gained"
+    ],
+    "cds_end": 541,
+    "protein_start": 181,
+    "codons": "Cag/Tag",
+    "used_ref": "G",
+    "strand": -1,
+    "variant_allele": "A",
+    "cds_start": 541,
+    "gene_id": "2904",
+    "cdna_start": 661,
+    "hgvsp": "XP_005253408.1:p.Gln181Ter",
+    "given_ref": "G",
+    "transcript_id": "XM_005253351.3"
+   }
+  ],
+  "allele_string": "G/A",
+  "seq_region_name": "12",
+  "assembly_name": "GRCh38",
+  "start": 13564483,
+  "colocated_variants": [
+   {
+    "clin_sig_ref_allele": "G",
+    "start": 13564483,
+    "allele_string": "G/A/T",
+    "var_synonyms": {
+     "ClinVar": [
+      "RCV001229836",
+      "VCV000956942",
+      "RCV001056301",
+      "VCV000851821"
+     ]
+    },
+    "phenotype_or_disease": 1,
+    "seq_region_name": "12",
+    "clin_sig": [
+     "uncertain_significance",
+     "pathogenic"
+    ],
+    "clin_sig_allele": "T:uncertain_significance;A:pathogenic",
+    "end": 13564483,
+    "id": "rs1555102548",
+    "strand": 1
+   }
+  ],
+  "id": "NC_000012.12:g.13564483G>A",
+  "strand": 1
+ }
+]

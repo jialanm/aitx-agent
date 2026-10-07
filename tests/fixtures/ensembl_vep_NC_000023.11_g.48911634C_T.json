@@ -1,0 +1,311 @@
+[
+ {
+  "start": 48911634,
+  "assembly_name": "GRCh38",
+  "seq_region_name": "X",
+  "allele_string": "C/T",
+  "transcript_consequences": [
+   {
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "polyphen_score": 0,
+    "codons": "atG/atA",
+    "protein_start": 1,
+    "biotype": "protein_coding",
+    "amino_acids": "M/I",
+    "sift_score": 0,
+    "protein_end": 1,
+    "hgvsc": "NM_001032289.3:c.3G>A",
+    "impact": "HIGH",
+    "gene_symbol": "SLC35A2",
+    "gene_symbol_source": "EntrezGene",
+    "cdna_end": 13,
+    "exon": "1/4",
+    "transcript_id": "NM_001032289.3",
+    "given_ref": "C",
+    "hgvsp": "NP_001027460.1:p.Met1?",
+    "cdna_start": 13,
+    "polyphen_prediction": "unknown",
+    "variant_allele": "T",
+    "cds_start": 3,
+    "gene_id": "7355",
+    "strand": -1,
+    "used_ref": "C",
+    "sift_prediction": "deleterious_low_confidence"
+   },
+   {
+    "amino_acids": "M/I",
+    "sift_score": 0.03,
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "polyphen_score": 0,
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "biotype": "protein_coding",
+    "exon": "1/4",
+    "cdna_end": 13,
+    "gene_symbol_source": "EntrezGene",
+    "hgvsc": "NM_001042498.3:c.3G>A",
+    "protein_end": 1,
+    "gene_symbol": "SLC35A2",
+    "impact": "HIGH",
+    "hgvsp": "NP_001035963.1:p.Met1?",
+    "transcript_id": "NM_001042498.3",
+    "given_ref": "C",
+    "sift_prediction": "deleterious_low_confidence",
+    "used_ref": "C",
+    "strand": -1,
+    "cdna_start": 13,
+    "cds_start": 3,
+    "gene_id": "7355",
+    "polyphen_prediction": "unknown",
+    "variant_allele": "T"
+   },
+   {
+    "gene_symbol": "SLC35A2",
+    "impact": "HIGH",
+    "hgvsc": "NM_001282647.2:c.3G>A",
+    "protein_end": 1,
+    "exon": "1/5",
+    "cdna_end": 13,
+    "gene_symbol_source": "EntrezGene",
+    "biotype": "protein_coding",
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "polyphen_score": 0,
+    "cds_end": 3,
+    "sift_score": 0,
+    "amino_acids": "M/I",
+    "gene_id": "7355",
+    "cds_start": 3,
+    "variant_allele": "T",
+    "polyphen_prediction": "unknown",
+    "cdna_start": 13,
+    "sift_prediction": "deleterious_low_confidence",
+    "used_ref": "C",
+    "strand": -1,
+    "given_ref": "C",
+    "transcript_id": "NM_001282647.2",
+    "hgvsp": "NP_001269576.1:p.Met1?"
+   },
+   {
+    "transcript_id": "NM_001282648.2",
+    "consequence_terms": [
+     "intron_variant"
+    ],
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "intron": "1/3",
+    "gene_symbol_source": "EntrezGene",
+    "used_ref": "C",
+    "strand": -1,
+    "hgvsc": "NM_001282648.2:c.19+225G>A",
+    "gene_symbol": "SLC35A2",
+    "gene_id": "7355",
+    "impact": "MODIFIER",
+    "variant_allele": "T"
+   },
+   {
+    "used_ref": "C",
+    "strand": -1,
+    "sift_prediction": "deleterious_low_confidence",
+    "cdna_start": 13,
+    "variant_allele": "T",
+    "polyphen_prediction": "benign",
+    "cds_start": 3,
+    "gene_id": "7355",
+    "hgvsp": "NP_001269578.1:p.Met1?",
+    "transcript_id": "NM_001282649.2",
+    "given_ref": "C",
+    "gene_symbol_source": "EntrezGene",
+    "exon": "1/3",
+    "cdna_end": 13,
+    "protein_end": 1,
+    "hgvsc": "NM_001282649.2:c.3G>A",
+    "impact": "HIGH",
+    "gene_symbol": "SLC35A2",
+    "amino_acids": "M/I",
+    "sift_score": 0,
+    "polyphen_score": 0,
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "biotype": "protein_coding"
+   },
+   {
+    "sift_score": 0.03,
+    "amino_acids": "M/I",
+    "biotype": "protein_coding",
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "polyphen_score": 0,
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "cdna_end": 13,
+    "exon": "1/4",
+    "gene_symbol_source": "EntrezGene",
+    "gene_symbol": "SLC35A2",
+    "impact": "HIGH",
+    "hgvsc": "NM_001282650.2:c.3G>A",
+    "protein_end": 1,
+    "hgvsp": "NP_001269579.1:p.Met1?",
+    "given_ref": "C",
+    "transcript_id": "NM_001282650.2",
+    "sift_prediction": "deleterious_low_confidence",
+    "strand": -1,
+    "used_ref": "C",
+    "gene_id": "7355",
+    "cds_start": 3,
+    "variant_allele": "T",
+    "polyphen_prediction": "unknown",
+    "cdna_start": 13
+   },
+   {
+    "amino_acids": "M/I",
+    "sift_score": 0,
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "polyphen_score": 0,
+    "biotype": "protein_coding",
+    "exon": "1/5",
+    "cdna_end": 13,
+    "gene_symbol_source": "EntrezGene",
+    "hgvsc": "NM_001282651.2:c.3G>A",
+    "protein_end": 1,
+    "gene_symbol": "SLC35A2",
+    "impact": "HIGH",
+    "hgvsp": "NP_001269580.1:p.Met1?",
+    "transcript_id": "NM_001282651.2",
+    "given_ref": "C",
+    "sift_prediction": "deleterious_low_confidence",
+    "used_ref": "C",
+    "strand": -1,
+    "cdna_start": 13,
+    "gene_id": "7355",
+    "cds_start": 3,
+    "variant_allele": "T",
+    "polyphen_prediction": "benign"
+   },
+   {
+    "biotype": "protein_coding",
+    "consequence_terms": [
+     "start_lost"
+    ],
+    "cds_end": 3,
+    "polyphen_score": 0,
+    "protein_start": 1,
+    "codons": "atG/atA",
+    "sift_score": 0.03,
+    "amino_acids": "M/I",
+    "impact": "HIGH",
+    "gene_symbol": "SLC35A2",
+    "protein_end": 1,
+    "hgvsc": "NM_005660.3:c.3G>A",
+    "gene_symbol_source": "EntrezGene",
+    "cdna_end": 13,
+    "exon": "1/5",
+    "given_ref": "C",
+    "transcript_id": "NM_005660.3",
+    "hgvsp": "NP_005651.1:p.Met1?",
+    "variant_allele": "T",
+    "polyphen_prediction": "unknown",
+    "gene_id": "7355",
+    "cds_start": 3,
+    "cdna_start": 13,
+    "used_ref": "C",
+    "strand": -1,
+    "sift_prediction": "deleterious_low_confidence"
+   },
+   {
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "NM_006875.4",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "distance": 1548,
+    "strand": -1,
+    "used_ref": "C",
+    "gene_symbol_source": "EntrezGene",
+    "gene_symbol": "PIM2",
+    "gene_id": "11040",
+    "variant_allele": "T",
+    "impact": "MODIFIER"
+   },
+   {
+    "gene_symbol": "PIM2",
+    "gene_id": "11040",
+    "variant_allele": "T",
+    "impact": "MODIFIER",
+    "distance": 1548,
+    "used_ref": "C",
+    "strand": -1,
+    "gene_symbol_source": "EntrezGene",
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "XM_047441792.1",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ]
+   }
+  ],
+  "end": 48911634,
+  "input": "NC_000023.11:g.48911634C>T",
+  "most_severe_consequence": "start_lost",
+  "strand": 1,
+  "id": "NC_000023.11:g.48911634C>T",
+  "colocated_variants": [
+   {
+    "end": 48911634,
+    "strand": 1,
+    "id": "CM132546",
+    "seq_region_name": "X",
+    "allele_string": "HGMD_MUTATION",
+    "phenotype_or_disease": 1,
+    "start": 48911634
+   },
+   {
+    "seq_region_name": "X",
+    "clin_sig": [
+     "pathogenic"
+    ],
+    "clin_sig_allele": "T:pathogenic",
+    "end": 48911634,
+    "id": "rs587776962",
+    "pubmed": [
+     23561849
+    ],
+    "strand": 1,
+    "clin_sig_ref_allele": "C",
+    "start": 48911634,
+    "allele_string": "C/T",
+    "var_synonyms": {
+     "ClinVar": [
+      "RCV000043516",
+      "VCV000050365"
+     ],
+     "OMIM": [
+      314375.0003
+     ]
+    },
+    "phenotype_or_disease": 1
+   }
+  ]
+ }
+]

@@ -1,0 +1,439 @@
+[
+ {
+  "most_severe_consequence": "frameshift_variant",
+  "input": "NC_000019.10:g.35738488del",
+  "end": 35738488,
+  "transcript_consequences": [
+   {
+    "distance": 4039,
+    "strand": -1,
+    "used_ref": "C",
+    "gene_symbol_source": "EntrezGene",
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "NM_001040425.3",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ]
+   },
+   {
+    "gene_symbol_source": "EntrezGene",
+    "distance": 313,
+    "strand": -1,
+    "used_ref": "C",
+    "gene_symbol": "IGFLR1",
+    "gene_id": "79713",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "transcript_id": "NM_001346003.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "protein_coding",
+    "given_ref": "C"
+   },
+   {
+    "used_ref": "C",
+    "strand": -1,
+    "distance": 313,
+    "gene_symbol_source": "EntrezGene",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1",
+    "given_ref": "C",
+    "biotype": "protein_coding",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NM_001346004.2"
+   },
+   {
+    "transcript_id": "NM_001346005.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 313,
+    "used_ref": "C",
+    "strand": -1
+   },
+   {
+    "distance": 313,
+    "used_ref": "C",
+    "strand": -1,
+    "gene_symbol_source": "EntrezGene",
+    "gene_symbol": "IGFLR1",
+    "gene_id": "79713",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "NM_001346006.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ]
+   },
+   {
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 3976,
+    "used_ref": "C",
+    "strand": -1,
+    "transcript_id": "NM_001369824.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "protein_coding",
+    "given_ref": "C"
+   },
+   {
+    "hgvsp": "NP_055542.1:p.Ile2694SerfsTer44",
+    "given_ref": "C",
+    "transcript_id": "NM_014727.3",
+    "used_ref": "C",
+    "strand": 1,
+    "cds_start": 8079,
+    "gene_id": "9757",
+    "variant_allele": "-",
+    "cdna_start": 8095,
+    "amino_acids": "P/X",
+    "biotype": "protein_coding",
+    "protein_start": 2693,
+    "codons": "ccC/cc",
+    "cds_end": 8079,
+    "consequence_terms": [
+     "frameshift_variant"
+    ],
+    "cdna_end": 8095,
+    "exon": "37/37",
+    "gene_symbol_source": "EntrezGene",
+    "gene_symbol": "KMT2B",
+    "impact": "HIGH",
+    "hgvsc": "NM_014727.3:c.8079del",
+    "protein_end": 2693
+   },
+   {
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "NM_024660.4",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "gene_symbol": "IGFLR1",
+    "gene_id": "79713",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "distance": 313,
+    "used_ref": "C",
+    "strand": -1,
+    "gene_symbol_source": "EntrezGene"
+   },
+   {
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "distance": 4039,
+    "used_ref": "C",
+    "strand": -1,
+    "gene_symbol_source": "EntrezGene",
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "transcript_id": "NM_144987.4",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ]
+   },
+   {
+    "transcript_id": "NR_110173.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "misc_RNA",
+    "given_ref": "C",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 4039,
+    "used_ref": "C",
+    "strand": -1,
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "impact": "MODIFIER",
+    "variant_allele": "-"
+   },
+   {
+    "given_ref": "C",
+    "biotype": "misc_RNA",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NR_144338.2",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1",
+    "used_ref": "C",
+    "strand": -1,
+    "distance": 313,
+    "gene_symbol_source": "EntrezGene"
+   },
+   {
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 313,
+    "strand": -1,
+    "used_ref": "C",
+    "transcript_id": "NR_144339.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "misc_RNA",
+    "given_ref": "C"
+   },
+   {
+    "gene_symbol": "IGFLR1",
+    "gene_id": "79713",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "distance": 313,
+    "strand": -1,
+    "used_ref": "C",
+    "gene_symbol_source": "EntrezGene",
+    "biotype": "misc_RNA",
+    "given_ref": "C",
+    "transcript_id": "NR_144340.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ]
+   },
+   {
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NR_144341.2",
+    "given_ref": "C",
+    "biotype": "misc_RNA",
+    "gene_symbol_source": "EntrezGene",
+    "used_ref": "C",
+    "strand": -1,
+    "distance": 313,
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1"
+   },
+   {
+    "transcript_id": "NR_144342.2",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "misc_RNA",
+    "given_ref": "C",
+    "gene_id": "79713",
+    "gene_symbol": "IGFLR1",
+    "impact": "MODIFIER",
+    "variant_allele": "-",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 313,
+    "used_ref": "C",
+    "strand": -1
+   },
+   {
+    "gene_symbol_source": "EntrezGene",
+    "strand": -1,
+    "used_ref": "C",
+    "distance": 4039,
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NR_163169.1",
+    "given_ref": "C",
+    "biotype": "misc_RNA"
+   },
+   {
+    "transcript_id": "NR_163170.1",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "biotype": "misc_RNA",
+    "given_ref": "C",
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_symbol_source": "EntrezGene",
+    "distance": 4039,
+    "strand": -1,
+    "used_ref": "C"
+   },
+   {
+    "biotype": "misc_RNA",
+    "given_ref": "C",
+    "transcript_id": "NR_163171.1",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "distance": 4039,
+    "strand": -1,
+    "used_ref": "C",
+    "gene_symbol_source": "EntrezGene"
+   },
+   {
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "strand": -1,
+    "used_ref": "C",
+    "distance": 3976,
+    "gene_symbol_source": "EntrezGene",
+    "given_ref": "C",
+    "biotype": "misc_RNA",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NR_163172.2"
+   },
+   {
+    "strand": -1,
+    "used_ref": "C",
+    "distance": 4039,
+    "gene_symbol_source": "EntrezGene",
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_id": "199746",
+    "gene_symbol": "U2AF1L4",
+    "given_ref": "C",
+    "biotype": "misc_RNA",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "NR_163173.1"
+   },
+   {
+    "amino_acids": "P/X",
+    "biotype": "protein_coding",
+    "codons": "ccC/cc",
+    "protein_start": 2671,
+    "cds_end": 8013,
+    "consequence_terms": [
+     "frameshift_variant"
+    ],
+    "cdna_end": 8029,
+    "exon": "37/37",
+    "gene_symbol_source": "EntrezGene",
+    "gene_symbol": "KMT2B",
+    "impact": "HIGH",
+    "hgvsc": "XM_011527561.3:c.8013del",
+    "protein_end": 2671,
+    "hgvsp": "XP_011525863.3:p.Ile2672SerfsTer44",
+    "given_ref": "C",
+    "transcript_id": "XM_011527561.3",
+    "strand": 1,
+    "used_ref": "C",
+    "cds_start": 8013,
+    "gene_id": "9757",
+    "variant_allele": "-",
+    "cdna_start": 8029
+   },
+   {
+    "variant_allele": "-",
+    "impact": "MODIFIER",
+    "gene_symbol": "KMT2B",
+    "gene_id": "9757",
+    "used_ref": "C",
+    "strand": 1,
+    "distance": 297,
+    "gene_symbol_source": "EntrezGene",
+    "given_ref": "C",
+    "biotype": "protein_coding",
+    "consequence_terms": [
+     "downstream_gene_variant"
+    ],
+    "transcript_id": "XM_011527562.3"
+   },
+   {
+    "hgvsp": "XP_047295743.1:p.Ile2602SerfsTer44",
+    "transcript_id": "XM_047439787.1",
+    "given_ref": "C",
+    "strand": 1,
+    "used_ref": "C",
+    "cdna_start": 7819,
+    "cds_start": 7803,
+    "gene_id": "9757",
+    "variant_allele": "-",
+    "amino_acids": "P/X",
+    "protein_start": 2601,
+    "codons": "ccC/cc",
+    "cds_end": 7803,
+    "consequence_terms": [
+     "frameshift_variant"
+    ],
+    "biotype": "protein_coding",
+    "exon": "36/36",
+    "cdna_end": 7819,
+    "gene_symbol_source": "EntrezGene",
+    "hgvsc": "XM_047439787.1:c.7803del",
+    "protein_end": 2601,
+    "gene_symbol": "KMT2B",
+    "impact": "HIGH"
+   }
+  ],
+  "allele_string": "C/-",
+  "seq_region_name": "19",
+  "assembly_name": "GRCh38",
+  "start": 35738488,
+  "colocated_variants": [
+   {
+    "start": 35738488,
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION",
+    "seq_region_name": "19",
+    "strand": 1,
+    "id": "CD171301",
+    "end": 35738488
+   },
+   {
+    "seq_region_name": "19",
+    "end": 35738488,
+    "somatic": 1,
+    "id": "COSV108746005",
+    "strand": 1,
+    "start": 35738488,
+    "var_synonyms": {
+     "COSMIC": [
+      "COSM10824186"
+     ]
+    },
+    "allele_string": "COSMIC_MUTATION",
+    "phenotype_or_disease": 1
+   }
+  ],
+  "id": "NC_000019.10:g.35738488del",
+  "strand": 1
+ }
+]

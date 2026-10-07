@@ -1,0 +1,199 @@
+[
+ {
+  "seq_region_name": "17",
+  "id": "NC_000017.11:g.50194032C>T",
+  "transcript_consequences": [
+   {
+    "gene_symbol": "COL1A1",
+    "polyphen_prediction": "unknown",
+    "protein_end": 560,
+    "variant_allele": "T",
+    "codons": "Ggt/Agt",
+    "protein_start": 560,
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "gene_id": "1277",
+    "sift_score": 0,
+    "amino_acids": "G/S",
+    "cdna_start": 1796,
+    "hgvsc": "NM_000088.4:c.1678G>A",
+    "impact": "MODERATE",
+    "transcript_id": "NM_000088.4",
+    "sift_prediction": "deleterious",
+    "hgvsp": "NP_000079.2:p.Gly560Ser",
+    "exon": "25/51",
+    "cds_end": 1678,
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "used_ref": "C",
+    "polyphen_score": 0,
+    "strand": -1,
+    "gene_symbol_source": "EntrezGene",
+    "cds_start": 1678,
+    "cdna_end": 1796
+   },
+   {
+    "protein_end": 560,
+    "gene_symbol": "COL1A1",
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "gene_id": "1277",
+    "protein_start": 560,
+    "codons": "Ggt/Agt",
+    "variant_allele": "T",
+    "cds_end": 1678,
+    "hgvsp": "XP_005257115.2:p.Gly560Ser",
+    "exon": "25/49",
+    "transcript_id": "XM_005257058.5",
+    "impact": "MODERATE",
+    "hgvsc": "XM_005257058.5:c.1678G>A",
+    "cdna_start": 1796,
+    "amino_acids": "G/S",
+    "cds_start": 1678,
+    "cdna_end": 1796,
+    "gene_symbol_source": "EntrezGene",
+    "strand": -1,
+    "used_ref": "C",
+    "biotype": "protein_coding",
+    "given_ref": "C"
+   },
+   {
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "used_ref": "C",
+    "variant_allele": "T",
+    "strand": -1,
+    "consequence_terms": [
+     "intron_variant"
+    ],
+    "gene_id": "1277",
+    "gene_symbol_source": "EntrezGene",
+    "intron": "14/37",
+    "hgvsc": "XM_005257059.5:c.958-1339G>A",
+    "impact": "MODIFIER",
+    "transcript_id": "XM_005257059.5",
+    "gene_symbol": "COL1A1"
+   },
+   {
+    "used_ref": "C",
+    "biotype": "protein_coding",
+    "given_ref": "C",
+    "cdna_end": 1598,
+    "cds_start": 1480,
+    "gene_symbol_source": "EntrezGene",
+    "strand": -1,
+    "transcript_id": "XM_011524341.2",
+    "impact": "MODERATE",
+    "hgvsc": "XM_011524341.2:c.1480G>A",
+    "amino_acids": "G/S",
+    "cdna_start": 1598,
+    "cds_end": 1480,
+    "hgvsp": "XP_011522643.1:p.Gly494Ser",
+    "exon": "22/48",
+    "protein_start": 494,
+    "variant_allele": "T",
+    "codons": "Ggt/Agt",
+    "gene_id": "1277",
+    "consequence_terms": [
+     "missense_variant"
+    ],
+    "gene_symbol": "COL1A1",
+    "protein_end": 494
+   }
+  ],
+  "most_severe_consequence": "missense_variant",
+  "end": 50194032,
+  "allele_string": "C/T",
+  "start": 50194032,
+  "strand": 1,
+  "colocated_variants": [
+   {
+    "id": "CM900065",
+    "end": 50194032,
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION",
+    "seq_region_name": "17",
+    "strand": 1,
+    "start": 50194032
+   },
+   {
+    "seq_region_name": "17",
+    "strand": 1,
+    "start": 50194032,
+    "end": 50194032,
+    "id": "CM930144",
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION"
+   },
+   {
+    "end": 50194032,
+    "id": "CM962422",
+    "phenotype_or_disease": 1,
+    "allele_string": "HGMD_MUTATION",
+    "seq_region_name": "17",
+    "strand": 1,
+    "start": 50194032
+   },
+   {
+    "end": 50194032,
+    "var_synonyms": {
+     "COSMIC": [
+      "COSM5342960"
+     ]
+    },
+    "id": "COSV56804476",
+    "phenotype_or_disease": 1,
+    "allele_string": "COSMIC_MUTATION",
+    "somatic": 1,
+    "seq_region_name": "17",
+    "start": 50194032,
+    "strand": 1
+   },
+   {
+    "start": 50194032,
+    "strand": 1,
+    "clin_sig_allele": "T:pathogenic;A:pathogenic;A:pathogenic/likely_pathogenic",
+    "seq_region_name": "17",
+    "pubmed": [
+     25944380
+    ],
+    "phenotype_or_disease": 1,
+    "allele_string": "C/A/G/T",
+    "clin_sig": [
+     "likely_pathogenic",
+     "pathogenic"
+    ],
+    "end": 50194032,
+    "var_synonyms": {
+     "OIVD": [
+      "COL1A1_00114",
+      "COL1A1_00109",
+      "COL1A1_00110"
+     ],
+     "ClinVar": [
+      "RCV004547777",
+      "RCV000722158",
+      "RCV002278251",
+      "RCV000255844",
+      "VCV000265433",
+      "RCV000293333",
+      "RCV000631487",
+      "VCV000526860",
+      "RCV003139957",
+      "RCV003411495",
+      "RCV004725133"
+     ],
+     "UniProt": [
+      "VAR_001668"
+     ]
+    },
+    "id": "rs67507747",
+    "clin_sig_ref_allele": "C"
+   }
+  ],
+  "input": "NC_000017.11:g.50194032C>T",
+  "assembly_name": "GRCh38"
+ }
+]
