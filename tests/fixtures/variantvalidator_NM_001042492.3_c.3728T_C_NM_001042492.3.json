@@ -1,0 +1,139 @@
+{
+ "NM_001042492.3:c.3728T>C": {
+  "alt_genomic_loci": [
+   {
+    "grch38": {
+     "hgvs_genomic_description": "NW_025791803.1:g.314804T>C",
+     "vcf": {
+      "alt": "C",
+      "chr": "HG2407_PATCH",
+      "pos": "314804",
+      "ref": "T"
+     }
+    }
+   },
+   {
+    "hg38": {
+     "hgvs_genomic_description": "NW_025791803.1:g.314804T>C",
+     "vcf": {
+      "alt": "C",
+      "chr": "chr17_MU273380v1_fix",
+      "pos": "314804",
+      "ref": "T"
+     }
+    }
+   }
+  ],
+  "annotations": {
+   "chromosome": "17",
+   "db_xref": {
+    "CCDS": "CCDS42292.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:7765",
+    "ncbigene": "4763",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "17q11.2",
+   "note": "neurofibromin 1",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS11264",
+    "CCDS42292",
+    "CCDS45645"
+   ],
+   "ensembl_gene_id": "ENSG00000196712",
+   "entrez_gene_id": "4763",
+   "hgnc_id": "HGNC:7765",
+   "omim_id": [
+    "613113"
+   ],
+   "ucsc_id": "uc002hgh.3"
+  },
+  "gene_symbol": "NF1",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "LRG_214p2:p.(L1243P)",
+   "lrg_tlr": "LRG_214p2:p.(Leu1243Pro)",
+   "slr": "NP_001035957.1:p.(L1243P)",
+   "tlr": "NP_001035957.1:p.(Leu1243Pro)"
+  },
+  "hgvs_refseqgene_variant": "",
+  "hgvs_transcript_variant": "NM_001042492.3:c.3728T>C",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000017.10:g.29562648T>C",
+    "vcf": {
+     "alt": "C",
+     "chr": "17",
+     "pos": "29562648",
+     "ref": "T"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000017.11:g.31235630T>C",
+    "vcf": {
+     "alt": "C",
+     "chr": "17",
+     "pos": "31235630",
+     "ref": "T"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000017.10:g.29562648T>C",
+    "vcf": {
+     "alt": "C",
+     "chr": "chr17",
+     "pos": "29562648",
+     "ref": "T"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000017.11:g.31235630T>C",
+    "vcf": {
+     "alt": "C",
+     "chr": "chr17",
+     "pos": "31235630",
+     "ref": "T"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_001035957.1",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001042492.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_001042492.3:c.3728T>C",
+  "transcript_description": "Homo sapiens neurofibromin 1 (NF1), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000017.10": {
+    "end_exon": "28",
+    "start_exon": "28"
+   },
+   "NC_000017.11": {
+    "end_exon": "28",
+    "start_exon": "28"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

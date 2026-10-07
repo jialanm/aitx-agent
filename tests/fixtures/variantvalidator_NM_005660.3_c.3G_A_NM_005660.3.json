@@ -1,0 +1,171 @@
+{
+ "NM_005660.3:c.3G>A": {
+  "alt_genomic_loci": [
+   {
+    "grch37": {
+     "hgvs_genomic_description": "NW_004070880.2:g.1151063C>T",
+     "vcf": {
+      "alt": "T",
+      "chr": "HG1436_HG1432_PATCH",
+      "pos": "1151063",
+      "ref": "C"
+     }
+    }
+   },
+   {
+    "hg19": {
+     "hgvs_genomic_description": "NW_004070880.2:g.1151063C>T",
+     "vcf": {
+      "alt": "T",
+      "chr": "NW_004070880.2",
+      "pos": "1151063",
+      "ref": "C"
+     }
+    }
+   },
+   {
+    "grch38": {
+     "hgvs_genomic_description": "NW_025791820.1:g.70469C>T",
+     "vcf": {
+      "alt": "T",
+      "chr": "HSCHRX_3_CTG3",
+      "pos": "70469",
+      "ref": "C"
+     }
+    }
+   },
+   {
+    "hg38": {
+     "hgvs_genomic_description": "NW_025791820.1:g.70469C>T",
+     "vcf": {
+      "alt": "T",
+      "chr": "NW_025791820.1",
+      "pos": "70469",
+      "ref": "C"
+     }
+    }
+   }
+  ],
+  "annotations": {
+   "chromosome": "X",
+   "db_xref": {
+    "CCDS": "CCDS14311.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:11022",
+    "ncbigene": "7355",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "Xp11.23",
+   "note": "solute carrier family 35 member A2",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS14311",
+    "CCDS35247",
+    "CCDS43937",
+    "CCDS65253",
+    "CCDS65254",
+    "CCDS75973",
+    "CCDS75974",
+    "CCDS75975"
+   ],
+   "ensembl_gene_id": "ENSG00000102100",
+   "entrez_gene_id": "7355",
+   "hgnc_id": "HGNC:11022",
+   "omim_id": [
+    "314375"
+   ],
+   "ucsc_id": "uc004dlo.4"
+  },
+  "gene_symbol": "SLC35A2",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_005651.1:p.(M1?)",
+   "tlr": "NP_005651.1:p.(Met1?)"
+  },
+  "hgvs_refseqgene_variant": "NG_034300.1:g.5325G>A",
+  "hgvs_transcript_variant": "NM_005660.3:c.3G>A",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000023.10:g.48768911C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "X",
+     "pos": "48768911",
+     "ref": "C"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000023.11:g.48911634C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "X",
+     "pos": "48911634",
+     "ref": "C"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000023.10:g.48768911C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chrX",
+     "pos": "48768911",
+     "ref": "C"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000023.11:g.48911634C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chrX",
+     "pos": "48911634",
+     "ref": "C"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_005651.1",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_034300.1",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_005660.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_005660.3:c.3G>A",
+  "transcript_description": "Homo sapiens solute carrier family 35 member A2 (SLC35A2), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000023.10": {
+    "end_exon": "1",
+    "start_exon": "1"
+   },
+   "NC_000023.11": {
+    "end_exon": "1",
+    "start_exon": "1"
+   },
+   "NG_034300.1": {
+    "end_exon": "1",
+    "start_exon": "1"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

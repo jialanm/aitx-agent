@@ -1,0 +1,120 @@
+{
+ "NM_020822.3:c.2849G>A": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "9",
+   "db_xref": {
+    "CCDS": "CCDS35175.2",
+    "ensemblgene": null,
+    "hgnc": "HGNC:18865",
+    "ncbigene": "57582",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "9q34.3",
+   "note": "potassium sodium-activated channel subfamily T member 1",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS35175",
+    "CCDS65188"
+   ],
+   "ensembl_gene_id": "ENSG00000107147",
+   "entrez_gene_id": "57582",
+   "hgnc_id": "HGNC:18865",
+   "omim_id": [
+    "608167"
+   ],
+   "ucsc_id": "uc011mdq.3"
+  },
+  "gene_symbol": "KCNT1",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_065873.2:p.(R950Q)",
+   "tlr": "NP_065873.2:p.(Arg950Gln)"
+  },
+  "hgvs_refseqgene_variant": "NG_033070.2:g.86847G>A",
+  "hgvs_transcript_variant": "NM_020822.3:c.2849G>A",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000009.11:g.138675877G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "9",
+     "pos": "138675877",
+     "ref": "G"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000009.12:g.135784031G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "9",
+     "pos": "135784031",
+     "ref": "G"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000009.11:g.138675877G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr9",
+     "pos": "138675877",
+     "ref": "G"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000009.12:g.135784031G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr9",
+     "pos": "135784031",
+     "ref": "G"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_065873.2",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_033070.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_020822.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_020822.3:c.2849G>A",
+  "transcript_description": "Homo sapiens potassium sodium-activated channel subfamily T member 1 (KCNT1), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000009.11": {
+    "end_exon": "25",
+    "start_exon": "25"
+   },
+   "NC_000009.12": {
+    "end_exon": "25",
+    "start_exon": "25"
+   },
+   "NG_033070.2": {
+    "end_exon": "25",
+    "start_exon": "25"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

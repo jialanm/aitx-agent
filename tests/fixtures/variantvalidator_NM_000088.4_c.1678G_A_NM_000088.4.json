@@ -1,0 +1,114 @@
+{
+ "NM_000088.4:c.1678G>A": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "17",
+   "db_xref": {
+    "CCDS": "CCDS11561.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:2197",
+    "ncbigene": "1277",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "17q21.33",
+   "note": "collagen type I alpha 1 chain",
+   "refseq_select": true,
+   "variant": "0"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS11561"
+   ],
+   "ensembl_gene_id": "ENSG00000108821",
+   "entrez_gene_id": "1277",
+   "hgnc_id": "HGNC:2197",
+   "omim_id": [
+    "120150"
+   ],
+   "ucsc_id": "uc002iqm.4"
+  },
+  "gene_symbol": "COL1A1",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "LRG_1p1:p.(G560S)",
+   "lrg_tlr": "LRG_1p1:p.(Gly560Ser)",
+   "slr": "NP_000079.2:p.(G560S)",
+   "tlr": "NP_000079.2:p.(Gly560Ser)"
+  },
+  "hgvs_refseqgene_variant": "",
+  "hgvs_transcript_variant": "NM_000088.4:c.1678G>A",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000017.10:g.48271393C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "17",
+     "pos": "48271393",
+     "ref": "C"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000017.11:g.50194032C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "17",
+     "pos": "50194032",
+     "ref": "C"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000017.10:g.48271393C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr17",
+     "pos": "48271393",
+     "ref": "C"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000017.11:g.50194032C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr17",
+     "pos": "50194032",
+     "ref": "C"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000079.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000088.4"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_000088.4:c.1678G>A",
+  "transcript_description": "Homo sapiens collagen type I alpha 1 chain (COL1A1), mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000017.10": {
+    "end_exon": "25",
+    "start_exon": "25"
+   },
+   "NC_000017.11": {
+    "end_exon": "25",
+    "start_exon": "25"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

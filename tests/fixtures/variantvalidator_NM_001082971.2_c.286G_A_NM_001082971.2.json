@@ -1,0 +1,124 @@
+{
+ "NM_001082971.2:c.286G>A": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "7",
+   "db_xref": {
+    "CCDS": "CCDS5511.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:2719",
+    "ncbigene": "1644",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "7p12.2-p12.1",
+   "note": "dopa decarboxylase",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS5511",
+    "CCDS56485",
+    "CCDS56486",
+    "CCDS56487",
+    "CCDS75598",
+    "CCDS75599"
+   ],
+   "ensembl_gene_id": "ENSG00000132437",
+   "entrez_gene_id": "1644",
+   "hgnc_id": "HGNC:2719",
+   "omim_id": [
+    "107930"
+   ],
+   "ucsc_id": "uc003tpg.5"
+  },
+  "gene_symbol": "DDC",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_001076440.2:p.(G96R)",
+   "tlr": "NP_001076440.2:p.(Gly96Arg)"
+  },
+  "hgvs_refseqgene_variant": "NG_008742.2:g.30461G>A",
+  "hgvs_transcript_variant": "NM_001082971.2:c.286G>A",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000007.13:g.50607642C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "7",
+     "pos": "50607642",
+     "ref": "C"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000007.14:g.50539944C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "7",
+     "pos": "50539944",
+     "ref": "C"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000007.13:g.50607642C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr7",
+     "pos": "50607642",
+     "ref": "C"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000007.14:g.50539944C>T",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr7",
+     "pos": "50539944",
+     "ref": "C"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_001076440.2",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_008742.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_001082971.2"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_001082971.2:c.286G>A",
+  "transcript_description": "Homo sapiens dopa decarboxylase (DDC), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000007.13": {
+    "end_exon": "3",
+    "start_exon": "3"
+   },
+   "NC_000007.14": {
+    "end_exon": "3",
+    "start_exon": "3"
+   },
+   "NG_008742.2": {
+    "end_exon": "3",
+    "start_exon": "3"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

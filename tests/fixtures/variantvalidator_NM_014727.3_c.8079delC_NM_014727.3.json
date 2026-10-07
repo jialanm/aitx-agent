@@ -1,0 +1,121 @@
+{
+ "NM_014727.3:c.8079del": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "19",
+   "db_xref": {
+    "CCDS": "CCDS46055.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:15840",
+    "ncbigene": "9757",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "19q13.12",
+   "note": "lysine methyltransferase 2B",
+   "refseq_select": true,
+   "variant": "0"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS46055"
+   ],
+   "ensembl_gene_id": "ENSG00000272333",
+   "entrez_gene_id": "9757",
+   "hgnc_id": "HGNC:15840",
+   "omim_id": [
+    "606834"
+   ],
+   "ucsc_id": ""
+  },
+  "gene_symbol": "KMT2B",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_055542.1:p.(I2694Sfs*44)",
+   "tlr": "NP_055542.1:p.(Ile2694SerfsTer44)"
+  },
+  "hgvs_refseqgene_variant": "NG_052906.1:g.25470del",
+  "hgvs_transcript_variant": "NM_014727.3:c.8079del",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000019.9:g.36229389del",
+    "vcf": {
+     "alt": "T",
+     "chr": "19",
+     "pos": "36229385",
+     "ref": "TC"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000019.10:g.35738488del",
+    "vcf": {
+     "alt": "T",
+     "chr": "19",
+     "pos": "35738484",
+     "ref": "TC"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000019.9:g.36229389del",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr19",
+     "pos": "36229385",
+     "ref": "TC"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000019.10:g.35738488del",
+    "vcf": {
+     "alt": "T",
+     "chr": "chr19",
+     "pos": "35738484",
+     "ref": "TC"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_055542.1",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_052906.1",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_014727.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_014727.3:c.8079delC",
+  "transcript_description": "Homo sapiens lysine methyltransferase 2B (KMT2B), mRNA",
+  "validation_warnings": [
+   "VariantSyntaxError: Removing redundant reference bases from variant description"
+  ],
+  "variant_exonic_positions": {
+   "NC_000019.10": {
+    "end_exon": "37",
+    "start_exon": "37"
+   },
+   "NC_000019.9": {
+    "end_exon": "37",
+    "start_exon": "37"
+   },
+   "NG_052906.1": {
+    "end_exon": "37",
+    "start_exon": "37"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

@@ -1,0 +1,119 @@
+{
+ "NM_000834.5:c.2755C>T": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "12",
+   "db_xref": {
+    "CCDS": "CCDS8662.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:4586",
+    "ncbigene": "2904",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "12p13.1",
+   "note": "glutamate ionotropic receptor NMDA type subunit 2B",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS8662"
+   ],
+   "ensembl_gene_id": "ENSG00000273079",
+   "entrez_gene_id": "2904",
+   "hgnc_id": "HGNC:4586",
+   "omim_id": [
+    "138252"
+   ],
+   "ucsc_id": "uc001rbt.3"
+  },
+  "gene_symbol": "GRIN2B",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_000825.2:p.(Q919*)",
+   "tlr": "NP_000825.2:p.(Gln919Ter)"
+  },
+  "hgvs_refseqgene_variant": "NG_031854.2:g.422530C>T",
+  "hgvs_transcript_variant": "NM_000834.5:c.2755C>T",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000012.11:g.13717417G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "12",
+     "pos": "13717417",
+     "ref": "G"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000012.12:g.13564483G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "12",
+     "pos": "13564483",
+     "ref": "G"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000012.11:g.13717417G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr12",
+     "pos": "13717417",
+     "ref": "G"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000012.12:g.13564483G>A",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr12",
+     "pos": "13564483",
+     "ref": "G"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000825.2",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_031854.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000834.5"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_000834.5:c.2755C>T",
+  "transcript_description": "Homo sapiens glutamate ionotropic receptor NMDA type subunit 2B (GRIN2B), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000012.11": {
+    "end_exon": "14",
+    "start_exon": "14"
+   },
+   "NC_000012.12": {
+    "end_exon": "14",
+    "start_exon": "14"
+   },
+   "NG_031854.2": {
+    "end_exon": "14",
+    "start_exon": "14"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

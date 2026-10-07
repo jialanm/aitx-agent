@@ -1,0 +1,124 @@
+{
+ "NM_004006.3:c.10453_10454delinsTA": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "X",
+   "db_xref": {
+    "CCDS": "CCDS14233.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:2928",
+    "ncbigene": "1756",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "Xp21.2-p21.1",
+   "note": "dystrophin",
+   "refseq_select": true,
+   "variant": "DP427M"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS14229",
+    "CCDS14230",
+    "CCDS14231",
+    "CCDS14232",
+    "CCDS14233",
+    "CCDS14234",
+    "CCDS48091",
+    "CCDS55394",
+    "CCDS55395",
+    "CCDS94585",
+    "CCDS94586"
+   ],
+   "ensembl_gene_id": "ENSG00000198947",
+   "entrez_gene_id": "1756",
+   "hgnc_id": "HGNC:2928",
+   "omim_id": [
+    "300377"
+   ],
+   "ucsc_id": "uc004dda.2"
+  },
+  "gene_symbol": "DMD",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_003997.2:p.(L3485*)",
+   "tlr": "NP_003997.2:p.(Leu3485Ter)"
+  },
+  "hgvs_refseqgene_variant": "",
+  "hgvs_transcript_variant": "NM_004006.3:c.10453_10454delinsTA",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000023.10:g.31187659_31187660delinsTA",
+    "vcf": {
+     "alt": "TA",
+     "chr": "X",
+     "pos": "31187659",
+     "ref": "AG"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000023.11:g.31169542_31169543delinsTA",
+    "vcf": {
+     "alt": "TA",
+     "chr": "X",
+     "pos": "31169542",
+     "ref": "AG"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000023.10:g.31187659_31187660delinsTA",
+    "vcf": {
+     "alt": "TA",
+     "chr": "chrX",
+     "pos": "31187659",
+     "ref": "AG"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000023.11:g.31169542_31169543delinsTA",
+    "vcf": {
+     "alt": "TA",
+     "chr": "chrX",
+     "pos": "31169542",
+     "ref": "AG"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_003997.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_004006.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NC_000023.11:g.31169542_31169543delinsTA",
+  "transcript_description": "Homo sapiens dystrophin (DMD), transcript variant Dp427m, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000023.10": {
+    "end_exon": "74",
+    "start_exon": "74"
+   },
+   "NC_000023.11": {
+    "end_exon": "74",
+    "start_exon": "74"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

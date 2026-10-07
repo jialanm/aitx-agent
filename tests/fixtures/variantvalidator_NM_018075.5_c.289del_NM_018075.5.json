@@ -1,0 +1,123 @@
+{
+ "NM_018075.5:c.289del": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "3",
+   "db_xref": {
+    "CCDS": "CCDS2710.2",
+    "ensemblgene": null,
+    "hgnc": "HGNC:25519",
+    "ncbigene": "55129",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "3p22.1-p21.33",
+   "note": "anoctamin 10",
+   "refseq_select": true,
+   "variant": "1"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS2710",
+    "CCDS56247",
+    "CCDS56248",
+    "CCDS56249",
+    "CCDS56250"
+   ],
+   "ensembl_gene_id": "ENSG00000160746",
+   "entrez_gene_id": "55129",
+   "hgnc_id": "HGNC:25519",
+   "omim_id": [
+    "613726"
+   ],
+   "ucsc_id": "uc003cmv.4"
+  },
+  "gene_symbol": "ANO10",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_060545.3:p.(M97*)",
+   "tlr": "NP_060545.3:p.(Met97Ter)"
+  },
+  "hgvs_refseqgene_variant": "NG_028216.2:g.96163del",
+  "hgvs_transcript_variant": "NM_018075.5:c.289del",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000003.11:g.43641924del",
+    "vcf": {
+     "alt": "A",
+     "chr": "3",
+     "pos": "43641923",
+     "ref": "AT"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000003.12:g.43600432del",
+    "vcf": {
+     "alt": "A",
+     "chr": "3",
+     "pos": "43600431",
+     "ref": "AT"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000003.11:g.43641924del",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr3",
+     "pos": "43641923",
+     "ref": "AT"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000003.12:g.43600432del",
+    "vcf": {
+     "alt": "A",
+     "chr": "chr3",
+     "pos": "43600431",
+     "ref": "AT"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_060545.3",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_028216.2",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_018075.5"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_018075.5:c.289del",
+  "transcript_description": "Homo sapiens anoctamin 10 (ANO10), transcript variant 1, mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000003.11": {
+    "end_exon": "3",
+    "start_exon": "3"
+   },
+   "NC_000003.12": {
+    "end_exon": "3",
+    "start_exon": "3"
+   },
+   "NG_028216.2": {
+    "end_exon": "3",
+    "start_exon": "3"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}

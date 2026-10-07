@@ -1,0 +1,119 @@
+{
+ "NM_000030.3:c.33dup": {
+  "alt_genomic_loci": [],
+  "annotations": {
+   "chromosome": "2",
+   "db_xref": {
+    "CCDS": "CCDS2543.1",
+    "ensemblgene": null,
+    "hgnc": "HGNC:341",
+    "ncbigene": "189",
+    "select": "MANE"
+   },
+   "ensembl_select": false,
+   "mane_plus_clinical": false,
+   "mane_select": true,
+   "map": "2q37.3",
+   "note": "alanine--glyoxylate aminotransferase",
+   "refseq_select": true,
+   "variant": "0"
+  },
+  "gene_ids": {
+   "ccds_ids": [
+    "CCDS2543"
+   ],
+   "ensembl_gene_id": "ENSG00000172482",
+   "entrez_gene_id": "189",
+   "hgnc_id": "HGNC:341",
+   "omim_id": [
+    "604285"
+   ],
+   "ucsc_id": "uc002waa.5"
+  },
+  "gene_symbol": "AGXT",
+  "genome_context_intronic_sequence": "",
+  "hgvs_lrg_transcript_variant": "",
+  "hgvs_lrg_variant": "",
+  "hgvs_predicted_protein_consequence": {
+   "lrg_slr": "",
+   "lrg_tlr": "",
+   "slr": "NP_000021.1:p.(K12Qfs*156)",
+   "tlr": "NP_000021.1:p.(Lys12GlnfsTer156)"
+  },
+  "hgvs_refseqgene_variant": "NG_008005.1:g.5154dup",
+  "hgvs_transcript_variant": "NM_000030.3:c.33dup",
+  "lovd_corrections": null,
+  "lovd_messages": null,
+  "primary_assembly_loci": {
+   "grch37": {
+    "hgvs_genomic_description": "NC_000002.11:g.241808315dup",
+    "vcf": {
+     "alt": "AC",
+     "chr": "2",
+     "pos": "241808307",
+     "ref": "A"
+    }
+   },
+   "grch38": {
+    "hgvs_genomic_description": "NC_000002.12:g.240868898dup",
+    "vcf": {
+     "alt": "AC",
+     "chr": "2",
+     "pos": "240868890",
+     "ref": "A"
+    }
+   },
+   "hg19": {
+    "hgvs_genomic_description": "NC_000002.11:g.241808315dup",
+    "vcf": {
+     "alt": "AC",
+     "chr": "chr2",
+     "pos": "241808307",
+     "ref": "A"
+    }
+   },
+   "hg38": {
+    "hgvs_genomic_description": "NC_000002.12:g.240868898dup",
+    "vcf": {
+     "alt": "AC",
+     "chr": "chr2",
+     "pos": "240868890",
+     "ref": "A"
+    }
+   }
+  },
+  "reference_sequence_records": {
+   "protein": "https://www.ncbi.nlm.nih.gov/nuccore/NP_000021.1",
+   "refseqgene": "https://www.ncbi.nlm.nih.gov/nuccore/NG_008005.1",
+   "transcript": "https://www.ncbi.nlm.nih.gov/nuccore/NM_000030.3"
+  },
+  "refseqgene_context_intronic_sequence": "",
+  "rna_variant_descriptions": null,
+  "selected_assembly": "GRCh38",
+  "submitted_variant": "NM_000030.3:c.33dup",
+  "transcript_description": "Homo sapiens alanine--glyoxylate aminotransferase (AGXT), mRNA",
+  "validation_warnings": [],
+  "variant_exonic_positions": {
+   "NC_000002.11": {
+    "end_exon": "1",
+    "start_exon": "1"
+   },
+   "NC_000002.12": {
+    "end_exon": "1",
+    "start_exon": "1"
+   },
+   "NG_008005.1": {
+    "end_exon": "1",
+    "start_exon": "1"
+   }
+  }
+ },
+ "flag": "gene_variant",
+ "metadata": {
+  "variantvalidator_hgvs_version": "4.0.0",
+  "variantvalidator_version": "4.0.1.dev7+gbdab9c72f",
+  "vvdb_version": "vvdb_2025_3",
+  "vvseqrepo_db": "VV_SR_2025_02/master",
+  "vvta_version": "vvta_2025_02"
+ }
+}
