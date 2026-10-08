@@ -20,6 +20,7 @@ from src.tools.uniprot import UniProtTool
 from src.tools.pharmgkb import PharmGKBTool
 from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
+from src.tools.pharos import PharosTool
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ def get_agent() -> Agent:
             PharmGKBTool(),
             OMIMTool(),
             OpenFDATool(),
+            PharosTool(),
         ]
         _agent = Agent(model, tokenizer, tools)
         logger.info("Agent initialized successfully.")

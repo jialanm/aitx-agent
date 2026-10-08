@@ -1,0 +1,92 @@
+{
+ "data": {
+  "target": {
+   "sym": "KCNT1",
+   "name": "Potassium channel subfamily T member 1",
+   "uniprot": "Q5JUK3",
+   "tdl": "Tchem",
+   "fam": "IC",
+   "description": "Potassium channels represent the most complex class of voltage-gated ion channels from both functional and structural standpoints. Their diverse functions include regulating neurotransmitter release, heart rate, insulin secretion, neuronal excitability, epithelial electrolyte transport, smooth muscle contraction, and cell volume. This gene encodes a sodium-activated potassium channel subunit which is thought to function in ion conductance and developmental signaling pathways. Mutations in this gene cause the early-onset epileptic disorders, malignant migrating partial seizures of infancy and autosomal dominant nocturnal frontal lobe epilepsy. Alternative splicing results in multiple transcript variants. [provided by RefSeq, Dec 2012]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 28
+    },
+    {
+     "name": "drug",
+     "value": 3
+    }
+   ],
+   "ligands": [
+    {
+     "name": "quinidine",
+     "isdrug": true,
+     "actcnt": 73,
+     "activities": [
+      {
+       "type": "-",
+       "value": 4,
+       "moa": null,
+       "reference": null
+      }
+     ]
+    },
+    {
+     "name": "loxapine",
+     "isdrug": true,
+     "actcnt": 20,
+     "activities": [
+      {
+       "type": "EC50",
+       "value": 5.36000013,
+       "moa": null,
+       "reference": null
+      },
+      {
+       "type": "EC50",
+       "value": 5.36,
+       "moa": "ACTIVATOR",
+       "reference": "http://www.guidetopharmacology.org/GRAC/LigandDisplayForward?ligandId=205"
+      }
+     ]
+    },
+    {
+     "name": "niclosamide",
+     "isdrug": true,
+     "actcnt": 7,
+     "activities": [
+      {
+       "type": "EC50",
+       "value": 5.53999996,
+       "moa": null,
+       "reference": null
+      },
+      {
+       "type": "EC50",
+       "value": 5.54,
+       "moa": "ACTIVATOR",
+       "reference": "http://www.guidetopharmacology.org/GRAC/LigandDisplayForward?ligandId=8494"
+      }
+     ]
+    }
+   ],
+   "diseases": [
+    {
+     "name": "developmental and epileptic encephalopathy, 14"
+    },
+    {
+     "name": "autosomal dominant nocturnal frontal lobe epilepsy 5"
+    },
+    {
+     "name": "frontal lobe epilepsy"
+    },
+    {
+     "name": "autosomal dominant nocturnal frontal lobe epilepsy"
+    },
+    {
+     "name": "partial epilepsy"
+    }
+   ]
+  }
+ }
+}

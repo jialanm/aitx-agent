@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "COL1A1",
+   "name": "Collagen alpha-1(I) chain",
+   "uniprot": "P02452",
+   "tdl": "Tbio",
+   "fam": null,
+   "description": "This gene encodes the pro-alpha1 chains of type I collagen whose triple helix comprises two alpha1 chains and one alpha2 chain. Type I is a fibril-forming collagen found in most connective tissues and is abundant in bone, cornea, dermis and tendon. Mutations in this gene are associated with osteogenesis imperfecta types I-IV, Ehlers-Danlos syndrome type VIIA, Ehlers-Danlos syndrome Classical type, Caffey Disease and idiopathic osteoporosis. Reciprocal translocations between chromosomes 17 and 22, where this gene and the gene for platelet-derived growth factor beta are located, are associated with a particular type of skin tumor called dermatofibrosarcoma protuberans, resulting from unregulated expression of the growth factor. Two transcripts, resulting from the use of alternate polyadenylation signals, have been identified for this gene. [provided by R. Dalgleish, Feb 2008]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "osteogenesis imperfecta"
+    },
+    {
+     "name": "Caffey disease"
+    },
+    {
+     "name": "dermatofibrosarcoma protuberans"
+    },
+    {
+     "name": "Ehlers-Danlos syndrome, classic type, 1"
+    },
+    {
+     "name": "osteogenesis imperfecta type 3"
+    }
+   ]
+  }
+ }
+}

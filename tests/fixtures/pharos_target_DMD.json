@@ -1,0 +1,93 @@
+{
+ "data": {
+  "target": {
+   "sym": "DMD",
+   "name": "Dystrophin",
+   "uniprot": "P11532",
+   "tdl": "Tclin",
+   "fam": null,
+   "description": "This gene spans a genomic range of greater than 2 Mb and encodes a large protein containing an N-terminal actin-binding domain and multiple spectrin repeats. The encoded protein forms a component of the dystrophin-glycoprotein complex (DGC), which bridges the inner cytoskeleton and the extracellular matrix. Deletions, duplications, and point mutations at this gene locus may cause Duchenne muscular dystrophy (DMD), Becker muscular dystrophy (BMD), or cardiomyopathy. Alternative promoter usage and alternative splicing result in numerous distinct transcript variants and protein isoforms for this gene. [provided by RefSeq, Dec 2016]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 4
+    }
+   ],
+   "ligands": [
+    {
+     "name": "golodirsen",
+     "isdrug": true,
+     "actcnt": 1,
+     "activities": [
+      {
+       "type": null,
+       "value": null,
+       "moa": "ANTISENSE INHIBITOR",
+       "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2019/211970s000lbl.pdf"
+      }
+     ]
+    },
+    {
+     "name": "eteplirsen",
+     "isdrug": true,
+     "actcnt": 1,
+     "activities": [
+      {
+       "type": null,
+       "value": null,
+       "moa": "BINDING AGENT",
+       "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2016/206488lbl.pdf"
+      }
+     ]
+    },
+    {
+     "name": "viltolarsen",
+     "isdrug": true,
+     "actcnt": 1,
+     "activities": [
+      {
+       "type": "EC50",
+       "value": 8.33,
+       "moa": "BINDING AGENT",
+       "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2020/212154Orig1s000lbl.pdf"
+      }
+     ]
+    },
+    {
+     "name": "casimersen",
+     "isdrug": true,
+     "actcnt": 1,
+     "activities": [
+      {
+       "type": null,
+       "value": null,
+       "moa": "ANTISENSE INHIBITOR",
+       "reference": "https://www.accessdata.fda.gov/drugsatfda_docs/label/2021/213026lbl.pdf"
+      }
+     ]
+    }
+   ],
+   "diseases": [
+    {
+     "name": "Duchenne muscular dystrophy"
+    },
+    {
+     "name": "dilated cardiomyopathy"
+    },
+    {
+     "name": "Becker muscular dystrophy"
+    },
+    {
+     "name": "dilated cardiomyopathy 3B"
+    },
+    {
+     "name": "cardiomyopathy"
+    }
+   ]
+  }
+ }
+}

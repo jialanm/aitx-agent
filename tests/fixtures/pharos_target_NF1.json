@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "NF1",
+   "name": "Neurofibromin",
+   "uniprot": "P21359",
+   "tdl": "Tbio",
+   "fam": null,
+   "description": "This gene product appears to function as a negative regulator of the ras signal transduction pathway. Mutations in this gene have been linked to neurofibromatosis type 1, juvenile myelomonocytic leukemia and Watson syndrome. The mRNA for this gene is subject to RNA editing (CGA>UGA->Arg1306Term) resulting in premature translation termination. Alternatively spliced transcript variants encoding different isoforms have also been described for this gene. [provided by RefSeq, Jul 2008]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "neurofibromatosis"
+    },
+    {
+     "name": "juvenile myelomonocytic leukemia"
+    },
+    {
+     "name": "astrocytic tumor"
+    },
+    {
+     "name": "neurofibromatosis-Noonan syndrome"
+    },
+    {
+     "name": "schwannoma"
+    }
+   ]
+  }
+ }
+}

@@ -32,6 +32,7 @@ from src.tools.uniprot import UniProtTool
 from src.tools.pharmgkb import PharmGKBTool
 from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
+from src.tools.pharos import PharosTool
 
 
 DEFAULT_QUESTIONS = "data/phase1_questions.json"
@@ -131,6 +132,7 @@ def run_evaluation(
         PharmGKBTool(),
         OMIMTool(),
         OpenFDATool(),
+        PharosTool(),
     ]
     agent = Agent(model, tokenizer, tools)
 

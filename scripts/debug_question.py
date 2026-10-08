@@ -23,6 +23,7 @@ from src.tools.uniprot import UniProtTool
 from src.tools.pharmgkb import PharmGKBTool
 from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
+from src.tools.pharos import PharosTool
 
 # Enable verbose logging
 logging.basicConfig(level=logging.DEBUG, format="%(name)s | %(message)s")
@@ -58,6 +59,7 @@ def debug_question(question_json: str | dict):
         PharmGKBTool(),
         OMIMTool(),
         OpenFDATool(),
+        PharosTool(),
     ]
     agent = Agent(model, tokenizer, tools)
 

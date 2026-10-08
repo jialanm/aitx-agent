@@ -1,0 +1,106 @@
+{
+ "data": {
+  "target": {
+   "sym": "GRIN2B",
+   "name": "Glutamate receptor ionotropic, NMDA 2B",
+   "uniprot": "Q13224",
+   "tdl": "Tclin",
+   "fam": "IC",
+   "description": "This gene encodes a member of the N-methyl-D-aspartate (NMDA) receptor family within the ionotropic glutamate receptor superfamily. The encoded protein is a subunit of the NMDA receptor ion channel which acts as an agonist binding site for glutamate. The NMDA receptors mediate a slow calcium-permeable component of excitatory synaptic transmission in the central nervous system. The NMDA receptors are heterotetramers of seven genetically encoded, differentially expressed subunits including NR1 (GRIN1), NR2 (GRIN2A, GRIN2B, GRIN2C, or GRIN2D) and NR3 (GRIN3A or GRIN3B). The early expression of this gene in development suggests a role in brain development, circuit formation, synaptic plasticity, and cellular migration and differentiation. Naturally occurring mutations within this gene are associated with neurodevelopmental disorders including autism spectrum disorder, attention deficit hyperactivity disorder, epilepsy, and schizophrenia. [provided by RefSeq, Aug 2017]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 216
+    },
+    {
+     "name": "drug",
+     "value": 5
+    }
+   ],
+   "ligands": [
+    {
+     "name": "ketamine",
+     "isdrug": true,
+     "actcnt": 13,
+     "activities": [
+      {
+       "type": "Ki",
+       "value": 6.38000011,
+       "moa": "BLOCKER",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL742"
+      }
+     ]
+    },
+    {
+     "name": "acamprosate",
+     "isdrug": true,
+     "actcnt": 10,
+     "activities": [
+      {
+       "type": null,
+       "value": null,
+       "moa": "ANTAGONIST",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL1201293"
+      }
+     ]
+    },
+    {
+     "name": "amantadine",
+     "isdrug": true,
+     "actcnt": 9,
+     "activities": [
+      {
+       "type": "Ki",
+       "value": 4.98000002,
+       "moa": "BLOCKER",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL660"
+      }
+     ]
+    },
+    {
+     "name": "memantine",
+     "isdrug": true,
+     "actcnt": 7,
+     "activities": [
+      {
+       "type": "IC50",
+       "value": 5.26,
+       "moa": "NEGATIVE ALLOSTERIC MODULATOR",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL1699"
+      }
+     ]
+    },
+    {
+     "name": "felbamate",
+     "isdrug": true,
+     "actcnt": 3,
+     "activities": [
+      {
+       "type": "IC50",
+       "value": 4.284,
+       "moa": "ANTAGONIST",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL1094"
+      }
+     ]
+    }
+   ],
+   "diseases": [
+    {
+     "name": "epilepsy"
+    },
+    {
+     "name": "intellectual disability, autosomal dominant 6"
+    },
+    {
+     "name": "developmental and epileptic encephalopathy, 27"
+    },
+    {
+     "name": "West syndrome"
+    },
+    {
+     "name": "schizophrenia"
+    }
+   ]
+  }
+ }
+}

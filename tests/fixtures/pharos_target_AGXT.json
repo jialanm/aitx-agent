@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "AGXT",
+   "name": "Serine--pyruvate aminotransferase",
+   "uniprot": "P21549",
+   "tdl": "Tbio",
+   "fam": "Enzyme",
+   "description": "This gene is expressed only in the liver and the encoded protein is localized mostly in the peroxisomes, where it is involved in glyoxylate detoxification. Mutations in this gene, some of which alter subcellular targetting, have been associated with type I primary hyperoxaluria. [provided by RefSeq, Jul 2008]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "primary hyperoxaluria type 1"
+    },
+    {
+     "name": "primary hyperoxaluria"
+    },
+    {
+     "name": "inborn errors of metabolism"
+    },
+    {
+     "name": "nephrolithiasis"
+    },
+    {
+     "name": "urolithiasis"
+    }
+   ]
+  }
+ }
+}

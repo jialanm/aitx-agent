@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "SLC35A2",
+   "name": "UDP-galactose translocator",
+   "uniprot": "P78381",
+   "tdl": "Tbio",
+   "fam": "Transporter",
+   "description": "This gene encodes a member of the nucleotide-sugar transporter family. The encoded protein is a multi-pass membrane protein. It transports UDP-galactose from the cytosol into Golgi vesicles, where it serves as a glycosyl donor for the generation of glycans. Mutations in this gene cause congenital disorder of glycosylation type IIm (CDG2M). Multiple alternatively spliced transcript variants encoding distinct isoforms have been found for this gene. [provided by RefSeq, Oct 2014]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "SLC35A2-CDG"
+    },
+    {
+     "name": "congenital disorder of glycosylation"
+    },
+    {
+     "name": "pituitary cancer"
+    },
+    {
+     "name": "rheumatoid arthritis"
+    },
+    {
+     "name": "breast cancer"
+    }
+   ]
+  }
+ }
+}

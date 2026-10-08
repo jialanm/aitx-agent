@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "KMT2B",
+   "name": "Histone-lysine N-methyltransferase 2B",
+   "uniprot": "Q9UMN6",
+   "tdl": "Tbio",
+   "fam": "Epigenetic",
+   "description": "This gene encodes a protein which contains multiple domains including a CXXC zinc finger, three PHD zinc fingers, two FY-rich domains, and a SET (suppressor of variegation, enhancer of zeste, and trithorax) domain. The SET domain is a conserved C-terminal domain that characterizes proteins of the MLL (mixed-lineage leukemia) family. This gene is ubiquitously expressed in adult tissues. It is also amplified in solid tumor cell lines, and may be involved in human cancer. Two alternatively spliced transcript variants encoding distinct isoforms have been reported for this gene, however, the full length nature of the shorter transcript is not known. [provided by RefSeq, Jul 2008]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "dystonic disorder"
+    },
+    {
+     "name": "dystonia 28, childhood-onset"
+    },
+    {
+     "name": "Idiopathic familial dystonia"
+    },
+    {
+     "name": "Liver carcinoma"
+    },
+    {
+     "name": "peripheral neuropathy"
+    }
+   ]
+  }
+ }
+}

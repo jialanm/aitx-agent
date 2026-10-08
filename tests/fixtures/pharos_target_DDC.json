@@ -1,0 +1,54 @@
+{
+ "data": {
+  "target": {
+   "sym": "DDC",
+   "name": "Aromatic-L-amino-acid decarboxylase",
+   "uniprot": "P20711",
+   "tdl": "Tclin",
+   "fam": "Enzyme",
+   "description": "The encoded protein catalyzes the decarboxylation of L-3,4-dihydroxyphenylalanine (DOPA) to dopamine, L-5-hydroxytryptophan to serotonin and L-tryptophan to tryptamine. Defects in this gene are the cause of aromatic L-amino-acid decarboxylase deficiency (AADCD). AADCD deficiency is an inborn error in neurotransmitter metabolism that leads to combined serotonin and catecholamine deficiency. Multiple alternatively spliced transcript variants encoding different isoforms have been identified for this gene. [provided by RefSeq, Jun 2011]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 1
+    }
+   ],
+   "ligands": [
+    {
+     "name": "carbidopa",
+     "isdrug": true,
+     "actcnt": 1,
+     "activities": [
+      {
+       "type": null,
+       "value": null,
+       "moa": "INHIBITOR",
+       "reference": "https://www.ebi.ac.uk/chembl/compound/inspect/CHEMBL1200748"
+      }
+     ]
+    }
+   ],
+   "diseases": [
+    {
+     "name": "aromatic L-amino acid decarboxylase deficiency"
+    },
+    {
+     "name": "Parkinson disease"
+    },
+    {
+     "name": "Liver Cirrhosis, Experimental"
+    },
+    {
+     "name": "Pheochromocytoma"
+    },
+    {
+     "name": "Nerve Degeneration"
+    }
+   ]
+  }
+ }
+}

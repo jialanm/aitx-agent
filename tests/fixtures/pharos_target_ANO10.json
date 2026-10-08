@@ -1,0 +1,40 @@
+{
+ "data": {
+  "target": {
+   "sym": "ANO10",
+   "name": "Anoctamin-10",
+   "uniprot": "Q9NW15",
+   "tdl": "Tbio",
+   "fam": null,
+   "description": "The transmembrane protein encoded by this gene belongs to the anoctamin family of calcium-activated chloride channels, also known as the transmembrane 16 family. The encoded protein contains eight transmembrane domains with cytosolic N- and C-termini. Defects in this gene may cause autosomal recessive spinocerebellar ataxia-10. Alternative splicing results in multiple transcript variants. [provided by RefSeq, Oct 2016]",
+   "ligandCounts": [
+    {
+     "name": "ligand",
+     "value": 0
+    },
+    {
+     "name": "drug",
+     "value": 0
+    }
+   ],
+   "ligands": [],
+   "diseases": [
+    {
+     "name": "autosomal recessive spinocerebellar ataxia 10"
+    },
+    {
+     "name": "Ataxias, Hereditary"
+    },
+    {
+     "name": "intellectual disability"
+    },
+    {
+     "name": "neurodegenerative disease"
+    },
+    {
+     "name": "spinocerebellar ataxia type 1"
+    }
+   ]
+  }
+ }
+}
