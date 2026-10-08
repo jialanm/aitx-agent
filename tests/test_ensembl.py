@@ -109,8 +109,32 @@ def test_timeout_is_retried_five_times_then_reported(monkeypatch, caplog):
     assert caplog.text.count("VEP timeout") == 5
 
 
-def test_http_error_is_logged_once_and_not_retried(monkeypatch, caplog):
+def test_server_error_is_retried_then_succeeds(monkeypatch, caplog):
+    """Ensembl's transient 500 page, then the recorded reply on the second try."""
     attempts: list[str] = []
+    sleeps: list[int] = []
+    recorded = json.loads((FIXTURES / "ensembl_vep_NC_000002.12_g.240871433G_A.json").read_text())
+
+    def flaky(url, headers=None, params=None, timeout=None):
+        attempts.append(url)
+        if len(attempts) == 1:
+            return _Reply(500, "<html>Error: 500</html>", content_type="text/html")
+        return _Reply(200, recorded)
+
+    monkeypatch.setattr(ensembl.requests, "get", flaky)
+    monkeypatch.setattr(ensembl.time, "sleep", sleeps.append)
+
+    summary, evidence = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240871433G>A", transcript="NM_000030.3")
+
+    assert len(attempts) == 2
+    assert sleeps == [5]
+    assert "Consequence: missense_variant" in summary
+    assert caplog.text.count("VEP server error") == 1
+
+
+def test_server_error_five_times_is_reported(monkeypatch, caplog):
+    attempts: list[str] = []
+    monkeypatch.setattr(ensembl.time, "sleep", lambda s: None)
 
     def error_page(url, headers=None, params=None, timeout=None):
         attempts.append(url)
@@ -120,7 +144,29 @@ def test_http_error_is_logged_once_and_not_retried(monkeypatch, caplog):
 
     summary, evidence = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240871433G>A", transcript="NM_000030.3")
 
-    assert len(attempts) == 1
-    assert summary.startswith("VEP returned nothing for NC_000002.12:g.240871433G>A: HTTP 500")
+    assert len(attempts) == 5
+    assert summary == "VEP returned nothing for NC_000002.12:g.240871433G>A: HTTP 500 after 5 attempts"
     assert evidence == []
+
+
+def test_client_error_is_not_retried(monkeypatch, caplog):
+    attempts: list[str] = []
+
+    def bad_request(url, headers=None, params=None, timeout=None):
+        attempts.append(url)
+        return _Reply(400, {"error": "Unable to parse HGVS notation"})
+
+    monkeypatch.setattr(ensembl.requests, "get", bad_request)
+
+    summary, evidence = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240871433G>A", transcript="NM_000030.3")
+
+    assert len(attempts) == 1
+    assert summary.startswith("VEP returned nothing for NC_000002.12:g.240871433G>A: HTTP 400")
     assert "VEP error" in caplog.text
+
+
+def test_duplication_link_puts_the_smaller_coordinate_first(recorded):
+    # AITX-00005: VEP reports the inserted base as start 240868898, end 240868897.
+    summary, evidence = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240868898dup", transcript="NM_000030.3")
+
+    assert evidence[0].url == ENSEMBL_LOCATION_URL.format(chrom="2", start=240868897, end=240868898)

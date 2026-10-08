@@ -17,10 +17,12 @@ ENSEMBL_REST = "https://rest.ensembl.org"
 ENSEMBL_LOCATION_URL = "https://www.ensembl.org/Homo_sapiens/Location/View?r={chrom}:{start}-{end}"
 
 TIMEOUT = 15
-# VEP took up to 66 s for a 1.7 kb deletion on 2026-10-07; timeouts are
-# retried because the service answers the same request on a later try.
+# VEP took up to 66 s for a 1.7 kb deletion on 2026-10-07. Timeouts and
+# server errors (5xx) are retried because the service answered the same
+# request on a later try in 7 of 8 cases that day; 4xx means the request
+# itself is wrong and is not retried.
 VEP_TIMEOUT = 90
-VEP_TIMEOUT_RETRIES = 5
+VEP_RETRIES = 5
 VEP_RETRY_INTERVAL_SECONDS = 5
 # Fields the model needs from the entry for the patient's transcript. A
 # missing one is logged by name and shown as "not returned", never blank.
@@ -113,7 +115,8 @@ class EnsemblTool(BaseTool):
         # adds exon/intron numbers; hgvs adds the HGVS protein string.
         params = {"refseq": 1, "numbers": 1, "hgvs": 1}
         resp = None
-        for attempt in range(1, VEP_TIMEOUT_RETRIES + 1):
+        last_failure = ""
+        for attempt in range(1, VEP_RETRIES + 1):
             try:
                 resp = requests.get(
                     url,
@@ -121,16 +124,22 @@ class EnsemblTool(BaseTool):
                     params=params,
                     timeout=VEP_TIMEOUT,
                 )
-                break
             except requests.Timeout:
-                logger.warning(f"VEP timeout (attempt {attempt}/{VEP_TIMEOUT_RETRIES}): {url}")
-                if attempt < VEP_TIMEOUT_RETRIES:
-                    time.sleep(VEP_RETRY_INTERVAL_SECONDS)
+                last_failure = "timeout"
+                logger.warning(f"VEP timeout (attempt {attempt}/{VEP_RETRIES}): {url}")
             except requests.RequestException as e:
                 logger.warning(f"VEP request failed: {url}: {e}")
                 return f"VEP returned nothing for {notation}: request failed ({e})"
+            else:
+                if resp.status_code < 500:
+                    break
+                last_failure = f"HTTP {resp.status_code}"
+                logger.warning(f"VEP server error (attempt {attempt}/{VEP_RETRIES}): {url}: HTTP {resp.status_code}")
+                resp = None
+            if attempt < VEP_RETRIES:
+                time.sleep(VEP_RETRY_INTERVAL_SECONDS)
         if resp is None:
-            return f"VEP returned nothing for {notation}: timeout after {VEP_TIMEOUT_RETRIES} attempts"
+            return f"VEP returned nothing for {notation}: {last_failure} after {VEP_RETRIES} attempts"
 
         if resp.status_code != 200 or "json" not in resp.headers.get("content-type", ""):
             reason = f"HTTP {resp.status_code}, content-type {resp.headers.get('content-type', '')!r}"
@@ -144,8 +153,12 @@ class EnsemblTool(BaseTool):
         entry = data[0]
         chrom, start, end = entry.get("seq_region_name"), entry.get("start"), entry.get("end")
         if chrom and start and end:
+            # An insertion or duplication is reported with start = end + 1,
+            # naming the two bases either side of the gap; the browser link
+            # needs the smaller coordinate first.
+            lo, hi = min(start, end), max(start, end)
             evidence.append(
-                EvidenceRecord(url=ENSEMBL_LOCATION_URL.format(chrom=chrom, start=start, end=end))
+                EnsemblTool.location_evidence(chrom, lo, hi)
             )
         else:
             logger.warning(f"VEP reply lacks seq_region_name/start/end: {url}")
@@ -186,6 +199,11 @@ class EnsemblTool(BaseTool):
             f"Most severe consequence across all transcripts: {entry.get('most_severe_consequence', 'unknown')}",
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def location_evidence(chrom: str, start: int, end: int) -> EvidenceRecord:
+        """Evidence record for a GRCh38 region in the Ensembl browser."""
+        return EvidenceRecord(url=ENSEMBL_LOCATION_URL.format(chrom=chrom, start=start, end=end))
 
     @staticmethod
     def _transcript_entry(consequences: list[dict], transcript: str) -> dict | None:
