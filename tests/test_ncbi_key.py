@@ -249,3 +249,19 @@ def test_genereviews_keeps_key_out_of_rate_limit_error(genereviews_eutils, monke
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []
+
+
+def test_clinvar_reads_the_current_classification_field(clinvar_eutils, monkeypatch, caplog):
+    """ClinVar's esummary carries germline_classification, not clinical_significance (recorded 2026-09-25)."""
+    monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
+
+    summary, _ = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
+
+    assert "Clinical Significance: Uncertain significance" in summary
+    assert "Review Status: criteria provided, multiple submitters, no conflicts" in summary
+    assert "Clinical Significance: Pathogenic" in summary
+    assert "Review Status: reviewed by expert panel" in summary
+    assert "Conditions: Cystic fibrosis" in summary
+    assert "Molecular consequence: inframe_deletion, missense variant" in summary
+    assert "Not provided" not in summary
+    assert "has no germline_classification" not in caplog.text

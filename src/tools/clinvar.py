@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import requests
 
+import logging
+
 from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
+
+logger = logging.getLogger(__name__)
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -113,13 +117,23 @@ class ClinVarTool(BaseTool):
             for uid in uids[:3]:
                 entry = summary_data.get(uid, {})
                 title = entry.get("title", "Unknown")
-                clinical_sig = entry.get("clinical_significance", {})
+                # ClinVar's esummary moved the classification from
+                # "clinical_significance" to "germline_classification" (the old
+                # key is gone, so every record read as "Not provided"). A record
+                # with neither is reported as such and logged, never blanked.
+                clinical_sig = entry.get("germline_classification") or entry.get("clinical_significance")
                 if isinstance(clinical_sig, dict):
-                    sig_desc = clinical_sig.get("description", "Not provided")
-                    review_status = clinical_sig.get("review_status", "Not provided")
+                    sig_desc = clinical_sig.get("description") or "Not provided"
+                    review_status = clinical_sig.get("review_status") or "Not provided"
+                    conditions = [
+                        t.get("trait_name", "") for t in clinical_sig.get("trait_set") or []
+                        if t.get("trait_name") and t.get("trait_name") != "not specified"
+                    ]
                 else:
-                    sig_desc = str(clinical_sig)
-                    review_status = "Not provided"
+                    logger.warning(f"ClinVar record {uid} has no germline_classification; keys: {sorted(entry)}")
+                    sig_desc = "not returned"
+                    review_status = "not returned"
+                    conditions = []
 
                 genes_info = entry.get("genes", [])
                 gene_name = genes_info[0].get("symbol", gene) if genes_info else gene
@@ -139,6 +153,10 @@ class ClinVarTool(BaseTool):
                     f"Variant: {variant_name}\n"
                     f"Clinical Significance: {sig_desc}\n"
                     f"Review Status: {review_status}\n"
+                    + (f"Conditions: {', '.join(conditions[:3])}\n" if conditions else "")
+                    + (f"Molecular consequence: {', '.join(entry['molecular_consequence_list'])}\n"
+                       if entry.get("molecular_consequence_list") else "")
+                    +
                     f"URL: {url}"
                 )
 
