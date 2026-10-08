@@ -36,10 +36,12 @@ class GeneReviewsTool(BaseTool):
             "function": {
                 "name": "search_genereviews",
                 "description": (
-                    "Search NCBI GeneReviews for expert-authored, peer-reviewed "
-                    "disease descriptions including management and treatment "
-                    "recommendations for genetic conditions. Returns relevant "
-                    "management sections."
+                    "Expert-authored, peer-reviewed disease overviews focused on the "
+                    "diagnosis, management, and genetic counseling of inherited "
+                    "disorders. Returns the GeneReviews chapters found for the gene "
+                    "or condition, with the treatment passages of the best match. "
+                    "Give the condition name when it is known; a gene alone can "
+                    "match chapters about other conditions that mention it."
                 ),
                 "parameters": {
                     "type": "object",

@@ -22,10 +22,13 @@ class PubMedTool(BaseTool):
             "function": {
                 "name": "search_pubmed",
                 "description": (
-                    "Search PubMed for biomedical research articles. Returns "
-                    "article titles, authors, publication dates, and PMIDs. "
-                    "Use for finding evidence about treatments, drug efficacy, "
-                    "variant pathogenicity, and clinical outcomes."
+                    "A searchable database of biomedical literature, including "
+                    "research articles relevant to genetics and molecular biology. "
+                    "Returns up to ten articles ranked by PubMed relevance, with "
+                    "title, first author, journal, date and PMID; no abstracts. "
+                    "Results are only as specific as the query: name the gene, "
+                    "the variant consequence or exon, and the therapy or question, "
+                    "not a general topic."
                 ),
                 "parameters": {
                     "type": "object",
@@ -33,8 +36,8 @@ class PubMedTool(BaseTool):
                         "query": {
                             "type": "string",
                             "description": (
-                                "PubMed search query (e.g., "
-                                "'CFTR F508del Trikafta treatment')"
+                                "Specific PubMed query, e.g. 'DMD exon 51 skipping "
+                                "eteplirsen deletion exons 52-63', not 'DMD treatment'"
                             ),
                         },
                         "max_results": {

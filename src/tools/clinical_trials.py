@@ -21,9 +21,12 @@ class ClinicalTrialsTool(BaseTool):
             "function": {
                 "name": "search_clinical_trials",
                 "description": (
-                    "Search ClinicalTrials.gov for clinical trials related to a "
-                    "gene, condition, or intervention. Returns trial IDs, titles, "
-                    "status, and eligibility information."
+                    "A registry of clinical trials, providing information on ongoing "
+                    "or completed studies involving genetic conditions and therapies. "
+                    "Returns NCT ID, title, status and phase for matching trials. "
+                    "The query is matched literally against trial records: use the "
+                    "gene symbol or the disease name alone (e.g. 'KCNT1'), never a "
+                    "sentence or a list of symptoms, which finds nothing."
                 ),
                 "parameters": {
                     "type": "object",
@@ -31,8 +34,8 @@ class ClinicalTrialsTool(BaseTool):
                         "query": {
                             "type": "string",
                             "description": (
-                                "Search query combining gene, condition, and/or "
-                                "intervention (e.g., 'BRAF melanoma vemurafenib')"
+                                "Gene symbol or disease name, one or two terms "
+                                "(e.g., 'KCNT1' or 'propionic acidemia')"
                             ),
                         },
                         "condition": {

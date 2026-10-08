@@ -21,9 +21,11 @@ class UniProtTool(BaseTool):
             "function": {
                 "name": "query_uniprot",
                 "description": (
-                    "Query UniProt for protein information including functional domains, "
-                    "active sites, binding sites, and post-translational modifications. "
-                    "Useful for understanding how a variant's protein location affects function."
+                    "A comprehensive resource for protein sequence and functional "
+                    "information, including isoforms and domain annotations. Returns "
+                    "the protein's function, location, domains, active and binding "
+                    "sites, and whether a given amino acid position falls inside an "
+                    "annotated domain or site. Take the position from the VEP result."
                 ),
                 "parameters": {
                     "type": "object",

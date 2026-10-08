@@ -26,9 +26,12 @@ class OMIMTool(BaseTool):
             "function": {
                 "name": "search_omim",
                 "description": (
-                    "Search OMIM (Online Mendelian Inheritance in Man) for gene-disease "
-                    "relationships, inheritance patterns, and phenotype descriptions. "
-                    "Critical for rare/Mendelian disease questions."
+                    "Online Mendelian Inheritance in Man; a comprehensive catalog of "
+                    "human genes and genetic disorders with phenotype descriptions "
+                    "and molecular relationships. Returns the gene entry, the "
+                    "disorders linked to it and their inheritance pattern. Use it to "
+                    "find the disease name for a gene when the clinical context does "
+                    "not give one."
                 ),
                 "parameters": {
                     "type": "object",

@@ -25,10 +25,12 @@ class PharmGKBTool(BaseTool):
             "function": {
                 "name": "search_pharmgkb",
                 "description": (
-                    "Search PharmGKB for pharmacogenomic information including "
-                    "drug-gene interactions, clinical annotations, dosing guidelines, "
-                    "and drug label annotations. Use for questions about how genetic "
-                    "variants affect drug response or dosing."
+                    "ClinPGx (formerly PharmGKB): curated pharmacogenomic knowledge. "
+                    "Returns, for a gene, the clinical annotations with their "
+                    "evidence level and drugs, the drug labels that mention the gene, "
+                    "and the dosing guidelines, optionally filtered to one drug. Use "
+                    "for drugs to avoid or adjust because of the gene, such as "
+                    "anaesthetic risks."
                 ),
                 "parameters": {
                     "type": "object",

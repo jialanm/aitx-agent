@@ -22,9 +22,13 @@ class ClinVarTool(BaseTool):
             "function": {
                 "name": "search_clinvar",
                 "description": (
-                    "Search ClinVar for a genetic variant to retrieve clinical "
-                    "significance, review status, and associated conditions. "
-                    "Provide a gene symbol and variant notation (cDNA or protein)."
+                    "A public archive of interpretations of clinically relevant "
+                    "variants and their supporting evidence. Returns the "
+                    "classification and review status of up to three ClinVar "
+                    "records whose text matches the gene and variant. The match "
+                    "is a text search, so a returned record may be a different "
+                    "variant of the same gene: check its variant name against "
+                    "the patient's before relying on it."
                 ),
                 "parameters": {
                     "type": "object",

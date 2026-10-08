@@ -21,10 +21,11 @@ class OpenFDATool(BaseTool):
             "function": {
                 "name": "search_fda_labels",
                 "description": (
-                    "Search FDA-approved drug labels for indications, "
-                    "contraindications, warnings, and dosing information. "
-                    "Useful for verifying whether a drug is approved for a "
-                    "specific condition or patient population."
+                    "FDA drug label text from openFDA. Returns the indications, "
+                    "contraindications, warnings and dosing sections of the label "
+                    "for a named drug. Requires a drug name; it cannot search by "
+                    "gene or disease, so find the candidate drug first, then use "
+                    "this to confirm what it is approved for."
                 ),
                 "parameters": {
                     "type": "object",
