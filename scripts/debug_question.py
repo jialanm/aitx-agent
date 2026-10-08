@@ -25,6 +25,7 @@ from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
 from src.tools.pharos import PharosTool
 from src.tools.n1c import N1CGuidelinesTool
+from src.tools.clingen_dosage import ClinGenDosageTool
 
 # Enable verbose logging
 logging.basicConfig(level=logging.DEBUG, format="%(name)s | %(message)s")
@@ -62,6 +63,7 @@ def debug_question(question_json: str | dict):
         OpenFDATool(),
         PharosTool(),
         N1CGuidelinesTool(),
+        ClinGenDosageTool(),
     ]
     agent = Agent(model, tokenizer, tools)
 

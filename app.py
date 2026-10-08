@@ -22,6 +22,7 @@ from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
 from src.tools.pharos import PharosTool
 from src.tools.n1c import N1CGuidelinesTool
+from src.tools.clingen_dosage import ClinGenDosageTool
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -48,6 +49,7 @@ def get_agent() -> Agent:
             OpenFDATool(),
             PharosTool(),
             N1CGuidelinesTool(),
+            ClinGenDosageTool(),
         ]
         _agent = Agent(model, tokenizer, tools)
         logger.info("Agent initialized successfully.")

@@ -82,7 +82,7 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
     )
     # Every tool class becomes a stand-in; the first keeps the real tool
     # name so the scripted call reaches it.
-    stand_ins = {"ClinVarTool": "search_clinvar", "EnsemblTool": "query_ensembl", "PharosTool": "query_pharos", "N1CGuidelinesTool": "n1c_aso_guidelines",
+    stand_ins = {"ClinVarTool": "search_clinvar", "EnsemblTool": "query_ensembl", "PharosTool": "query_pharos", "N1CGuidelinesTool": "n1c_aso_guidelines", "ClinGenDosageTool": "clingen_dosage",
                  "GeneReviewsTool": "search_genereviews", "ClinicalTrialsTool": "search_clinical_trials",
                  "PubMedTool": "search_pubmed", "UniProtTool": "query_uniprot",
                  "PharmGKBTool": "search_pharmgkb", "OMIMTool": "search_omim", "OpenFDATool": "search_openfda"}

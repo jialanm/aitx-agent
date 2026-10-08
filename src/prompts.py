@@ -16,12 +16,12 @@ TOOL_PRIORITY = {
     # Phase 3 report goals, in the order the report is built. Only tools
     # with an adapter are listed; a name here is a promise the model can
     # call it. Planned sources move in as their adapters are built:
-    #   goal 4: ClinGen dosage sensitivity; DrugBank needs a licensed key (skipped 2026-10-08)
+    #   DrugBank needs a licensed key (skipped 2026-10-08)
     "goal1_existing_targeted": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
     "goal2_existing_supportive": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
     "goal3_ongoing_trials": ["search_clinical_trials"],
-    "goal4_drug_repurposing": ["query_pharos"],
-    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "query_uniprot", "query_ensembl"],
+    "goal4_drug_repurposing": ["query_pharos", "clingen_dosage"],
+    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "clingen_dosage", "query_uniprot", "query_ensembl"],
 }
 
 # Asked once per multiple-choice question, with thinking off, before the
