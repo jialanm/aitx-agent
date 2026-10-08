@@ -7,11 +7,23 @@ from .variant_validation import ValidatedVariant
 
 # Tool routing per category
 TOOL_PRIORITY = {
+    # Phase 1 question categories (retired task, kept for the eval set).
     "Established_Targeted": ["search_genereviews", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
     "Established_Supportive": ["search_genereviews", "search_omim", "search_pubmed"],
     "Clinical_Trials": ["search_clinical_trials", "search_omim", "search_pubmed"],
     "Drug_Development_and_Repurposing": ["search_pubmed", "search_pharmgkb", "search_fda_labels", "search_clinical_trials"],
     "Variant_Assessment": ["query_ensembl", "search_clinvar", "query_uniprot", "search_pubmed"],
+    # Phase 3 report goals, in the order the report is built. Only tools
+    # with an adapter are listed; a name here is a promise the model can
+    # call it. Planned sources move in as their adapters are built:
+    #   goal 4: PHAROS, DrugBank, ClinGen dosage sensitivity
+    #   goal 5: N1C variant/disease/patient eligibility guidelines
+    #           (user cites Cheerie et al., AJHG 2025; not yet verified)
+    "goal1_existing_targeted": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
+    "goal2_existing_supportive": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
+    "goal3_ongoing_trials": ["search_clinical_trials"],
+    "goal4_drug_repurposing": [],
+    "goal5_personalized_therapeutics": ["query_uniprot", "query_ensembl"],
 }
 
 # Asked once per multiple-choice question, with thinking off, before the
