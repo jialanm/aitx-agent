@@ -385,3 +385,29 @@ class TestEnsemblArgsFromValidation:
             submitted="NM_000030.3:c.508G>A", valid=False, warnings=["validator unavailable: timeout after retries"]))
 
         assert call["arguments"] == {"hgvs_cdna": "NM_000030.3:c.508G>A", "gene": "AGXT"}
+
+
+class TestModelTurnsInTrace:
+    """Every model turn is kept, including a turn-1 answer displaced by a forced lookup."""
+
+    def test_displaced_first_answer_and_final_answer_are_recorded(self, monkeypatch):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+        turns = [
+            ModelResponse(text="No", tool_calls=[], raw="No", thinking="I know this one."),   # answered without a lookup
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking="The result says yes."),  # after the forced lookup
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        agent = Agent(model=None, tokenizer=None, tools=[TestEnsemblArgsFromValidation._Ensembl()])
+
+        output = agent.run(TaskInput(**TestEnsemblArgsFromValidation.TASK))
+
+        recorded = agent.last_trace["model_turns"]
+        assert [(m["kind"], m["iteration"], m["text"]) for m in recorded] == [("loop", 1, "No"), ("loop", 2, "Yes")]
+        assert recorded[0]["thinking"] == "I know this one."
+        assert agent.last_trace["events"] == ["forced_first_tool"]
+        assert agent.last_trace["final_text"] == "Yes"
+        assert agent.last_trace["answer"] == output.response == "Yes"

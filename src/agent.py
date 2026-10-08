@@ -50,6 +50,12 @@ class Agent:
             "events": [],
             "messages": [],
             "validation": [],
+            # Every model turn, including answers that never enter messages
+            # (a turn-1 answer replaced by a forced lookup, the final answer,
+            # the retries), so a run can be read end to end from the trace.
+            "model_turns": [],
+            "final_text": "",
+            "answer": "",
         }
 
         # Step 1: Preprocess, then validate each variant and rewrite it onto
@@ -106,6 +112,7 @@ class Agent:
             logger.debug(f"Model thinking: {response.thinking[:200]}...")
             logger.debug(f"Tool calls: {len(response.tool_calls)}")
             logger.debug(f"Text output: {response.text[:200]}...")
+            self._record_turn("loop", iteration + 1, response)
 
             if not response.tool_calls:
                 if iteration == 0 and not all_evidence:
@@ -147,6 +154,7 @@ class Agent:
                         max_new_tokens=256,
                         enable_thinking=False,
                     )
+                    self._record_turn("empty_answer_retry", iteration + 1, retry_response)
                     if retry_response.text:
                         final_text = retry_response.text
                         break
@@ -203,6 +211,8 @@ class Agent:
             if not final_text:
                 final_text = "Unable to determine answer."
 
+        self.last_trace["final_text"] = final_text
+
         # Step 5: Normalize the answer
         normalized = normalize_answer(
             final_text,
@@ -219,6 +229,8 @@ class Agent:
                 messages, context["answer_format"], context["prompt"], options
             )
 
+        self.last_trace["answer"] = normalized
+
         # Step 7: Build evidence items
         evidence_items = self._build_evidence(
             all_evidence, normalized, task_input, messages
@@ -231,6 +243,16 @@ class Agent:
             response=normalized,
             evidence=evidence_items,
         )
+
+    def _record_turn(self, kind: str, iteration: int, response: ModelResponse) -> None:
+        """Keep one model turn in the trace: kind is loop, empty_answer_retry or validation_retry."""
+        self.last_trace["model_turns"].append({
+            "kind": kind,
+            "iteration": iteration,
+            "thinking": response.thinking,
+            "text": response.text,
+            "tool_calls": [{"tool": tc.name, "arguments": tc.arguments} for tc in response.tool_calls],
+        })
 
     def _call_tool(
         self,
@@ -526,6 +548,7 @@ class Agent:
                 max_new_tokens=256,
                 enable_thinking=False,
             )
+            self._record_turn("validation_retry", 0, response)
             normalized = normalize_answer(response.text, answer_format, prompt, options)
             if self._is_valid_answer(normalized, answer_format, options):
                 return normalized
