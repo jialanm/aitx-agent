@@ -336,3 +336,52 @@ class TestTrace:
         system_prompt = agent.last_trace["messages"][0]["content"]
         assert "Validated (VariantValidator, GRCh38): NM_000492.4:c.1521_1523del" in system_prompt
         assert "Genomic position: NC_000007.14:g.117559592_117559594del" in system_prompt
+
+
+class TestEnsemblArgsFromValidation:
+    """Forced/auto-chained Ensembl calls use the validator's genomic form (AITX-00004 variant)."""
+
+    TASK = {
+        "id": "AITX-00004",
+        "patient": {
+            "genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
+                          "variant_protein": "p.(Gly170Arg)", "zygosity": "homozygous"}],
+            "clinical_context": "Primary hyperoxaluria type 1.",
+        },
+        "question": {"category": "Variant_Assessment", "answer_format": "binary",
+                     "prompt": "Is this variant pathogenic?", "date_submitted": "2025-08-01"},
+    }
+
+    class _Ensembl(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return "vep text", [EvidenceRecord(url="https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433")]
+
+    def _run(self, monkeypatch, validated):
+        import src.agent as agent_module
+        monkeypatch.setattr(agent_module, "validate_variant", lambda t, c: validated)
+        # Model answers without a tool call, so the agent forces the first priority tool: query_ensembl.
+        monkeypatch.setattr(agent_module, "generate",
+                            lambda *a, **k: ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""))
+        agent = Agent(model=None, tokenizer=None, tools=[self._Ensembl()])
+        agent.run(TaskInput(**self.TASK))
+        return agent.last_trace["tool_calls"][0]
+
+    def test_validated_variant_gives_genomic_form_and_current_transcript(self, monkeypatch):
+        from src.variant_validation import ValidatedVariant
+        call = self._run(monkeypatch, ValidatedVariant(
+            submitted="NM_000030.3:c.508G>A", valid=True, transcript_variant="NM_000030.3:c.508G>A",
+            genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+
+        assert call["origin"] == "forced"
+        assert call["arguments"] == {"genomic_hgvs": "NC_000002.12:g.240871433G>A",
+                                     "transcript": "NM_000030.3", "gene": "AGXT"}
+
+    def test_failed_validation_falls_back_to_cdna_form(self, monkeypatch):
+        from src.variant_validation import ValidatedVariant
+        call = self._run(monkeypatch, ValidatedVariant(
+            submitted="NM_000030.3:c.508G>A", valid=False, warnings=["validator unavailable: timeout after retries"]))
+
+        assert call["arguments"] == {"hgvs_cdna": "NM_000030.3:c.508G>A", "gene": "AGXT"}

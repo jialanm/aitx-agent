@@ -62,6 +62,7 @@ class Agent:
             for g in task_input.patient.genotype
         ]
         self.last_trace["validation"] = [asdict(v) for v in validated]
+        context["validated_variants"] = validated
 
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
@@ -280,7 +281,9 @@ class Agent:
                 continue
 
             # Build arguments based on tool type and input data
-            kwargs = self._build_auto_args(tool_name, parsed_variants, task_input)
+            kwargs = self._build_auto_args(
+                tool_name, parsed_variants, task_input, context.get("validated_variants")
+            )
             logger.info(f"Forcing tool call: {tool_name}({kwargs})")
 
             try:
@@ -299,16 +302,29 @@ class Agent:
         tool_name: str,
         parsed_variants: list,
         task_input: TaskInput,
+        validated: list | None = None,
     ) -> dict:
-        """Build tool arguments automatically from input data."""
+        """Build tool arguments automatically from input data.
+
+        validated holds the step-1 validator results, one per variant; when
+        the first variant validated, Ensembl gets its genomic form and
+        current transcript instead of the submitted cDNA string.
+        """
         gene = parsed_variants[0].gene if parsed_variants else ""
         variant_cdna = parsed_variants[0].variant_cdna if parsed_variants else ""
         transcript = parsed_variants[0].transcript if parsed_variants else ""
         clinical_context = task_input.patient.clinical_context
+        first_valid = validated[0] if validated and validated[0].valid else None
 
         if tool_name == "search_clinvar":
             return {"gene": gene, "variant": variant_cdna}
         elif tool_name == "query_ensembl":
+            if first_valid and first_valid.genomic_variant:
+                return {
+                    "genomic_hgvs": first_valid.genomic_variant,
+                    "transcript": first_valid.transcript_variant.split(":")[0],
+                    "gene": gene,
+                }
             hgvs = f"{transcript}:{variant_cdna}" if transcript else variant_cdna
             return {"hgvs_cdna": hgvs, "gene": gene}
         elif tool_name == "search_genereviews":
@@ -403,7 +419,9 @@ class Agent:
             if tool is None:
                 continue
 
-            kwargs = self._build_auto_args(tool_name, parsed_variants, task_input)
+            kwargs = self._build_auto_args(
+                tool_name, parsed_variants, task_input, context.get("validated_variants")
+            )
             logger.info(f"Auto-chaining to next tool: {tool_name}({kwargs})")
 
             try:
