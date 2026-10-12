@@ -1,0 +1,254 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "40166"
+  ],
+  "40166": {
+   "uid": "40166",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV000040166",
+   "accession_version": "VCV000040166.88",
+   "title": "NM_000030.3(AGXT):c.508G>A (p.Gly170Arg)",
+   "variation_set": [
+    {
+     "measure_id": "38436",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA343785"
+      },
+      {
+       "db_source": "UniProtKB",
+       "db_id": "P21549#VAR_000590"
+      },
+      {
+       "db_source": "OMIM",
+       "db_id": "604285.0013"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "121908529"
+      }
+     ],
+     "variation_name": "NM_000030.3(AGXT):c.508G>A (p.Gly170Arg)",
+     "cdna_change": "c.508G>A",
+     "aliases": [
+      "NM_000030.2(AGXT):c.508G>A(p.Gly170Arg)"
+     ],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "2",
+       "band": "2q37.3",
+       "start": "240871433",
+       "stop": "240871433",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "240871433",
+       "display_stop": "240871433",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "2",
+       "band": "2q37.3",
+       "start": "241810850",
+       "stop": "241810850",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "241810850",
+       "display_stop": "241810850",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00056",
+       "minor_allele": ""
+      },
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00053",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00063",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00067",
+       "minor_allele": ""
+      },
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00102",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000002.12:240871432:G:A",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV000239650",
+     "SCV000693979",
+     "SCV000803508",
+     "SCV000894272",
+     "SCV000914911",
+     "SCV000966875",
+     "SCV002106576",
+     "SCV005920898",
+     "SCV006108876",
+     "SCV002023769",
+     "SCV007614896",
+     "SCV001246473",
+     "SCV005086818",
+     "SCV000056444",
+     "SCV000511372",
+     "SCV000928384",
+     "SCV001193829",
+     "SCV001760080",
+     "SCV000172454",
+     "SCV000617630",
+     "SCV001715799",
+     "SCV005879872",
+     "SCV000331656",
+     "SCV007096400",
+     "SCV000944322",
+     "SCV007531368",
+     "SCV007936624",
+     "SCV004115838",
+     "SCV008081010",
+     "SCV007591682"
+    ],
+    "rcv": [
+     "RCV000032681",
+     "RCV000432954",
+     "RCV000589490",
+     "RCV003407388"
+    ]
+   },
+   "germline_classification": {
+    "description": "Pathogenic/Likely pathogenic",
+    "last_evaluated": "2026/06/25 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [],
+      "trait_name": "AGXT-related disorder"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "416"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0020501"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0002474"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "PS259900"
+       }
+      ],
+      "trait_name": "Primary hyperoxaluria"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "416"
+       },
+       {
+        "db_source": "Orphanet",
+        "db_id": "93598"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C0268164"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0009823"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "259900"
+       }
+      ],
+      "trait_name": "Primary hyperoxaluria, type I"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "AGXT",
+   "chr_sort": "02",
+   "location_sort": "00000000000240871433",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "AGXT",
+     "geneid": "189",
+     "strand": "+",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "missense variant"
+   ],
+   "protein_change": "G170R",
+   "fda_recognized_database": ""
+  }
+ }
+}

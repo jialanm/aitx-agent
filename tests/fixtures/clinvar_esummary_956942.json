@@ -1,0 +1,169 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "956942"
+  ],
+  "956942": {
+   "uid": "956942",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV000956942",
+   "accession_version": "VCV000956942.10",
+   "title": "NM_000834.5(GRIN2B):c.2755C>T (p.Gln919Ter)",
+   "variation_set": [
+    {
+     "measure_id": "947921",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA383993747"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "1555102548"
+      }
+     ],
+     "variation_name": "NM_000834.5(GRIN2B):c.2755C>T (p.Gln919Ter)",
+     "cdna_change": "c.2755C>T",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "12",
+       "band": "12p13.1",
+       "start": "13564483",
+       "stop": "13564483",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "13564483",
+       "display_stop": "13564483",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "12",
+       "band": "12p13.1",
+       "start": "13717417",
+       "stop": "13717417",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "13717417",
+       "display_stop": "13717417",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000012.12:13564482:G:A",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV001402293"
+    ],
+    "rcv": [
+     "RCV001229836"
+    ]
+   },
+   "germline_classification": {
+    "description": "Pathogenic",
+    "last_evaluated": "2023/05/04 00:00",
+    "review_status": "criteria provided, single submitter",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "589547"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C3151411"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0013509"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "613970"
+       }
+      ],
+      "trait_name": "Intellectual disability, autosomal dominant 6"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "3451"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C4015316"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0014505"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "616139"
+       }
+      ],
+      "trait_name": "Developmental and epileptic encephalopathy, 27"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "GRIN2B",
+   "chr_sort": "12",
+   "location_sort": "00000000000013564483",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "GRIN2B",
+     "geneid": "2904",
+     "strand": "-",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "nonsense"
+   ],
+   "protein_change": "Q919*",
+   "fda_recognized_database": ""
+  }
+ }
+}

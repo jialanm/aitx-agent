@@ -1,0 +1,31 @@
+{
+ "header": {
+  "type": "esearch",
+  "version": "0.3"
+ },
+ "esearchresult": {
+  "count": "1",
+  "retmax": "1",
+  "retstart": "0",
+  "idlist": [
+   "503974"
+  ],
+  "translationset": [],
+  "translationstack": [
+   {
+    "term": "\"c0x2e289del\"[variant name]",
+    "field": "variant name",
+    "count": "56",
+    "explode": "N"
+   },
+   {
+    "term": "ANO10[gene]",
+    "field": "gene",
+    "count": "672",
+    "explode": "N"
+   },
+   "AND"
+  ],
+  "querytranslation": "\"c0x2e289del\"[variant name] AND ANO10[gene]"
+ }
+}

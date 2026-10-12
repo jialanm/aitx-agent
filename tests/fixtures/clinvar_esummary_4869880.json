@@ -1,0 +1,127 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "4869880"
+  ],
+  "4869880": {
+   "uid": "4869880",
+   "obj_type": "single nucleotide variant",
+   "accession": "VCV004869880",
+   "accession_version": "VCV004869880.1",
+   "title": "NM_004006.3(DMD):c.9285A>G (p.Leu3095=)",
+   "variation_set": [
+    {
+     "measure_id": "4972008",
+     "variation_xrefs": [],
+     "variation_name": "NM_004006.3(DMD):c.9285A>G (p.Leu3095=)",
+     "cdna_change": "c.9285A>G",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "X",
+       "band": "Xp21.2",
+       "start": "31260956",
+       "stop": "31260956",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "31260956",
+       "display_stop": "31260956",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "X",
+       "band": "Xp21.2",
+       "start": "31279073",
+       "stop": "31279073",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "31279073",
+       "display_stop": "31279073",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [],
+     "variant_type": "single nucleotide variant",
+     "canonical_spdi": "NC_000023.11:31260955:T:C",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV007633002"
+    ],
+    "rcv": [
+     "RCV006725282"
+    ]
+   },
+   "germline_classification": {
+    "description": "Likely benign",
+    "last_evaluated": "2026/06/12 00:00",
+    "review_status": "criteria provided, single submitter",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "CN230736"
+       }
+      ],
+      "trait_name": "Cardiovascular phenotype"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "DMD",
+   "chr_sort": "X",
+   "location_sort": "00000000000031260956",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "DMD",
+     "geneid": "1756",
+     "strand": "-",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "synonymous variant"
+   ],
+   "protein_change": "",
+   "fda_recognized_database": ""
+  }
+ }
+}

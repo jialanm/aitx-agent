@@ -9,10 +9,10 @@
   "retstart": "0",
   "idlist": [],
   "translationset": [],
-  "querytranslation": "CFTR[gene] AND c.9999999del[All Fields]",
+  "querytranslation": "\"c.7544_9286del\"[variant name] AND DMD[gene]",
   "errorlist": {
    "phrasesnotfound": [
-    "c.9999999del"
+    "c.7544_9286del[variant name]"
    ],
    "fieldsnotfound": []
   },

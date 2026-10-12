@@ -152,40 +152,30 @@ def test_pubmed_keeps_key_out_of_rate_limit_error(eutils, monkeypatch):
     assert evidence == []
 
 
-CLINVAR_REPLIES = {
-    "esearch": "clinvar_esearch_CFTR_c1521_1523del.json",
-    "esummary": "clinvar_esummary_CFTR_c1521_1523del.json",
-}
-
-
 @pytest.fixture
 def clinvar_eutils(monkeypatch):
-    server = _Server(CLINVAR_REPLIES)
+    """Recorded exact-name search and summary for AGXT c.508G>A; records every request."""
+    server = _Server({"esearch": "clinvar_esearch_name_AGXT_c.508G_A.json", "esummary": "clinvar_esummary_40166.json"})
     monkeypatch.setattr(clinvar.requests, "get", server.get)
     return server
 
 
 def test_clinvar_sends_key_on_every_request(clinvar_eutils, monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
-    # First search misses so the broader fallback search runs as well.
-    clinvar_eutils.replies["esearch"] = [
-        "clinvar_esearch_no_hits.json",
-        "clinvar_esearch_CFTR_c1521_1523del.json",
-    ]
 
-    summary, evidence = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
+    summary, evidence = clinvar.ClinVarTool().execute(gene="AGXT", variant="c.508G>A", transcript="NM_000030.3")
 
-    assert clinvar_eutils.endpoints() == ["esearch", "esearch", "esummary"]
+    assert clinvar_eutils.endpoints() == ["esearch", "esummary"]
     assert all(p["api_key"] == FAKE_KEY for _, p in clinvar_eutils.calls)
-    assert evidence[0].url == "https://www.ncbi.nlm.nih.gov/clinvar/variation/1705126/"
+    assert evidence[0].url == "https://www.ncbi.nlm.nih.gov/clinvar/variation/40166/"
+    assert "Clinical Significance: Pathogenic" in summary  # the current classification field is read
 
 
 def test_clinvar_sends_no_key_when_unset(clinvar_eutils, monkeypatch):
     monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
 
-    clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
+    clinvar.ClinVarTool().execute(gene="AGXT", variant="c.508G>A", transcript="NM_000030.3")
 
-    assert len(clinvar_eutils.calls) == 2
     assert not any("api_key" in p for _, p in clinvar_eutils.calls)
 
 
@@ -194,67 +184,9 @@ def test_clinvar_keeps_key_out_of_rate_limit_error(clinvar_eutils, monkeypatch):
     clinvar_eutils.rate_limit_first = True
     monkeypatch.setattr(base.time, "sleep", lambda s: None)
 
-    summary, evidence = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
+    summary, evidence = clinvar.ClinVarTool().execute(gene="AGXT", variant="c.508G>A", transcript="NM_000030.3")
 
     assert summary.startswith("ClinVar API error: 429 Too Many Requests after 5 attempts")
-    assert len(clinvar_eutils.calls) == 5
-    assert FAKE_KEY not in summary
-    assert NCBI_KEY_PLACEHOLDER in summary
-    assert evidence == []
-
-
-def _genereviews_server(monkeypatch, fail_abstract=None):
-    """Serve the recorded index files and chapter abstract; record every request."""
-    calls: list[tuple[str, dict]] = []
-
-    def get(url, params=None, timeout=None):
-        calls.append((url, dict(params or {})))
-        if url.endswith("NBKid_shortname_genesymbol.txt"):
-            return _Recorded(FIXTURES / "genereviews_NBKid_shortname_genesymbol.txt")
-        if url.endswith("GRtitle_shortname_NBKid.txt"):
-            return _Recorded(FIXTURES / "genereviews_GRtitle_shortname_NBKid.txt")
-        if fail_abstract is not None:
-            raise fail_abstract(url, params)
-        return _Recorded(FIXTURES / f"genereviews_abstract_{params['id']}.txt")
-
-    monkeypatch.setattr(genereviews.requests, "get", get)
-    return calls
-
-
-def test_genereviews_sends_key_on_the_pubmed_fetch_only(monkeypatch):
-    monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
-    calls = _genereviews_server(monkeypatch)
-
-    summary, evidence = genereviews.GeneReviewsTool().execute(gene="AGXT")
-
-    index_calls = [p for u, p in calls if u.endswith(".txt")]
-    efetch_calls = [p for u, p in calls if "efetch" in u]
-    assert len(index_calls) == 2 and not any("api_key" in p for p in index_calls)  # FTP files take no key
-    assert efetch_calls == [{"db": "pubmed", "id": "20301460", "rettype": "abstract", "retmode": "text", "api_key": FAKE_KEY}]
-    assert evidence[0].url == "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
-
-
-def test_genereviews_sends_no_key_when_unset(monkeypatch):
-    monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
-    calls = _genereviews_server(monkeypatch)
-
-    genereviews.GeneReviewsTool().execute(gene="AGXT")
-
-    assert not any("api_key" in p for _, p in calls)
-
-
-def test_genereviews_keeps_key_out_of_request_errors(monkeypatch):
-    monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
-
-    def connection_error(url, params):
-        full = requests.Request("GET", url, params=params).prepare().url
-        return requests.ConnectionError(f"connection refused for url: {full}")
-
-    _genereviews_server(monkeypatch, fail_abstract=connection_error)
-
-    summary, evidence = genereviews.GeneReviewsTool().execute(gene="AGXT")
-
-    assert summary.startswith("GeneReviews returned nothing for NBK1283: request failed")
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []

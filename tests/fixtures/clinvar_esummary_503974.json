@@ -1,0 +1,196 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "503974"
+  ],
+  "503974": {
+   "uid": "503974",
+   "obj_type": "Deletion",
+   "accession": "VCV000503974",
+   "accession_version": "VCV000503974.27",
+   "title": "NM_018075.5(ANO10):c.289del (p.Thr96_Met97insTer)",
+   "variation_set": [
+    {
+     "measure_id": "495191",
+     "variation_xrefs": [
+      {
+       "db_source": "ClinGen",
+       "db_id": "CA2341096"
+      },
+      {
+       "db_source": "dbSNP",
+       "db_id": "772345347"
+      }
+     ],
+     "variation_name": "NM_018075.5(ANO10):c.289del (p.Thr96_Met97insTer)",
+     "cdna_change": "c.289del",
+     "aliases": [],
+     "variation_loc": [
+      {
+       "status": "current",
+       "assembly_name": "GRCh38",
+       "chr": "3",
+       "band": "3p21.33",
+       "start": "43600432",
+       "stop": "43600432",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "43600432",
+       "display_stop": "43600432",
+       "assembly_acc_ver": "GCF_000001405.38",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      },
+      {
+       "status": "previous",
+       "assembly_name": "GRCh37",
+       "chr": "3",
+       "band": "3p21.33",
+       "start": "43641924",
+       "stop": "43641924",
+       "inner_start": "",
+       "inner_stop": "",
+       "outer_start": "",
+       "outer_stop": "",
+       "display_start": "43641924",
+       "display_stop": "43641924",
+       "assembly_acc_ver": "GCF_000001405.25",
+       "annotation_release": "",
+       "alt": "",
+       "ref": ""
+      }
+     ],
+     "allele_freq_set": [
+      {
+       "source": "Trans-Omics for Precision Medicine (TOPMed)",
+       "value": "0.00000",
+       "minor_allele": ""
+      },
+      {
+       "source": "Exome Aggregation Consortium (ExAC)",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD)",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00001",
+       "minor_allele": ""
+      },
+      {
+       "source": "The Genome Aggregation Database (gnomAD), exomes",
+       "value": "0.00002",
+       "minor_allele": ""
+      }
+     ],
+     "variant_type": "Deletion",
+     "canonical_spdi": "NC_000003.12:43600431:T:",
+     "common_name": ""
+    }
+   ],
+   "supporting_submissions": {
+    "scv": [
+     "SCV000710277",
+     "SCV001519096",
+     "SCV005664525",
+     "SCV007093559",
+     "SCV004540334",
+     "SCV005075455",
+     "SCV007930302"
+    ],
+    "rcv": [
+     "RCV000598963",
+     "RCV001644702",
+     "RCV006934850"
+    ]
+   },
+   "germline_classification": {
+    "description": "Pathogenic/Likely pathogenic",
+    "last_evaluated": "2025/07/18 00:00",
+    "review_status": "criteria provided, multiple submitters, no conflicts",
+    "fda_recognized_database": "",
+    "trait_set": [
+     {
+      "trait_xrefs": [],
+      "trait_name": "ANO10-related disorder"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "MedGen",
+        "db_id": "C3661900"
+       }
+      ],
+      "trait_name": "not provided"
+     },
+     {
+      "trait_xrefs": [
+       {
+        "db_source": "Orphanet",
+        "db_id": "284289"
+       },
+       {
+        "db_source": "MedGen",
+        "db_id": "C3150998"
+       },
+       {
+        "db_source": "MONDO",
+        "db_id": "MONDO:0013392"
+       },
+       {
+        "db_source": "OMIM",
+        "db_id": "613728"
+       }
+      ],
+      "trait_name": "Autosomal recessive spinocerebellar ataxia 10"
+     }
+    ]
+   },
+   "clinical_impact_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "oncogenicity_classification": {
+    "description": "",
+    "last_evaluated": "1/01/01 00:00",
+    "review_status": "",
+    "fda_recognized_database": "",
+    "trait_set": []
+   },
+   "record_status": "",
+   "gene_sort": "ANO10",
+   "chr_sort": "03",
+   "location_sort": "00000000000043600432",
+   "variation_set_name": "",
+   "variation_set_id": "",
+   "genes": [
+    {
+     "symbol": "ANO10",
+     "geneid": "55129",
+     "strand": "-",
+     "source": "submitted"
+    }
+   ],
+   "molecular_consequence_list": [
+    "nonsense",
+    "intron variant"
+   ],
+   "protein_change": "",
+   "fda_recognized_database": ""
+  }
+ }
+}
