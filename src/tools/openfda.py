@@ -2,12 +2,18 @@
 
 from __future__ import annotations
 
+import logging
+
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, get_with_retries
+
+logger = logging.getLogger(__name__)
 
 FDA_LABEL_URL = "https://api.fda.gov/drug/label.json"
 FDA_LABEL_WEB = "https://labels.fda.gov"
+# A label's own page, by its set ID; the search page cited before was not a record.
+DAILYMED_LABEL_URL = "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid={set_id}"
 
 TIMEOUT = 15
 
@@ -70,10 +76,11 @@ class OpenFDATool(BaseTool):
             openfda = label.get("openfda", {})
 
             # Build evidence URL
-            spl_id = label.get("id", "") or label.get("set_id", "")
-            if spl_id:
-                url = f"https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query={requests.utils.quote(drug)}"
+            set_id = label.get("set_id", "")
+            if set_id:
+                url = DAILYMED_LABEL_URL.format(set_id=set_id)
             else:
+                logger.warning(f"openFDA label for {drug} has no set_id; citing the DailyMed search page")
                 url = f"https://dailymed.nlm.nih.gov/dailymed/search.cfm?labeltype=all&query={requests.utils.quote(drug)}"
             evidence.append(EvidenceRecord(url=url))
 
@@ -129,8 +136,8 @@ class OpenFDATool(BaseTool):
         # Try generic name first
         for field in ["openfda.generic_name", "openfda.brand_name"]:
             try:
-                resp = requests.get(
-                    FDA_LABEL_URL,
+                resp = get_with_retries(
+                    label="openFDA", url=FDA_LABEL_URL,
                     params={
                         "search": f'{field}:"{drug}"',
                         "limit": 1,
@@ -147,8 +154,8 @@ class OpenFDATool(BaseTool):
 
         # Fallback: broad search
         try:
-            resp = requests.get(
-                FDA_LABEL_URL,
+            resp = get_with_retries(
+                label="openFDA", url=FDA_LABEL_URL,
                 params={
                     "search": drug,
                     "limit": 1,
