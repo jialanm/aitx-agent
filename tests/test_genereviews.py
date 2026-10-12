@@ -41,7 +41,7 @@ def test_gene_with_several_chapters_lists_them_for_the_model_to_choose(recorded)
     assert "- NBK1244: Classic Ehlers-Danlos Syndrome (PMID 20301422)" in summary
     assert "- NBK1295: COL1A1- and COL1A2-Related Osteogenesis Imperfecta (PMID 20301472)" in summary
     assert "- NBK99168: Caffey Disease (PMID 22855962)" in summary
-    assert [e.url for e in evidence] == [f"https://www.ncbi.nlm.nih.gov/books/{n}/" for n in ("NBK1244", "NBK1295", "NBK99168")]
+    assert evidence == []  # a menu is not a consulted record; nothing to cite yet
     assert len(recorded) == 2  # the two index files, no abstract fetched
 
 

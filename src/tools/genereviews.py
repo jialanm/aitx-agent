@@ -110,11 +110,13 @@ class GeneReviewsTool(BaseTool):
             if not nbks:
                 return f"GeneReviews has no chapter indexed to gene {gene}.", evidence
             if len(nbks) > 1:
+                # A menu, not a record consulted: no evidence links, so nothing is
+                # cited until a chapter is fetched (run 3: 6 of 11 unsupported
+                # citations were these list links).
                 lines = [f"GeneReviews chapters indexed to {gene} ({len(nbks)}); call again with the accession that matches the patient's phenotype:"]
                 for n in nbks:
                     ch = self._chapters.get(n, {})
                     lines.append(f"- {n}: {ch.get('title', '(title not in index)')} (PMID {ch.get('pmid', '?')})")
-                    evidence.append(EvidenceRecord(url=BOOKSHELF_URL.format(nbk=n)))
                 return "\n".join(lines), evidence
             nbk = nbks[0]
 
