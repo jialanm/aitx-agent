@@ -36,8 +36,9 @@ class PubMedTool(BaseTool):
                         "query": {
                             "type": "string",
                             "description": (
-                                "Specific PubMed query, e.g. 'DMD exon 51 skipping "
-                                "eteplirsen deletion exons 52-63', not 'DMD treatment'"
+                                "Specific PubMed query naming the gene, the variant "
+                                "consequence and the therapy, e.g. 'CFTR F508del "
+                                "homozygous elexacaftor', not 'CFTR treatment'"
                             ),
                         },
                         "max_results": {
