@@ -1,0 +1,69 @@
+1. Classic Ehlers-Danlos Syndrome.
+
+Malfait F(1), Symoens S(1), Syx D(1).
+
+In: Adam MP, Bick S, Mirzaa GM, Wallace SE, Amemiya A, editors. GeneReviews(®) 
+[Internet]. Seattle (WA): University of Washington, Seattle; 1993–2026.
+2007 May 29 [updated 2024 Feb 1].
+
+Author information:
+(1)Center for Medical Genetics, Ghent University Hospital, Ghent, Belgium
+
+CLINICAL CHARACTERISTICS: Classic Ehlers-Danlos syndrome (cEDS) is a heritable 
+connective tissue disorder characterized by skin hyperextensibility, atrophic 
+scarring, and generalized joint hypermobility (GJH). The skin is soft, velvety, 
+or doughy to the touch. In addition, the skin is hyperextensible, meaning that 
+it extends easily and snaps back after release. The skin is fragile, as 
+manifested by splitting of the dermis following relatively minor trauma, 
+especially over pressure points (knees, elbows) and areas prone to trauma 
+(shins, forehead, chin). Wound healing is poor, and stretching, thinning, and 
+pigmentation of scars is characteristic, leading to the presence of atrophic 
+and/or hemosiderotic scars. Easy bruising is also a hallmark of cEDS. GJH is 
+present in most but not all affected individuals, evidenced by the presence of a 
+Beighton score of five or greater, either on examination or historically. Joint 
+instability complications may comprise sprains and dislocations/subluxations. 
+Mild muscle hypotonia with delayed motor development, fatigue and muscle cramps, 
+and some skeletal morphologic alterations (scoliosis, pectus deformities, 
+genus/hallux valgus, pes planus) are regularly observed. While aortic root 
+dilatation and mitral valve prolapse are seen in cEDS, they are rarely 
+clinically significant. Arterial aneurysm and rupture have been reported in a 
+few individuals with cEDS.
+DIAGNOSIS/TESTING: The diagnosis of cEDS is established in a proband with 
+characteristic clinical features and a heterozygous pathogenic variant in 
+COL1A1, COL5A1, or COL5A2 identified by molecular genetic testing.
+MANAGEMENT: Treatment of manifestations: Dermal wounds are closed without 
+tension, preferably in two layers. For other wounds, deep stitches are applied 
+generously; cutaneous stitches are left in place twice as long as usual; and the 
+borders of adjacent skin are carefully taped to prevent stretching of the scar. 
+Young children with skin fragility can wear pads or bandages over the forehead, 
+knees, and shins to avoid skin tears. Older children can wear soccer pads or ski 
+stockings with shin padding during activities. Braces as needed to improve joint 
+stability; referral to orthopedist, rheumatologist, or physical therapist and 
+occupational therapist as needed. Mobility devices as needed. Adjust sleep 
+surface as needed to improve sleep quality and decrease pain. Those with 
+hypotonia, joint instability, and chronic pain may need to adapt lifestyles 
+accordingly. Anti-inflammatory drugs may alleviate joint pain. Children with 
+hypotonia and delayed motor development benefit from physiotherapy. 
+Non-weight-bearing exercise promotes muscle strength and coordination. Ascorbic 
+acid (vitamin C) may reduce bruising. DDAVP® (desmopressin) may be useful to 
+normalize bleeding time. Cardiovascular manifestations are treated in a standard 
+manner. Surveillance: Assess for skin fragility, joint instability, occupational 
+and physical therapy needs, mobility issues, and pain at each visit or as 
+needed. Evaluation for hypotonia and motor development at each visit in infants 
+and children. Assess for easy bruising and/or prolonged bleeding at each visit. 
+Evaluation of clotting factors if severe easy bruising is present. Yearly 
+echocardiogram when aortic dilatation and/or mitral valve prolapse are present. 
+Agents/circumstances to avoid: Sports with heavy joint strain.
+GENETIC COUNSELING: Classic EDS is inherited in an autosomal dominant manner. 
+Approximately 50% of individuals diagnosed with cEDS have an affected parent; 
+approximately 50% of individuals diagnosed with cEDS have the disorder as the 
+result of a de novo pathogenic variant. Each child of an individual with cEDS 
+has a 50% chance of inheriting the pathogenic variant. Once the cEDS-related 
+pathogenic variant has been identified in an affected family member, prenatal 
+and preimplantation genetic testing are possible.
+
+Copyright © 1993-2026, University of Washington, Seattle. GeneReviews is a 
+registered trademark of the University of Washington, Seattle. All rights 
+reserved.
+
+PMID: 20301422

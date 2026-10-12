@@ -350,12 +350,10 @@ class Agent:
             hgvs = f"{transcript}:{variant_cdna}" if transcript else variant_cdna
             return {"hgvs_cdna": hgvs, "gene": gene}
         elif tool_name == "search_genereviews":
-            # Extract condition from clinical_context (first sentence, strip age/sex preamble)
-            condition = self._extract_condition(clinical_context)
-            args = {"gene": gene}
-            if condition:
-                args["condition"] = condition
-            return args
+            # Gene only: the adapter lists the gene's chapters and the model
+            # picks by phenotype. A code-built condition phrase matched the
+            # wrong chapter in run 2 (2026-10-07).
+            return {"gene": gene}
         elif tool_name == "search_clinical_trials":
             return {"query": f"{gene} {clinical_context.split('.')[0][:50]}"}
         elif tool_name == "search_pubmed":

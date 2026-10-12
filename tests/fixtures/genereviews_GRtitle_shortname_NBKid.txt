@@ -1,0 +1,894 @@
+#GR_shortname	GR_Title	NBK_id	PMID
+aadc-def	Aromatic L-Amino Acid Decarboxylase Deficiency	NBK595821	37824694
+aars2-dis	AARS2-Related Disorder	NBK608563	39480987
+ab-lipo-p	Abetalipoproteinemia	NBK532447	30358967
+abs	Cytochrome P450 Oxidoreductase Deficiency	NBK1419	20301592
+accpn	Hereditary Motor and Sensory Neuropathy with Agenesis of the Corpus Callosum	NBK1372	20301546
+achm	Achromatopsia	NBK1418	20301591
+achon1b	Achondrogenesis Type 1B	NBK1516	20301689
+achondroplasia	Achondroplasia	NBK1152	20301331
+acp	Aceruloplasminemia	NBK1493	20301666
+acpp	Andersen-Tawil Syndrome	NBK1264	20301441
+actg2-dis	ACTG2 Visceral Myopathy	NBK299311	26072522
+ada	Adenosine Deaminase Deficiency	NBK1483	20301656
+ada2-def	Adenosine Deaminase 2 Deficiency	NBK544951	31393689
+adamtsl4-eyes	ADAMTSL4-Related Eye Disorders	NBK84111	22338190
+adcy5-dysk	ADCY5-Related Movement Disorder	NBK263441	25521004
+adnfle	Autosomal Dominant Sleep-Related Hypermotor (Hyperkinetic) Epilepsy	NBK1169	20301348
+adnp-dis	ADNP-Related Helsmoortel-Van der Aa Syndrome	NBK355518	27054228
+aec	TP63-Related Disorders	NBK43797	20556892
+aff4-chops	AFF4-Related CHOPS Syndrome	NBK621037	41712746
+ags	Aicardi-Goutieres Syndrome	NBK1475	20301648
+agu	Aspartylglucosaminuria	NBK599378	38252773
+ahc	NR0B1-Related Adrenal Hypoplasia Congenita	NBK1431	20301604
+aic	Aicardi Syndrome	NBK1381	20301555
+aip	Acute Intermittent Porphyria	NBK1193	20301372
+alagille	Alagille Syndrome	NBK1273	20301450
+alexander	Alexander Disease	NBK1172	20301351
+alkap	Alkaptonuria	NBK1454	20301627
+alk-nbs	ALK-Related Neuroblastic Tumor Susceptibility	NBK24599	20301782
+alpers	POLG-Related Disorders	NBK26471	20301791
+alpha1-a	Alpha-1 Antitrypsin Deficiency	NBK1519	20301692
+alpk1-auto	ALPK1-Related Autoinflammatory Disease	NBK604494	38935811
+alport	Alport Syndrome	NBK1207	20301386
+alps	Autoimmune Lymphoproliferative Syndrome	NBK1108	20301287
+als-ftd	C9orf72-Related Amyotrophic Lateral Sclerosis and/or Frontotemporal Dementia	NBK268647	25577942
+als-overview	Amyotrophic Lateral Sclerosis Overview	NBK1450	20301623
+alstrom	Alstrom Syndrome	NBK1267	20301444
+alzheimer	Alzheimer Disease Overview	NBK1161	20301340
+a-mannosidosis	Alpha-Mannosidosis	NBK1396	20301570
+amish-mcph	SLC25A19-Related Thiamine Metabolism Dysfunction	NBK1365	20301539
+amrf	SCARB2-Related Action Myoclonus ? Renal Failure Syndrome	NBK333437	26677510
+androgen	Androgen Insensitivity Syndrome	NBK1429	20301602
+angelman	Angelman Syndrome	NBK1144	20301323
+aniridia	PAX6 Aniridia Syndrome	NBK1360	20301534
+ankrd17-nds	ANKRD17-Related Neurodevelopmental Syndrome	NBK588029	36548456
+ankrd26	ANKRD26-Related Thrombocytopenia	NBK507664	29927566
+ano5-md	ANO5-Related Muscle Disease	NBK114459	23193613
+ao2	Atelosteogenesis Type 2	NBK1317	20301493
+aoa2	Ataxia with Oculomotor Apraxia Type 2	NBK1154	20301333
+ap4-def	AP-4-Associated Hereditary Spastic Paraplegia	NBK535153	30543385
+apbd	GBE1 Adult Polyglucosan Body Disease	NBK5300	20301758
+apds	Activated PI3K Delta Syndrome	NBK611655	39899769
+apert	Apert Syndrome	NBK541728	31145570
+apob-hbl	APOB-Related Familial Hypobetalipoproteinemia	NBK570370	33983694
+aprt-def	Adenine Phosphoribosyltransferase Deficiency	NBK100238	22934314
+arg1	Arginase 1 Deficiency	NBK1159	20301338
+args-aciduria	Argininosuccinate Lyase Deficiency	NBK51784	21290785
+arid1b-dis	ARID1B-Related Disorder	NBK541502	31132234
+arsacs	ARSACS	NBK1255	20301432
+arterial-t	Arterial Tortuosity Syndrome	NBK253404	25392904
+arts	Phosphoribosylpyrophosphate Synthetase Deficiency	NBK2591	20301738
+arvd	Arrhythmogenic Right Ventricular Cardiomyopathy Overview	NBK1131	20301310
+asah1	ASAH1-Related Disorders	NBK488189	29595935
+as-def	Asparagine Synthetase Deficiency	NBK525916	30234940
+aspm-pm	ASPM Primary Microcephaly	NBK555474	32239881
+asxl3	ASXL3-Related Disorder	NBK563693	33151654
+ataxias	Hereditary Ataxia Overview	NBK1138	20301317
+ataxia-telangiectas	Ataxia-Telangiectasia	NBK26468	20301790
+a-thal	Alpha-Thalassemia	NBK1435	20301608
+atm-cpd	ATM-Related Cancer Predisposition	NBK623002	42258614
+atn1-ndd	ATN1-Related Neurodevelopmental Disorder	NBK583218	36007104
+au-kline	Au-Kline Syndrome	NBK540283	30998304
+aved	Ataxia with Vitamin E Deficiency	NBK1241	20301419
+ayme-gripp	Ayme-Gripp Syndrome	NBK553534	32027476
+bachmann-bupp	Bachmann-Bupp Syndrome	NBK583220	36007106
+bap1-tpds	BAP1 Tumor Predisposition Syndrome	NBK390611	27748099
+baraitser-winter	Baraitser-Winter Cerebrofrontofacial Syndrome	NBK327153	26583190
+barth	Barth Syndrome	NBK247162	25299040
+bbs	Bardet-Biedl Syndrome Overview	NBK1363	20301537
+bcl11a-id	BCL11A-Related Intellectual Disability	NBK547048	31556984
+bcns	Nevoid Basal Cell Carcinoma Syndrome	NBK1151	20301330
+beck-fahrner	TET3-Related Beck-Fahrner Syndrome	NBK591837	37200470
+bethlem	Collagen VI-Related Dystrophies	NBK1503	20301676
+bfns	KCNQ2-Related Disorders	NBK32534	20437616
+bgc	Primary Familial Brain Calcification Overview	NBK1421	20301594
+bgd-biotin	Biotin-Thiamine-Responsive Basal Ganglia Disease 	NBK169615	24260777
+bgs	Baller-Gerold Syndrome	NBK1204	20301383
+bhd	Birt-Hogg-Dube Syndrome	NBK1522	20301695
+bietti-cd	Bietti Crystalline Dystrophy	NBK91457	22497028
+biotin	Biotinidase Deficiency	NBK1322	20301497
+bloom	Bloom Syndrome	NBK1398	20301572
+b-mannosidosis	Beta-Mannosidosis	NBK622587	42160655
+bofs	Branchiooculofacial Syndrome	NBK55063	21634087
+bohring-opitz	ASXL1-Related Bohring-Opitz Syndrome	NBK481833	29446906
+bor	Branchiootorenal Spectrum Disorder	NBK1380	20301554
+bpan	Beta-Propeller Protein-Associated Neurodegeneration	NBK424403	28211668
+bpes	Blepharophimosis, Ptosis, and Epicanthus Inversus Syndrome	NBK1441	20301614
+brca1	BRCA1- and BRCA2-Associated Hereditary Breast and Ovarian Cancer	NBK1247	20301425
+brugada	Brugada Syndrome	NBK1517	20301690
+brylib	Bryant-Li-Bhoj Neurodevelopmental Syndrome	NBK595206	37782742
+b-thal	Beta-Thalassemia	NBK1426	20301599
+burn-mckeown	TXNL4A-Related Craniofacial Disorders	NBK373577	27413799
+bvd	Bestrophinopathies	NBK1167	20301346
+bws	Beckwith-Wiedemann Syndrome	NBK1394	20301568
+ca5a-def	Carbonic Anhydrase VA Deficiency	NBK284774	25834911
+cach	Childhood Ataxia with Central Nervous System Hypomyelination / Vanishing White Matter	NBK1258	20301435
+cact-def	Carnitine-Acylcarnitine Translocase Deficiency	NBK582032	35862567
+cadasil	CADASIL	NBK1500	20301673
+caffey	Caffey Disease	NBK99168	22855962
+cah	21-Hydroxylase-Deficient Congenital Adrenal Hyperplasia	NBK1171	20301350
+campo-dysp	Campomelic Dysplasia	NBK1760	20301724
+canavan	Canavan Disease	NBK1234	20301412
+cantu	Cant� syndrome	NBK246980	25275207
+carasil	HTRA1 Disorder	NBK32533	20437615
+carney	Carney Complex	NBK1286	20301463
+cask-dis	CASK Disorders	NBK169825	24278995
+cbl	Disorders of Intracellular Cobalamin Metabolism	NBK1328	20301503
+cc2-leuk	CLCN2-Related Leukoencephalopathy	NBK326661	26539602
+cca	Congenital Contractural Arachnodactyly	NBK1386	20301560
+ccd	Cleidocranial Dysplasia Spectrum Disorder	NBK1513	20301686
+ccfdn	CTDP1-Related Congenital Cataracts, Facial Dysmorphism, and Neuropathy	NBK25565	20301787
+ccm	Familial Cerebral Cavernous Malformation	NBK1293	20301470
+cda1	Congenital Dyserythropoietic Anemia Type I	NBK5313	20301759
+cd-chst3	Chondrodysplasia with Congenital Joint Dislocations, CHST3-Related	NBK62112	21882400
+cdg-1a	PMM2-CDG	NBK1110	20301289
+cdk13-dis	CDK13-Related Disorder	NBK536784	30702837
+cdkl5-def	CDKL5 Deficiency Disorder	NBK602610	38603524
+cdkn2a-cpd	CDKN2A Cancer Predisposition	NBK616232	40674536
+cdls	Cornelia de Lange Syndrome	NBK1104	20301283
+cdp1-xlr	Chondrodysplasia Punctata 1, X-Linked	NBK1544	20301713
+cdsp	Primary Carnitine Deficiency	NBK84551	22420015
+cebpa-aml	CEBPA-Associated Familial Acute Myeloid Leukemia	NBK47457	20963938
+ced	Camurati-Engelmann Disease	NBK1156	20301335
+ce-dysp	Cranioectodermal Dysplasia	NBK154653	24027799
+celiac	Celiac Disease	NBK1727	20301720
+cep	Congenital Erythropoietic Porphyria	NBK154652	24027798
+cetp-def	CETP-Related Hyperalphalipoproteinemia	NBK614254	40339105
+cf	Cystic Fibrosis	NBK1250	20301428
+cfc	Cardiofaciocutaneous Syndrome	NBK1186	20301365
+cfeom	Congenital Fibrosis of the Extraocular Muscles Overview	NBK1348	20301522
+cgd	Chronic Granulomatous Disease	NBK99496	22876374
+chac	VPS13A Disease	NBK1387	20301561
+char	Char Syndrome	NBK1106	20301285
+charge	CHD7 Disorder	NBK1117	20301296
+chchd10-dis	CHCHD10-Related Disorders	NBK304142	26131548
+chd2-dis	CHD2-Related Neurodevelopmental Disorders	NBK333201	26677509
+chd4-ndd	CHD4 Neurodevelopmental Disorder	NBK561516	32881470
+chd8-ndd-og	CHD8-Related Neurodevelopmental Disorder with Overgrowth	NBK585456	36302072
+chediak-higashi	Chediak-Higashi Syndrome	NBK5188	20301751
+chek2-cpd	CHEK2-Related Cancer Predisposition	NBK615090	40440438
+cherubism	Cherubism	NBK1137	20301316
+chh	Cartilage-Hair Hypoplasia - Anauxetic Dysplasia Spectrum Disorders 	NBK84550	22420014
+chkb-md	CHKB-Related Muscular Dystrophy	NBK589929	37011121
+chol-liver-ov	Pediatric Genetic Cholestatic Liver Disease Overview	NBK584020	36108118
+choroid	Choroideremia	NBK1337	20301511
+christianson	Christianson Syndrome	NBK475801	29334451
+chrom17-lis	PAFAH1B1-Related Lissencephaly / Subcortical Band Heterotopia	NBK5189	20301752
+cip-overview	Congenital Insensitivity to Pain Overview	NBK481553	29419974
+ciss	Cold-Induced Sweating Syndrome including Crisponi Syndrome	NBK52917	21370513
+citrin	Citrin Deficiency	NBK1181	20301360
+clcn4-ndd	CLCN4-Related Neurodevelopmental Disorder	NBK575836	34928551
+clcn7	CLCN7-Related Osteopetrosis	NBK1127	20301306
+cln3-dis	CLN3-Related Disorder	NBK624593	42691200
+clpb-def	CLPB Deficiency	NBK396257	27891836
+cls	RPS6KA3-Related Intellectual Disability	NBK1346	20301520
+cmr	Chylomicron Retention Disease	NBK578949	35344313
+cms	Congenital Myasthenic Syndromes Overview	NBK1168	20301347
+cmt	Charcot-Marie-Tooth Hereditary Neuropathy Overview	NBK1358	20301532
+cmt2a	MFN2 Hereditary Motor and Sensory Neuropathy	NBK1511	20301684
+cmt2c	Autosomal Dominant TRPV4-Related Disorders	NBK201366	24830047
+cmt2d	GARS-Associated Axonal Neuropathy	NBK1242	20301420
+cmt4c	SH3TC2-Related Hereditary Motor and Sensory Neuropathy	NBK1340	20301514
+cmtc	Isolated and Classic Cutis Marmorata Telangiectatica Congenita	NBK581081	35679444
+cmtx	GJB1 Disorders: Charcot-Marie-Tooth Neuropathy (CMT1X) and Central Nervous System Phenotypes	NBK1374	20301548
+cnot1-vibos	CNOT1-Related Vissers-Bodmer Syndrome	NBK621477	41911374
+cockayne	Cockayne Syndrome	NBK1342	20301516
+coffin-siris	Coffin-Siris Syndrome	NBK131811	23556151
+cohen	Cohen Syndrome	NBK1482	20301655
+col4a1-dis	COL4A1-Related Disorders	NBK7046	20301768
+collagen-2	Type II Collagen Disorders Overview	NBK540447	31021589
+coq10-def	Primary Coenzyme Q10 Deficiency Overview	NBK410087	28125198
+costello	HRAS-Related Costello Syndrome	NBK1507	20301680
+cpt1a	Carnitine Palmitoyltransferase 1A Deficiency	NBK1527	20301700
+cpt2	Carnitine Palmitoyltransferase II Deficiency	NBK1253	20301431
+cranio-md	Autosomal Dominant Craniometaphyseal Dysplasia	NBK1461	20301634
+craniosynostosis	FGFR Craniosynostosis Syndromes Overview	NBK1455	20301628
+creatine	Creatine Deficiency Disorders	NBK3794	20301745
+csc-dys	Congenital Stromal Corneal Dystrophy	NBK2690	20301741
+csnb	X-Linked Congenital Stationary Night Blindness	NBK1245	20301423
+csnk2b-ndd	CSNK2B-Related Neurodevelopmental Disorder	NBK606532	39236211
+ctcf-dis	CTCF-Related Disorder	NBK603087	38662876
+ctlm	Citrullinemia Type I	NBK1458	20301631
+ctnnb1-ndd	CTNNB1 Neurodevelopmental Disorder	NBK580527	35593792
+ctns	Cystinosis	NBK1400	20301574
+ctx	Cerebrotendinous Xanthomatosis	NBK1409	20301583
+cutis-laxa	ATP6V0A2-Related Cutis Laxa	NBK5200	20301755
+cvt	Catecholaminergic Polymorphic Ventricular Tachycardia	NBK1289	20301466
+cyclic-n	ELANE-Related Neutropenia	NBK1533	20301705
+cyld-cs	CYLD Cutaneous Syndrome	NBK555820	32298062
+cystinuria	Cystinuria	NBK619248	41264765
+danon	Danon Disease	NBK554742	32134616
+dbh	Dopamine Beta-Hydroxylase Deficiency	NBK1474	20301647
+dbmd	Dystrophinopathies	NBK1119	20301298
+dcm-lmna	LMNA-Related Dilated Cardiomyopathy	NBK1674	20301717
+dcm-ov	Dilated Cardiomyopathy Overview	NBK1309	20301486
+dcx	DCX-Related Disorders	NBK1185	20301364
+ddon	Deafness-Dystonia-Optic Neuronopathy Syndrome	NBK1216	20301395
+ddx3x-ndd	DDX3X-Related Neurodevelopmental Disorder	NBK561282	32852922
+ddx41-mds	DDX41-Associated Familial Myelodysplastic Syndrome and Acute Myeloid Leukemia	NBK574843	34723452
+deafness-overview	Genetic Hearing Loss Overview	NBK1434	20301607
+del16p11_2	16p11.2 Recurrent Deletion	NBK11167	20301775
+dent	Dent Disease	NBK99494	22876375
+depdc5-epilepsy	DEPDC5-Related Epilepsy	NBK385626	27683934
+df-lamm	Congenital Deafness with Labyrinthine Aplasia, Microtia, and Microdontia	NBK100664	22993869
+dfna2	DFNA2 Nonsyndromic Hearing Loss	NBK1209	20301388
+dfnb1	GJB2-Related Autosomal Recessive Nonsyndromic Hearing Loss	NBK1272	20301449
+dfnb9	OTOF-Related Hearing Loss	NBK1251	20301429
+dguok-mtddepl	Deoxyguanosine Kinase Deficiency	NBK7040	20301766
+dhpr-def	Dihydropteridine Reductase Deficiency	NBK622830	42228786
+diamond-b	DBA Syndrome	NBK7047	20301769
+diastrophic-d	Diastrophic Dysplasia	NBK1350	20301524
+dkc	Dyskeratosis Congenita and Related Telomere Biology Disorders	NBK22301	20301779
+dld-def	Dihydrolipoamide Dehydrogenase Deficiency	NBK220444	25032271
+dlg4-synap	DLG4-Related Synaptopathy	NBK592682	37347881
+dmn	Permanent Neonatal Diabetes Mellitus	NBK1447	20301620
+dmtn	6q24-Related Transient Neonatal Diabetes Mellitus	NBK1534	20301706
+dnajc6-pd	DNAJC6 Parkinson Disease	NBK570369	33983693
+dnmt1-ddsn	DNMT1-Related Disorder	NBK84112	22338191
+donnai	Donnai-Barrow Syndrome	NBK1878	20301732
+drd	GTP Cyclohydrolase 1-Deficient Dopa-Responsive Dystonia	NBK1508	20301681
+drpla	DRPLA	NBK1491	20301664
+drrs	SALL4-Related Disorders	NBK1373	20301547
+duane	Duane Syndrome	NBK1190	20301369
+duarte-gal	Duarte Galactosemia	NBK258640	25473725
+dup15q	Maternal 15q Duplication Syndrome	NBK367946	27308687
+dup17q12	17q12 Recurrent Duplication	NBK344340	26925472
+dup7q11_23	7q11.23 Duplication Syndrome	NBK327268	26610320
+dync1h1-dis	DYNC1H1-Related Disorders	NBK601997	38513047
+dyrk1a-id	DYRK1A Syndrome	NBK333438	26677511
+dystonia	DYT-TOR1A	NBK1492	20301665
+dystonia-ov	Monogenic Isolated Dystonia Overview	NBK1155	20301334
+ea1	Episodic Ataxia Type 1	NBK25442	20301785
+ebd	Dystrophic Epidermolysis Bullosa	NBK1304	20301481
+ebf3-ndd	EBF3 Neurodevelopmental Disorder	NBK570204	33956416
+ebj	Junctional Epidermolysis Bullosa	NBK1125	20301304
+eb-pa	Epidermolysis Bullosa with Pyloric Atresia	NBK1157	20301336
+ebs	Epidermolysis Bullosa Simplex	NBK1369	20301543
+eccl	Encephalocraniocutaneous Lipomatosis	NBK576966	35099867
+echs1-def	Mitochondrial Short-Chain Enoyl-CoA Hydratase Deficiency	NBK542806	31219693
+ed2	Hidrotic Ectodermal Dysplasia 2	NBK1200	20301379
+edm	SLC26A2-Related Multiple Epiphyseal Dysplasia	NBK1306	20301483
+edm-ad	Multiple Epiphyseal Dysplasia, Dominant	NBK1123	20301302
+edmd	Emery-Dreifuss Muscular Dystrophy	NBK1436	20301609
+eds	Classic Ehlers-Danlos Syndrome	NBK1244	20301422
+eds3	Hypermobile Ehlers-Danlos Syndrome	NBK1279	20301456
+eds4	Vascular Ehlers-Danlos Syndrome	NBK1494	20301667
+eds6	PLOD1-Related Kyphoscoliotic Ehlers-Danlos Syndrome	NBK1462	20301635
+eds-mc	Musculocontractural Ehlers-Danlos Syndrome	NBK614472	40373179
+eds-pd	Periodontal Ehlers-Danlos Syndrome	NBK572429	34324282
+ee	Ethylmalonic Encephalopathy	NBK453432	28933811
+eed-og	EED-Related Overgrowth	NBK540017	30973693
+efemp2-cutis-laxa	EFEMP2-Related Cutis Laxa	NBK54467	21563328
+el-hattab-alkuraya	El-Hattab-Alkuraya Syndrome	NBK584547	36173873
+eln-cutis-laxa	ELN-Related Cutis Laxa	NBK584550	36173875
+emanuel	Emanuel Syndrome	NBK1263	20301440
+emc10-ndd	EMC10-Related Neurodevelopmental Disorder	NBK592645	37319253
+entpd1-ndd	ENTPD1-Related Neurodevelopmental Disorder	NBK592266	37262206
+epas1-gofs	Mosaic EPAS1 Gain-of-Function Spectrum	NBK621478	41911375
+epb42-spherocytosis	EPB42-Related Hereditary Spherocytosis	NBK190102	24624460
+epg5	EPG5-Related Disorder	NBK584989	36228046
+epm1	Progressive Myoclonic Epilepsy Type 1	NBK1142	20301321
+epp-ar	Erythropoietic Protoporphyria, Autosomal Recessive	NBK100826	23016163
+epp-xl	X-Linked Protoporphyria	NBK121284	23409301
+etha	SCN9A Neuropathic Pain Syndromes	NBK1163	20301342
+etv6-tpl	ETV6-Related Thrombocytopenia and Predisposition to Leukemia	NBK564234	33226740
+evc	Ellis-van Creveld Syndrome	NBK596643	37903214
+exoc6b-semd	EXOC6B-Related Spondyloepimetaphyseal Dysplasia with Joint Laxity	NBK592183	37229238
+exosc3-pc-hypo-p	EXOSC3 Pontocerebellar Hypoplasia	NBK236968	25144110
+ext	Hereditary Multiple Osteochondromas	NBK1235	20301413
+fa	Fanconi Anemia	NBK1401	20301575
+fabry	Fabry Disease	NBK1292	20301469
+factor-v-leiden	Factor V Leiden Thrombophilia	NBK1368	20301542
+fahn	Fatty Acid Hydroxylase-Associated Neurodegeneration	NBK56080	21735565
+fam111a-dysp	FAM111A-Related Skeletal Dysplasias	NBK590151	37023242
+fap	APC-Associated Polyposis Conditions	NBK1345	20301519
+fars2-def	FARS2 Deficiency	NBK538658	30869852
+fastkd2-coxpd	FASTKD2-Related Combined Oxidative Phosphorylation Deficiency	NBK619576	41343688
+fbln5-cutis-laxa	FBLN5-Related Cutis Laxa	NBK5201	20301756
+fbxl4-mtddepl	FBXL4-Related Encephalomyopathic Mitochondrial DNA Depletion Syndrome	NBK425540	28383868
+fch	Familial Combined Hypolipidemia	NBK593236	37471510
+fcmd	Fukuyama Congenital Muscular Dystrophy	NBK1206	20301385
+fd	Familial Dysautonomia	NBK1180	20301359
+feingold	Feingold Syndrome 1	NBK7050	20301770
+fg	MED12-Related Disorders	NBK1676	20301719
+fgd1-fgd	FGD1-Related Faciogenital Dysplasia (Aarskog-Scott Syndrome)	NBK620763	41704117
+fgf14-ataxia	GAA-FGF14-Related Ataxia	NBK599589	38271551
+fhm	Familial Hemiplegic Migraine	NBK1388	20301562
+fhs	Floating-Harbor Syndrome	NBK114458	23193612
+fkbp14-keds	FKBP14 Kyphoscoliotic Ehlers-Danlos Syndrome	NBK541503	31132235
+flnb-dis	FLNB-Related Disorders	NBK2534	20301736
+fmf	Familial Mediterranean Fever	NBK1227	20301405
+focal-dh	PORCN-Related Developmental Disorders	NBK1543	20301712
+folate-mal	Hereditary Folate Malabsorption	NBK1673	20301716
+folr1-cft-def	FOLR1-Related Cerebral Folate Transport Deficiency	NBK599286	38224559
+fop	Fibrodysplasia Ossificans Progressiva	NBK558090	32525643
+foxg1-ndd	FOXG1 Syndrome	NBK604176	38843374
+foxp1	FOXP1 Syndrome	NBK594825	37733892
+foxp2-sl-dis	FOXP2-Related Speech and Language Disorder	NBK368474	27336128
+fragilex	FMR1 Disorders	NBK1384	20301558
+friedreich	Friedreich Ataxia	NBK1281	20301458
+fructose1-6-def	Fructose-1,6-Bisphosphatase 1 Deficiency	NBK550349	31804789
+fryns	Fryns Syndrome	NBK1459	20301632
+fsh	Facioscapulohumeral Muscular Dystrophy	NBK1443	20301616
+ftd-chmp2b	CHMP2B-Related Frontotemporal Dementia-Amyotrophic Lateral Sclerosis	NBK1199	20301378
+ftd-grn	GRN Frontotemporal Dementia	NBK1371	20301545
+ftdp-17	MAPT-Related Frontotemporal Dementia	NBK1505	20301678
+fucosidosis	Fucosidosis	NBK621565	41926607
+fum	Fumarate Hydratase Deficiency	NBK1506	20301679
+g6pc3-def	G6PC3 Deficiency	NBK285321	25879134
+gabriele-devries	Gabriele-de Vries Syndrome	NBK541730	31145572
+gaci	Generalized Arterial Calcification of Infancy	NBK253403	25392903
+galactosemia	Classic Galactosemia and Clinical Variant Galactosemia	NBK1518	20301691
+gale-def	Epimerase Deficiency Galactosemia	NBK51671	21290786
+gan	GAN-Related Neurodegeneration	NBK1136	20301315
+gata1	GATA1-Related Cytopenia	NBK1364	20301538
+gaucher	Gaucher Disease	NBK1269	20301446
+gcps	GLI3-Related Greig Cephalopolysyndactyly Syndrome	NBK1446	20301619
+gefs	SCN1A-Related Seizure Disorders	NBK1318	20301494
+geleophys-dysp	Geleophysic Dysplasia	NBK11168	20301776
+gist	Primary Familial Gastrointestinal Stromal Tumors	NBK625142	42809666
+glut1	Glucose Transporter Type 1 Deficiency Syndrome	NBK1430	20301603
+glutaric-a1	Glutaric Acidemia Type 1	NBK546575	31536184
+gm1-ganglio	GLB1-Related Disorders	NBK164500	24156116
+gm2a-def	GM2 Activator Deficiency	NBK583219	36007105
+gm3-def	GM3 Synthase Deficiency	NBK593237	37471511
+gnai1-ndd	GNAI1-Related Neurodevelopmental Disorder	NBK605493	39083633
+gnal-dystonia	DYT-GNAL	NBK535640	30605297
+gnao1-dis	GNAO1-Related Disorder	NBK597155	37956232
+gnas-dis	Disorders of GNAS Inactivation	NBK459117	29072892
+gnb1-e	GNB1 Encephalopathy	NBK554743	32134617
+gnb5-ndd	GNB5-Related Neurodevelopmental Disorder 	NBK573218	34436834
+gonad-dys-46xy	Nonsyndromic Disorders of Testicular Development Overview	NBK1547	20301714
+gr_22q11deletion	22q11.2 Deletion Syndrome	NBK1523	20301696
+gr_22q13_3	Phelan-McDermid Syndrome-SHANK3 Related	NBK1198	20301377
+gr_3ms	3-M Syndrome	NBK1481	20301654
+gria2-ndd	GRIA2-Related Neurodevelopmental Disorder	NBK599285	38224558
+grin1-ndd	GRIN1-Related Neurodevelopmental Disorder	NBK542807	31219694
+grin2a-dis	GRIN2A-Related Disorders	NBK385627	27683935
+grin2b	GRIN2B-Related Neurodevelopmental Disorder	NBK501979	29851452
+grin2d-dee	GRIN2D-Related Developmental and Epileptic Encephalopathy	NBK582335	35914066
+gsd1	Glycogen Storage Disease Type I	NBK1312	20301489
+gsd2	Pompe Disease	NBK1261	20301438
+gsd3	Glycogen Storage Disease Type III	NBK26372	20301788
+gsd4	Glycogen Storage Disease Type IV	NBK115333	23285490
+gsd5	Glycogen Storage Disease Type V	NBK1344	20301518
+gsd6	Glycogen Storage Disease Type VI	NBK5941	20301760
+gsd9	Phosphorylase Kinase Deficiency	NBK55061	21634085
+h1-4	HIST1H1E Syndrome	NBK564966	33270410
+haplo-a20	Haploinsufficiency of A20	NBK610430	39715316
+hartsfield	FGFR1-Related Hartsfield Syndrome	NBK349073	26937548
+hcp	Hereditary Coproporphyria	NBK114807	23236641
+hd-l2	Huntington Disease-Like 2	NBK1529	20301701
+hdls	CSF1R-Related Disorder	NBK100239	22934315
+hemo-a	Hemophilia A	NBK1404	20301578
+hemo-b	Hemophilia B	NBK1495	20301668
+hemochromatosis	HFE-Related Hemochromatosis	NBK1440	20301613
+hep	Hepatoerythropoietic Porphyria	NBK169003	24175354
+hered-drta	Hereditary Distal Renal Tubular Acidosis	NBK547595	31600044
+hfg	Hand-Foot-Genital Syndrome	NBK1423	20301596
+hfi	Hereditary Fructose Intolerance	NBK333439	26677512
+hfpoik-tmp	Hereditary Fibrosing Poikiloderma with Tendon Contractures, Myopathy, and Pulmonary Fibrosis	NBK390610	27748098
+hgc	Diffuse Gastric and Lobular Breast Cancer Syndrome	NBK1139	20301318
+hgps	Hutchinson-Gilford Progeria Syndrome	NBK1121	20301300
+hhhs	Hyperornithinemia-Hyperammonemia-Homocitrullinuria  Syndrome	NBK97260	22649802
+hht	Hereditary Hemorrhagic Telangiectasia	NBK1351	20301525
+hi	Nonsyndromic Genetic Hyperinsulinism Overview	NBK1375	20301549
+hibch-def	3-Hydroxyisobutyryl-CoA Hydrolase Deficiency	NBK619246	41264763
+higes	STAT3 Hyper IgE Syndrome	NBK25507	20301786
+hlh	Familial Hemophagocytic Lymphohistiocytosis	NBK1444	20301617
+hlrcc	FH Tumor Predisposition Syndrome	NBK1252	20301430
+hmdpc	Hypermanganesemia with Dystonia 1	NBK100241	22934317
+hmerf	Hereditary Myopathy with Early Respiratory Failure	NBK185330	24575448
+hnpcc	Lynch Syndrome	NBK1211	20301390
+hnpp	Hereditary Neuropathy with Liability to Pressure Palsies	NBK1392	20301566
+hnrnph2-ndd	HNRNPH2-Related Neurodevelopmental Disorder	NBK584018	36108116
+hnrnpu-ndd	HNRNPU-Related Neurodevelopmental Disorder	NBK578573	35274911
+homocystinuria	Homocystinuria due to Cystathionine Beta-Synthase Deficiency	NBK1524	20301697
+hops	Hypophosphatasia	NBK1150	20301329
+hos	Holt-Oram Syndrome	NBK1111	20301290
+hoxa1-dis	HOXA1-Related Disorders	NBK609107	39541495
+hpe-overview	Holoprosencephaly Overview	NBK1530	20301702
+hpp	Hypokalemic Periodic Paralysis	NBK1338	20301512
+hps	Hermansky-Pudlak Syndrome	NBK1287	20301464
+hrpt2	CDC73-Related Disorders	NBK3789	20301744
+hsan2	Hereditary Sensory and Autonomic Neuropathy Type II	NBK49247	21089229
+hsan4	NTRK1 Congenital Insensitivity to Pain with Anhidrosis	NBK1769	20301726
+hsn1	SPTLC1-Related Hereditary Sensory Neuropathy	NBK1390	20301564
+hsp	Uncomplicated (Pure) Hereditary Spastic Paraplegia Overview	NBK1509	20301682
+hunter	Mucopolysaccharidosis Type II	NBK1274	20301451
+huntington	Huntington Disease	NBK1305	20301482
+huppke-brendel	Huppke-Brendel Syndrome	NBK542334	31194315
+husa	Genetic Atypical Hemolytic-Uremic Syndrome	NBK1367	20301541
+hyal2-def	HYAL2 Deficiency	NBK594824	37733894
+hyper-card	Nonsyndromic Hypertrophic Cardiomyopathy Overview	NBK1768	20301725
+hyperchol	Familial Hypercholesterolemia	NBK174884	24404629
+hyperek	Hereditary Hyperekplexia Overview	NBK1260	20301437
+hyper-ftc	Hyperphosphatemic Familial Tumoral Calcinosis	NBK476672	29389098
+hyper-nfj2	Autosomal Dominant Tubulointerstitial Kidney Disease -- REN	NBK53700	21473025
+hyper-pp	Hyperkalemic Periodic Paralysis	NBK1496	20301669
+hypochondroplasia	Hypochondroplasia	NBK1477	20301650
+hypo-mcc	Hypomyelination and Congenital Cataract	NBK2587	20301737
+iahsp	ALS2-Related Disorder	NBK1243	20301421
+ibm	GNE Myopathy	NBK1262	20301439
+ibmpfd	Multisystem Proteinopathy	NBK1476	20301649
+idednik	IDEDNIK Syndrome	NBK609106	39541497
+image	IMAGe Syndrome	NBK190103	24624461
+inad	PLA2G6-Associated Neurodegeneration	NBK1675	20301718
+inppl1-opsmd	INPPL1-Related Opsismodysplasia	NBK615431	40504975
+insr-ir	INSR-Related Severe Insulin Resistance Syndrome	NBK476444	29369573
+i-p	Incontinentia Pigmenti	NBK1472	20301645
+ipa	AIP Familial Isolated Pituitary Adenomas 	NBK97965	22720333
+ipex	IPEX Syndrome	NBK1118	20301297
+irf2bpl-dis	IRF2BPL-Related Disorder	NBK609461	39571061
+isca1-mmds	ISCA1-Related Multiple Mitochondrial Dysfunctions Syndrome	NBK547304	31580634
+isca2-mt-dis	ISCA2-Related Mitochondrial Disorder	NBK481904	29470032
+iso-def	Isolated Sulfite Oxidase Deficiency	NBK453433	28933809
+isovaleric-a	Classic Isovaleric Acidemia	NBK601614	38484105
+issd	Free Sialic Acid Storage Disorder	NBK1470	20301643
+jh	HAMP- and HJV-Related Hemochromatosis	NBK1170	20301349
+jln	Jervell and Lange-Nielsen Syndrome	NBK1405	20301579
+jmc	PTH1R-Related Jansen Metaphyseal Chondrodysplasia	NBK616087	40638774
+joubert	Joubert Syndrome	NBK1325	20301500
+jpd	PRKN-Related Early-Onset Parkinson Disease	NBK1478	20301651
+jps	Juvenile Polyposis Syndrome	NBK1469	20301642
+kabuki	Kabuki Syndrome	NBK62111	21882399
+kagami-ogata	Kagami-Ogata Syndrome	NBK608430	39446997
+kat6b-dis	KAT6B Disorders	NBK114806	23236640
+kbgs	ANKRD11-Related KBG Syndrome	NBK487886	29565525
+kcnc1-dis	KCNC1-Related Disorders	NBK619809	41411464
+kcnk9-is	KCNK9 Imprinting Syndrome	NBK425128	28333430
+kcnq3-dis	KCNQ3-Related Disorders	NBK201978	24851285
+kcnt1-epilepsy	KCNT1-Related Epilepsy	NBK525917	30234941
+kctd7-epilepsy	KCTD7-Related Progressive Myoclonic Epilepsy	NBK619245	41264762
+kennedy	Spinal and Bulbar Muscular Atrophy	NBK1333	20301508
+kif1a-ndd	KIF1A-Related Neurodevelopmental Disorder	NBK621569	41941559
+kindler	Kindler Syndrome	NBK349072	26937547
+kleefstra	Kleefstra Syndrome	NBK47079	20945554
+kms	Isolated Gonadotropin-Releasing Hormone (GnRH) Deficiency	NBK1334	20301509
+kmt2b-dystonia	KMT2B-Related Disorders	NBK493766	29697234
+kmt2e-ndd	KMT2E-Related Neurodevelopmental Disorder	NBK602945	38648332
+kos	Kaufman Oculocerebrofacial Syndrome	NBK390670	27763745
+kptn-dis	KPTN-Related Disorder	NBK605495	39083632
+krabbe	Krabbe Disease	NBK1238	20301416
+kss	Mitochondrial DNA Deletion Syndromes	NBK1203	20301382
+l1cam	L1 Syndrome	NBK1484	20301657
+lad-ad	LMNB1-Related Autosomal Dominant Leukodystrophy	NBK338165	26749591
+lafora	Progressive Myoclonus Epilepsy, Lafora Type	NBK1389	20301563
+lal-def	Lysosomal Acid Lipase Deficiency	NBK305870	26225414
+lathosterolosis	Lathosterolosis	NBK597809	38060690
+lbsl	Leukoencephalopathy with Brain Stem and Spinal Cord Involvement and Lactate Elevation	NBK43417	20506600
+lca-ov	Nonsyndromic Leber Congenital Amaurosis / Early-Onset Severe Retinal Dystrophy Overview	NBK531510	30285347
+lchad	Long-Chain Hydroxyacyl-CoA Dehydrogenase Deficiency / Trifunctional Protein Deficiency	NBK583531	36063482
+lds	Lymphedema-Distichiasis Syndrome	NBK1457	20301630
+legius	Legius Syndrome	NBK47312	20945555
+leigh-nucl-ov	Nuclear Gene-Encoded Leigh Syndrome Spectrum Overview	NBK320989	26425749
+leopard	Noonan Syndrome with Multiple Lentigines	NBK1383	20301557
+lgmd2a	Calpainopathy	NBK1313	20301490
+lhon	Leber Hereditary Optic Neuropathy	NBK1174	20301353
+li-ar	Autosomal Recessive Congenital Ichthyosis	NBK1420	20301593
+li-fraumeni	Li-Fraumeni Syndrome	NBK1311	20301488
+lipoid-p	Lipoid Proteinosis	NBK338540	26803878
+lms	NOTCH3-Related Lateral Meningocele Syndrome	NBK368476	27336130
+lns	HPRT1 Disorders	NBK1149	20301328
+loeys-dietz	Loeys-Dietz Syndrome	NBK1133	20301312
+lowe	Lowe Syndrome	NBK1480	20301653
+lpi	Lysinuric Protein Intolerance	NBK1361	20301535
+lpin2-majeed	LPIN2-Related Majeed Syndrome	NBK589480	36877799
+lpl	Lipoprotein Lipase Deficiency	NBK1308	20301485
+lrrk2	LRRK2-Related Parkinson Disease	NBK1208	20301387
+ltbp4-cutis-laxa	LTBP4-Related Cutis Laxa	NBK343782	26866239
+lwd	SHOX Deficiency Disorders	NBK1215	20301394
+madd	Multiple Acyl-CoA Dehydrogenase Deficiency	NBK558236	32550677
+maps	MUTYH Polyposis	NBK107219	23035301
+marfan	FBN1-Related Marfan Syndrome	NBK1335	20301510
+mbd4-tpds	MBD4-Related Tumor Predisposition Syndrome	NBK624097	42594245
+mbd5-dis	MBD5 Haploinsufficiency	NBK390803	27786435
+mbtps1-semd	MBTPS1-Related Spondyloepimetaphyseal Dysplasia with Elevated Lysosomal Enzymes	NBK597768	38048414
+mcad	Medium-Chain Acyl-Coenzyme A Dehydrogenase Deficiency	NBK1424	20301597
+mccune-albright	Fibrous Dysplasia / McCune-Albright Syndrome	NBK274564	25719192
+mc-def	Molybdenum Cofactor Deficiency	NBK575630	34870926
+mckd1	Autosomal Dominant Tubulointerstitial Kidney Disease -- MUC1	NBK153723	23946964
+mckd2	Autosomal Dominant Tubulointerstitial Kidney Disease -- UMOD	NBK1356	20301530
+mcleod	McLeod Neuroacanthocytosis Syndrome	NBK1354	20301528
+mcm8-mcm9	MCM8/MCM9-Related Syndromes	NBK623157	42302138
+mdef-cmd	LAMA2 Muscular Dystrophy	NBK97333	22675738
+mdel15q13_3	15q13.3 Recurrent Deletion	NBK50780	21290787
+mdel16p12_2	16p12.2 Recurrent Deletion	NBK274565	25719193
+mdel17q12	17q12 Recurrent Deletion Syndrome	NBK401562	27929632
+mdel17q21_31	Koolen-de Vries Syndrome	NBK24676	20301783
+mdel1q21_1	1q21.1 Recurrent Microdeletion	NBK52787	21348049
+mdel3q29	3q29 Recurrent Deletion	NBK385289	27656750
+me-ataxia	PRICKLE1-Related Disorders	NBK9674	20301774
+mecp2-dup	MECP2 Duplication Syndrome	NBK1284	20301461
+mecr-dis	MECR-Related Neurologic Disorder	NBK540959	31070877
+med13l	MED13L Syndrome	NBK613517	40228085
+mef2c-dis	MEF2C-Related Disorder	NBK610216	39666846
+megdel	SERAC1 Deficiency	NBK195853	24741715
+melas	MELAS	NBK1233	20301411
+men1	Multiple Endocrine Neoplasia Type 1	NBK1538	20301710
+men2	Multiple Endocrine Neoplasia Type 2	NBK1257	20301434
+men4	Multiple Endocrine Neoplasia Type 4	NBK594826	37733893
+menkes	ATP7A-Related Copper Transport Disorders	NBK1413	20301586
+merrf	MERRF	NBK1520	20301693
+mf-dys-mic	Mandibulofacial Dysostosis with Microcephaly	NBK214367	24999515
+mga3	Costeff Syndrome	NBK1473	20301646
+mhs	Nonsyndromic Malignant Hyperthermia Susceptibility	NBK1146	20301325
+miccap-ms	Microcephaly-Capillary Malformation Syndrome	NBK174452	24354023
+microph-lsd	Microphthalmia with Linear Skin Defects Syndrome	NBK7041	20301767
+milroy	Milroy Disease	NBK1239	20301417
+mirage	MIRAGE Syndrome	NBK564655	33237688
+mirror	Congenital Mirror Movements	NBK279760	25763452
+miyoshi	Dysferlinopathy	NBK1303	20301480
+mkks	McKusick-Kaufman Syndrome	NBK1502	20301675
+ml2	GNPTAB-Related Disorders	NBK1828	20301728
+ml3c	Mucolipidosis III Gamma	NBK24701	20301784
+ml4	Mucolipidosis IV	NBK1214	20301393
+mlc	Megalencephalic Leukoencephalopathy with Subcortical Cysts	NBK1535	20301707
+mld	Arylsulfatase A Deficiency	NBK1130	20301309
+mlid-maternal	Maternal Effect Gene-Related Multilocus Imprinting Disturbances	NBK614473	40373180
+mma	Isolated Methylmalonic Acidemia	NBK1231	20301409
+mmihs-ov	Megacystis-Microcolon-Intestinal Hypoperistalsis Syndrome Overview	NBK540960	31070878
+mn1-ctt	MN1 C-Terminal Truncation Syndrome	NBK560443	32790267
+mngie	Mitochondrial Neurogastrointestinal Encephalopathy Disease	NBK1179	20301358
+mody-ov	Maturity-Onset Diabetes of the Young Overview	NBK500456	29792621
+mona	Multicentric Osteolysis Nodulosis and Arthropathy	NBK373578	27413800
+monosomy7-ov	Monosomy 7 Predisposition Syndromes Overview	NBK571103	34110727
+mopd2	Microcephalic Osteodysplastic Primordial Dwarfism Type II	NBK575926	34978779
+mota	FREM1 Autosomal Recessive Disorders 	NBK1728	20301721
+mpd1	Laing Distal Myopathy	NBK1433	20301606
+mpgn	C3 Glomerulopathy	NBK1425	20301598
+mpph	MPPH Syndrome	NBK396098	27854409
+mps1	Mucopolysaccharidosis Type I	NBK1162	20301341
+mps3	Mucopolysaccharidosis Type III	NBK546574	31536183
+mps4a	Mucopolysaccharidosis Type IVA 	NBK148668	23844448
+mps7	Mucopolysaccharidosis Type VII	NBK598990	38190471
+mpv17-mtdep	MPV17-Related Hepatocerebral Mitochondrial DNA Maintenance Defect	NBK92947	22593919
+mss	Marinesco-Sjogren Syndrome	NBK1192	20301371
+msud	Maple Syrup Urine Disease	NBK1319	20301495
+m-sulfatase-def	Multiple Sulfatase Deficiency	NBK538937	30896912
+msx2	Enlarged Parietal Foramina	NBK1128	20301307
+mt-deafness	Nonsyndromic Hearing Loss and Deafness, Mitochondrial	NBK1422	20301595
+mtdna-md-ov	Mitochondrial DNA Maintenance Defects Overview	NBK487393	29517884
+mthfr-homocystinuria	Homocystinuria due to Deficiency of N(5,10)-Methylenetetrahydrofolate Reductase Activity	NBK615089	40440437
+mtm	X-Linked Myotubular Myopathy	NBK1432	20301605
+mt-mpan	Mitochondrial Membrane Protein-Associated Neurodegeneration	NBK185329	24575447
+mt-overview	Primary Mitochondrial Disorders Overview	NBK1224	20301403
+muenke	Muenke Syndrome	NBK1415	20301588
+mws	Mowat-Wilson Syndrome	NBK1412	20301585
+myh9	MYH9-Related Disease	NBK2689	20301740
+myhre	Myhre Syndrome	NBK425723	28406602
+myo-dystonia	SGCE Myoclonus-Dystonia	NBK1414	20301587
+myotonia-c	Myotonia Congenita	NBK1355	20301529
+myotonic-d	Myotonic Dystrophy Type 1	NBK1165	20301344
+myotonic-d2	Myotonic Dystrophy Type 2	NBK1466	20301639
+myrf-cugs	MYRF-Related Cardiac Urogenital Syndrome	NBK586169	36375006
+nad-def	Congenital NAD Deficiency Disorder	NBK593504	37499065
+nail-ps	Nail-Patella Syndrome	NBK1132	20301311
+narp	Mitochondrial DNA-Associated Leigh Syndrome Spectrum	NBK1173	20301352
+nars1	NARS1-Related Neurologic Disorders	NBK612410	40014750
+nbia-ov	Neurodegeneration with Brain Iron Accumulation Disorders Overview	NBK121988	23447832
+nbs	SMARCA2-Related Nicolaides-Baraitser Syndrome	NBK321516	26468571
+ncl	Neuronal Ceroid Lipofuscinoses Overview	NBK1428	20301601
+ndi	Hereditary Nephrogenic Diabetes Insipidus	NBK1177	20301356
+nephron-ov	Nephronophthisis-Related Ciliopathies	NBK368475	27336129
+neurocutaneous	Neurocutaneous Disorders due to Mitochondrial Proline Synthesis Defects	NBK620405	41570168
+neuroferritin	Neuroferritinopathy	NBK1141	20301320
+nf1	Neurofibromatosis 1	NBK1109	20301288
+nf2	NF2-Related Schwannomatosis	NBK1201	20301380
+nfia-dis	NFIA-Related Disorder	NBK542336	31194316
+nfix-malan	NFIX-Related Malan Syndrome	NBK605494	39083629
+ngly1-cddg	NGLY1-Related Congenital Disorder of Deglycosylation	NBK481554	29419975
+nijmegen	Nijmegen Breakage Syndrome	NBK1176	20301355
+nkh	Nonketotic Hyperglycinemia	NBK1357	20301531
+nkx2-1-dis	NKX2-1-Related Disorders	NBK185066	24555207
+nkx6-2-spax	NKX6-2-Related Disorder	NBK531509	30285346
+noonan	Noonan Syndrome	NBK1124	20301303
+norrie	NDP-Related Retinopathies	NBK1331	20301506
+npab	Acid Sphingomyelinase Deficiency	NBK1370	20301544
+npc	Niemann-Pick Disease Type C	NBK1296	20301473
+nr2f1-ndd	NR2F1-Related Neurodevelopmental Disorder	NBK587319	36508512
+nr4a2-ndd	NR4A2-Related Neurodevelopmental Disorder and Dopa-Responsive Dystonia	NBK624883	42752099
+nsdhl-dis	NSDHL-Related Disorders	NBK51754	21290788
+nthl1-ts	NTHL1 Tumor Syndrome	NBK555473	32239880
+oca4	Oculocutaneous Albinism Type 4	NBK1510	20301683
+oca-oa-ov	Oculocutaneous Albinism and Ocular Albinism Overview	NBK590568	37053367
+ofd1	Oral-Facial-Digital Syndrome Type I	NBK1188	20301367
+og-dysp	Osteoglophonic Dysplasia	NBK602944	38648328
+oi	COL1A1- and COL1A2-Related Osteogenesis Imperfecta	NBK1295	20301472
+okur-chung	Okur-Chung Neurodevelopmental Syndrome	NBK581083	35679446
+ondine	Congenital Central Hypoventilation Syndrome	NBK1427	20301600
+opd	FLNA-Related Otopalatodigital Spectrum Disorders	NBK1393	20301567
+opitz	MID1-Related Opitz G/BBB Syndrome	NBK1327	20301502
+opmd	Oculopharyngeal Muscular Dystrophy	NBK1126	20301305
+os-cs	Osteopathia Striata with Cranial Sclerosis	NBK569515	33856753
+otc-def	Ornithine Transcarbamylase Deficiency	NBK154378	24006547
+pacs1-ndd	PACS1-Related Neurodevelopmental Disorder	NBK559434	32672908
+pai-1-def	Complete Plasminogen Activator Inhibitor 1 Deficiency	NBK447152	28771291
+pancreatitis-ov	Pancreatitis Overview	NBK190101	24624459
+papr	PAX2-Related Disorder	NBK1451	20301624
+paragangliomas	Hereditary Paraganglioma-Pheochromocytoma Syndromes	NBK1548	20301715
+parkinson-overview	Monogenic Parkinson Disease Overview	NBK1223	20301402
+pbd	Zellweger Spectrum Disorder	NBK1448	20301621
+pc	Pachyonychia Congenita	NBK1280	20301457
+pcd	Primary Ciliary Dyskinesia	NBK1122	20301301
+pc-hypo-p	TSEN54 Pontocerebellar Hypoplasia	NBK9673	20301773
+pdc	Pyruvate Carboxylase Deficiency	NBK6852	20301764
+pdhc-def-ov	Primary Pyruvate Dehydrogenase Complex Deficiency Overview	NBK571223	34138529
+pds	Pyridoxine-Dependent Epilepsy - ALDH7A1	NBK1486	20301659
+peaf	Autosomal Dominant Epilepsy with Auditory Features	NBK1537	20301709
+pendred	SLC26A4-Related Sensorineural Hearing Loss	NBK1467	20301640
+perrault	Perrault Syndrome Overview	NBK242617	25254289
+perry	DCTN1-Related Neurodegeneration	NBK47027	20945553
+peters-plus	Peters Plus Syndrome	NBK1464	20301637
+pf	Pulmonary Fibrosis Predisposition Overview	NBK1230	20301408
+pfcp	Primary Familial and Congenital Erythrocytosis	NBK395975	27831681
+pfic	ATP8B1 Deficiency	NBK1297	20301474
+ph1	Primary Hyperoxaluria Type 1	NBK1283	20301460
+ph2	Primary Hyperoxaluria Type 2	NBK2692	20301742
+ph3	Primary Hyperoxaluria Type 3	NBK316514	26401545
+pha2	Pseudohypoaldosteronism Type II	NBK65707	22073419
+phs	GLI3-Related Pallister-Hall Syndrome	NBK1465	20301638
+phts	PTEN Hamartoma Tumor Syndrome	NBK1488	20301661
+pi4ka	PI4KA-Related Disorder	NBK583038	35951779
+pik3ca-overgrowth	PIK3CA-Related Overgrowth Spectrum	NBK153722	23946963
+pink1-pd	PINK1 Type of Young-Onset Parkinson Disease 	NBK26472	20301792
+pitt-hopkins	Pitt-Hopkins Syndrome	NBK100240	22934316
+pjs	Peutz-Jeghers Syndrome	NBK1266	20301443
+pkan	Pantothenate Kinase-Associated Neurodegeneration	NBK1490	20301663
+pkd-ad	Polycystic Kidney Disease, Autosomal Dominant	NBK1246	20301424
+pkd-ar	Autosomal Recessive Polycystic Kidney Disease ? PKHD1	NBK1326	20301501
+pku	Phenylalanine Hydroxylase Deficiency	NBK1504	20301677
+plosl	Polycystic Lipomembranous Osteodysplasia with Sclerosing Leukoencephalopathy	NBK1197	20301376
+plpbp-def	PLPBP Deficiency	NBK589231	36795901
+pmd	PLP1-Related Disorders	NBK1182	20301361
+pmld1	Pelizaeus-Merzbacher-Like Disease 1	NBK470716	29276893
+pnknd	Familial Paroxysmal Nonkinesigenic Dyskinesia	NBK1221	20301400
+pnpla6-dis	PNPLA6 Disorders	NBK247161	25299038
+pnpo-def	PNPO Deficiency	NBK581452	35737815
+poikiloderma-n	Poikiloderma with Neutropenia	NBK459118	29072891
+pol3-leuk	POLR3-Related Leukodystrophy	NBK99167	22855961
+porphyria-ct	Familial Porphyria Cutanea Tarda	NBK143129	23741761
+porphyria-var	Variegate Porphyria	NBK121283	23409300
+pot1-tpd	POT1 Tumor Predisposition	NBK563529	33119245
+potocki-lupski	Potocki-Lupski Syndrome	NBK447920	28837307
+pp-blastoma	DICER1-Related Tumor Predisposition	NBK196157	24761742
+pph	Heritable Pulmonary Arterial Hypertension Overview	NBK1485	20301658
+ppp1r12a-ubm	PPP1R12A-Related Urogenital and/or Brain Malformation Syndrome	NBK573670	34499436
+ppp1r21-ndd	PPP1R21-Related El-Hattab-Schmidts Syndrome	NBK620407	41570170
+ppp2r1a-ndd	PPP2R1A-Related Neurodevelopmental Disorder	NBK580243	35593790
+ppp2r5d-dis	PPP2R5D-Related Neurodevelopmental Disorder	NBK536360	30676711
+ppr-dysp	Progressive Pseudorheumatoid Dysplasia	NBK327267	26610319
+primrose	Primrose Syndrome	NBK570205	33956417
+prion	Genetic Prion Disease	NBK1229	20301407
+prolidase-def	Prolidase Deficiency	NBK299584	26110198
+prop1	PROP1-Related Combined Pituitary Hormone Deficiency	NBK1347	20301521
+propionic-a	Propionic Acidemia	NBK92946	22593918
+proteus	Proteus Syndrome	NBK99495	22876373
+prrt2-parox	PRRT2-Related Disorder	NBK475803	29334453
+prs	Phosphoribosylpyrophosphate Synthetase Superactivity	NBK1973	20301734
+prss1-hp	PRSS1-Related Hereditary Pancreatitis	NBK84399	22379635
+psach	COMP-Related Pseudoachondroplasia	NBK1487	20301660
+ptdss1-lmhd	PTDSS1-Related Lenz-Majewski Hyperostotic Dysplasia	NBK621299	41818602
+ptps-def	PTS-Related Tetrahydrobiopterin Deficiency (PTPSD)	NBK616086	40638773
+ptt	Prothrombin Thrombophilia	NBK1148	20301327
+puf60-dis	PUF60-Related Disorders	NBK623826	42520151
+pura-dis	PURA-Related Neurodevelopmental Disorders	NBK426063	28448108
+pws	Prader-Willi Syndrome	NBK1330	20301505
+pxe	Pseudoxanthoma Elasticum	NBK1113	20301292
+pycnodys	Pycnodysostosis	NBK563694	33151655
+rab18-def	RAB18 Deficiency	NBK475670	29300443
+rab32-pd	RAB32-Related Parkinson Disease	NBK620406	41570169
+rapid-odp	ATP1A3-Related Disorder	NBK1115	20301294
+rasa1-rel-dis	Capillary Malformation-Arteriovenous Malformation Syndrome	NBK52764	21348050
+rbs	ESCO2 Spectrum Disorder	NBK1153	20301332
+rcdp	PEX7-Related Rhizomelic Chondrodysplasia Punctata	NBK1270	20301447
+refsum	Adult Refsum Disease	NBK1353	20301527
+rere-dis	RERE-Related Disorders	NBK538938	30896913
+retinoblastoma	Retinoblastoma	NBK1452	20301625
+retinoschisis	X-Linked Congenital Retinoschisis	NBK1222	20301401
+rett	MECP2 Disorders	NBK1497	20301670
+rfc1-canvas	RFC1-Related Disorders	NBK564656	33237689
+riboflavin-tn	Riboflavin Transporter Deficiency	NBK299312	26072523
+rickets-xlh	X-Linked Hypophosphatemia	NBK83985	22319799
+ritscher-schinzel	Ritscher-Schinzel Syndrome	NBK553049	31971710
+rnu4-2-ndd	RNU4-2?Related Autosomal Dominant Neurodevelopmental Disorder	NBK622730	42190036
+rnu4atac-dis	RNU4atac-opathy	NBK589232	36795902
+rob	ROR2-Related Robinow Syndrome	NBK1240	20301418
+rob-ad	Autosomal Dominant Robinow Syndrome	NBK268648	25577943
+rotor	Rotor Syndrome	NBK114805	23236639
+rpe65-lca	Autosomal Recessive RPE65-Related Retinal Degeneration	NBK549574	31725251
+rp-overview	Nonsyndromic Retinitis Pigmentosa Overview	NBK1417	20301590
+rrm2b-mtddepl	RRM2B Mitochondrial DNA Maintenance Defects	NBK195854	24741716
+rss	Silver-Russell Syndrome	NBK1324	20301499
+rsts	Rubinstein-Taybi Syndrome	NBK1526	20301699
+rtps	Rhabdoid Tumor Predisposition Syndrome	NBK469816	29215836
+rts	Rothmund-Thomson Syndrome	NBK1237	20301415
+runx1	RUNX1 Familial Platelet Disorder with Associated Myeloid Malignancies	NBK568319	33661592
+rvcl	Retinal Vasculopathy with Cerebral Leukoencephalopathy and Systemic Manifestations	NBK546576	31536185
+rws	Long QT Syndrome Overview	NBK1129	20301308
+salih-myo	Salih Myopathy	NBK83297	22238790
+samd9l-ap	SAMD9L-Related Syndrome	NBK435692	28570036
+sandhoff	Sandhoff Disease	NBK579484	35420740
+satb2-dis	SATB2-Associated Syndrome	NBK458647	29023086
+saul-wilson	Saul-Wilson Syndrome	NBK554080	32078278
+sca1	Spinocerebellar Ataxia Type  1	NBK1184	20301363
+sca10	Spinocerebellar Ataxia Type 10	NBK1175	20301354
+sca11	Spinocerebellar Ataxia Type 11	NBK1757	20301723
+sca13	Spinocerebellar Ataxia Type 13	NBK1225	20301404
+sca14	Spinocerebellar Ataxia Type 14	NBK1399	20301573
+sca17	Spinocerebellar Ataxia Type 17	NBK1438	20301611
+sca2	Spinocerebellar Ataxia Type 2	NBK1275	20301452
+sca20	Spinocerebellar Ataxia Type 20	NBK1471	20301644
+sca28	AFG3L2-Related Neurologic Disorders	NBK54582	21595125
+sca3	Spinocerebellar Ataxia Type 3	NBK1196	20301375
+sca36	Spinocerebellar Ataxia Type 36	NBK231880	25101480
+sca37	Spinocerebellar Ataxia Type 37	NBK541729	31145571
+sca38	Spinocerebellar Ataxia Type 38	NBK543515	31294938
+sca4	Spinocerebellar Ataxia Type 4	NBK610215	39666847
+sca6	Spinocerebellar Ataxia Type 6	NBK1140	20301319
+sca7	Spinocerebellar Ataxia Type 7	NBK1256	20301433
+sca8	Spinocerebellar Ataxia Type 8	NBK1268	20301445
+scad	Short-Chain Acyl-CoA Dehydrogenase Deficiency	NBK63582	21938826
+scan1	Spinocerebellar Ataxia with Axonal Neuropathy, Autosomal Recessive	NBK1105	20301284
+schaaf-yang	Schaaf-Yang Syndrome	NBK567492	33570896
+schinzel-giedion	Schinzel-Giedion Syndrome	NBK601394	38452171
+schmid-mcd	Schmid Metaphyseal Chondrodysplasia	NBK547823	31633898
+schwann	LZTR1- and SMARCB1-Related Schwannomatosis	NBK487394	29517885
+scn3a-ndd	SCN3A-Related Neurodevelopmental Disorder	NBK570882	34081427
+scn8a-ee	SCN8A-Related Epilepsy and/or Neurodevelopmental Disorders	NBK379665	27559564
+scs	Saethre-Chotzen Syndrome	NBK1189	20301368
+sds	Shwachman-Diamond Syndrome	NBK1756	20301722
+sd-thes	Trichohepatoenteric Syndrome	NBK475802	29334452
+sedt	X-Linked Spondyloepiphyseal Dysplasia Tarda	NBK1145	20301324
+serine-def	Serine Deficiency Disorders	NBK592681	37347880
+setbp1-hd	SETBP1 Haploinsufficiency Disorder	NBK575336	34807554
+setd1b-ndd	SETD1B-Related Neurodevelopmental Disorder	NBK584549	36173874
+setd2-ndd	SETD2 Neurodevelopmental Disorders	NBK575927	34978780
+sgbs	Simpson-Golabi-Behmel Syndrome Type 1	NBK1219	20301398
+sgpl1	Sphingosine Phosphate Lyase Insufficiency Syndrome	NBK562988	33074640
+sgs	Shprintzen-Goldberg Syndrome	NBK1277	20301454
+shashi-pena	Shashi-Pena Syndrome	NBK609017	39527683
+short	PIK3R1-Related SHORT Syndrome	NBK201365	24830046
+sickle	Sickle Cell Disease	NBK1377	20301551
+siod	Schimke Immunoosseous Dysplasia	NBK1376	20301550
+slc12a5-e	SLC12A5-Related Epilepsy of Infancy with Migrating Focal Seizures	NBK537476	30763027
+slc19a1-ft-def	SLC19A1-Related Folate Transport Deficiency	NBK617054	40811598
+slc25a24-fps	SLC25A24 Fontaine Progeroid Syndrome	NBK581082	35679445
+slc39a14-def	SLC39A14 Deficiency	NBK431123	28541650
+slc39a8-cdg	SLC39A8-CDG	NBK590152	37023243
+slc6a1-ndd	SLC6A1-Related Neurodevelopmental Disorder	NBK589173	36780407
+slc6a3-dtds	SLC6A3-Related Dopamine Transported Deficiency Syndrome	NBK442323	28749637
+slo	Smith-Lemli-Opitz Syndrome	NBK1143	20301322
+sma	Spinal Muscular Atrophy	NBK1352	20301526
+sma-xli	Spinal Muscular Atrophy, X-Linked Infantile	NBK2594	20301739
+smdcf	Spondylometaphyseal Dysplasia, Corner Fracture Type	NBK555103	32200603
+smith-kingsmore	Smith-Kingsmore Syndrome	NBK619247	41264764
+sms	Smith-Magenis Syndrome	NBK1310	20301487
+snyder-robinson	Snyder-Robinson Syndrome	NBK144284	23805436
+sost	SOST-Related Sclerosing Bone Dysplasias	NBK587318	36508511
+sotos	Sotos Syndrome	NBK1479	20301652
+sox2	SOX2 Disorder	NBK1300	20301477
+spg11	Spastic Paraplegia 11	NBK1210	20301389
+spg15	Spastic Paraplegia 15	NBK570772	34057829
+spg17	BSCL2-Related Neurologic Disorders / Seipinopathy	NBK1307	20301484
+spg20	Troyer Syndrome	NBK1382	20301556
+spg3a	Spastic Paraplegia 3A	NBK45978	20862796
+spg4	Spastic Paraplegia 4	NBK1160	20301339
+spg7	SPG7-Related Neurologic Disorder	NBK1107	20301286
+spg8	Spastic Paraplegia 8	NBK1827	20301727
+spondylocostal-d	Spondylocostal Dysostosis, Autosomal Recessive	NBK8828	20301771
+spr-def	Sepiapterin Reductase Deficiency	NBK304122	26131547
+sptbn4	SPTBN4 Disorder	NBK559435	32672909
+srns-ov	Genetic Steroid-Resistant Nephrotic Syndrome Overview	NBK573219	34436835
+ssadh	Succinic Semialdehyde Dehydrogenase Deficiency	NBK1195	20301374
+ss-def	Squalene Synthase Deficiency	NBK553533	32027475
+stac3-dis	STAC3 Disorder	NBK542808	31219695
+stickler	Stickler Syndrome	NBK1302	20301479
+strc-hearing-loss	STRC-Related Autosomal Recessive Hearing Loss	NBK598310	38109326
+stromme	Str�mme Syndrome	NBK586170	36375007
+stsl	Sitosterolemia	NBK131810	23556150
+stxbp1-ee	STXBP1 Encephalopathy with Epilepsy	NBK396561	27905812
+sucla2-def	SUCLA2-Related Mitochondrial DNA Depletion Syndrome, Encephalomyopathic Form with Methylmalonic Aciduria	NBK6803	20301762
+suclg1-mtddepl	SUCLG1-Related Mitochondrial DNA Depletion Syndrome, Encephalomyopathic Form with Methylmalonic Aciduria	NBK425223	28358460
+syncrip-ndd	SYNCRIP-Related Neurodevelopmental Disorder	NBK622585	42160654
+syne1ca-ar	SYNE1 Deficiency	NBK1379	20301553
+syngap1-id	SYNGAP1-Related Intellectual Disability	NBK537721	30789692
+sys-h	Hyaline Fibromatosis Syndrome	NBK1525	20301698
+taa	Heritable Thoracic Aortic Disease Overview	NBK1120	20301299
+taf8-ndd	TAF8-Related Neurodevelopmental Disorder	NBK619575	41343687
+tangier	Tangier Disease	NBK549920	31751110
+tango2-mea	TANGO2 Deficiency	NBK476443	29369572
+tar	Thrombocytopenia Absent Radius Syndrome	NBK23758	20301781
+tardbp-als	TARDBP-Related Amyotrophic Lateral Sclerosis-Frontotemporal Dementia	NBK5942	20301761
+tay-sachs	HEXA Disorders	NBK1218	20301397
+tbc1d24-dis	TBC1D24-Related Disorders	NBK274566	25719194
+tbck-ndd	TBCK-Related Neurodevelopmental Disorder	NBK615430	40504974
+tbrs	Tatton-Brown-Rahman Syndrome	NBK581652	35771960
+tbs	SALL1-Related Townes-Brocks Syndrome	NBK1445	20301618
+tcirg1-opt	TCIRG1-Related Osteopetrosis	NBK617444	40875877
+tcs	Treacher Collins Syndrome	NBK1532	20301704
+td	Thanatophoric Dysplasia	NBK1366	20301540
+tecpr2-hsan-id	TECPR2-Related Hereditary Sensory and Autonomic  Neuropathy with Intellectual Disability 	NBK584409	36137062
+temple	Temple Syndrome	NBK621564	41926606
+tfap	Hereditary Transthyretin  Amyloidosis	NBK1194	20301373
+tfr2	TFR2-Related Hemochromatosis	NBK1349	20301523
+thctd	Allan-Herndon-Dudley Syndrome	NBK26373	20301789
+thdrd	Tyrosine Hydroxylase Deficiency	NBK1437	20301610
+thoc6-id	THOC6 Intellectual Disability Syndrome	NBK560442	32790266
+timothy	CACNA1C-Related Disorders	NBK1403	20301577
+tk2-mtddepl	TK2-Related Mitochondrial DNA Maintenance Defect, Myopathic Form	NBK114628	23230576
+tnxb-eds	TNXB-Related Classical-Like Ehlers-Danlos Syndrome	NBK584019	36108117
+tooth-agenesis-ov	Nonsyndromic Tooth Agenesis Overview	NBK572295	34292692
+tpk1-def	TPK1-Related Thiamine Metabolism Dysfunction Syndrome	NBK623293	42335246
+tps	Trichorhinophalangeal Syndrome	NBK425926	28426188
+traps	TNF Receptor-Associated Periodic Fever Syndrome	NBK586171	36375008
+trimethylaminuria	Primary Trimethylaminuria	NBK1103	20301282
+trio-id	TRIO-Related Neurodevelopmental Disorder	NBK447257	28796471
+trma	Thiamine-Responsive Megaloblastic Anemia Syndrome	NBK1282	20301459
+trmu-def	TRMU Deficiency	NBK591557	37184193
+trpm3-ndd	TRPM3-Related Neurodevelopmental Disorder	NBK589387	36821706
+tubb4a-leuk	TUBB4A-Related Neurologic Disorders	NBK395611	27809427
+tuberous-sclerosis	Tuberous Sclerosis Complex	NBK1220	20301399
+tubulin-ov	Tubulinopathies Overview	NBK350554	27010057
+tyrosinemia	Tyrosinemia Type I	NBK1515	20301688
+tyrosinemia-2	Tyrosinemia Type II	NBK608431	39446998
+ucd-overview	Urea Cycle Disorders Overview	NBK1217	20301396
+udd	Udd Distal Myopathy - Tibial Muscular Dystrophy	NBK1323	20301498
+unc80-def	UNC80 Deficiency	NBK453434	28933810
+urofacial	Urofacial Syndrome	NBK154138	23967498
+usher1	Usher Syndrome Type I	NBK1265	20301442
+usher2	Usher Syndrome Type II	NBK1341	20301515
+usp7-ndd	USP7-Related Hao-Fountain Syndrome	NBK619577	41343689
+vexas	VEXAS Syndrome	NBK614471	40373178
+vhl	Von Hippel-Lindau Syndrome	NBK1463	20301636
+vlcad	Very Long-Chain Acyl-Coenzyme A Dehydrogenase Deficiency	NBK6816	20301763
+vldlr-ch	VLDLR Cerebellar Hypoplasia	NBK1874	20301729
+vmcm	TEK-Related Venous Malformations	NBK1967	20301733
+vodi	Hepatic Veno-Occlusive Disease with Immunodeficiency	NBK1271	20301448
+von-willebrand	Von Willebrand Disease	NBK7014	20301765
+vps13d-md	VPS13D Movement Disorder	NBK537720	30789691
+vps35-pd	VPS35-Related Parkinson Disease	NBK447258	28796472
+vws	IRF6-Related Disorders	NBK1407	20301581
+wac-id	WAC-Related Intellectual Disability	NBK465012	29190062
+wagner	VCAN-Related Vitreoretinopathy	NBK3821	20301747
+wagr	WAGR Spectrum Disorder	NBK621298	41818601
+wars2-def	WARS2 Deficiency	NBK595820	37824696
+warsaw	DDX11-Related Cohesinopathy	NBK541972	31169992
+was	WAS-Related Disorders	NBK1178	20301357
+wdr26-id	WDR26-Related Intellectual Disability	NBK540448	31021590
+wdr62-pm	WDR62 Primary Microcephaly	NBK578067	35188728
+weaver	EZH2-Related Overgrowth	NBK148820	23865096
+weill-ms	Weill-Marchesani Syndrome	NBK1114	20301293
+weiss-kruszka	Weiss-Kruszka Syndrome	NBK549204	31670927
+werner	Werner Syndrome	NBK1514	20301687
+wfs	WFS1  Spectrum Disorder	NBK4144	20301750
+white-sutton	White-Sutton Syndrome	NBK573972	34529370
+wiedemann-steiner	Wiedemann-Steiner Syndrome	NBK580718	35617449
+williams	Williams Syndrome	NBK1249	20301427
+wilms-ov	Wilms Tumor Predisposition	NBK1294	20301471
+wilson	Wilson Disease	NBK1512	20301685
+ws1	Waardenburg Syndrome Type I	NBK1531	20301703
+wss	Woodhouse-Sakati Syndrome	NBK378974	27489925
+wt1-dis	WT1 Disorder	NBK556455	32352694
+x-ag	X-Linked Acrogigantism	NBK476671	29389097
+x-ald	X-Linked Adrenoleukodystrophy	NBK1315	20301491
+x-dcdp	EBP-Related X-Linked Chondrodysplasia Punctata	NBK55062	21634086
+xdp	X-Linked Dystonia-Parkinsonism Syndrome	NBK1489	20301662
+x-hed	Hypohidrotic Ectodermal Dysplasia	NBK1112	20301291
+xia-gibbs	Xia-Gibbs Syndrome	NBK575793	34902026
+xla	X-Linked Agammaglobulinemia	NBK1453	20301626
+xlhi	CD40 Ligand Deficiency	NBK1402	20301576
+xlmr	Alpha-Thalassemia X-Linked Intellectual Disability Syndrome	NBK1449	20301622
+xl-nystag	FRMD7-Related Infantile Nystagmus	NBK3822	20301748
+x-lpd	X-Linked Lymphoproliferative Disease	NBK1406	20301580
+xp	Xeroderma Pigmentosum	NBK1397	20301571
+x-pvh	FLNA Deficiency	NBK1213	20301392
+xq28-dup	Xq28 Duplication Syndrome, Int22h1/Int22h2 Mediated	NBK349624	26962617
+x-scid	X-Linked Severe Combined Immunodeficiency	NBK1410	20301584
+xxms	Nonsyndromic 46,XX Testicular Disorders/Differences of Sex Development	NBK1416	20301589
+yars1-def	YARS1 Deficiency	NBK615917	40608960
+yci	Y Chromosome Infertility	NBK1339	20301513
+yif1b-ndd	YIF1B-Related Neurodevelopmental Disorder	NBK606999	39265055
+zap70-scid	ZAP70 Deficiency	NBK20221	20301777
+zttk	Zhu-Tokita-Takenouchi-Kim Syndrome	NBK618356	40991760

@@ -11,7 +11,6 @@ from src.agent import Agent
 from src.model import ToolCall, ModelResponse, parse_response
 from src.schemas import TaskInput, TaskOutput
 from src.tools.base import BaseTool, EvidenceRecord
-from src.tools.genereviews import GeneReviewsTool
 
 
 class TestParseResponse:
@@ -215,35 +214,6 @@ class TestExtractCondition:
     def test_empty_context(self):
         result = Agent._extract_condition("")
         assert result == ""
-
-
-class TestGeneReviewsTitleRelevance:
-    """Test GeneReviews title relevance scoring."""
-
-    def test_gene_in_title_scores_high(self):
-        # Title with gene name should score higher
-        score_lqts = GeneReviewsTool._title_relevance_score(
-            "KCNQ1 Long QT Syndrome Overview", "KCNQ1"
-        )
-        score_bws = GeneReviewsTool._title_relevance_score(
-            "Beckwith-Wiedemann Syndrome", "KCNQ1"
-        )
-        assert score_lqts > score_bws
-
-    def test_overview_bonus(self):
-        score_overview = GeneReviewsTool._title_relevance_score(
-            "Long QT Syndrome Overview", "KCNQ1"
-        )
-        score_plain = GeneReviewsTool._title_relevance_score(
-            "Some Other Syndrome", "KCNQ1"
-        )
-        assert score_overview > score_plain
-
-    def test_unrelated_penalized(self):
-        score = GeneReviewsTool._title_relevance_score(
-            "Beckwith-Wiedemann Syndrome", "KCNQ1"
-        )
-        assert score < 0
 
 
 class TestTrace:

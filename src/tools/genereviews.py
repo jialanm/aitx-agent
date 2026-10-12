@@ -1,34 +1,52 @@
-"""GeneReviews tool via NCBI PubMed + Bookshelf."""
+"""GeneReviews tool: the chapters for a gene, and a chapter's management text.
+
+GeneReviews is NCBI Bookshelf's expert-written, peer-reviewed reference on
+rare genetic diseases, one chapter per disease. Two public index files on
+NCBI's FTP site map gene symbols to chapters and chapters to their title,
+NBK accession and PMID, so chapter selection needs no search. Bookshelf's
+pages refuse scripted access, but each chapter's PubMed record carries a
+structured abstract with CLINICAL CHARACTERISTICS, DIAGNOSIS/TESTING,
+MANAGEMENT and GENETIC COUNSELING paragraphs, and that is the text served.
+"""
 
 from __future__ import annotations
+
+import logging
+import re
+import time
 
 import requests
 
 from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
 
-ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
-ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
+logger = logging.getLogger(__name__)
+
+GR_FTP = "https://ftp.ncbi.nlm.nih.gov/pub/GeneReviews/"
+GENE_INDEX = GR_FTP + "NBKid_shortname_genesymbol.txt"
+TITLE_INDEX = GR_FTP + "GRtitle_shortname_NBKid.txt"
 EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
-ELINK_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi"
+BOOKSHELF_URL = "https://www.ncbi.nlm.nih.gov/books/{nbk}/"
+PUBMED_URL = "https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
+TIMEOUT = 60
+RETRIES = 5
+RETRY_INTERVAL_SECONDS = 5
 
-TIMEOUT = 15
-
-# Sections of interest for therapeutic questions
-THERAPY_KEYWORDS = [
-    "management",
-    "targeted therap",
-    "treatment",
-    "pharmacologic",
-    "therapies",
-    "agents/circumstances to avoid",
-    "avoid",
-    "prevention",
-    "surveillance",
-]
+# Section headings as they appear in the structured abstract.
+SECTIONS = {
+    "clinical": "CLINICAL CHARACTERISTICS",
+    "diagnosis": "DIAGNOSIS/TESTING",
+    "management": "MANAGEMENT",
+    "counseling": "GENETIC COUNSELING",
+}
+_HEADINGS = "|".join(re.escape(h) for h in SECTIONS.values())
 
 
 class GeneReviewsTool(BaseTool):
-    """Search GeneReviews for gene-specific management information."""
+    """List a gene's GeneReviews chapters, or return one chapter's management text."""
+
+    def __init__(self) -> None:
+        self._gene_to_nbks: dict[str, list[str]] | None = None
+        self._chapters: dict[str, dict] | None = None   # NBK -> {title, pmid, shortname}
 
     def schema(self) -> dict:
         return {
@@ -36,12 +54,20 @@ class GeneReviewsTool(BaseTool):
             "function": {
                 "name": "search_genereviews",
                 "description": (
-                    "Expert-authored, peer-reviewed disease overviews focused on the "
-                    "diagnosis, management, and genetic counseling of inherited "
-                    "disorders. Returns the GeneReviews chapters found for the gene "
-                    "or condition, with the treatment passages of the best match. "
-                    "Give the condition name when it is known; a gene alone can "
-                    "match chapters about other conditions that mention it."
+                    "GeneReviews: expert-authored, peer-reviewed overviews of "
+                    "inherited disorders, one chapter per disease, covering "
+                    "diagnosis, management and genetic counseling. Called with "
+                    "a gene only, it returns every chapter indexed to that gene "
+                    "(accession, title, PMID); a gene can have several, for "
+                    "different diseases, so choose the chapter that matches the "
+                    "patient's phenotype and call again with its accession. With "
+                    "an accession, it returns the chapter's MANAGEMENT text in "
+                    "full: targeted therapies and which variants qualify, "
+                    "treatment of manifestations, agents to avoid, and therapies "
+                    "under investigation; ask for 'clinical', 'diagnosis', "
+                    "'counseling' or 'all' for the other sections. A gene with "
+                    "one chapter is fetched at once. Use it for Tier 1 targeted "
+                    "and supportive therapies and contraindications."
                 ),
                 "parameters": {
                     "type": "object",
@@ -50,11 +76,18 @@ class GeneReviewsTool(BaseTool):
                             "type": "string",
                             "description": "HGNC gene symbol (e.g., CFTR, SCN1A)",
                         },
-                        "condition": {
+                        "nbk": {
                             "type": "string",
                             "description": (
-                                "Disease or condition name "
-                                "(e.g., cystic fibrosis, Dravet syndrome)"
+                                "Chapter accession from the list, e.g. NBK1250. "
+                                "Give it to fetch that chapter's text."
+                            ),
+                        },
+                        "section": {
+                            "type": "string",
+                            "description": (
+                                "Which part of the chapter: management (default), "
+                                "clinical, diagnosis, counseling, or all"
                             ),
                         },
                     },
@@ -64,208 +97,140 @@ class GeneReviewsTool(BaseTool):
         }
 
     def execute(self, **kwargs) -> tuple[str, list[EvidenceRecord]]:
-        gene = kwargs.get("gene", "")
-        condition = kwargs.get("condition", "")
+        gene = (kwargs.get("gene") or "").strip().upper()
+        nbk = (kwargs.get("nbk") or "").strip().upper()
+        section = (kwargs.get("section") or "management").strip().lower()
         evidence: list[EvidenceRecord] = []
+        if not gene and not nbk:
+            return "GeneReviews: no gene or chapter given.", evidence
 
-        try:
-            # Strategy 1: Search PubMed for GeneReviews entries
-            search_term = f"{gene} AND GeneReviews[book]"
-            if condition:
-                search_term = f"({gene} OR {condition}) AND GeneReviews[book]"
+        failure = self._load_index()
+        if failure:
+            return f"GeneReviews returned nothing: {failure}", evidence
 
-            resp = requests.get(
-                ESEARCH_URL,
-                params=ncbi_params(
-                    db="pubmed",
-                    term=search_term,
-                    retmode="json",
-                    retmax=3,
-                ),
-                timeout=TIMEOUT,
-            )
-            resp.raise_for_status()
-            search_data = resp.json()
-            id_list = search_data.get("esearchresult", {}).get("idlist", [])
+        if not nbk:
+            nbks = self._gene_to_nbks.get(gene, [])
+            if not nbks:
+                return f"GeneReviews has no chapter indexed to gene {gene}.", evidence
+            if len(nbks) > 1:
+                lines = [f"GeneReviews chapters indexed to {gene} ({len(nbks)}); call again with the accession that matches the patient's phenotype:"]
+                for n in nbks:
+                    ch = self._chapters.get(n, {})
+                    lines.append(f"- {n}: {ch.get('title', '(title not in index)')} (PMID {ch.get('pmid', '?')})")
+                    evidence.append(EvidenceRecord(url=BOOKSHELF_URL.format(nbk=n)))
+                return "\n".join(lines), evidence
+            nbk = nbks[0]
 
-            if id_list:
-                return self._process_pubmed_results(id_list, gene, evidence)
+        chapter = self._chapters.get(nbk)
+        if chapter is None:
+            return f"GeneReviews: {nbk} is not a chapter accession in the index.", evidence
+        pmid = chapter.get("pmid", "")
+        if not pmid:
+            logger.warning(f"GeneReviews chapter {nbk} has no PMID in the index")
+            return f"GeneReviews chapter {nbk} ({chapter.get('title')}) has no PubMed record to fetch text from.", evidence
 
-            # Strategy 2: Broader PubMed search
-            if condition:
-                resp2 = requests.get(
-                    ESEARCH_URL,
-                    params=ncbi_params(
-                        db="pubmed",
-                        term=f"{condition} AND GeneReviews[book]",
-                        retmode="json",
-                        retmax=3,
-                    ),
-                    timeout=TIMEOUT,
-                )
-                resp2.raise_for_status()
-                id_list = resp2.json().get("esearchresult", {}).get("idlist", [])
-                if id_list:
-                    return self._process_pubmed_results(id_list, gene, evidence)
+        text, failure = self._abstract(pmid)
+        if text is None:
+            return f"GeneReviews returned nothing for {nbk}: {failure}", evidence
+        evidence.append(EvidenceRecord(url=BOOKSHELF_URL.format(nbk=nbk)))
 
-            return (
-                f"No GeneReviews entries found for gene {gene}.",
-                evidence,
-            )
+        header = f"GeneReviews: {chapter.get('title')} ({nbk}, PMID {pmid}, {BOOKSHELF_URL.format(nbk=nbk)})"
+        sections = self._split(text)
+        if not sections:
+            # Overview chapters carry a short unstructured abstract.
+            return header + "\nThis chapter's PubMed record has no structured sections; full abstract:\n" + text.strip(), evidence
+        if section == "all":
+            body = "\n\n".join(f"{SECTIONS[k]}: {v}" for k, v in sections.items())
+        elif section in sections:
+            body = f"{SECTIONS[section]}: {sections[section]}"
+        elif section in SECTIONS:
+            logger.warning(f"GeneReviews {nbk}: section {SECTIONS[section]} not in abstract; has {list(sections)}")
+            body = f"Section {SECTIONS[section]} not present in this chapter's record. Sections present: " + ", ".join(SECTIONS[k] for k in sections)
+        else:
+            body = f"Unknown section {section!r}; use management, clinical, diagnosis, counseling or all."
+        return header + "\n" + body, evidence
 
-        except requests.RequestException as e:
-            return redact_ncbi_key(f"GeneReviews API error: {e}"), evidence
+    def _load_index(self) -> str:
+        """Both index files, downloaded once per process. Returns '' or a failure reason."""
+        if self._gene_to_nbks is not None:
+            return ""
+        gene_text, failure = self._get(GENE_INDEX, {})
+        if gene_text is None:
+            return f"gene index unavailable ({failure})"
+        title_text, failure = self._get(TITLE_INDEX, {})
+        if title_text is None:
+            return f"title index unavailable ({failure})"
+        gene_to_nbks: dict[str, list[str]] = {}
+        for line in gene_text.splitlines():
+            if line.startswith("#") or not line.strip():
+                continue
+            parts = line.split("\t")
+            if len(parts) < 3:
+                continue
+            gene_to_nbks.setdefault(parts[2].strip().upper(), []).append(parts[0].strip())
+        chapters: dict[str, dict] = {}
+        for line in title_text.splitlines():
+            if line.startswith("#") or not line.strip():
+                continue
+            parts = line.split("\t")
+            if len(parts) < 3:
+                continue
+            chapters[parts[2].strip()] = {
+                "shortname": parts[0].strip(), "title": parts[1].strip(),
+                "pmid": parts[3].strip() if len(parts) > 3 else "",
+            }
+        if not gene_to_nbks or not chapters:
+            logger.warning("GeneReviews index files parsed to nothing; format changed?")
+            return "index files parsed to nothing"
+        self._gene_to_nbks, self._chapters = gene_to_nbks, chapters
+        return ""
 
-    def _process_pubmed_results(
-        self,
-        pmids: list[str],
-        gene: str,
-        evidence: list[EvidenceRecord],
-    ) -> tuple[str, list[EvidenceRecord]]:
-        """Process PubMed IDs to get GeneReviews content."""
-        # Get PubMed summaries for titles
-        resp = requests.get(
-            ESUMMARY_URL,
-            params=ncbi_params(
-                db="pubmed",
-                id=",".join(pmids[:3]),
-                retmode="json",
-            ),
-            timeout=TIMEOUT,
-        )
-        resp.raise_for_status()
-        summary_data = resp.json().get("result", {})
-
-        # Try to get linked books (NBK IDs)
-        nbk_urls = self._get_bookshelf_links(pmids[:3])
-
-        # Score and rank articles by title relevance to the gene
-        uids = summary_data.get("uids", [])
-        scored_uids = []
-        for uid in uids[:3]:
-            entry = summary_data.get(uid, {})
-            title = entry.get("title", "Unknown")
-            score = self._title_relevance_score(title, gene)
-            scored_uids.append((uid, title, score))
-
-        # Sort by relevance (highest first)
-        scored_uids.sort(key=lambda x: x[2], reverse=True)
-
-        results = []
-        best_therapy_text = ""
-
-        for uid, title, score in scored_uids:
-            # Use NBK link if available, otherwise specific PubMed URL
-            if uid in nbk_urls:
-                url = nbk_urls[uid]
-            else:
-                url = f"https://pubmed.ncbi.nlm.nih.gov/{uid}/"
-
-            evidence.append(EvidenceRecord(url=url))
-            results.append(f"GeneReviews: {title}\nPMID: {uid}\nURL: {url}")
-
-        # Fetch abstract ONLY for the most relevant article (not all)
-        if scored_uids:
-            best_uid = scored_uids[0][0]
-            try:
-                resp2 = requests.get(
-                    EFETCH_URL,
-                    params=ncbi_params(
-                        db="pubmed",
-                        id=best_uid,
-                        rettype="abstract",
-                        retmode="text",
-                    ),
-                    timeout=TIMEOUT,
-                )
-                resp2.raise_for_status()
-                best_therapy_text = self._extract_therapy_content(resp2.text)
-            except requests.RequestException:
-                pass
-
-        # Build final text
-        header = f"GeneReviews results for {gene}:\n\n"
-        entries = "\n\n".join(results)
-
-        full_text = header + entries
-        if best_therapy_text:
-            full_text += f"\n\n## Relevant Content\n{best_therapy_text}"
-
-        return full_text[:2000], evidence
+    def _abstract(self, pmid: str) -> tuple[str | None, str]:
+        text, failure = self._get(EFETCH_URL, ncbi_params(db="pubmed", id=pmid, rettype="abstract", retmode="text"))
+        if text is None:
+            return None, failure
+        if not text.strip():
+            logger.warning(f"GeneReviews: empty abstract for PMID {pmid}")
+            return None, f"empty abstract for PMID {pmid}"
+        return text, ""
 
     @staticmethod
-    def _title_relevance_score(title: str, gene: str) -> int:
-        """Score how relevant a GeneReviews article title is to the gene.
+    def _split(text: str) -> dict[str, str]:
+        """The structured abstract's sections, keyed by SECTIONS key, in order."""
+        found: dict[str, str] = {}
+        matches = list(re.finditer(rf"({_HEADINGS}):", text))
+        for i, m in enumerate(matches):
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            heading = m.group(1)
+            key = next(k for k, v in SECTIONS.items() if v == heading)
+            body = text[m.end():end]
+            body = re.sub(r"\s*\n\s*", " ", body).strip()
+            # The abstract ends with copyright and author lines after the last section.
+            body = re.split(r"\s*(?:Copyright|©)\s", body)[0].strip()
+            found[key] = body
+        return found
 
-        Higher score = more relevant. Penalizes articles that mention the
-        gene only tangentially (e.g., Beckwith-Wiedemann mentions KCNQ1
-        only because of the 11p15.5 locus).
-        """
-        title_lower = title.lower()
-        gene_lower = gene.lower()
-        score = 0
-
-        # Direct gene name in title is a strong signal
-        if gene_lower in title_lower:
-            score += 10
-
-        # Common disease-gene associations boost relevance
-        # Articles with "Overview" or "Syndrome" in the title that also
-        # match the gene are likely the primary entry
-        if "overview" in title_lower:
-            score += 3
-
-        # Penalize titles that are clearly about a different condition
-        # (gene appears in the search results but the article is about
-        # something else, e.g., imprinting regions)
-        if gene_lower not in title_lower:
-            score -= 5
-
-        return score
-
-    def _get_bookshelf_links(self, pmids: list[str]) -> dict[str, str]:
-        """Try to get Bookshelf NBK links for PubMed IDs."""
-        try:
-            resp = requests.get(
-                ELINK_URL,
-                params=ncbi_params(
-                    dbfrom="pubmed",
-                    db="books",
-                    id=",".join(pmids),
-                    retmode="json",
-                ),
-                timeout=TIMEOUT,
-            )
-            resp.raise_for_status()
-            data = resp.json()
-
-            result = {}
-            for linkset in data.get("linksets", []):
-                pmid = str(linkset.get("ids", [None])[0])
-                for linksetdb in linkset.get("linksetdbs", []):
-                    links = linksetdb.get("links", [])
-                    if links:
-                        nbk_id = links[0]
-                        result[pmid] = f"https://www.ncbi.nlm.nih.gov/books/NBK{nbk_id}/"
-            return result
-        except Exception:
-            return {}
-
-    def _extract_therapy_content(self, text: str) -> str:
-        """Extract therapy-relevant lines from abstract text."""
-        lines = text.split("\n")
-        relevant = []
-        capture = False
-        for line in lines:
-            lower = line.lower().strip()
-            if any(kw in lower for kw in THERAPY_KEYWORDS):
-                capture = True
-            if capture:
-                if line.strip():
-                    relevant.append(line.strip())
-                else:
-                    if relevant:
-                        capture = False
-            if len(relevant) > 20:
-                break
-        return "\n".join(relevant)
+    def _get(self, url: str, params: dict) -> tuple[str | None, str]:
+        """GET text; timeouts and 5xx retried, other failures reported once."""
+        last = ""
+        for attempt in range(1, RETRIES + 1):
+            try:
+                resp = requests.get(url, params=params, timeout=TIMEOUT)
+            except requests.Timeout:
+                last = "timeout"
+                logger.warning(f"GeneReviews timeout (attempt {attempt}/{RETRIES}): {url}")
+            except requests.RequestException as e:
+                msg = redact_ncbi_key(str(e))
+                logger.warning(f"GeneReviews request failed: {url}: {msg}")
+                return None, f"request failed ({msg})"
+            else:
+                if resp.status_code < 500:
+                    if resp.status_code != 200:
+                        logger.warning(f"GeneReviews HTTP {resp.status_code}: {url}: {resp.text[:200]!r}")
+                        return None, f"HTTP {resp.status_code}"
+                    return resp.text, ""
+                last = f"HTTP {resp.status_code}"
+                logger.warning(f"GeneReviews server error (attempt {attempt}/{RETRIES}): {url}: HTTP {resp.status_code}")
+            if attempt < RETRIES:
+                time.sleep(RETRY_INTERVAL_SECONDS)
+        return None, f"{last} after {RETRIES} attempts"

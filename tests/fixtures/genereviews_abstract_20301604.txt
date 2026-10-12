@@ -1,0 +1,85 @@
+1. NR0B1-Related Adrenal Hypoplasia Congenita.
+
+Achermann JC(1), Vilain EJ(2).
+
+In: Adam MP, Bick S, Mirzaa GM, Wallace SE, Amemiya A, editors. GeneReviews(®) 
+[Internet]. Seattle (WA): University of Washington, Seattle; 1993–2026.
+2001 Nov 20 [updated 2018 Jan 25].
+
+Author information:
+(1)Genetics and Genomic Medicine UCL Great Ormond Street Institute of Child 
+Health University College London London, United Kingdom
+(2)Center for Genetic Medicine Research Children's National Medical Center 
+Washington, DC
+
+CLINICAL CHARACTERISTICS: NR0B1-related adrenal hypoplasia congenita includes 
+both X-linked adrenal hypoplasia congenita (X-linked AHC) and Xp21 deletion 
+(previously called complex glycerol kinase deficiency). X-linked AHC is 
+characterized by primary adrenal insufficiency and/or hypogonadotropic 
+hypogonadism (HH). Adrenal insufficiency is acute infantile onset (average age 3 
+weeks) in approximately 60% of affected males and childhood onset (ages 1-9 
+years) in approximately 40%. HH typically manifests in a male with adrenal 
+insufficiency as delayed puberty (i.e., onset age >14 years) and less commonly 
+as arrested puberty at about Tanner Stage 3. Rarely, X-linked AHC manifests 
+initially in early adulthood as delayed-onset adrenal insufficiency, partial HH, 
+and/or infertility. Heterozygous females very occasionally have manifestations 
+of adrenal insufficiency or hypogonadotropic hypogonadism. Xp21 deletion 
+includes deletion of NR0B1 (causing X-linked AHC) and GK (causing glycerol 
+kinase deficiency), and in some cases deletion of DMD (causing Duchenne muscular 
+dystrophy). Developmental delay has been reported in males with Xp21 deletion 
+when the deletion extends proximally to include DMD or when larger deletions 
+extend distally to include IL1RAPL1 and DMD.
+DIAGNOSIS/TESTING: The diagnosis of NR0B1-related adrenal hypoplasia congenita 
+is established in a male proband by detection of either a hemizygous pathogenic 
+variant in NR0B1 or a non-recurrent Xp21 deletion that includes NR0B1.
+MANAGEMENT: Treatment of manifestations: Episodes of acute adrenal insufficiency 
+are usually treated in an intensive care unit with close monitoring of blood 
+pressure, hydration, clinical status, and serum concentration of glucose and 
+electrolytes. Once the initial acute episode has been treated, affected 
+individuals are started on replacement doses of glucocorticoids and 
+mineralocorticoids and – in younger children – oral supplements of sodium 
+chloride. Steroid dosage must be increased during periods of stress (e.g., 
+intercurrent illness, surgery, trauma); glucose and sodium may be needed. HH may 
+be treated with increasing doses of testosterone to induce age-appropriate 
+puberty and should be monitored by a pediatric endocrinologist. Treatment is 
+usually initiated at around or just after the time puberty would be expected 
+(age 12 years in boys). Surveillance: If mineralocorticoid production is 
+sufficient at the time of initial diagnosis, long-term follow up of adrenal 
+mineralocorticoid function is necessary. If glucocorticoid production is 
+sufficient at the time of initial diagnosis, long-term follow up of adrenal 
+glucocorticoid function is necessary. If puberty has not started by age 14 
+years, monitoring of serum concentrations of LH, FSH, testosterone, and inhibin 
+B to evaluate for the possibility of HH is necessary. If puberty has started 
+spontaneously, it is likely to arrest; thus, yearly routine monitoring of levels 
+of LH, FSH, and testosterone is necessary. Evaluation of relatives at risk: At 
+birth: If the genetic status of an at-risk male relative has not been 
+established prior to birth by prenatal molecular genetic testing, it is 
+appropriate to monitor him with biochemical testing for evidence of adrenal 
+insufficiency in the first few days of life in order to determine if he would 
+benefit from prompt initiation of glucocorticoid and mineralocorticoid hormone 
+replacement therapy to avoid a salt-losing adrenal crisis. Later in childhood: 
+When the NR0B1 pathogenic variant in the family is known, it is reasonable to 
+clarify the genetic status of at-risk asymptomatic maternal male relatives by 
+molecular genetic testing as approximately 40% of affected males will not 
+manifest adrenal insufficiency until childhood or later.
+GENETIC COUNSELING: NR0B1-related adrenal hypoplasia congenita is inherited in 
+an X-linked manner. X-linked AHC: The risk to sibs depends on the genetic status 
+of the mother: if the mother is heterozygous for an NR0B1 pathogenic variant, 
+the chance of transmitting it in each pregnancy is 50%. Males who inherit the 
+pathogenic variant will be affected; females who inherit the pathogenic variant 
+will typically not be affected but will be carriers. Most males with AHC are 
+infertile. Xp21 deletion: Although most mothers of an individual diagnosed with 
+an Xp21 deletion are carriers, a proband may have the disorder as the result of 
+a de novo contiguous gene deletion. The risk to the sibs of the proband depends 
+on the genetic status of the mother: if the mother is heterozygous for the Xp21 
+deletion, the chance of transmitting the deletion in each pregnancy is 50%. 
+Males who inherit the deletion will be affected; females who inherit the 
+deletion will typically not be affected. Once the NR0B1 pathogenic variant or 
+Xp21 deletion has been identified in an affected family member, prenatal and 
+preimplantation genetic testing are possible.
+
+Copyright © 1993-2026, University of Washington, Seattle. GeneReviews is a 
+registered trademark of the University of Washington, Seattle. All rights 
+reserved.
+
+PMID: 20301604

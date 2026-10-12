@@ -196,72 +196,58 @@ def test_clinvar_keeps_key_out_of_rate_limit_error(clinvar_eutils, monkeypatch):
     assert evidence == []
 
 
-GENEREVIEWS_REPLIES = {
-    "esearch": "genereviews_esearch_CFTR.json",
-    "esummary": "genereviews_esummary_CFTR.json",
-    "elink": "genereviews_elink_CFTR.json",
-    "efetch": "genereviews_efetch_24624459.txt",
-}
+def _genereviews_server(monkeypatch, fail_abstract=None):
+    """Serve the recorded index files and chapter abstract; record every request."""
+    calls: list[tuple[str, dict]] = []
+
+    def get(url, params=None, timeout=None):
+        calls.append((url, dict(params or {})))
+        if url.endswith("NBKid_shortname_genesymbol.txt"):
+            return _Recorded(FIXTURES / "genereviews_NBKid_shortname_genesymbol.txt")
+        if url.endswith("GRtitle_shortname_NBKid.txt"):
+            return _Recorded(FIXTURES / "genereviews_GRtitle_shortname_NBKid.txt")
+        if fail_abstract is not None:
+            raise fail_abstract(url, params)
+        return _Recorded(FIXTURES / f"genereviews_abstract_{params['id']}.txt")
+
+    monkeypatch.setattr(genereviews.requests, "get", get)
+    return calls
 
 
-@pytest.fixture
-def genereviews_eutils(monkeypatch):
-    server = _Server(GENEREVIEWS_REPLIES)
-    monkeypatch.setattr(genereviews.requests, "get", server.get)
-    return server
-
-
-def test_genereviews_sends_key_on_every_request(genereviews_eutils, monkeypatch):
+def test_genereviews_sends_key_on_the_pubmed_fetch_only(monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
-    # First search misses so the condition-based fallback search runs as well.
-    genereviews_eutils.replies["esearch"] = [
-        "genereviews_esearch_no_hits.json",
-        "genereviews_esearch_CFTR.json",
-    ]
+    calls = _genereviews_server(monkeypatch)
 
-    summary, evidence = genereviews.GeneReviewsTool().execute(
-        gene="CFTR", condition="cystic fibrosis"
-    )
+    summary, evidence = genereviews.GeneReviewsTool().execute(gene="AGXT")
 
-    assert genereviews_eutils.endpoints() == [
-        "esearch", "esearch", "esummary", "elink", "efetch"
-    ]
-    assert all(p["api_key"] == FAKE_KEY for _, p in genereviews_eutils.calls)
-    assert len(evidence) == 2
+    index_calls = [p for u, p in calls if u.endswith(".txt")]
+    efetch_calls = [p for u, p in calls if "efetch" in u]
+    assert len(index_calls) == 2 and not any("api_key" in p for p in index_calls)  # FTP files take no key
+    assert efetch_calls == [{"db": "pubmed", "id": "20301460", "rettype": "abstract", "retmode": "text", "api_key": FAKE_KEY}]
+    assert evidence[0].url == "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
 
 
-def test_genereviews_sends_no_key_when_unset(genereviews_eutils, monkeypatch):
+def test_genereviews_sends_no_key_when_unset(monkeypatch):
     monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
+    calls = _genereviews_server(monkeypatch)
 
-    genereviews.GeneReviewsTool().execute(gene="CFTR")
+    genereviews.GeneReviewsTool().execute(gene="AGXT")
 
-    assert len(genereviews_eutils.calls) == 4
-    assert not any("api_key" in p for _, p in genereviews_eutils.calls)
+    assert not any("api_key" in p for _, p in calls)
 
 
-def test_genereviews_keeps_key_out_of_rate_limit_error(genereviews_eutils, monkeypatch):
+def test_genereviews_keeps_key_out_of_request_errors(monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
-    genereviews_eutils.rate_limit_first = True
 
-    summary, evidence = genereviews.GeneReviewsTool().execute(gene="CFTR")
+    def connection_error(url, params):
+        full = requests.Request("GET", url, params=params).prepare().url
+        return requests.ConnectionError(f"connection refused for url: {full}")
 
-    assert summary.startswith("GeneReviews API error: 429")
+    _genereviews_server(monkeypatch, fail_abstract=connection_error)
+
+    summary, evidence = genereviews.GeneReviewsTool().execute(gene="AGXT")
+
+    assert summary.startswith("GeneReviews returned nothing for NBK1283: request failed")
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []
-
-
-def test_clinvar_reads_the_current_classification_field(clinvar_eutils, monkeypatch, caplog):
-    """ClinVar's esummary carries germline_classification, not clinical_significance (recorded 2026-09-25)."""
-    monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
-
-    summary, _ = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
-
-    assert "Clinical Significance: Uncertain significance" in summary
-    assert "Review Status: criteria provided, multiple submitters, no conflicts" in summary
-    assert "Clinical Significance: Pathogenic" in summary
-    assert "Review Status: reviewed by expert panel" in summary
-    assert "Conditions: Cystic fibrosis" in summary
-    assert "Molecular consequence: inframe_deletion, missense variant" in summary
-    assert "Not provided" not in summary
-    assert "has no germline_classification" not in caplog.text

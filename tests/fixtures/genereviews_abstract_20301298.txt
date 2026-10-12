@@ -1,0 +1,110 @@
+1. Dystrophinopathies.
+
+Duvuru R(1), Cunningham T(1), Colvin MK(2), Veerapandiyan A(1).
+
+In: Adam MP, Bick S, Mirzaa GM, Wallace SE, Amemiya A, editors. GeneReviews(®) 
+[Internet]. Seattle (WA): University of Washington, Seattle; 1993–2026.
+2000 Sep 5 [updated 2026 Sep 10].
+
+Author information:
+(1)University of Arkansas for Medical Sciences;, Arkansas Children's Hospital, 
+Little Rock, Arkansas
+(2)Massachusetts General Hospital;, Harvard Medical School, Boston, 
+Massachusetts
+
+CLINICAL CHARACTERISTICS: The dystrophinopathies comprise a spectrum including 
+Duchenne muscular dystrophy (DMD) and Becker muscular dystrophy (BMD), which 
+predominantly affect males and involve skeletal and cardiac muscle, and 
+DMD-related cardiomyopathy, characterized by cardiac muscle involvement 
+typically without symptomatic skeletal muscle involvement that affects both 
+males and females. DMD is characterized by early onset and progressive weakness, 
+motor delays, increased risk of cognitive issues, neurobehavioral and 
+psychiatric manifestations, progressive respiratory issues, decline in cardiac 
+function, constipation, osteopenia, and Increased mortality. BMD is 
+characterized by later onset and slower progression, a more heterogeneous 
+cardiac phenotype, and longer survival. Longevity in those with 
+dystrophinopathies has increased with development of improved therapies.
+DIAGNOSIS/TESTING: The diagnosis of a dystrophinopathy is established in a 
+proband with suggestive clinical and laboratory findings and a hemizygous or 
+heterozygous pathogenic variant in DMD identified by molecular genetic testing.
+MANAGEMENT: Corticosteroid therapy: Prednisone, deflazacort, or vamarolone for 
+improved muscle strength and motor function Targeted therapies: Histone 
+deacetylase inhibitor therapy (givinostat); dystrophin restoration therapy 
+(antisense oligonucleotide, adeno-associated virus-mediated gene therapy) for 
+those with DMD pathogenic variants in select exons Supportive care: In affected 
+males – preventative home stretching; orthotics; mobility and seating equipment; 
+pain management; treatment of scoliosis per neuromuscular specialist and 
+orthopedist; regular submaximal aerobic exercise or exercise as tolerated; 
+progressive mobility planning; developmental and educational support; standard 
+treatment of neurobehavioral and psychiatric manifestations; nutrition support; 
+gastrostomy tube when needed; proactive treatment of gastroesophageal reflux and 
+constipation; treatment of cardiac disease per cardiologist; vaccinations for 
+respiratory illnesses; respiratory spirometry, lung volume recruitment, 
+mechanical insufflation-exsufflation; additional respiratory support when 
+needed; prompt treatment of respiratory infection; bisphosphonates, vitamin D, 
+and calcium supplements to prevent fractures; transitional care plan; family and 
+social work support. In heterozygous females – cardiac management per 
+cardiologist; regular exercise as tolerated, stretching, and physical therapy as 
+needed in those with skeletal muscle manifestations. Surveillance: In affected 
+males – measure linear growth every six months until completion of puberty and 
+attainment of adult height; nutrition assessment by a registered nutritionist at 
+each visit and at least every six months; assessment of skeletal muscle 
+involvement by a neuromuscular neurologist and physical therapist every six 
+months; cardiology evaluation including EKG and echocardiogram or cardiac MRI 
+annually and before major surgery and more frequently in those with myocardial 
+fibrosis or ventricular dysfunction; Holter monitor annually in those with 
+cardiac dysfunction; evaluation by speech and language therapist when dysphagia 
+is suspected; evaluation for gastrointestinal manifestations per 
+gastroenterologist; pulmonology assessment annually and every six months after 
+loss of ambulation; assess for cognitive and educational issues at each visit; 
+neuropsychological evaluation as needed; assess for anxiety, depression, and 
+social concerns at every visit; psychiatry evaluation as needed; assess pubertal 
+development at each visit beginning in early adolescence; endocrinology 
+evaluation in those with absence of pubertal development by age 14 years; 
+clinical spine examination at each visit; spine radiographs in those with 
+evidence of scoliosis; assess for back pain and fractures at each visit in those 
+on steroid therapy; consider annual lateral spine imaging and dual-energy x-ray 
+absorptiometry scan. In heterozygous females – cardiac evaluation with EKG and 
+cardiac imaging every three to five years beginning in the 2nd to 3rd decade of 
+life; cardiac follow up per cardiologist in those with cardiac manifestations; 
+assessment of skeletal manifestations every 2-3 years. Agents/circumstances to 
+avoid: Abrupt discontinuation of corticosteroids; stress dosing is recommended 
+for steroid therapy to avoid adrenal crisis; statins may exacerbate muscle 
+weakness and cause rhabdomyolysis; anesthetics such as succinylcholine can 
+trigger malignant hyperthermia. Evaluation of relatives at risk: Evaluate 
+at-risk male relatives of an affected individual in order to identify as early 
+as possible those who would benefit from prompt initiation of supportive care 
+and dystrophin restoration targeted therapy. Evaluate at-risk female relatives 
+to identify those who would benefit from cardiac and skeletal muscle evaluation 
+and surveillance. Evaluations include molecular genetic testing if the DMD 
+pathogenic variant in the family is known. Pregnancy management: Evaluation for 
+dilated cardiomyopathy and skeletal muscle involvement ideally prior to 
+conceiving or as soon as pregnancy is recognized; women with dilated 
+cardiomyopathy should be managed by a cardiac specialist with experience in 
+treatment of heart failure and/or neuromuscular disorders and a high-risk 
+obstetrician.
+GENETIC COUNSELING: Dystrophinopathies are inherited in an X-linked manner. Male 
+proband: The risk to sibs depends on the genetic status of the mother. If the 
+mother of the proband is heterozygous for a DMD pathogenic variant, the chance 
+of the mother transmitting the pathogenic variant in each pregnancy is 50%. 
+Males who inherit the DMD pathogenic variant will be affected and will typically 
+have clinical manifestations similar to those of the proband. Females who 
+inherit the pathogenic variant will be heterozygotes and at risk for DMD-related 
+cardiomyopathy. Heterozygous females are mostly free of severe skeletal muscle 
+disease but may have milder muscle involvement or, rarely, a DMD or BMD 
+phenotype resulting from non-random X-chromosome inactivation. Female proband: 
+The risk to sibs depends on the genetic status of the parents. If the mother of 
+the proband has a DMD pathogenic variant, the chance of the mother transmitting 
+it in each pregnancy is 50%. If the father of the proband has a DMD pathogenic 
+variant, he will transmit it to all his daughters and none of his sons. Once the 
+DMD pathogenic variant has been identified in an affected family member, 
+identification of female heterozygotes and prenatal testing are possible. 
+Depending on the familial DMD pathogenic variant, preimplantation genetic 
+testing may be an option for some families but can be challenging if phasing is 
+necessary to confirm test results.
+
+Copyright © 1993-2026, University of Washington, Seattle. GeneReviews is a 
+registered trademark of the University of Washington, Seattle. All rights 
+reserved.
+
+PMID: 20301298
