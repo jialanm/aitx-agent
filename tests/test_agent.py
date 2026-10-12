@@ -581,3 +581,64 @@ class TestAdapterBoilerplateIsNotGrounding:
     ])
     def test_boilerplate_patterns(self, quote, boilerplate):
         assert Agent._is_adapter_boilerplate(quote) is boilerplate
+
+
+class TestConsequenceInStepOne:
+    """VEP runs for every validated variant before the model, and its text enters the variant block."""
+
+    class _VEP(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            assert kwargs == {"genomic_hgvs": "NC_000002.12:g.240871433G>A", "transcript": "NM_000030.3"}
+            text = ("VEP (Ensembl, GRCh38) for NC_000002.12:g.240871433G>A on transcript NM_000030.3:\nConsequence: missense_variant\n"
+                    "Exon: 4/11\nExon 4 of 11 (ENST00000307503): 101 coding bases = 33 codons + 2 bases (out of frame by 2)")
+            return text, [EvidenceRecord(url="https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433")]
+
+    def _agent(self, monkeypatch, turns):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant="NM_000030.3:c.508G>A",
+                                                          genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda x: (x, []))
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00004"
+        task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
+                                         "variant_protein": "p.(Gly170Arg)", "zygosity": "homozygous"}],
+                           "clinical_context": "Recurrent nephrocalcinosis and chronic kidney disease"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "What targeted, small molecule therapy is available for this patient? Provide the generic name or None.",
+                            "date_submitted": "2025-08-01"}
+        return Agent(model=None, tokenizer=None, tools=[self._VEP(), TestTrace._Tool()]), TaskInput(**task)
+
+    def test_vep_runs_before_the_model_and_its_text_is_in_the_prompt(self, monkeypatch):
+        agent, task = self._agent(monkeypatch, [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_clinvar", arguments={})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
+        ])
+
+        output = agent.run(task)
+
+        calls = agent.last_trace["tool_calls"]
+        assert [(c["tool"], c["origin"]) for c in calls] == [("query_ensembl", "step1"), ("search_clinvar", "model")]
+        system_prompt = agent.last_trace["messages"][0]["content"]
+        assert "Predicted consequence (Ensembl VEP, fetched automatically):" in system_prompt
+        assert "Consequence: missense_variant" in system_prompt and "out of frame by 2" in system_prompt
+        assert "Variant type:" not in system_prompt
+        assert "https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433" in [e.source for e in output.evidence]
+
+    def test_step_one_evidence_does_not_count_as_the_model_looking_anything_up(self, monkeypatch):
+        agent, task = self._agent(monkeypatch, [
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # no lookup of its own
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # ignores the reminder
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
+        ])
+
+        agent.run(task)
+
+        assert loop_events(agent.last_trace) == ["evidence_reminder", "reminder_ignored"]

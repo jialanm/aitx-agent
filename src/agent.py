@@ -74,6 +74,14 @@ class Agent:
         self.last_trace["validation"] = [asdict(v) for v in validated]
         context["validated_variants"] = validated
 
+        # Step 1b: the variant's predicted consequence (Ensembl VEP: consequence,
+        # exon, coding length and frame, protein change) is needed for every
+        # therapy decision, so it is fetched here for every validated variant
+        # rather than left to the model to request. Its evidence is citable;
+        # it does not count as the model having looked anything up.
+        step1_evidence: list[EvidenceRecord] = []
+        consequences = [self._predict_consequence(g.gene, v, step1_evidence) for g, v in zip(task_input.patient.genotype, validated)]
+
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
         # list means extraction was rejected: the model gets the generic
@@ -91,6 +99,7 @@ class Agent:
             date_submitted=context["date_submitted"],
             options=options,
             validated=validated,
+            consequences=consequences,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
@@ -99,7 +108,8 @@ class Agent:
             {"role": "user", "content": user_message},
         ]
 
-        # Step 4: ReAct loop
+        # Step 4: ReAct loop. all_evidence is what the model itself retrieved;
+        # the step-1 consequence evidence is added for citation at the end.
         all_evidence: list[EvidenceRecord] = []
         final_text = ""
         reminded = False
@@ -263,7 +273,7 @@ class Agent:
 
         # Step 7: Build evidence items
         evidence_items = self._build_evidence(
-            all_evidence, normalized, task_input, messages
+            step1_evidence + all_evidence, normalized, task_input, messages
         )
 
         # Step 8: Return output
@@ -273,6 +283,22 @@ class Agent:
             response=normalized,
             evidence=evidence_items,
         )
+
+    def _predict_consequence(self, gene: str, validated, evidence: list[EvidenceRecord]) -> str:
+        """Run the Ensembl tool for one validated variant in step 1; text for the prompt."""
+        tool = self.tools.get("query_ensembl")
+        if tool is None:
+            return "Predicted consequence: not run (Ensembl tool not registered)"
+        if not validated.valid or not validated.genomic_variant:
+            return "Predicted consequence: not run (variant did not validate)"
+        kwargs = {"genomic_hgvs": validated.genomic_variant, "transcript": validated.transcript_variant.split(":")[0]}
+        try:
+            summary, found = self._call_tool(tool, "query_ensembl", kwargs, "step1")
+        except Exception as e:
+            logger.error(f"Step-1 consequence lookup failed for {gene}: {e}")
+            return f"Predicted consequence: not available (Ensembl lookup failed: {e})"
+        evidence.extend(found)
+        return "Predicted consequence (Ensembl VEP, fetched automatically):\n" + summary
 
     def _record_turn(self, kind: str, iteration: int, response: ModelResponse) -> None:
         """Keep one model turn in the trace: kind is loop, empty_answer_retry or validation_retry."""

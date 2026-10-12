@@ -8,13 +8,13 @@ from .variant_validation import ValidatedVariant
 # Tool routing per category
 TOOL_PRIORITY = {
     # Phase 1 question categories (retired task, kept for the eval set).
-    # VEP second: exon-skipping and readthrough eligibility turn on the
-    # consequence, exon and frame, which the model never fetched in run 3.
-    "Established_Targeted": ["search_genereviews", "query_ensembl", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
+    # VEP is not listed: the consequence, exon and frame are fetched for
+    # every variant in step 1, before the model runs.
+    "Established_Targeted": ["search_genereviews", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
     "Established_Supportive": ["search_genereviews", "search_omim", "search_pubmed"],
     "Clinical_Trials": ["search_clinical_trials", "search_omim", "search_pubmed"],
     "Drug_Development_and_Repurposing": ["search_pubmed", "search_pharmgkb", "search_fda_labels", "search_clinical_trials"],
-    "Variant_Assessment": ["query_ensembl", "search_clinvar", "query_uniprot", "search_pubmed"],
+    "Variant_Assessment": ["search_clinvar", "query_uniprot", "search_pubmed"],
     # Phase 3 report goals, in the order the report is built. Only tools
     # with an adapter are listed; a name here is a promise the model can
     # call it. Planned sources move in as their adapters are built:
@@ -23,7 +23,7 @@ TOOL_PRIORITY = {
     "goal2_existing_supportive": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
     "goal3_ongoing_trials": ["search_clinical_trials"],
     "goal4_drug_repurposing": ["query_pharos", "clingen_dosage"],
-    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "clingen_dosage", "query_uniprot", "query_ensembl"],
+    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "clingen_dosage", "query_uniprot"],
 }
 
 # Asked once per multiple-choice question, with thinking off, before the
@@ -57,13 +57,16 @@ ANSWER_FORMAT_INSTRUCTIONS = {
 def _format_variant_summary(
     variants: list[ParsedVariant],
     validated: list[ValidatedVariant] | None = None,
+    consequences: list[str] | None = None,
 ) -> str:
     """Format parsed variants into a readable summary.
 
     When validation results are given (one per variant, same order), each
     variant also shows its current transcript form, genomic position, any
-    superseded transcript version, and the validator's warnings, so the
-    model reasons from the checked form rather than the submitted string.
+    superseded transcript version, and the validator's warnings; when VEP
+    consequences are given, each variant shows its predicted consequence.
+    The local regex label ("Variant type") is no longer shown: it misread
+    bracketed protein strings, and VEP's consequence replaces it.
     """
     parts = []
     for i, v in enumerate(variants):
@@ -72,13 +75,12 @@ def _format_variant_summary(
             f"Transcript: {v.transcript}\n"
             f"cDNA: {v.variant_cdna}\n"
             f"Protein: {v.variant_protein}\n"
-            f"Zygosity: {v.zygosity}\n"
-            f"Variant type: {v.variant_type}"
+            f"Zygosity: {v.zygosity}"
         )
-        if v.protein_position:
-            desc += f"\nProtein position: {v.protein_position}"
         if validated and i < len(validated):
             desc += "\n" + _format_validation(validated[i])
+        if consequences and i < len(consequences):
+            desc += "\n" + consequences[i]
         parts.append(desc)
     return "\n---\n".join(parts)
 
@@ -110,6 +112,7 @@ def build_system_prompt(
     date_submitted: str,
     options: list[str] | None = None,
     validated: list[ValidatedVariant] | None = None,
+    consequences: list[str] | None = None,
 ) -> str:
     """Build the system prompt for the ReAct agent.
 
@@ -117,7 +120,7 @@ def build_system_prompt(
     instruction so the model sees them exactly as the scorer expects.
     """
 
-    variant_summary = _format_variant_summary(parsed_variants, validated)
+    variant_summary = _format_variant_summary(parsed_variants, validated, consequences)
     format_instruction = ANSWER_FORMAT_INSTRUCTIONS.get(answer_format, "")
     if answer_format == "multiple_choice" and options:
         format_instruction = (

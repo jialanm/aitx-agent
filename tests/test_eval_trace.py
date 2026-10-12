@@ -98,6 +98,6 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
     assert written["metadata"] == {"git_commit": "test"}
     assert [t["id"] for t in written["traces"]] == ["AITX-TEST"]
     recorded = written["traces"][0]["tool_calls"]
-    assert [c["tool"] for c in recorded] == ["search_clinvar"]
-    assert recorded[0]["origin"] == "model"
+    # Step 1 fetches the consequence automatically; the model's own call follows.
+    assert [(c["tool"], c["origin"]) for c in recorded] == [("query_ensembl", "step1"), ("search_clinvar", "model")]
     assert written["traces"][0]["messages"][0]["role"] == "system"
