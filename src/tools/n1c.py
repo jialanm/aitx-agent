@@ -11,11 +11,10 @@ from __future__ import annotations
 
 import logging
 import re
-import time
 
 import requests
 
-from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
+from .base import BaseTool, EvidenceRecord, ncbi_get, ncbi_params, redact_ncbi_key
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +24,6 @@ PMC_URL = f"https://pmc.ncbi.nlm.nih.gov/articles/PMC{PMC_ID}/"
 CALCULATOR_URL = "http://eligibilitycalculator.n1collaborative.org/"
 EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 TIMEOUT = 60
-RETRIES = 5
-RETRY_INTERVAL_SECONDS = 5
 MAX_SECTION_CHARS = 4000
 
 # Paper sections a caller can ask for, by the title in the article XML.
@@ -133,31 +130,19 @@ class N1CGuidelinesTool(BaseTool):
         """The article XML from PubMed Central, fetched once per process."""
         if self._article_xml is not None:
             return self._article_xml, ""
-        last = ""
-        for attempt in range(1, RETRIES + 1):
-            try:
-                resp = requests.get(
-                    EFETCH_URL, params=ncbi_params(db="pmc", id=PMC_ID, retmode="xml"), timeout=TIMEOUT
-                )
-            except requests.Timeout:
-                last = "timeout"
-                logger.warning(f"PMC efetch timeout (attempt {attempt}/{RETRIES})")
-            except requests.RequestException as e:
-                msg = redact_ncbi_key(str(e))
-                logger.warning(f"PMC efetch failed: {msg}")
-                return None, f"request failed ({msg})"
-            else:
-                if resp.status_code < 500:
-                    if resp.status_code != 200 or "<article" not in resp.text:
-                        logger.warning(f"PMC efetch HTTP {resp.status_code}, no article in body: {resp.text[:200]!r}")
-                        return None, f"HTTP {resp.status_code}, no article in reply"
-                    self._article_xml = resp.text
-                    return self._article_xml, ""
-                last = f"HTTP {resp.status_code}"
-                logger.warning(f"PMC efetch server error (attempt {attempt}/{RETRIES}): HTTP {resp.status_code}")
-            if attempt < RETRIES:
-                time.sleep(RETRY_INTERVAL_SECONDS)
-        return None, f"{last} after {RETRIES} attempts"
+        try:
+            resp = ncbi_get(
+                url=EFETCH_URL, params=ncbi_params(db="pmc", id=PMC_ID, retmode="xml"), timeout=TIMEOUT, label="PMC efetch"
+            )
+        except requests.RequestException as e:
+            msg = redact_ncbi_key(str(e))
+            logger.warning(f"PMC efetch failed: {msg}")
+            return None, f"request failed ({msg})"
+        if resp.status_code != 200 or "<article" not in resp.text:
+            logger.warning(f"PMC efetch HTTP {resp.status_code}, no article in body: {resp.text[:200]!r}")
+            return None, f"HTTP {resp.status_code}, no article in reply"
+        self._article_xml = resp.text
+        return self._article_xml, ""
 
     @staticmethod
     def _section_text(xml: str, title: str) -> str:

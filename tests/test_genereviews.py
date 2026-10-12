@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from src.tools import genereviews
+from src.tools import base, genereviews
 from src.tools.genereviews import GeneReviewsTool
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -95,10 +95,10 @@ def test_index_is_downloaded_once_per_tool(recorded):
 
 
 def test_index_download_failure_is_reported(monkeypatch, caplog):
-    monkeypatch.setattr(genereviews.time, "sleep", lambda s: None)
+    monkeypatch.setattr(base.time, "sleep", lambda s: None)
     monkeypatch.setattr(genereviews.requests, "get", lambda url, params=None, timeout=None: _Reply(503, "down"))
 
     summary, evidence = GeneReviewsTool().execute(gene="AGXT")
 
-    assert summary == "GeneReviews returned nothing: gene index unavailable (HTTP 503 after 5 attempts)"
+    assert summary.startswith("GeneReviews returned nothing: gene index unavailable (request failed (503 Server Error after 5 attempts")
     assert evidence == []

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from src.tools import n1c
+from src.tools import base, n1c
 from src.tools.n1c import N1CGuidelinesTool
 
 FIXTURES = Path(__file__).parent / "fixtures"
@@ -66,10 +66,11 @@ def test_unknown_section_is_refused_with_the_list():
 
 
 def test_fetch_failure_is_reported(monkeypatch, caplog):
-    monkeypatch.setattr(n1c.time, "sleep", lambda s: None)
+    monkeypatch.setattr(base.time, "sleep", lambda s: None)
     monkeypatch.setattr(n1c.requests, "get", lambda *a, **k: (_ for _ in ()).throw(requests.Timeout("simulated")))
 
     summary, evidence = N1CGuidelinesTool().execute(section="discussion")
 
-    assert summary == "N1C guidelines: could not fetch the paper's text from PubMed Central: timeout after 5 attempts"
+    # The shared policy retries the timeout five times, then the adapter reports the exception.
+    assert summary == "N1C guidelines: could not fetch the paper's text from PubMed Central: request failed (simulated)"
     assert caplog.text.count("PMC efetch timeout") == 5

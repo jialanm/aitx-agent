@@ -6,7 +6,7 @@ import requests
 
 import logging
 
-from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
+from .base import BaseTool, EvidenceRecord, ncbi_get, ncbi_params, redact_ncbi_key
 
 logger = logging.getLogger(__name__)
 
@@ -63,8 +63,8 @@ class ClinVarTool(BaseTool):
 
         try:
             # Step 1: search for variant IDs
-            resp = requests.get(
-                ESEARCH_URL,
+            resp = ncbi_get(
+                label="ClinVar", url=ESEARCH_URL,
                 params=ncbi_params(
                     db="clinvar",
                     term=query,
@@ -79,8 +79,8 @@ class ClinVarTool(BaseTool):
             id_list = search_data.get("esearchresult", {}).get("idlist", [])
             if not id_list:
                 # Try broader search with just gene
-                resp2 = requests.get(
-                    ESEARCH_URL,
+                resp2 = ncbi_get(
+                    label="ClinVar", url=ESEARCH_URL,
                     params=ncbi_params(
                         db="clinvar",
                         term=f"{gene}[gene] AND {variant.split('.')[0] if '.' in variant else variant}",
@@ -100,8 +100,8 @@ class ClinVarTool(BaseTool):
                 )
 
             # Step 2: get summaries
-            resp3 = requests.get(
-                ESUMMARY_URL,
+            resp3 = ncbi_get(
+                label="ClinVar", url=ESUMMARY_URL,
                 params=ncbi_params(
                     db="clinvar",
                     id=",".join(id_list[:5]),

@@ -37,7 +37,7 @@ from pathlib import Path
 import pytest
 import requests
 
-from src.tools import clinvar, genereviews, pubmed
+from src.tools import base, clinvar, genereviews, pubmed
 
 FIXTURES = Path(__file__).parent / "fixtures"
 FAKE_KEY = "0123456789abcdef0123456789abcdef0123"
@@ -92,7 +92,9 @@ class _Server:
 
     def get(self, url, params=None, timeout=None):
         self.calls.append((url, dict(params or {})))
-        if self.rate_limit_first and len(self.calls) == 1:
+        # rate_limit_first: every attempt of the first request is answered
+        # 429, so the shared retry policy spends its tries and reports.
+        if self.rate_limit_first and all(u == url for u, _ in self.calls):
             return _RateLimited(url, params)
         endpoint = url.rsplit("/", 1)[-1].removesuffix(".fcgi")
         queue = self.replies[endpoint]
@@ -138,10 +140,12 @@ def test_pubmed_sends_no_key_when_unset(eutils, monkeypatch):
 def test_pubmed_keeps_key_out_of_rate_limit_error(eutils, monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
     eutils.rate_limit_first = True
+    monkeypatch.setattr(base.time, "sleep", lambda s: None)
 
     summary, evidence = pubmed.PubMedTool().execute(query="CFTR F508del Trikafta treatment")
 
-    assert summary.startswith("PubMed API error: 429")
+    assert summary.startswith("PubMed API error: 429 Too Many Requests after 5 attempts")
+    assert len(eutils.calls) == 5
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []
@@ -187,10 +191,12 @@ def test_clinvar_sends_no_key_when_unset(clinvar_eutils, monkeypatch):
 def test_clinvar_keeps_key_out_of_rate_limit_error(clinvar_eutils, monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
     clinvar_eutils.rate_limit_first = True
+    monkeypatch.setattr(base.time, "sleep", lambda s: None)
 
     summary, evidence = clinvar.ClinVarTool().execute(gene="CFTR", variant="c.1521_1523del")
 
-    assert summary.startswith("ClinVar API error: 429")
+    assert summary.startswith("ClinVar API error: 429 Too Many Requests after 5 attempts")
+    assert len(clinvar_eutils.calls) == 5
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []
@@ -251,3 +257,43 @@ def test_genereviews_keeps_key_out_of_request_errors(monkeypatch):
     assert FAKE_KEY not in summary
     assert NCBI_KEY_PLACEHOLDER in summary
     assert evidence == []
+
+
+# --- shared retry policy ---------------------------------------------------
+
+
+def test_ncbi_get_retries_a_rate_limit_once_then_returns(monkeypatch):
+    sleeps: list[float] = []
+    replies = [_RateLimited("https://x/efetch.fcgi", {"db": "pubmed"}),
+               _Recorded(FIXTURES / "pubmed_esearch_CFTR_F508del_Trikafta.json")]
+    monkeypatch.setattr(base.time, "sleep", sleeps.append)
+    monkeypatch.setattr(requests, "get", lambda url, params=None, timeout=None: replies.pop(0))
+
+    resp = base.ncbi_get(url="https://x/efetch.fcgi", params={"db": "pubmed"}, timeout=10, label="T")
+
+    assert resp.status_code == 200
+    assert sleeps == [base.NCBI_RATE_LIMIT_PAUSE_SECONDS]
+
+
+def test_ncbi_get_raises_after_five_rate_limits(monkeypatch, caplog):
+    monkeypatch.setattr(base.time, "sleep", lambda s: None)
+    monkeypatch.setattr(requests, "get", lambda url, params=None, timeout=None: _RateLimited(url, params))
+
+    with pytest.raises(requests.HTTPError) as err:
+        base.ncbi_get(url="https://x/efetch.fcgi", params={}, timeout=10, label="T")
+
+    assert "429 Too Many Requests after 5 attempts" in str(err.value)
+    assert caplog.text.count("T rate limited") == 5
+
+
+def test_ncbi_get_returns_other_client_errors_at_once(monkeypatch):
+    calls: list[str] = []
+
+    class _Bad:
+        status_code = 400
+
+    monkeypatch.setattr(requests, "get", lambda url, params=None, timeout=None: calls.append(url) or _Bad())
+
+    resp = base.ncbi_get(url="https://x/esearch.fcgi", params={}, timeout=10, label="T")
+
+    assert resp.status_code == 400 and len(calls) == 1

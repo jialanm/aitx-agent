@@ -13,11 +13,10 @@ from __future__ import annotations
 
 import logging
 import re
-import time
 
 import requests
 
-from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
+from .base import BaseTool, EvidenceRecord, ncbi_get, ncbi_params, redact_ncbi_key
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +27,6 @@ EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 BOOKSHELF_URL = "https://www.ncbi.nlm.nih.gov/books/{nbk}/"
 PUBMED_URL = "https://pubmed.ncbi.nlm.nih.gov/{pmid}/"
 TIMEOUT = 60
-RETRIES = 5
-RETRY_INTERVAL_SECONDS = 5
 
 # Section headings as they appear in the structured abstract.
 SECTIONS = {
@@ -211,26 +208,14 @@ class GeneReviewsTool(BaseTool):
         return found
 
     def _get(self, url: str, params: dict) -> tuple[str | None, str]:
-        """GET text; timeouts and 5xx retried, other failures reported once."""
-        last = ""
-        for attempt in range(1, RETRIES + 1):
-            try:
-                resp = requests.get(url, params=params, timeout=TIMEOUT)
-            except requests.Timeout:
-                last = "timeout"
-                logger.warning(f"GeneReviews timeout (attempt {attempt}/{RETRIES}): {url}")
-            except requests.RequestException as e:
-                msg = redact_ncbi_key(str(e))
-                logger.warning(f"GeneReviews request failed: {url}: {msg}")
-                return None, f"request failed ({msg})"
-            else:
-                if resp.status_code < 500:
-                    if resp.status_code != 200:
-                        logger.warning(f"GeneReviews HTTP {resp.status_code}: {url}: {resp.text[:200]!r}")
-                        return None, f"HTTP {resp.status_code}"
-                    return resp.text, ""
-                last = f"HTTP {resp.status_code}"
-                logger.warning(f"GeneReviews server error (attempt {attempt}/{RETRIES}): {url}: HTTP {resp.status_code}")
-            if attempt < RETRIES:
-                time.sleep(RETRY_INTERVAL_SECONDS)
-        return None, f"{last} after {RETRIES} attempts"
+        """GET text through the shared NCBI retry policy; failures reported once."""
+        try:
+            resp = ncbi_get(url=url, params=params, timeout=TIMEOUT, label="GeneReviews")
+        except requests.RequestException as e:
+            msg = redact_ncbi_key(str(e))
+            logger.warning(f"GeneReviews request failed: {url}: {msg}")
+            return None, f"request failed ({msg})"
+        if resp.status_code != 200:
+            logger.warning(f"GeneReviews HTTP {resp.status_code}: {url}: {resp.text[:200]!r}")
+            return None, f"HTTP {resp.status_code}"
+        return resp.text, ""

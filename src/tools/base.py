@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import os
 import time
 from abc import ABC, abstractmethod
@@ -12,6 +13,16 @@ from dataclasses import dataclass, field
 # every call, never stored in code, fixtures or committed files.
 NCBI_API_KEY_ENV = "NCBI_API_KEY"
 NCBI_KEY_PLACEHOLDER = "[NCBI_API_KEY]"
+
+# E-utilities answer HTTP 429 when the per-second limit is exceeded (3/s
+# without a key, 10/s with one); a second later the same request succeeds.
+# Timeouts and 5xx are retried at a longer interval. 4xx other than 429
+# means the request is wrong and is returned at once.
+NCBI_RETRIES = 5
+NCBI_RATE_LIMIT_PAUSE_SECONDS = 1
+NCBI_RETRY_INTERVAL_SECONDS = 5
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -75,3 +86,35 @@ def redact_ncbi_key(text: str) -> str:
     if key:
         text = text.replace(key, NCBI_KEY_PLACEHOLDER)
     return text
+
+
+def ncbi_get(url: str, params: dict, timeout: float, label: str = "NCBI") -> "requests.Response":
+    """GET an E-utilities URL, retrying 429, 5xx and timeouts; raises after the last try.
+
+    Drop-in for requests.get: returns the response for any status below
+    500 except 429, so callers keep their own raise_for_status() handling.
+    """
+    import requests  # local import keeps base.py free of a hard dependency at import time
+
+    last_exc: Exception | None = None
+    for attempt in range(1, NCBI_RETRIES + 1):
+        try:
+            resp = requests.get(url, params=params, timeout=timeout)
+        except requests.Timeout as e:
+            last_exc = e
+            logger.warning(f"{label} timeout (attempt {attempt}/{NCBI_RETRIES}): {url}")
+            pause = NCBI_RETRY_INTERVAL_SECONDS
+        else:
+            if resp.status_code == 429:
+                logger.warning(f"{label} rate limited, HTTP 429 (attempt {attempt}/{NCBI_RETRIES}): {url}")
+                last_exc = requests.HTTPError(f"429 Too Many Requests after {NCBI_RETRIES} attempts for url: {url}", response=resp)
+                pause = NCBI_RATE_LIMIT_PAUSE_SECONDS
+            elif resp.status_code >= 500:
+                logger.warning(f"{label} server error, HTTP {resp.status_code} (attempt {attempt}/{NCBI_RETRIES}): {url}")
+                last_exc = requests.HTTPError(f"{resp.status_code} Server Error after {NCBI_RETRIES} attempts for url: {url}", response=resp)
+                pause = NCBI_RETRY_INTERVAL_SECONDS
+            else:
+                return resp
+        if attempt < NCBI_RETRIES:
+            time.sleep(pause)
+    raise last_exc  # type: ignore[misc]

@@ -90,8 +90,8 @@ class OMIMTool(BaseTool):
     def _search_omim_gene(self, gene: str) -> list[dict]:
         """Search NCBI for OMIM gene entries."""
         try:
-            resp = requests.get(
-                ESEARCH_URL,
+            resp = ncbi_get(
+                label="OMIM", url=ESEARCH_URL,
                 params={
                     "db": "omim",
                     "term": f"{gene}[gene symbol]",
@@ -105,8 +105,8 @@ class OMIMTool(BaseTool):
             if not id_list:
                 return []
 
-            resp2 = requests.get(
-                ESUMMARY_URL,
+            resp2 = ncbi_get(
+                label="OMIM", url=ESUMMARY_URL,
                 params={
                     "db": "omim",
                     "id": ",".join(id_list[:5]),
@@ -134,8 +134,8 @@ class OMIMTool(BaseTool):
             if condition:
                 query = f"({gene}[gene symbol] OR {condition}) AND phenotype"
 
-            resp = requests.get(
-                ESEARCH_URL,
+            resp = ncbi_get(
+                label="OMIM", url=ESEARCH_URL,
                 params={
                     "db": "omim",
                     "term": query,
@@ -149,8 +149,8 @@ class OMIMTool(BaseTool):
             if not id_list:
                 return []
 
-            resp2 = requests.get(
-                ESUMMARY_URL,
+            resp2 = ncbi_get(
+                label="OMIM", url=ESUMMARY_URL,
                 params={
                     "db": "omim",
                     "id": ",".join(id_list[:5]),
@@ -178,8 +178,8 @@ class OMIMTool(BaseTool):
             if condition:
                 query = f"{condition} inheritance"
 
-            resp = requests.get(
-                ESEARCH_URL,
+            resp = ncbi_get(
+                label="OMIM", url=ESEARCH_URL,
                 params={
                     "db": "medgen",
                     "term": query,
@@ -193,8 +193,8 @@ class OMIMTool(BaseTool):
             if not id_list:
                 return None
 
-            resp2 = requests.get(
-                ESUMMARY_URL,
+            resp2 = ncbi_get(
+                label="OMIM", url=ESUMMARY_URL,
                 params={
                     "db": "medgen",
                     "id": ",".join(id_list[:3]),

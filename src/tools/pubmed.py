@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import requests
 
-from .base import BaseTool, EvidenceRecord, ncbi_params, redact_ncbi_key
+from .base import BaseTool, EvidenceRecord, ncbi_get, ncbi_params, redact_ncbi_key
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -58,8 +58,8 @@ class PubMedTool(BaseTool):
 
         try:
             # Step 1: search for PMIDs
-            resp = requests.get(
-                ESEARCH_URL,
+            resp = ncbi_get(
+                label="PubMed", url=ESEARCH_URL,
                 params=ncbi_params(
                     db="pubmed",
                     term=query,
@@ -79,8 +79,8 @@ class PubMedTool(BaseTool):
             total = search_data.get("esearchresult", {}).get("count", "0")
 
             # Step 2: get summaries
-            resp2 = requests.get(
-                ESUMMARY_URL,
+            resp2 = ncbi_get(
+                label="PubMed", url=ESUMMARY_URL,
                 params=ncbi_params(
                     db="pubmed",
                     id=",".join(id_list),
