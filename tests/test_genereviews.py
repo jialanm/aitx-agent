@@ -14,8 +14,8 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 
 class _Reply:
-    def __init__(self, status, text):
-        self.status_code, self.text = status, text
+    def __init__(self, status, text, url="https://ftp.ncbi.nlm.nih.gov/pub/GeneReviews/x.txt"):
+        self.status_code, self.text, self.url = status, text, url
 
 
 @pytest.fixture

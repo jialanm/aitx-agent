@@ -107,11 +107,13 @@ def ncbi_get(url: str, params: dict, timeout: float, label: str = "NCBI") -> "re
         else:
             if resp.status_code == 429:
                 logger.warning(f"{label} rate limited, HTTP 429 (attempt {attempt}/{NCBI_RETRIES}): {url}")
-                last_exc = requests.HTTPError(f"429 Too Many Requests after {NCBI_RETRIES} attempts for url: {url}", response=resp)
+                # resp.url carries the query string, api_key included, like requests'
+                # own HTTPError text; callers redact before returning it.
+                last_exc = requests.HTTPError(f"429 Too Many Requests after {NCBI_RETRIES} attempts for url: {resp.url}", response=resp)
                 pause = NCBI_RATE_LIMIT_PAUSE_SECONDS
             elif resp.status_code >= 500:
                 logger.warning(f"{label} server error, HTTP {resp.status_code} (attempt {attempt}/{NCBI_RETRIES}): {url}")
-                last_exc = requests.HTTPError(f"{resp.status_code} Server Error after {NCBI_RETRIES} attempts for url: {url}", response=resp)
+                last_exc = requests.HTTPError(f"{resp.status_code} Server Error after {NCBI_RETRIES} attempts for url: {resp.url}", response=resp)
                 pause = NCBI_RETRY_INTERVAL_SECONDS
             else:
                 return resp
