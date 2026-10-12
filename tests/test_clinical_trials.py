@@ -77,3 +77,47 @@ def test_api_rejection_is_reported_not_hidden(monkeypatch):
 
     assert summary.startswith("ClinicalTrials.gov API error: 400 Client Error")
     assert evidence == []
+
+
+@pytest.fixture
+def recorded_fields(monkeypatch):
+    """The KCNT1 search with the eligibility fields, and the single-study fetch, recorded 2026-10-12."""
+    calls = []
+
+    def fake_get(url, params=None, timeout=None):
+        calls.append((url, dict(params or {})))
+        if url.endswith("/studies/NCT05402384"):
+            return _Reply(200, (FIXTURES / "clinicaltrials_study_NCT05402384.json").read_text())
+        if url.endswith("/studies/NCT00000000"):
+            return _Reply(404, '{"message":"not found"}')
+        return _Reply(200, (FIXTURES / "clinicaltrials_KCNT1_recruiting_fields.json").read_text())
+
+    monkeypatch.setattr(clinical_trials.requests, "get", fake_get)
+    return calls
+
+
+def test_search_results_show_ages_sex_and_interventions(recorded_fields):
+    summary, evidence = ClinicalTrialsTool().execute(query="KCNT1", status_filter="RECRUITING,NOT_YET_RECRUITING")
+
+    assert "Eligible ages: 18 Years to 55 Years | Sex: ALL" in summary  # the healthy-volunteer study
+    assert "Interventions: ABS-1230 (drug); Placebo (drug)" in summary
+    assert "MinimumAge" in recorded_fields[0][1]["fields"]
+    assert len(evidence) == 4
+
+
+def test_fetch_by_id_returns_the_full_eligibility_criteria(recorded_fields):
+    summary, evidence = ClinicalTrialsTool().execute(nct_id="NCT05402384")
+
+    assert summary.startswith("NCT ID: NCT05402384")
+    assert "Eligible ages: 1 Month to no maximum | Sex: ALL" in summary
+    assert "Interventions: AVTX-801 (drug); Placebo (drug)" in summary
+    assert "Exclusion Criteria" in summary and "Hemoglobin" in summary and "Current enrollment in another trial" in summary
+    assert [e.url for e in evidence] == ["https://clinicaltrials.gov/study/NCT05402384"]
+    assert recorded_fields[0][0].endswith("/studies/NCT05402384")
+
+
+def test_unknown_trial_id_is_reported(recorded_fields):
+    summary, evidence = ClinicalTrialsTool().execute(nct_id="NCT00000000")
+
+    assert summary == "ClinicalTrials.gov has no study with ID NCT00000000."
+    assert evidence == []

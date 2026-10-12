@@ -36,14 +36,23 @@ class ClinicalTrialsTool(BaseTool):
                 "description": (
                     "A registry of clinical trials, providing information on ongoing "
                     "or completed studies involving genetic conditions and therapies. "
-                    "Returns NCT ID, title, status and phase for matching trials. "
-                    "The query is matched literally against trial records: use the "
-                    "gene symbol or the disease name alone (e.g. 'KCNT1'), never a "
-                    "sentence or a list of symptoms, which finds nothing."
+                    "Two uses. Search (query): returns matching trials with NCT ID, "
+                    "title, status, phase, age range, sex, interventions and a short "
+                    "summary; the query is matched literally against trial records, so "
+                    "use the gene symbol or the disease name alone (e.g. 'KCNT1'), never "
+                    "a sentence or a list of symptoms. Fetch (nct_id): returns one "
+                    "trial in full, including its complete inclusion and exclusion "
+                    "criteria, for judging whether this patient's age, findings, labs "
+                    "and treatment history qualify. Search to find candidates, then "
+                    "fetch each candidate before stating eligibility."
                 ),
                 "parameters": {
                     "type": "object",
                     "properties": {
+                        "nct_id": {
+                            "type": "string",
+                            "description": "Trial identifier to fetch in full, e.g. NCT05402384; other arguments are then ignored",
+                        },
                         "query": {
                             "type": "string",
                             "description": (
@@ -69,7 +78,7 @@ class ClinicalTrialsTool(BaseTool):
                             ),
                         },
                     },
-                    "required": ["query"],
+                    "required": [],
                 },
             },
         }
@@ -86,7 +95,12 @@ class ClinicalTrialsTool(BaseTool):
         return accepted, rejected
 
     def execute(self, **kwargs) -> tuple[str, list[EvidenceRecord]]:
+        nct_id = (kwargs.get("nct_id") or "").strip().upper()
+        if nct_id:
+            return self._fetch(nct_id)
         query = kwargs.get("query", "")
+        if not query and not kwargs.get("condition") and not kwargs.get("intervention"):
+            return "ClinicalTrials.gov: give a query to search, or an nct_id to fetch.", []
         condition = kwargs.get("condition", "")
         intervention = kwargs.get("intervention", "")
         status_filter = kwargs.get("status_filter", "")
@@ -96,6 +110,9 @@ class ClinicalTrialsTool(BaseTool):
             params: dict = {
                 "format": "json",
                 "pageSize": 5,
+                # Age range, sex and interventions come back in the search itself.
+                "fields": "NCTId,BriefTitle,OverallStatus,Phase,BriefSummary,MinimumAge,MaximumAge,Sex,"
+                          "InterventionName,InterventionType,Condition",
             }
 
             # Build query
@@ -161,6 +178,8 @@ class ClinicalTrialsTool(BaseTool):
                     f"Title: {title}\n"
                     f"Status: {status}\n"
                     f"Phase: {phase}\n"
+                    f"Eligible ages: {self._age_range(protocol)} | Sex: {protocol.get('eligibilityModule', {}).get('sex') or 'not stated'}\n"
+                    f"Interventions: {self._interventions(protocol)}\n"
                     f"URL: {url}"
                 )
                 if brief_summary:
@@ -168,7 +187,52 @@ class ClinicalTrialsTool(BaseTool):
                 results.append(entry)
 
             summary = "\n\n".join(results)
-            return summary[:2000], evidence
+            return summary[:4000], evidence
 
         except requests.RequestException as e:
             return f"ClinicalTrials.gov API error: {e}", evidence
+
+    def _fetch(self, nct_id: str) -> tuple[str, list[EvidenceRecord]]:
+        """One trial in full, with its complete eligibility criteria."""
+        evidence: list[EvidenceRecord] = []
+        try:
+            resp = requests.get(f"{CT_API_URL}/{nct_id}", params={"format": "json"}, timeout=TIMEOUT)
+            if resp.status_code == 404:
+                logger.warning(f"ClinicalTrials.gov has no study {nct_id}")
+                return f"ClinicalTrials.gov has no study with ID {nct_id}.", evidence
+            resp.raise_for_status()
+            protocol = resp.json().get("protocolSection", {})
+        except requests.RequestException as e:
+            return f"ClinicalTrials.gov API error: {e}", evidence
+        ident = protocol.get("identificationModule", {})
+        status = protocol.get("statusModule", {})
+        elig = protocol.get("eligibilityModule", {})
+        url = CT_WEB_URL.format(nct_id=nct_id)
+        evidence.append(EvidenceRecord(url=url))
+        criteria = (elig.get("eligibilityCriteria") or "").strip() or "not stated"
+        lines = [
+            f"NCT ID: {nct_id}",
+            f"Title: {ident.get('briefTitle') or ident.get('officialTitle') or 'No title'}",
+            f"Status: {status.get('overallStatus', 'Unknown')}",
+            f"Phase: {', '.join(protocol.get('designModule', {}).get('phases') or []) or 'Not specified'}",
+            f"Conditions: {', '.join(protocol.get('conditionsModule', {}).get('conditions') or []) or 'not stated'}",
+            f"Interventions: {self._interventions(protocol)}",
+            f"Eligible ages: {self._age_range(protocol)} | Sex: {elig.get('sex') or 'not stated'}",
+            f"URL: {url}",
+            "Eligibility criteria:",
+            criteria if len(criteria) <= 3000 else criteria[:2997] + "...",
+        ]
+        return "\n".join(lines), evidence
+
+    @staticmethod
+    def _age_range(protocol: dict) -> str:
+        elig = protocol.get("eligibilityModule", {})
+        lo, hi = elig.get("minimumAge"), elig.get("maximumAge")
+        if not lo and not hi:
+            return "not stated"
+        return f"{lo or 'no minimum'} to {hi or 'no maximum'}"
+
+    @staticmethod
+    def _interventions(protocol: dict) -> str:
+        items = protocol.get("armsInterventionsModule", {}).get("interventions") or []
+        return "; ".join(f"{i.get('name')} ({i.get('type', '').lower()})" for i in items if i.get("name")) or "not stated"

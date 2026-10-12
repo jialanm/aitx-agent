@@ -1,0 +1,255 @@
+{
+ "protocolSection": {
+  "identificationModule": {
+   "nctId": "NCT05402384",
+   "orgStudyIdInfo": {
+    "id": "19-005271"
+   },
+   "secondaryIdInfos": [
+    {
+     "id": "U54NS115198",
+     "type": "NIH",
+     "link": "https://reporter.nih.gov/quickSearch/U54NS115198"
+    }
+   ],
+   "organization": {
+    "fullName": "Icahn School of Medicine at Mount Sinai",
+    "class": "OTHER"
+   },
+   "briefTitle": "AVTX-801 D-galactose Supplementation in SLC35A2-CDG",
+   "officialTitle": "Evaluation of Efficacy and Safety of D-galactose Supplementation in SLC35A2-CDG, a Disorder of Hypogalactosylation"
+  },
+  "statusModule": {
+   "statusVerifiedDate": "2026-06",
+   "overallStatus": "NOT_YET_RECRUITING",
+   "expandedAccessInfo": {
+    "hasExpandedAccess": false
+   },
+   "startDateStruct": {
+    "date": "2027-01",
+    "type": "ESTIMATED"
+   },
+   "primaryCompletionDateStruct": {
+    "date": "2028-03",
+    "type": "ESTIMATED"
+   },
+   "completionDateStruct": {
+    "date": "2028-03",
+    "type": "ESTIMATED"
+   },
+   "studyFirstSubmitDate": "2022-05-28",
+   "studyFirstSubmitQcDate": "2022-05-28",
+   "studyFirstPostDateStruct": {
+    "date": "2022-06-02",
+    "type": "ACTUAL"
+   },
+   "lastUpdateSubmitDate": "2026-06-25",
+   "lastUpdatePostDateStruct": {
+    "date": "2026-06-29",
+    "type": "ACTUAL"
+   }
+  },
+  "sponsorCollaboratorsModule": {
+   "responsibleParty": {
+    "type": "SPONSOR_INVESTIGATOR",
+    "investigatorFullName": "Eva Morava-Kozicz",
+    "investigatorTitle": "Principal Investigator",
+    "investigatorAffiliation": "Icahn School of Medicine at Mount Sinai"
+   },
+   "leadSponsor": {
+    "name": "Eva Morava-Kozicz",
+    "class": "OTHER"
+   },
+   "collaborators": [
+    {
+     "name": "National Institute of Neurological Disorders and Stroke (NINDS)",
+     "class": "NIH"
+    },
+    {
+     "name": "Rare Diseases Clinical Research Network",
+     "class": "NETWORK"
+    },
+    {
+     "name": "Children's Hospital of Philadelphia",
+     "class": "OTHER"
+    }
+   ]
+  },
+  "oversightModule": {
+   "oversightHasDmc": false,
+   "isFdaRegulatedDrug": true,
+   "isFdaRegulatedDevice": false
+  },
+  "descriptionModule": {
+   "briefSummary": "This is a multicenter, randomized, double-blind, placebo-controlled, cross-over study to evaluate the efficacy and safety of AVTX-801 in subjects with SLC35A2-CDG"
+  },
+  "conditionsModule": {
+   "conditions": [
+    "SLC35A2-CDG - Solute Carrier Family 35 Member A2 Congenital Disorder of Glycosylation"
+   ]
+  },
+  "designModule": {
+   "studyType": "INTERVENTIONAL",
+   "phases": [
+    "PHASE2"
+   ],
+   "designInfo": {
+    "allocation": "RANDOMIZED",
+    "interventionModel": "CROSSOVER",
+    "primaryPurpose": "TREATMENT",
+    "maskingInfo": {
+     "masking": "TRIPLE",
+     "whoMasked": [
+      "PARTICIPANT",
+      "CARE_PROVIDER",
+      "INVESTIGATOR"
+     ]
+    }
+   },
+   "enrollmentInfo": {
+    "count": 10,
+    "type": "ESTIMATED"
+   }
+  },
+  "armsInterventionsModule": {
+   "armGroups": [
+    {
+     "label": "AVTX-801, then Placebo",
+     "type": "EXPERIMENTAL",
+     "description": "Each treatment period is 24 weeks, with 6-week washout period in between.",
+     "interventionNames": [
+      "Drug: AVTX-801",
+      "Drug: Placebo"
+     ]
+    },
+    {
+     "label": "Placebo, then AVTX-801",
+     "type": "PLACEBO_COMPARATOR",
+     "description": "Each treatment period is 24 weeks, with 6-week washout period in between.",
+     "interventionNames": [
+      "Drug: AVTX-801",
+      "Drug: Placebo"
+     ]
+    }
+   ],
+   "interventions": [
+    {
+     "type": "DRUG",
+     "name": "AVTX-801",
+     "description": "Medical grade D-galactose\n\ndosage:2.0 g/kg/day",
+     "armGroupLabels": [
+      "AVTX-801, then Placebo",
+      "Placebo, then AVTX-801"
+     ],
+     "otherNames": [
+      "D-Galactose"
+     ]
+    },
+    {
+     "type": "DRUG",
+     "name": "Placebo",
+     "description": "Matching placebo",
+     "armGroupLabels": [
+      "AVTX-801, then Placebo",
+      "Placebo, then AVTX-801"
+     ]
+    }
+   ]
+  },
+  "outcomesModule": {
+   "primaryOutcomes": [
+    {
+     "measure": "Number of major motor seizure frequency",
+     "description": "Seizure burden assessed by change from baseline in 28-day major motor seizure frequency",
+     "timeFrame": "28 days"
+    },
+    {
+     "measure": "Number of vomiting episodes",
+     "description": "Vomiting frequency in 28-day from baseline",
+     "timeFrame": "28 days"
+    },
+    {
+     "measure": "Bristol Stool Form Scale (BSFS)",
+     "description": "Constipation/diarrhea assessed by scale improvement toward normal stool forms from baseline in average daily 28-day Bristol Stool form scale. The BSFS classifies stool into 7 groups, type 1 (hardest) to type 7 (softest). Type 3 and Type 4 would be more indicative of normal stool.",
+     "timeFrame": "average daily 28 days"
+    }
+   ]
+  },
+  "eligibilityModule": {
+   "eligibilityCriteria": "Inclusion Criteria\n\n* Molecular confirmation of SLC35A2 genetic variant\n* Age \\> 1 month\n* Presence of seizures, chronic vomiting, chronic constipation, or chronic diarrhea\n* A parent or legal guardian must be available and willing to provide consent on behalf of minor subjects or adult subjects who are unable to give informed consent due to developmental disabilities.\n* Use of contraception in females \\> age 8 years\n* Previously performed eye exam within last year\n\nExclusion Criteria\n\n* Aldolase-B deficiency\n* Galactosemia\n* Hemolytic uremic syndrome\n* Hemoglobin \\< 7 mg/dL\n* LFTs \\> 3x ULN\n* Previously experienced severe AEs from oral galactose (severe diarrhea, vomiting, constipation, galactosuria, or increased liver glycogen storage)\n* Other history of galactose intolerance as determined by the investigator\n* Currently treated with ketogenic diet\n* Current enrollment in another trial involving investigational compounds\n* Ongoing dietary D-galactose supplementation\n* Use of investigational compounds\n* Pregnancy",
+   "healthyVolunteers": false,
+   "sex": "ALL",
+   "minimumAge": "1 Month",
+   "stdAges": [
+    "CHILD",
+    "ADULT",
+    "OLDER_ADULT"
+   ]
+  },
+  "contactsLocationsModule": {
+   "centralContacts": [
+    {
+     "name": "Mary Freeman, MS, CGC",
+     "role": "CONTACT",
+     "phone": "212-659-1434",
+     "email": "mary.freeman@mssm.edu"
+    }
+   ],
+   "overallOfficials": [
+    {
+     "name": "Eva Morava-Kozicz, MD, PhD",
+     "affiliation": "Icahn School of Medicine at Mount Sinai",
+     "role": "PRINCIPAL_INVESTIGATOR"
+    }
+   ],
+   "locations": [
+    {
+     "facility": "Mayo Clinic Minnesota",
+     "city": "Rochester",
+     "state": "Minnesota",
+     "zip": "55905",
+     "country": "United States",
+     "geoPoint": {
+      "lat": 44.02163,
+      "lon": -92.4699
+     }
+    }
+   ]
+  },
+  "ipdSharingStatementModule": {
+   "ipdSharing": "NO"
+  }
+ },
+ "derivedSection": {
+  "miscInfoModule": {
+   "versionHolder": "2026-10-09"
+  },
+  "interventionBrowseModule": {
+   "meshes": [
+    {
+     "id": "D005690",
+     "term": "Galactose"
+    }
+   ],
+   "ancestors": [
+    {
+     "id": "D006601",
+     "term": "Hexoses"
+    },
+    {
+     "id": "D009005",
+     "term": "Monosaccharides"
+    },
+    {
+     "id": "D000073893",
+     "term": "Sugars"
+    },
+    {
+     "id": "D002241",
+     "term": "Carbohydrates"
+    }
+   ]
+  }
+ },
+ "hasResults": false
+}

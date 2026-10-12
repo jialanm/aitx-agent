@@ -1,0 +1,185 @@
+{
+ "studies": [
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07156201",
+     "briefTitle": "A Study to Investigate the Safety, Tolerability, and Pharmacokinetics of ABS-1230 Given Orally Compared With Placebo in Healthy Participants Aged 18 to 55 Years"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "descriptionModule": {
+     "briefSummary": "This first in human trial will evaluate the safety, tolerability, and pharmacokinetics of single ascending doses, multiple ascending doses, and fed and fasted doses of ABS-1230 given orally compared with placebo in adult healthy participants."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "KCNT1-Related Epilepsy"
+     ]
+    },
+    "designModule": {
+     "phases": [
+      "PHASE1"
+     ]
+    },
+    "armsInterventionsModule": {
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "ABS-1230"
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo"
+      },
+      {
+       "type": "DRUG",
+       "name": "Omeprazole"
+      },
+      {
+       "type": "DRUG",
+       "name": "Voriconazole"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "maximumAge": "55 Years"
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07227857",
+     "briefTitle": "A First-in-human Study of S230815 in Pediatric Participants With KCNT1-related Developmental and Epileptic Encephalopathy"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "descriptionModule": {
+     "briefSummary": "Study CL1-230815-001 (KANDLE) is a Phase Ib/II, First In Human, multicentre, open-label, multiple ascending dose study to assess the safety, tolerability, pharmacokinetics (PK) and pharmacodynamic (PD) effect of S230815 in pediatric participants with KCNT1-related Developmental Epileptic Encephalopathy. To participate in the study, participants must have a diagnosis of Developmental Epileptic Encephalopathy due to a documented pathogenic or likely pathogenic variant in KCNT1 (to be confirmed by central genetic testing at the screening visit). The study consists of a screening period followed by two consecutive interventional parts. Part 1 will evaluate multiple ascending doses of S230815. Part 2 is a long-term treatment extension for participants who have completed Part 1. Participants will seamlessly roll-over from Part 1 to Part 2, resuming the same cohort as they were assigned in Part 1, and will receive S230815 for a maximum of 72 weeks."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Epileptic Encephalopathy"
+     ]
+    },
+    "designModule": {
+     "phases": [
+      "PHASE1",
+      "PHASE2"
+     ]
+    },
+    "armsInterventionsModule": {
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "S230815- Starting dose A"
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose B"
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose C"
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose D"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "sex": "ALL",
+     "minimumAge": "2 Years",
+     "maximumAge": "12 Years"
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07600736",
+     "briefTitle": "A Study to Investigate the Safety, Tolerability, Pharmacokinetics, and Clinical Activity of ABS-1230 in Pediatric and Young Adult Participants With KCNT1-related Epilepsy"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "descriptionModule": {
+     "briefSummary": "This trial will evaluate the safety, tolerability, pharmacokinetics, and clinical activity of ABS-1230 compared with placebo in participants with KCNT1-related epilepsy"
+    },
+    "conditionsModule": {
+     "conditions": [
+      "KCNT1-Related Epilepsy"
+     ]
+    },
+    "designModule": {
+     "phases": [
+      "PHASE2"
+     ]
+    },
+    "armsInterventionsModule": {
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "ABS-1230"
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "sex": "ALL",
+     "minimumAge": "1 Month",
+     "maximumAge": "21 Years"
+    }
+   }
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT05450822",
+     "briefTitle": "Precision Medicine in the Treatment of Epilepsy"
+    },
+    "statusModule": {
+     "overallStatus": "RECRUITING"
+    },
+    "descriptionModule": {
+     "briefSummary": "Primary objectives:\n\nThe purpose of this study is to identify single and composite biomarkers (from neuroimaging, electrophysiological, and non-imaging biological measures), clinical measures (from cognitive, psychometric, and behavioral test scores), and risk/protective factors (e.g., from medical history, socioeconomic status, coping, lifestyle) that can:\n\n1. Predict antiseizure medication (ASM) treatment outcome, psychiatric, cognitive, or behavioral comorbidities, and quality of life in newly diagnosed epilepsy patients (Cohort II-III).\n2. Predict a second epileptic seizure/epilepsy diagnosis and behavioral, cognitive, psychiatric dysfunction and quality of life in patients after a first epileptic seizure (Cohort I)."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Epilepsy"
+     ]
+    },
+    "designModule": {},
+    "armsInterventionsModule": {
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "Levetiracetam"
+      },
+      {
+       "type": "DRUG",
+       "name": "Levetiracetam Tablets"
+      },
+      {
+       "type": "DRUG",
+       "name": "Lamotrigine tablet"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "sex": "ALL",
+     "minimumAge": "16 Years",
+     "maximumAge": "55 Years"
+    }
+   }
+  }
+ ]
+}
