@@ -1,0 +1,40 @@
+{
+ "header": {
+  "type": "esearch",
+  "version": "0.3"
+ },
+ "esearchresult": {
+  "count": "20",
+  "retmax": "5",
+  "retstart": "0",
+  "idlist": [
+   "41265180",
+   "38380699",
+   "38144875",
+   "36758276",
+   "31213567"
+  ],
+  "translationset": [
+   {
+    "from": "GRIN2B",
+    "to": "\"nr2b nmda receptor\"[Supplementary Concept] OR \"nr2b nmda receptor\"[All Fields] OR \"grin2b\"[All Fields]"
+   },
+   {
+    "from": "function",
+    "to": "\"functional\"[All Fields] OR \"functional's\"[All Fields] OR \"functionalities\"[All Fields] OR \"functionality\"[All Fields] OR \"functionalization\"[All Fields] OR \"functionalizations\"[All Fields] OR \"functionalize\"[All Fields] OR \"functionalized\"[All Fields] OR \"functionalizes\"[All Fields] OR \"functionalizing\"[All Fields] OR \"functionally\"[All Fields] OR \"functionals\"[All Fields] OR \"functioned\"[All Fields] OR \"functioning\"[All Fields] OR \"functionings\"[All Fields] OR \"functions\"[All Fields] OR \"physiology\"[Subheading] OR \"physiology\"[All Fields] OR \"function\"[All Fields] OR \"physiology\"[MeSH Terms]"
+   },
+   {
+    "from": "L-serine",
+    "to": "\"serine\"[Supplementary Concept] OR \"serine\"[All Fields] OR \"l serine\"[All Fields] OR \"serine\"[MeSH Terms]"
+   }
+  ],
+  "querytranslation": "(\"nr2b nmda receptor\"[Supplementary Concept] OR \"nr2b nmda receptor\"[All Fields] OR \"grin2b\"[All Fields]) AND \"loss\"[All Fields] AND (\"functional\"[All Fields] OR \"functional s\"[All Fields] OR \"functionalities\"[All Fields] OR \"functionality\"[All Fields] OR \"functionalization\"[All Fields] OR \"functionalizations\"[All Fields] OR \"functionalize\"[All Fields] OR \"functionalized\"[All Fields] OR \"functionalizes\"[All Fields] OR \"functionalizing\"[All Fields] OR \"functionally\"[All Fields] OR \"functionals\"[All Fields] OR \"functioned\"[All Fields] OR \"functioning\"[All Fields] OR \"functionings\"[All Fields] OR \"functions\"[All Fields] OR \"physiology\"[MeSH Subheading] OR \"physiology\"[All Fields] OR \"function\"[All Fields] OR \"physiology\"[MeSH Terms]) AND (\"serine\"[Supplementary Concept] OR \"serine\"[All Fields] OR \"l serine\"[All Fields] OR \"serine\"[MeSH Terms])",
+  "warninglist": {
+   "phrasesignored": [
+    "of"
+   ],
+   "quotedphrasesnotfound": [],
+   "outputmessages": []
+  }
+ }
+}

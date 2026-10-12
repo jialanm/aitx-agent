@@ -44,11 +44,12 @@ FAKE_KEY = "0123456789abcdef0123456789abcdef0123"
 
 
 class _Recorded:
-    """A recorded reply: JSON for .json fixtures, plain text for .txt ones."""
+    """A recorded reply: JSON for .json fixtures, plain text otherwise."""
 
     def __init__(self, path: Path):
         self.status_code = 200
         self.text = path.read_text()
+        self.url = "https://eutils.ncbi.nlm.nih.gov/recorded"
         self._body = json.loads(self.text) if path.suffix == ".json" else None
 
     def json(self):
@@ -106,8 +107,8 @@ class _Server:
 
 
 PUBMED_REPLIES = {
-    "esearch": "pubmed_esearch_CFTR_F508del_Trikafta.json",
-    "esummary": "pubmed_esummary_CFTR_F508del_Trikafta.json",
+    "esearch": "pubmed_esearch_GRIN2B_LoF_Lserine.json",
+    "efetch": "pubmed_efetch_GRIN2B_LoF_Lserine.xml",
 }
 
 
@@ -121,17 +122,17 @@ def eutils(monkeypatch):
 def test_pubmed_sends_key_on_every_request(eutils, monkeypatch):
     monkeypatch.setenv(NCBI_API_KEY_ENV, FAKE_KEY)
 
-    summary, evidence = pubmed.PubMedTool().execute(query="CFTR F508del Trikafta treatment")
+    summary, evidence = pubmed.PubMedTool().execute(query="GRIN2B loss of function L-serine")
 
-    assert eutils.endpoints() == ["esearch", "esummary"]
+    assert eutils.endpoints() == ["esearch", "efetch"]
     assert all(p["api_key"] == FAKE_KEY for _, p in eutils.calls)
-    assert evidence[0].url == "https://pubmed.ncbi.nlm.nih.gov/34268058/"
+    assert evidence[0].url == "https://pubmed.ncbi.nlm.nih.gov/41265180/"
 
 
 def test_pubmed_sends_no_key_when_unset(eutils, monkeypatch):
     monkeypatch.delenv(NCBI_API_KEY_ENV, raising=False)
 
-    pubmed.PubMedTool().execute(query="CFTR F508del Trikafta treatment")
+    pubmed.PubMedTool().execute(query="GRIN2B loss of function L-serine")
 
     assert len(eutils.calls) == 2
     assert not any("api_key" in p for _, p in eutils.calls)
@@ -142,7 +143,7 @@ def test_pubmed_keeps_key_out_of_rate_limit_error(eutils, monkeypatch):
     eutils.rate_limit_first = True
     monkeypatch.setattr(base.time, "sleep", lambda s: None)
 
-    summary, evidence = pubmed.PubMedTool().execute(query="CFTR F508del Trikafta treatment")
+    summary, evidence = pubmed.PubMedTool().execute(query="GRIN2B loss of function L-serine")
 
     assert summary.startswith("PubMed API error: 429 Too Many Requests after 5 attempts")
     assert len(eutils.calls) == 5
@@ -265,7 +266,7 @@ def test_genereviews_keeps_key_out_of_request_errors(monkeypatch):
 def test_ncbi_get_retries_a_rate_limit_once_then_returns(monkeypatch):
     sleeps: list[float] = []
     replies = [_RateLimited("https://x/efetch.fcgi", {"db": "pubmed"}),
-               _Recorded(FIXTURES / "pubmed_esearch_CFTR_F508del_Trikafta.json")]
+               _Recorded(FIXTURES / "pubmed_esearch_GRIN2B_LoF_Lserine.json")]
     monkeypatch.setattr(base.time, "sleep", sleeps.append)
     monkeypatch.setattr(requests, "get", lambda url, params=None, timeout=None: replies.pop(0))
 
