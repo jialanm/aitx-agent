@@ -22,7 +22,7 @@ answer:
 | Baseline | 5 | not measured (no trace) | not measured |
 | Run 2 | 3 | 0 | 3 (00003, 00005, 00010) |
 | Run 3 | 8 | 7 (00003, 00005, 00007, 00009, 00012, 00013, 00015) | 1 (00010) |
-| Run 4 | 7 | 7 (00003, 00005, 00009, 00010, 00013, 00014, 00015) | 0 |
+| Run 4 | 7 | 6 (00003, 00009, 00010, 00013, 00014, 00015) | 1 (00005: both citations quoted the right facts under the wrong links) |
 
 Per category, run 2 to run 3: Established_Targeted 2/7 to 3/7;
 Established_Supportive 0/1 to 0/1; Clinical_Trials 1/3 to 2/3;
@@ -192,18 +192,29 @@ Drug_Development_and_Repurposing 0/1, Variant_Assessment 3/4. Agent time
 1,675 s (33 to 259 s per question), against 1,436 s for run 3; the
 per-source justification calls were not yet in.
 
-### What changed, question by question
+### Run 4, every question
 
-| Patient | Run 3 | Run 4 | Label | Cause in the trace |
-|---|---|---|---|---|
-| 00014 | 10.0 | **0.1, correct** | correct_supported | same Ensembl line; the model read "decimal" as the fraction this time |
-| 00010 | No, unsupported | **No, supported** | correct_supported | fetched the trial by ID, read the haemoglobin exclusion, answered from it |
-| 00006 | two lines | one line, both drugs | synthesis_wrong | list join worked; the age limit on the label was never fetched |
-| 00008 | Ascorbic acid, DDAVP | "No evidence was found" | wrong_tool | the chapter list now returns no evidence links, and the empty-result notice took that as a failed lookup and steered the model to OMIM instead of a chapter; a bug in 5b82d04 interacting with 2ead5a1 |
-| 00007 | 18 months | Not available | wrong_tool | went to ClinVar first and stopped; never opened the GeneReviews chapter |
-| 00012 | L-serine | Memantine | synthesis_wrong | stopped at PHAROS, which lists memantine as an approved drug on the target without the loss- or gain-of-function distinction; never reached the abstracts |
-| 00004 | None | lumasiran, nedosiran | synthesis_wrong | read the chapter, took the RNAi pair, ignored "small molecule" |
-| others | | unchanged | | 00001, 00002 None; 00011 against a stale key; 00016 TBD; 00003, 00005, 00009, 00013, 00015 correct |
+| Patient | Answer | Primary label | Cause in the trace |
+|---|---|---|---|
+| 00001 | None | synthesis_wrong | called GeneReviews (list, no chapter chosen), ClinVar (no record for the deletion, as it now reports) and VEP, which gave exons 52-63 out of frame by one; did not reason from that to exon 51 skipping |
+| 00002 | None | extraction_wrong | VEP's premature stop in exon 74 again not connected to Ataluren |
+| 00003 | None (correct) | correct_supported | VEP and ClinVar records quoted; one citation rejected |
+| 00004 | lumasiran, nedosiran | synthesis_wrong | read the PH1 chapter, took the RNAi pair, ignored "small molecule" |
+| 00005 | No (correct) | correct_unsupported | right facts retrieved, but both citations quoted a sentence under the other source's link, so the check rejected both |
+| 00006 | lumasiran, nedosiran | synthesis_wrong | one line now; the age limit is on the FDA label, never fetched |
+| 00007 | Not available | wrong_tool | went to ClinVar first and stopped; never opened the GeneReviews chapter that states 18 months (correct in run 3) |
+| 00008 | No evidence was found | wrong_tool | the chapter list now returns no evidence links and the empty-result notice took that as a failed lookup, steering the model to OMIM (correct pair in run 3); a bug in 5b82d04 with 2ead5a1, fixed in 3f62adc |
+| 00009 | NCT05402384 (correct) | correct_supported | trial search with the normalised filter |
+| 00010 | No (correct) | correct_supported | fetched the trial by ID and reasoned from the haemoglobin exclusion (unsupported in run 3) |
+| 00011 | NCT07227857 | reference_questionable | as before |
+| 00012 | Memantine | synthesis_wrong | stopped at PHAROS, which lists memantine as an approved drug on the target without the loss- or gain-of-function distinction; never reached the abstracts (correct in run 3) |
+| 00013 | 66 (correct) | correct_supported | exon coding length |
+| 00014 | 0.1 (correct) | correct_supported | same Ensembl line as run 3; the model read "decimal" as the fraction this time |
+| 00015 | No (correct) | correct_supported | last exon, as in run 3 |
+| 00016 | TBD | synthesis_wrong | UniProt's Ras-GAP boundary at 1251 against the key's GRD at 1198; "TBD" read as "to be determined" |
+
+Against run 3: 00014 and 00010 improved; 00007, 00008 and 00012 regressed;
+the rest are unchanged in answer.
 
 Grounded citations fell from 22 of 33 to 15 of 26. Seven of the eleven
 rejections were the model attaching one source's sentence to another
