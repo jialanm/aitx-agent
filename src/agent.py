@@ -98,6 +98,7 @@ class Agent:
         # Step 4: ReAct loop
         all_evidence: list[EvidenceRecord] = []
         final_text = ""
+        reminded = False
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -115,23 +116,21 @@ class Agent:
             self._record_turn("loop", iteration + 1, response)
 
             if not response.tool_calls:
-                if iteration == 0 and not all_evidence:
-                    # Model tried to answer without any tool calls.
-                    # Force the first recommended tool call for this category.
-                    forced = self._force_first_tool_call(
-                        context, task_input, messages, all_evidence
-                    )
-                    if forced:
-                        self.last_trace["events"].append("forced_first_tool")
-                        # Re-prompt the model with tool results now available
-                        messages.append({
-                            "role": "user",
-                            "content": (
-                                "Now use the tool results above to answer the question. "
-                                "Respond with ONLY the answer."
-                            ),
-                        })
-                        continue
+                if not all_evidence and not reminded:
+                    # The model answered without looking anything up. Code does
+                    # not compose a query for it (run 2, 2026-10-07: a code-built
+                    # GeneReviews query fetched a chapter for another gene). It
+                    # says so once, names the recommended tool, and the model
+                    # chooses the tool and writes the arguments.
+                    reminded = True
+                    self.last_trace["events"].append("evidence_reminder")
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append({"role": "user", "content": self._evidence_reminder(context)})
+                    continue
+                if not all_evidence and reminded:
+                    # Told once, still no lookup: accept the answer, record it, no loop.
+                    self.last_trace["events"].append("reminder_ignored")
+                    logger.warning("Model answered without a tool call after the evidence reminder")
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
@@ -281,43 +280,19 @@ class Agent:
         entry["summary"] = summary
         return summary, evidence
 
-    def _force_first_tool_call(
-        self,
-        context: dict,
-        task_input: TaskInput,
-        messages: list[dict],
-        all_evidence: list[EvidenceRecord],
-    ) -> bool:
-        """Force a tool call when the model skips tools on first iteration.
-
-        Returns True if a tool was successfully called.
-        """
-        category = context["category"]
-        priority = TOOL_PRIORITY.get(category, ["search_pubmed"])
-        parsed_variants = context["parsed_variants"]
-
-        # Find the first available tool from the priority list
-        for tool_name in priority:
-            tool = self.tools.get(tool_name)
-            if tool is None:
-                continue
-
-            # Build arguments based on tool type and input data
-            kwargs = self._build_auto_args(
-                tool_name, parsed_variants, task_input, context.get("validated_variants")
-            )
-            logger.info(f"Forcing tool call: {tool_name}({kwargs})")
-
-            try:
-                summary, evidence = self._call_tool(tool, tool_name, kwargs, "forced")
-                all_evidence.extend(evidence)
-                messages.append(format_tool_result(tool_name, summary))
-                return True
-            except Exception as e:
-                logger.error(f"Forced tool call failed: {e}")
-                continue
-
-        return False
+    def _evidence_reminder(self, context: dict) -> str:
+        """One message telling the model a lookup is required and which tool is recommended first."""
+        priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
+        first = next((t for t in priority if t in self.tools), None)
+        recommended = (
+            f"The recommended first tool for this question is {first}; call it, or another tool "
+            f"that fits better, choosing the arguments from the patient record. "
+            if first else "Call the tool that fits the question, choosing the arguments from the patient record. "
+        )
+        return (
+            "You answered without looking anything up. Evidence from a tool is required "
+            "before the final answer. " + recommended + "Then answer."
+        )
 
     def _build_auto_args(
         self,

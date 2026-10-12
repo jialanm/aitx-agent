@@ -281,17 +281,37 @@ class TestTrace:
         assert trace["messages"][0]["role"] == "system"
         assert any(m["role"] == "user" and "one record" in m["content"] for m in trace["messages"])
 
-    def test_forced_first_tool_is_recorded_as_an_event(self, monkeypatch):
-        # Model answers without calling a tool, so the agent forces one.
+    def test_answer_without_lookup_gets_one_reminder_and_the_model_writes_the_call(self, monkeypatch):
+        # Turn 1: the model answers without a tool. Turn 2, after the reminder: it calls
+        # ClinVar with its own arguments. Turn 3: it answers from the result.
+        call = ToolCall(name="search_clinvar", arguments={"gene": "CFTR", "variant": "c.1521_1523del"})
         self._scripted(monkeypatch, [
             ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""),
+            ModelResponse(text="", tool_calls=[call], raw="<tool_call>", thinking=""),
         ])
         agent = Agent(model=None, tokenizer=None, tools=[self._Tool()])
 
-        agent.run(TaskInput(**self.TASK))
+        output = agent.run(TaskInput(**self.TASK))
 
-        assert "forced_first_tool" in agent.last_trace["events"]
-        assert agent.last_trace["tool_calls"][0]["origin"] == "forced"
+        assert output.response == "Yes"
+        assert agent.last_trace["events"] == ["evidence_reminder"]
+        assert [c["origin"] for c in agent.last_trace["tool_calls"]] == ["model"]
+        assert agent.last_trace["tool_calls"][0]["arguments"] == {"gene": "CFTR", "variant": "c.1521_1523del"}
+        reminder = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "looking anything up" in m["content"])
+        assert "recommended first tool for this question is search_clinvar" in reminder["content"]
+
+    def test_reminder_ignored_is_recorded_and_the_answer_accepted(self, monkeypatch):
+        self._scripted(monkeypatch, [
+            ModelResponse(text="No", tool_calls=[], raw="No", thinking=""),
+            ModelResponse(text="No", tool_calls=[], raw="No", thinking=""),
+        ])
+        agent = Agent(model=None, tokenizer=None, tools=[self._Tool()])
+
+        output = agent.run(TaskInput(**self.TASK))
+
+        assert output.response == "No"
+        assert agent.last_trace["events"] == ["evidence_reminder", "reminder_ignored"]
+        assert agent.last_trace["tool_calls"] == []
 
     def test_validation_result_reaches_trace_and_prompt(self, monkeypatch):
         self._scripted(monkeypatch, [
@@ -329,32 +349,26 @@ class TestEnsemblArgsFromValidation:
         def execute(self, **kwargs):
             return "vep text", [EvidenceRecord(url="https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433")]
 
-    def _run(self, monkeypatch, validated):
-        import src.agent as agent_module
-        monkeypatch.setattr(agent_module, "validate_variant", lambda t, c: validated)
-        # Model answers without a tool call, so the agent forces the first priority tool: query_ensembl.
-        monkeypatch.setattr(agent_module, "generate",
-                            lambda *a, **k: ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""))
+    def _args(self, validated):
+        from src.preprocessing import preprocess_input
+        task = TaskInput(**self.TASK)
         agent = Agent(model=None, tokenizer=None, tools=[self._Ensembl()])
-        agent.run(TaskInput(**self.TASK))
-        return agent.last_trace["tool_calls"][0]
+        return agent._build_auto_args("query_ensembl", preprocess_input(task)["parsed_variants"], task, [validated])
 
-    def test_validated_variant_gives_genomic_form_and_current_transcript(self, monkeypatch):
+    def test_validated_variant_gives_genomic_form_and_current_transcript(self):
         from src.variant_validation import ValidatedVariant
-        call = self._run(monkeypatch, ValidatedVariant(
+        args = self._args(ValidatedVariant(
             submitted="NM_000030.3:c.508G>A", valid=True, transcript_variant="NM_000030.3:c.508G>A",
             genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
 
-        assert call["origin"] == "forced"
-        assert call["arguments"] == {"genomic_hgvs": "NC_000002.12:g.240871433G>A",
-                                     "transcript": "NM_000030.3", "gene": "AGXT"}
+        assert args == {"genomic_hgvs": "NC_000002.12:g.240871433G>A", "transcript": "NM_000030.3", "gene": "AGXT"}
 
-    def test_failed_validation_falls_back_to_cdna_form(self, monkeypatch):
+    def test_failed_validation_falls_back_to_cdna_form(self):
         from src.variant_validation import ValidatedVariant
-        call = self._run(monkeypatch, ValidatedVariant(
+        args = self._args(ValidatedVariant(
             submitted="NM_000030.3:c.508G>A", valid=False, warnings=["validator unavailable: timeout after retries"]))
 
-        assert call["arguments"] == {"hgvs_cdna": "NM_000030.3:c.508G>A", "gene": "AGXT"}
+        assert args == {"hgvs_cdna": "NM_000030.3:c.508G>A", "gene": "AGXT"}
 
 
 class TestModelTurnsInTrace:
@@ -368,7 +382,7 @@ class TestModelTurnsInTrace:
                                                           genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
         turns = [
             ModelResponse(text="No", tool_calls=[], raw="No", thinking="I know this one."),   # answered without a lookup
-            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking="The result says yes."),  # after the forced lookup
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking="Still no lookup."),  # after the reminder, still none
         ]
         monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
         agent = Agent(model=None, tokenizer=None, tools=[TestEnsemblArgsFromValidation._Ensembl()])
@@ -378,6 +392,6 @@ class TestModelTurnsInTrace:
         recorded = agent.last_trace["model_turns"]
         assert [(m["kind"], m["iteration"], m["text"]) for m in recorded] == [("loop", 1, "No"), ("loop", 2, "Yes")]
         assert recorded[0]["thinking"] == "I know this one."
-        assert agent.last_trace["events"] == ["forced_first_tool"]
+        assert agent.last_trace["events"] == ["evidence_reminder", "reminder_ignored"]
         assert agent.last_trace["final_text"] == "Yes"
         assert agent.last_trace["answer"] == output.response == "Yes"
