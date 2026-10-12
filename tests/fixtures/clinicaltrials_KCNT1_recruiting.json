@@ -1,0 +1,2728 @@
+{
+ "studies": [
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07156201",
+     "orgStudyIdInfo": {
+      "id": "ABS1230-1001"
+     },
+     "organization": {
+      "fullName": "Actio Biosciences, Inc.",
+      "class": "INDUSTRY"
+     },
+     "briefTitle": "A Study to Investigate the Safety, Tolerability, and Pharmacokinetics of ABS-1230 Given Orally Compared With Placebo in Healthy Participants Aged 18 to 55 Years",
+     "officialTitle": "A First-in-Human, Phase 1a, Randomized, Double-Blinded, Placebo-Controlled, Single- and Multiple-Ascending Dose and Food Effect Study to Assess the Safety, Tolerability, and Pharmacokinetics of ABS-1230 Administered Orally to Healthy Adults"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2026-08",
+     "overallStatus": "RECRUITING",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2025-08-28",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2026-12",
+      "type": "ESTIMATED"
+     },
+     "completionDateStruct": {
+      "date": "2026-12",
+      "type": "ESTIMATED"
+     },
+     "studyFirstSubmitDate": "2025-08-25",
+     "studyFirstSubmitQcDate": "2025-09-02",
+     "studyFirstPostDateStruct": {
+      "date": "2025-09-05",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2026-08-05",
+     "lastUpdatePostDateStruct": {
+      "date": "2026-08-07",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR"
+     },
+     "leadSponsor": {
+      "name": "Actio Biosciences, Inc.",
+      "class": "INDUSTRY"
+     }
+    },
+    "oversightModule": {
+     "oversightHasDmc": false,
+     "isFdaRegulatedDrug": false,
+     "isFdaRegulatedDevice": false
+    },
+    "descriptionModule": {
+     "briefSummary": "This first in human trial will evaluate the safety, tolerability, and pharmacokinetics of single ascending doses, multiple ascending doses, and fed and fasted doses of ABS-1230 given orally compared with placebo in adult healthy participants.",
+     "detailedDescription": "This is a Phase 1a, first-in-human, placebo-controlled study consisting of 3 parts.\n\nPart 1 is a single ascending dose (SAD) study in up to 40 participants consisting of a screening period of up to 28 days prior to a single dose of ABS-1230 or placebo, with follow-up 7 days and 14 days after dosing.\n\nPart 2 is a multiple ascending dose (MAD) study in up to 30 participants consisting of a screening period of up to 28 days, followed by ABS-1230 or placebo once daily for 14 days, with follow-up 7 days and 14 days after dosing is completed.\n\nPart 3 is a food effect (FE) study in 12 participants consisting of two doses of ABS-1230 under fasted and fed conditions and in combination with omeprazole with follow-up 7 days and 14 days after dosing is completed.\n\nPart 4 is a drug-drug interaction (DDI) study in 10 participants consisting of doses of ABS-1230 in combination with voriconazole, with follow-up 15 days after dosing is completed."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "KCNT1-Related Epilepsy"
+     ]
+    },
+    "designModule": {
+     "studyType": "INTERVENTIONAL",
+     "phases": [
+      "PHASE1"
+     ],
+     "designInfo": {
+      "allocation": "RANDOMIZED",
+      "interventionModel": "PARALLEL",
+      "primaryPurpose": "TREATMENT",
+      "maskingInfo": {
+       "masking": "TRIPLE",
+       "whoMasked": [
+        "PARTICIPANT",
+        "INVESTIGATOR",
+        "OUTCOMES_ASSESSOR"
+       ]
+      }
+     },
+     "enrollmentInfo": {
+      "count": 92,
+      "type": "ESTIMATED"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "ABS-1230 Single Dose",
+       "type": "EXPERIMENTAL",
+       "description": "Single doses of ABS-1230",
+       "interventionNames": [
+        "Drug: ABS-1230"
+       ]
+      },
+      {
+       "label": "ABS-1230 Multiple Doses",
+       "type": "EXPERIMENTAL",
+       "description": "Multiple doses of ABS-1230",
+       "interventionNames": [
+        "Drug: ABS-1230"
+       ]
+      },
+      {
+       "label": "Placebo Single Dose",
+       "type": "PLACEBO_COMPARATOR",
+       "description": "Single doses of placebo",
+       "interventionNames": [
+        "Drug: Placebo"
+       ]
+      },
+      {
+       "label": "Placebo Multiple Doses",
+       "type": "PLACEBO_COMPARATOR",
+       "description": "Multiple doses of placebo",
+       "interventionNames": [
+        "Drug: Placebo"
+       ]
+      },
+      {
+       "label": "ABS-1230 Singe Dose + Omeprazole",
+       "type": "EXPERIMENTAL",
+       "description": "Single doses of ABS-1230 + omeprazole",
+       "interventionNames": [
+        "Drug: ABS-1230",
+        "Drug: Omeprazole"
+       ]
+      },
+      {
+       "label": "ABS-1230 Singe Dose + Voriconazole",
+       "type": "EXPERIMENTAL",
+       "description": "Single doses of ABS-1230 + voriconazole",
+       "interventionNames": [
+        "Drug: ABS-1230",
+        "Drug: Voriconazole"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "ABS-1230",
+       "description": "ABS-1230",
+       "armGroupLabels": [
+        "ABS-1230 Multiple Doses",
+        "ABS-1230 Singe Dose + Omeprazole",
+        "ABS-1230 Singe Dose + Voriconazole",
+        "ABS-1230 Single Dose"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo",
+       "description": "Placebo",
+       "armGroupLabels": [
+        "Placebo Multiple Doses",
+        "Placebo Single Dose"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Omeprazole",
+       "description": "Omeprazole",
+       "armGroupLabels": [
+        "ABS-1230 Singe Dose + Omeprazole"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Voriconazole",
+       "description": "Voriconazole",
+       "armGroupLabels": [
+        "ABS-1230 Singe Dose + Voriconazole"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Safety and tolerability (incidence, severity, and dose-relationship of adverse events)",
+       "description": "To assess safety and tolerability of ABS-1230 following single and multiple oral administration by determining the incidence, severity, and dose-relationship of adverse events",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Safety and tolerability (incidence, severity, and dose-relationship of clinically significant changes in laboratory parameters)",
+       "description": "To assess safety and tolerability of ABS-1230 following single and multiple oral administration by determining the incidence, severity, and dose-relationship of clinically significant laboratory changes",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Maximum Plasma Concentration [Cmax] After Single Dose of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of single dose of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 2 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Concentration [AUCinf] After Single Dose of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of single dose of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 2 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Concentration [Cmax] After Multiple Doses of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of multiple doses of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Exposure [AUCtau] After Multiple Doses of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of multiple doses of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Concentration [Cmax] After Fed, Fasted and in Combination with Omeprazole Doses of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of fed, fasted, and in combination with omeprazole doses of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Exposure [AUCtau] After Fed, Fasted and in Combination with Omeprazole Doses of ABS-1230",
+       "description": "To evaluate the pharmacokinetics of fed, fasted, and in combination with omeprazole doses of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Concentration [Cmax] of ABS-1230 in Combination with Voriconazole",
+       "description": "To evaluate the pharmacokinetics ABS-1230 in combination with voriconazole",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      },
+      {
+       "measure": "Maximum Plasma Exposure [AUCtau] of ABS-1230 in Combination with Voriconazole",
+       "description": "To evaluate the pharmacokinetics ABS-1230 in combination with voriconazole",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 4 weeks)"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Age 18 to 55 years, inclusive\n* Body mass index greater than or equal to 18 to less than or equal to 32 kg/m2\n* Medically healthy with no clinically significant medical history, physical examination, vital sign, standard 12-lead ECG, chemistry, hematology, urinalysis, or coagulation results at Screening as deemed by the Investigator\n* Male and female subjects must use adequate birth control and agree not to donate sperm or eggs for the time periods specified in the protocol\n\nExclusion Criteria:\n\n* Positive result for HIV, HBV, or HCV\n* History of malignancy other than treated basal cell carcinoma, squamous cell carcinoma, or carcinoma in situ of the cervix\n* History of alcoholism or recreational drug use within 2 years or a positive alcohol or tobacco test result at screening or first check-in visit\n* For female participants, must not be pregnant, breastfeeding, or seeking to become pregnant while in the study",
+     "healthyVolunteers": true,
+     "sex": "ALL",
+     "minimumAge": "18 Years",
+     "maximumAge": "55 Years",
+     "stdAges": [
+      "ADULT"
+     ]
+    },
+    "contactsLocationsModule": {
+     "centralContacts": [
+      {
+       "name": "Actio Biosciences, Inc.",
+       "role": "CONTACT",
+       "phone": "+1 (858) 679-5891",
+       "email": "info@actiobiosciences.com"
+      }
+     ],
+     "overallOfficials": [
+      {
+       "name": "Medical Director",
+       "affiliation": "Actio Bioscences, Inc.",
+       "role": "STUDY_DIRECTOR"
+      }
+     ],
+     "locations": [
+      {
+       "facility": "Scientia Clinical Research",
+       "status": "RECRUITING",
+       "city": "Sydney",
+       "state": "New South Wales",
+       "country": "Australia",
+       "contacts": [
+        {
+         "name": "Christopher Argent, MD",
+         "role": "CONTACT",
+         "phone": "(+61) 2 9382 5800",
+         "email": "christopher.argent@scientiaclinicalresearch.com.au"
+        },
+        {
+         "name": "Christopher Argent, MD",
+         "role": "PRINCIPAL_INVESTIGATOR"
+        }
+       ],
+       "geoPoint": {
+        "lat": -33.86785,
+        "lon": 151.20732
+       }
+      }
+     ]
+    },
+    "ipdSharingStatementModule": {
+     "ipdSharing": "NO"
+    }
+   },
+   "derivedSection": {
+    "miscInfoModule": {
+     "versionHolder": "2026-10-09"
+    },
+    "interventionBrowseModule": {
+     "meshes": [
+      {
+       "id": "D009853",
+       "term": "Omeprazole"
+      },
+      {
+       "id": "D065819",
+       "term": "Voriconazole"
+      }
+     ],
+     "ancestors": [
+      {
+       "id": "D053799",
+       "term": "2-Pyridinylmethylsulfinylbenzimidazoles"
+      },
+      {
+       "id": "D013454",
+       "term": "Sulfoxides"
+      },
+      {
+       "id": "D013457",
+       "term": "Sulfur Compounds"
+      },
+      {
+       "id": "D009930",
+       "term": "Organic Chemicals"
+      },
+      {
+       "id": "D011725",
+       "term": "Pyridines"
+      },
+      {
+       "id": "D006573",
+       "term": "Heterocyclic Compounds, 1-Ring"
+      },
+      {
+       "id": "D006571",
+       "term": "Heterocyclic Compounds"
+      },
+      {
+       "id": "D001562",
+       "term": "Benzimidazoles"
+      },
+      {
+       "id": "D006574",
+       "term": "Heterocyclic Compounds, 2-Ring"
+      },
+      {
+       "id": "D000072471",
+       "term": "Heterocyclic Compounds, Fused-Ring"
+      },
+      {
+       "id": "D014230",
+       "term": "Triazoles"
+      },
+      {
+       "id": "D001393",
+       "term": "Azoles"
+      }
+     ]
+    }
+   },
+   "hasResults": false
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07227857",
+     "orgStudyIdInfo": {
+      "id": "CL1-230815-001"
+     },
+     "secondaryIdInfos": [
+      {
+       "id": "2024-513332-17-00",
+       "type": "CTIS"
+      }
+     ],
+     "organization": {
+      "fullName": "Servier",
+      "class": "INDUSTRY"
+     },
+     "briefTitle": "A First-in-human Study of S230815 in Pediatric Participants With KCNT1-related Developmental and Epileptic Encephalopathy",
+     "officialTitle": "A Phase Ib/II First-in-human, Multicentre, Open-label, Multiple Ascending Dose Study to Assess the Safety, Tolerability, Pharmacokinetics, and Pharmacodynamic Effect of Intrathecal S230815 in Pediatric Participants With KCNT1-related Developmental and Epileptic Encephalopathy",
+     "acronym": "KANDLE"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2026-08",
+     "overallStatus": "RECRUITING",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2025-11-24",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2028-04-15",
+      "type": "ESTIMATED"
+     },
+     "completionDateStruct": {
+      "date": "2028-04-15",
+      "type": "ESTIMATED"
+     },
+     "studyFirstSubmitDate": "2025-11-12",
+     "studyFirstSubmitQcDate": "2025-11-12",
+     "studyFirstPostDateStruct": {
+      "date": "2025-11-13",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2026-08-10",
+     "lastUpdatePostDateStruct": {
+      "date": "2026-08-11",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR"
+     },
+     "leadSponsor": {
+      "name": "Institut de Recherches Internationales Servier",
+      "class": "OTHER"
+     }
+    },
+    "oversightModule": {
+     "oversightHasDmc": true,
+     "isFdaRegulatedDrug": true,
+     "isFdaRegulatedDevice": false
+    },
+    "descriptionModule": {
+     "briefSummary": "Study CL1-230815-001 (KANDLE) is a Phase Ib/II, First In Human, multicentre, open-label, multiple ascending dose study to assess the safety, tolerability, pharmacokinetics (PK) and pharmacodynamic (PD) effect of S230815 in pediatric participants with KCNT1-related Developmental Epileptic Encephalopathy. To participate in the study, participants must have a diagnosis of Developmental Epileptic Encephalopathy due to a documented pathogenic or likely pathogenic variant in KCNT1 (to be confirmed by central genetic testing at the screening visit). The study consists of a screening period followed by two consecutive interventional parts. Part 1 will evaluate multiple ascending doses of S230815. Part 2 is a long-term treatment extension for participants who have completed Part 1. Participants will seamlessly roll-over from Part 1 to Part 2, resuming the same cohort as they were assigned in Part 1, and will receive S230815 for a maximum of 72 weeks."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Epileptic Encephalopathy"
+     ]
+    },
+    "designModule": {
+     "studyType": "INTERVENTIONAL",
+     "phases": [
+      "PHASE1",
+      "PHASE2"
+     ],
+     "designInfo": {
+      "allocation": "NON_RANDOMIZED",
+      "interventionModel": "SEQUENTIAL",
+      "primaryPurpose": "TREATMENT",
+      "maskingInfo": {
+       "masking": "NONE"
+      }
+     },
+     "enrollmentInfo": {
+      "count": 20,
+      "type": "ESTIMATED"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "Cohort 1",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: S230815- Starting dose A"
+       ]
+      },
+      {
+       "label": "Cohort 2",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: S230815- Dose B"
+       ]
+      },
+      {
+       "label": "Cohort 3",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: S230815- Dose C"
+       ]
+      },
+      {
+       "label": "Cohort 4",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: S230815- Dose D"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "S230815- Starting dose A",
+       "description": "Solution for injection",
+       "armGroupLabels": [
+        "Cohort 1"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose B",
+       "description": "Solution for injection",
+       "armGroupLabels": [
+        "Cohort 2"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose C",
+       "description": "Solution for injection",
+       "armGroupLabels": [
+        "Cohort 3"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "S230815- Dose D",
+       "description": "Solution for injection",
+       "armGroupLabels": [
+        "Cohort 4"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Incidence and severity of Adverse Events (AE)'s.",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Pharmacokinetic (PK) parameters of S230815 in cerebrospinal fluid (CSF) Ctrough",
+       "description": "Ctrough is defined as the concentration reached immediately before the next dose is administered.",
+       "timeFrame": "Through week 96"
+      },
+      {
+       "measure": "Pharmacokinetic (PK) parameters of S230815 in plasma AUC 0-\u03c4",
+       "description": "Area Under the Curve (AUC) from dosing (time 0) to time t \\[AUC0-t\\]",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      },
+      {
+       "measure": "Pharmacokinetic (PK) parameters of S230815 in plasma Cmax",
+       "description": "Cmax is defined as the maximum (peak) observed concentration following a dose. Measured 0.5, 2, 4, 8 , and 24 hours post dose",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      },
+      {
+       "measure": "Pharmacokinetic (PK) parameters of S230815 in plasma Ctrough",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      },
+      {
+       "measure": "Relative change from baseline in seizure frequency as recorded by daily seizure logs",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      },
+      {
+       "measure": "Relative change from baseline in seizure frequency as recorded by periodic 24h Video Electroencephalogram (vEEG) assessment",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      },
+      {
+       "measure": "Number and administration frequency of rescue medication",
+       "timeFrame": "Through End of study visit (A maximum of 116 weeks)"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Male or female pediatric participants aged 2-12 years old at screening, with a genetically confirmed diagnosis of Developmental Epileptic Encephalopathy (DEE) due to a pathogenic or likely pathogenic variant in KCNT1 confirmed by central genetic testing.\n* Stable dose of other regular medications and/or stable antiseizure interventions (such as ketogenic diet and vagal nerve stimulation).\n\nExclusion Criteria:\n\n* Other clinical phenotypes associated with pathogenic or likely pathogenic variants in KCNT1 other than Epilepsy of Infancy with Migrating Focal Seizures or Early-Onset Epileptic Encephalopathy\n* Documented pathogenic or likely pathogenic variants in any other gene known to cause epilepsy identified through prior genetic testing. Variants of uncertain significance in other genes known to cause epilepsy may be considered on discussion with the sponsor.\n* Clinically significant medical history or clinical findings on physical examination, other than DEE, that in the judgment of the investigator, make the participant unsuitable for participation in the study and/or completion of the trial procedures, including, but not limited to:\n\n  * Clinically significant prior or ongoing medical conditions within 30 days of the screening visit, as per investigator judgement.\n  * Clinically significant abnormality on Electrocardiogram (ECG) at the screening visit, as per investigator judgement.\n  * Clinically significant abnormality on laboratory testing at screening, including, but not limited to:\n  * Renal insufficiency, which is defined as creatinine clearance \\< 40 mL/min assessed as estimated glomerular filtration rate (eGFR) using Modification of Diet in Renal Disease (MDRD) formula\n  * Hepatic derangement defined as transaminase values more than 3 times the Upper Limit of Normal (ULN) range, or total bilirubin values more than 1.5 times the ULN.\n* Positive hepatitis B surface antigen test, positive hepatitis C antibody test, positive for human immunodeficiency virus (HIV), as reported by a laboratory test within 6 months prior to the screening visit, or on screening bloods.\n* Bone, spine, bleeding disorders, or other disorder that exposes the participant to risk of injury or unsuccessful Lumbar puncture (e.g., haemophilia, Von Willebrand's disease, liver disease).\n* Contraindications to undergoing Magnetic Resonance Imaging (MRI), Lumbar puncture procedure and Intrathecal administration.\n* History of Central Nervous System (CNS) tumors or malignancies, including CNS metastatic disease.\n* Continuous respiratory support, defined as oxygen supplementation or non-invasive ventilation (e.g.: continuous positive airway pressure, bi-level intermittent positive airway pressure), required during waking hours. This does not include suctioning; cough assist devices or other devices that may be used regularly to clear airways.\n* Invasive ventilation including the presence of a tracheostomy.\n* Use of quinidine within 30 days prior to the screening visit.\n* Current use or anticipated use of antiplatelet or anticoagulant therapy during the study.\n* Current or past enrolment in an interventional clinical study in which an investigational therapy is/was administered within 30 days (or 5 half-lives of study agent, whichever is longer) prior to the screening visit.\n* Implantable CNS device that may interfere with the ability to administer the study drug via Lumbar puncture.\n* Known hypersensitivity to any oligonucleotide, as demonstrated by a systemic allergic reaction (e.g., changes in pulse, blood pressure, breathing function, etc.), or any other drug that in the opinion of the investigator may preclude study participation.\n\n  * History of hydrocephalus requiring a ventriculoperitoneal shunt.",
+     "healthyVolunteers": false,
+     "sex": "ALL",
+     "minimumAge": "2 Years",
+     "maximumAge": "12 Years",
+     "stdAges": [
+      "CHILD"
+     ]
+    },
+    "contactsLocationsModule": {
+     "centralContacts": [
+      {
+       "name": "Institut de Recherches Internationales Servier",
+       "role": "CONTACT",
+       "phone": "+33 1 55 72 60-00",
+       "email": "scientificinformation@servier.com"
+      }
+     ],
+     "locations": [
+      {
+       "facility": "Children's Hospital of Orange County",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Orange",
+       "state": "California",
+       "zip": "92868",
+       "country": "United States",
+       "geoPoint": {
+        "lat": 33.78779,
+        "lon": -117.85311
+       }
+      },
+      {
+       "facility": "Boston Children's Hospital",
+       "status": "RECRUITING",
+       "city": "Boston",
+       "state": "Massachusetts",
+       "zip": "02115",
+       "country": "United States",
+       "contacts": [
+        {
+         "name": "Christelle Achkar",
+         "role": "CONTACT",
+         "email": "Christelle.Achkar@childrens.harvard.edu"
+        }
+       ],
+       "geoPoint": {
+        "lat": 42.35843,
+        "lon": -71.05977
+       }
+      },
+      {
+       "facility": "University of Rochester Medical Center",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Rochester",
+       "state": "New York",
+       "zip": "14642",
+       "country": "United States",
+       "geoPoint": {
+        "lat": 43.15478,
+        "lon": -77.61556
+       }
+      },
+      {
+       "facility": "Nationwide Children's Hospital",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Columbus",
+       "state": "Ohio",
+       "zip": "43205",
+       "country": "United States",
+       "geoPoint": {
+        "lat": 39.96118,
+        "lon": -82.99879
+       }
+      },
+      {
+       "facility": "The Children's Hospital of Philadelphia",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Philadelphia",
+       "state": "Pennsylvania",
+       "zip": "19104",
+       "country": "United States",
+       "geoPoint": {
+        "lat": 39.95238,
+        "lon": -75.16362
+       }
+      },
+      {
+       "facility": "Institut Des Neurosciences De La Timone",
+       "status": "RECRUITING",
+       "city": "Marseille",
+       "zip": "13005",
+       "country": "France",
+       "contacts": [
+        {
+         "name": "Mathieu Milh, Pr",
+         "role": "CONTACT",
+         "phone": "0491388613",
+         "email": "Mathieu.MILH@ap-hm.fr"
+        }
+       ],
+       "geoPoint": {
+        "lat": 43.29695,
+        "lon": 5.38107
+       }
+      },
+      {
+       "facility": "Hopital Necker Enfants Malades",
+       "status": "RECRUITING",
+       "city": "Paris",
+       "zip": "75015",
+       "country": "France",
+       "contacts": [
+        {
+         "name": "Rima Nabbout, Pr",
+         "role": "CONTACT",
+         "phone": "0144381536",
+         "email": "rima.nabbout@aphp.fr"
+        }
+       ],
+       "geoPoint": {
+        "lat": 48.85341,
+        "lon": 2.3488
+       }
+      },
+      {
+       "facility": "Robert Debre University Hospital",
+       "status": "RECRUITING",
+       "city": "Paris",
+       "zip": "75019",
+       "country": "France",
+       "contacts": [
+        {
+         "name": "Stephane AUVIN",
+         "role": "CONTACT",
+         "phone": "0140035724",
+         "email": "stephane.auvin@aphp.fr"
+        }
+       ],
+       "geoPoint": {
+        "lat": 48.85341,
+        "lon": 2.3488
+       }
+      },
+      {
+       "facility": "Azienda Ospedaliera Universitaria Meyer IRCCS",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Florence",
+       "zip": "50139",
+       "country": "Italy",
+       "contacts": [
+        {
+         "name": "Renzo Guerrini, Pr",
+         "role": "CONTACT",
+         "phone": "+390555662573",
+         "email": "renzo.guerrini@meyer.it"
+        }
+       ],
+       "geoPoint": {
+        "lat": 43.77925,
+        "lon": 11.24626
+       }
+      },
+      {
+       "facility": "Ospedale Pediatrico Bambino Gesu",
+       "status": "NOT_YET_RECRUITING",
+       "city": "Roma",
+       "zip": "00165",
+       "country": "Italy",
+       "contacts": [
+        {
+         "name": "Nicola Specchio, Pr",
+         "role": "CONTACT",
+         "phone": "+390668592645",
+         "email": "nicola.specchio@opbg.net"
+        }
+       ],
+       "geoPoint": {
+        "lat": 44.99364,
+        "lon": 11.10642
+       }
+      },
+      {
+       "facility": "Shinshu University Hospital",
+       "status": "RECRUITING",
+       "city": "Nagano",
+       "country": "Japan",
+       "contacts": [
+        {
+         "name": "Tetsuhiro Fukuyama",
+         "role": "CONTACT"
+        }
+       ],
+       "geoPoint": {
+        "lat": 36.65,
+        "lon": 138.18333
+       }
+      },
+      {
+       "facility": "Osaka City General Hospital",
+       "status": "RECRUITING",
+       "city": "Osaka",
+       "country": "Japan",
+       "contacts": [
+        {
+         "name": "Shin Okazaki",
+         "role": "CONTACT"
+        }
+       ],
+       "geoPoint": {
+        "lat": 34.69379,
+        "lon": 135.50107
+       }
+      },
+      {
+       "facility": "Shizuoka Institute of Epilepsy and Neurological Disorders",
+       "status": "RECRUITING",
+       "city": "Shizuoka",
+       "country": "Japan",
+       "contacts": [
+        {
+         "name": "Satoshi Mizutani",
+         "role": "CONTACT"
+        }
+       ],
+       "geoPoint": {
+        "lat": 34.98333,
+        "lon": 138.38333
+       }
+      },
+      {
+       "facility": "Hospital Sant Joan De Deu Barcelona",
+       "status": "RECRUITING",
+       "city": "Esplugues de Llobregat",
+       "zip": "08950",
+       "country": "Spain",
+       "contacts": [
+        {
+         "name": "Yana Dominguez, Dr",
+         "role": "CONTACT",
+         "phone": "+34936009733",
+         "email": "jana.dominguez@sjd.es"
+        }
+       ],
+       "geoPoint": {
+        "lat": 41.37732,
+        "lon": 2.08809
+       }
+      },
+      {
+       "facility": "Hospital Ruber Internacional",
+       "status": "RECRUITING",
+       "city": "Madrid",
+       "zip": "28035",
+       "country": "Spain",
+       "contacts": [
+        {
+         "name": "Antonio Gil-Nagel Rein, Dr",
+         "role": "CONTACT",
+         "phone": "+34913875250",
+         "email": "gilnagel.ensayos@neurologiaclinica.es"
+        }
+       ],
+       "geoPoint": {
+        "lat": 40.4165,
+        "lon": -3.70256
+       }
+      }
+     ]
+    },
+    "ipdSharingStatementModule": {
+     "ipdSharing": "YES",
+     "description": "Qualified scientific and medical researchers can request access to anonymized patient-level and study-level clinical trial data.\n\nAccess can be requested for all interventional clinical studies:\n\n* used for Marketing Authorization (MA) of medicines and new indications approved after 1 January 2014 in the European Economic Area (EEA) or the United States (US).\n* where Servier is the Marketing Authorization Holder (MAH). The date of the first MA of the new medicine (or the new indication) in one of the EEA Member States will be considered for this scope.\n\nIn addition, access can be requested for all interventional clinical studies in patients:\n\n* sponsored by Servier\n* with a first patient enrolled as of 1 January 2004 onwards\n* for New Chemical Entity or New Biological Entity (new pharmaceutical form excluded) for which development has been terminated before any Marketing authorization (MA) approval.",
+     "infoTypes": [
+      "STUDY_PROTOCOL",
+      "SAP",
+      "ICF",
+      "CSR"
+     ],
+     "timeFrame": "After Marketing Authorisation in EEA or US if the study is used for the approval",
+     "accessCriteria": "Researchers should register on Servier Data Portal and fill in the research proposal form. This form in four parts should be fully documented. The Research Proposal Form will not be reviewed until all mandatory fields are completed."
+    }
+   },
+   "derivedSection": {
+    "miscInfoModule": {
+     "versionHolder": "2026-10-09"
+    }
+   },
+   "hasResults": false
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT07600736",
+     "orgStudyIdInfo": {
+      "id": "ABS1230-1101"
+     },
+     "organization": {
+      "fullName": "Actio Biosciences, Inc.",
+      "class": "INDUSTRY"
+     },
+     "briefTitle": "A Study to Investigate the Safety, Tolerability, Pharmacokinetics, and Clinical Activity of ABS-1230 in Pediatric and Young Adult Participants With KCNT1-related Epilepsy",
+     "officialTitle": "A Phase 1b/2 Study to Assess the Safety, Tolerability, Pharmacokinetics, and Clinical Activity of ABS-1230 Administered to Pediatric and Young Adult Participants With KCNT1-Related Epilepsy",
+     "acronym": "KYRON"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2026-08",
+     "overallStatus": "RECRUITING",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2026-05-18",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2027-01",
+      "type": "ESTIMATED"
+     },
+     "completionDateStruct": {
+      "date": "2028-01",
+      "type": "ESTIMATED"
+     },
+     "studyFirstSubmitDate": "2026-05-14",
+     "studyFirstSubmitQcDate": "2026-05-14",
+     "studyFirstPostDateStruct": {
+      "date": "2026-05-22",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2026-08-05",
+     "lastUpdatePostDateStruct": {
+      "date": "2026-08-07",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR"
+     },
+     "leadSponsor": {
+      "name": "Actio Biosciences, Inc.",
+      "class": "INDUSTRY"
+     }
+    },
+    "oversightModule": {
+     "oversightHasDmc": true,
+     "isFdaRegulatedDrug": true,
+     "isFdaRegulatedDevice": false
+    },
+    "descriptionModule": {
+     "briefSummary": "This trial will evaluate the safety, tolerability, pharmacokinetics, and clinical activity of ABS-1230 compared with placebo in participants with KCNT1-related epilepsy",
+     "detailedDescription": "This is a Phase 1b/2 study that consists of 3 parts.\n\nIn part 1, participants will receive ABS-1230 for 12 weeks, with a follow-up period of 2 weeks.\n\nIn part 2, participants will receive ABS-1230 or placebo for 12 weeks, with a follow-up period of 2 weeks.\n\nAll participants who complete part 1 or part 2 will have the option to continue receiving ABS-1230 in an open-label extension study (part 3)."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "KCNT1-Related Epilepsy"
+     ]
+    },
+    "designModule": {
+     "studyType": "INTERVENTIONAL",
+     "phases": [
+      "PHASE2"
+     ],
+     "designInfo": {
+      "allocation": "RANDOMIZED",
+      "interventionModel": "PARALLEL",
+      "primaryPurpose": "TREATMENT",
+      "maskingInfo": {
+       "masking": "TRIPLE",
+       "maskingDescription": "Part 1 will be open-label. Part 2 of the study will be conducted in a randomized double-blind manner. Part 3 will be an open-label extension.",
+       "whoMasked": [
+        "PARTICIPANT",
+        "CARE_PROVIDER",
+        "INVESTIGATOR"
+       ]
+      }
+     },
+     "enrollmentInfo": {
+      "count": 55,
+      "type": "ESTIMATED"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "ABS-1230 (Part 1)",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: ABS-1230"
+       ]
+      },
+      {
+       "label": "ABS-1230 (Part 2)",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: ABS-1230"
+       ]
+      },
+      {
+       "label": "Placebo (Part 2)",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: Placebo"
+       ]
+      },
+      {
+       "label": "ABS-1230 (Part 3)",
+       "type": "EXPERIMENTAL",
+       "interventionNames": [
+        "Drug: ABS-1230"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "ABS-1230",
+       "description": "Daily",
+       "armGroupLabels": [
+        "ABS-1230 (Part 1)",
+        "ABS-1230 (Part 2)",
+        "ABS-1230 (Part 3)"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Placebo",
+       "description": "Daily",
+       "armGroupLabels": [
+        "Placebo (Part 2)"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Part 1: Safety and tolerability of ABS-1230 (incidence and severity of adverse events)",
+       "description": "Safety and tolerability of ABS-1230 by determining the incidence and severity of treatment emergent adverse events",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 12 weeks)"
+      },
+      {
+       "measure": "Part 2: Efficacy of ABS-1230",
+       "description": "Percentage change from baseline in countable motor seizures (normalized per 28 days) as recorded in the seizure diary",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 12 weeks)"
+      },
+      {
+       "measure": "Part 3: Safety and tolerability of ABS-1230 (incidence and severity of adverse events)",
+       "description": "Safety and tolerability of ABS-1230 by determining the incidence and severity of treatment emergent adverse events",
+       "timeFrame": "Measured from Day 1 of Part 3 to End of Study or Early Termination (up to 1 year)"
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Maximum Plasma Concentration [Cmax] of ABS-1230",
+       "description": "Pharmacokinetics of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 12 weeks)"
+      },
+      {
+       "measure": "Total Exposure [AUCtau] ABS-1230",
+       "description": "Pharmacokinetics of ABS-1230",
+       "timeFrame": "Measured from Day 1 to End of Study or Early Termination (up to 12 weeks)"
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria:\n\n* Aged 1 month to \\<22 years\n* Clinician-confirmed diagnosis of KCNT1-related epilepsy\n* Has an average of at least 4 countable motor seizures per week\n* Is taking no more than 6 antiseizure medications (ASM) and is able to keep stable doses of ASMs for the duration of Part 1 or Part 2\n\nExclusion Criteria:\n\n* Is currently taking phenytoin, carbamazepine, stiripentol, or quinidine\n* Has a medical condition that, in the opinion of the investigator, would limit the participant's ability to participate in the study or might compromise participant safety or interfere with evaluation of the study drug.",
+     "healthyVolunteers": false,
+     "sex": "ALL",
+     "minimumAge": "1 Month",
+     "maximumAge": "21 Years",
+     "stdAges": [
+      "CHILD",
+      "ADULT"
+     ]
+    },
+    "contactsLocationsModule": {
+     "centralContacts": [
+      {
+       "name": "Medical Director Actio Biosciences, Inc.",
+       "role": "CONTACT",
+       "phone": "+1 (858) 682-4042",
+       "email": "info@actiobiosciences.com"
+      }
+     ],
+     "locations": [
+      {
+       "facility": "Northeast Regional Epilepsy Group",
+       "status": "RECRUITING",
+       "city": "Hackensack",
+       "state": "New Jersey",
+       "zip": "07601",
+       "country": "United States",
+       "contacts": [
+        {
+         "name": "Hardik Rana",
+         "role": "CONTACT",
+         "phone": "551-497-5000",
+         "email": "HRana@epilepsygroup.com"
+        },
+        {
+         "name": "Eric Segal, MD",
+         "role": "PRINCIPAL_INVESTIGATOR"
+        }
+       ],
+       "geoPoint": {
+        "lat": 40.88593,
+        "lon": -74.04347
+       }
+      }
+     ]
+    },
+    "ipdSharingStatementModule": {
+     "ipdSharing": "NO"
+    }
+   },
+   "derivedSection": {
+    "miscInfoModule": {
+     "versionHolder": "2026-10-09"
+    }
+   },
+   "hasResults": false
+  },
+  {
+   "protocolSection": {
+    "identificationModule": {
+     "nctId": "NCT05450822",
+     "orgStudyIdInfo": {
+      "id": "H-21031962"
+     },
+     "organization": {
+      "fullName": "Copenhagen University Hospital, Rigshospitalet",
+      "class": "OTHER"
+     },
+     "briefTitle": "Precision Medicine in the Treatment of Epilepsy",
+     "officialTitle": "The BrainDrugs-Epilepsy Study: A Prospective Open-label Cohort Precision Medicine Study in Epilepsy",
+     "acronym": "BDE"
+    },
+    "statusModule": {
+     "statusVerifiedDate": "2024-04",
+     "overallStatus": "RECRUITING",
+     "expandedAccessInfo": {
+      "hasExpandedAccess": false
+     },
+     "startDateStruct": {
+      "date": "2022-02-18",
+      "type": "ACTUAL"
+     },
+     "primaryCompletionDateStruct": {
+      "date": "2026-12-31",
+      "type": "ESTIMATED"
+     },
+     "completionDateStruct": {
+      "date": "2031-12-31",
+      "type": "ESTIMATED"
+     },
+     "studyFirstSubmitDate": "2022-07-05",
+     "studyFirstSubmitQcDate": "2022-07-05",
+     "studyFirstPostDateStruct": {
+      "date": "2022-07-11",
+      "type": "ACTUAL"
+     },
+     "lastUpdateSubmitDate": "2024-04-09",
+     "lastUpdatePostDateStruct": {
+      "date": "2024-04-11",
+      "type": "ACTUAL"
+     }
+    },
+    "sponsorCollaboratorsModule": {
+     "responsibleParty": {
+      "type": "SPONSOR_INVESTIGATOR",
+      "investigatorFullName": "Gitte Moos Knudsen",
+      "investigatorTitle": "professor, MD neurology",
+      "investigatorAffiliation": "Copenhagen University Hospital, Rigshospitalet"
+     },
+     "leadSponsor": {
+      "name": "Gitte Moos Knudsen",
+      "class": "OTHER"
+     }
+    },
+    "oversightModule": {
+     "oversightHasDmc": false,
+     "isFdaRegulatedDrug": false,
+     "isFdaRegulatedDevice": false
+    },
+    "descriptionModule": {
+     "briefSummary": "Primary objectives:\n\nThe purpose of this study is to identify single and composite biomarkers (from neuroimaging, electrophysiological, and non-imaging biological measures), clinical measures (from cognitive, psychometric, and behavioral test scores), and risk/protective factors (e.g., from medical history, socioeconomic status, coping, lifestyle) that can:\n\n1. Predict antiseizure medication (ASM) treatment outcome, psychiatric, cognitive, or behavioral comorbidities, and quality of life in newly diagnosed epilepsy patients (Cohort II-III).\n2. Predict a second epileptic seizure/epilepsy diagnosis and behavioral, cognitive, psychiatric dysfunction and quality of life in patients after a first epileptic seizure (Cohort I).",
+     "detailedDescription": "Material and methods:\n\nThe BrainDrugs Epilepsy Study will be conducted as an open, longitudinal, prospective cohort study. The study consists of three patient cohorts:\n\nCohort I includes patients with a first epileptic seizure who will undergo basic clinical, cognitive, psychometric, and biological (blood) assessment, as well as electroencephalography (EEG) and Magnetic Resonance Imaging (MRI) neuroimaging.\n\nCohort II includes patients newly diagnosed with epilepsy who will undergo additional clinical, cognitive, psychometric, and biological (blood and stool) assessment as well as EEG and MRI neuroimaging.\n\nCohort III includes a subset of patients from Cohort II who they also undergo Positron Emission Tomography (PET) synaptic vesicle glycoprotein 2A (SV2A) neuroimaging.\n\nData from healthy controls will be collected, the investigative program for whom will be similar to that of Cohort III.\n\nAfter completing the baseline investigation program, patients diagnosed with epilepsy will start ASM treatment with lamotrigine or levetiracetam, in accordance with standard treatment procedures. If the first ASM does not lead to seizure-freedom, the patients will be offered to switch to the other. Patients will be monitored every three months in the epilepsy outpatient clinic or by video or telephone consultations. For daily monitoring, a digital solution will be used, including a mobile app for patients and a web dashboard for health professionals\n\nThe mobile app contains a study module with content tailor-made for the BrainDrugs Epilepsy Study. Patients will be instructed to use the app once daily to register compliance and disease progression. Patients will complete monthly questionnaires (NDDI-E, GAD-7, LAEP, PGIC, SSQ, STAXI-2 and WHO-5) through the app tracking depressive symptoms, anxiety, adverse reactions, treatment response, seizure frequency and severity, aggression, and quality of life.\n\nThe investigators aim to include a total of 350 patients and 50 healthy subjects during the first three years of the study. All patients will be followed for five years. In addition, data from Danish health registries and electronic patient records will be used to characterize patients both retrospectively (e.g., information about birth complications) and prospectively (e.g., clinical status) during the study period.\n\nIn Cohort I, investigators will include a total of 200 patients (\u226516 years old) who have been referred to clinical care after experiencing their first epileptic seizure, but do not fulfil the diagnostic criteria for epilepsy. In Cohort II, investigators will include a total of 150 newly diagnosed patients with epilepsy (\u226516 years old). During the observational period, investigators expect at least 70 patients from Cohort I to be diagnosed with epilepsy upon experiencing their second epileptic seizure. These patients will subsequently be included in Cohort II. Lastly, Cohort III will be a subset of approximately 45 adult patients (\u226518 years old) from Cohort II with focal onset seizures who will undergo investigation with PET.\n\nAfter inclusion in the study, the patients will undergo an examination program at baseline and follow-up (1, 3 and 5 years after inclusion) that includes a study nurse interview with setup of the mobile app, neuropsychiatric interview and examination, neuropsychological tests and self-report questionnaires, high density EEG, MRI brain scan including (T1, T2, fluid-attenuated inversion recovery (FLAIR), diffusion tensor imaging (DTI), arterial spin labeling (ASL) and functional magnetic resonance imaging (fMRI)) and blood and urine samples as well as gut microbiome samples (Cohort II-III). In addition, adult patients in Cohort III will undergo a \\[11C\\]-UCB-J PET brain scan followed by intravenous administration of levetiracetam (LEV) in a displacement paradigm.\n\nFor patients in Cohort III treated with LEV, if both symptoms and extended examinations are compatible with either 1) the development of an epilepsy-related comorbidity, 2) clinically significant adverse reactions or adverse events, 3) drug treatment failure, or 4) drug resistance, a repeated \\[11C\\]-UCB-J PET brain scan will be acquired prior to change in ASM treatment.\n\nAfter inclusion in the study all healthy controls (HCs) will undergo an examination program similar to Cohort III. HCs will not be followed over time. The mobile app will only be used by patients.\n\nPrimary hypotheses:\n\n1. Combined biomarkers from morphometric measurements (e.g., the volume of thalamus and hippocampus, cortical thickness of precentral gyri, parahippocampal cortex, entorhinal and fusiform gyri, precuneus, frontal gyri), within-network resting-state functional connectivity (rsfMRI), whole-brain structural connectomics (Diffusion Tensor Imaging, DTI) and functional connectivity in the theta band (EEG) at baseline can be used to predict the chance of a recurrent seizure (Cohort I).\n2. Combined biomarkers from morphometric measurements (e.g., the volume of amygdala and hippocampus, cortical thickness of orbitofrontal cortex), resting-state functional connectivity in the anterior cingulate cortex, between prefrontal-limbic systems, angular gyrus, temporal lobe, precuneus, cerebellum, default mode network, and executive control network (rsfMRI), structural connectivity between temporal lobe, the limbic system and orbitofrontal cortex (DTI) and functional connectivity in the anterior cingulate cortex, frontal and occipital alpha asymmetry and theta current source density in the anterior cingulate cortex (EEG) at epilepsy diagnosis can be used to predict the risk of developing drug-failure and epilepsy-related comorbidities (Cohort II-III).\n3. Cerebral \\[11C\\]-UCB-J binding at baseline both globally and in primary volumes of interest, i.e., hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala correlate negatively with epilepsy-related comorbidities e.g., depressive episodes and cognitive deficits (Cohort III and healthy).\n4. Cerebral \\[11C\\]-UCB-J PET SV2A occupancy following a displacement paradigm with levetiracetam is associated with a decrease in cerebral blood flow in the epileptogenic lesions(s) (patients) and in primary volumes of interest, i.e., hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate, and amygdala cortex in healthy controls and in patients who become seizure free with levetiracetam treatment (Cohort III and healthy)."
+    },
+    "conditionsModule": {
+     "conditions": [
+      "Epilepsy"
+     ],
+     "keywords": [
+      "epilepsy",
+      "precision medicine",
+      "treatment targets",
+      "biomarkers",
+      "high density EEG",
+      "gut microbiome",
+      "longitudinal",
+      "levetiracetam",
+      "lamotrigine",
+      "neuroimaging",
+      "machine learning",
+      "treatment response",
+      "PET",
+      "MRI",
+      "Psychometrics"
+     ]
+    },
+    "designModule": {
+     "studyType": "OBSERVATIONAL",
+     "patientRegistry": false,
+     "designInfo": {
+      "observationalModel": "COHORT",
+      "timePerspective": "PROSPECTIVE"
+     },
+     "bioSpec": {
+      "retention": "SAMPLES_WITH_DNA",
+      "description": "Blood and stool.\n\nBlood-derived neurotrophic factor (BDNF), S100B, inflammatory markers and purine concentrations.\n\nGenes involved with GABA-ergic, glutamatergic and dopaminergic neurotransmission, GRIN2A/B, CLDN5, PIGA, PIGV, PIGT, ALDH7A1, PNPO, SLC2A1, PDYN, MTHFR, PCDH7, NRG, BDNF, MMP-2/3, TRKB, SV2A, SYNGAP1, SNAP25, HLA-B\\*15:02, HLA-A\\*31:01, HLA-A\\*11:01, CYP2D6, CYP2C9, CYP2C19, UGT1A1, ABCB1, ABCC1, CLCN4, SCN1-3A, SCN8A, KCNA2, KCNT1, KCNQ2/3, KCNJ10, HCN1A, GABRA1, ASIC1a, AQP4, neuropeptide Y.\n\nEpigenetics: microRNA, TSC1/2, NPRL2/3, DEPDC5, AK3, MECP2, ARX, SCN2/3/8A, KCNQ3, GABRG2, GABRA1, GABRB2/3.\n\nShotgun DNA sequencing will be performed on gut microbial DNA.\n\nThe analysis of genetic biomarkers may change during the study period."
+     },
+     "enrollmentInfo": {
+      "count": 550,
+      "type": "ESTIMATED"
+     }
+    },
+    "armsInterventionsModule": {
+     "armGroups": [
+      {
+       "label": "Healthy Controls",
+       "description": "Healthy volunteers with no pre-existing or current psychiatric, neurological or server somatic illness.",
+       "interventionNames": [
+        "Drug: Levetiracetam"
+       ]
+      },
+      {
+       "label": "Cohort I",
+       "description": "Patients who have a history of only one epileptic seizure."
+      },
+      {
+       "label": "Cohort II",
+       "description": "Patients who are newly diagnosed with epilepsy.",
+       "interventionNames": [
+        "Drug: Levetiracetam Tablets",
+        "Drug: Lamotrigine tablet"
+       ]
+      },
+      {
+       "label": "Cohort III",
+       "description": "Patients who are newly diagnosed with epilepsy and have an epileptogenic lesion on MRI concordant with seizure semiology and/or EEG.",
+       "interventionNames": [
+        "Drug: Levetiracetam"
+       ]
+      }
+     ],
+     "interventions": [
+      {
+       "type": "DRUG",
+       "name": "Levetiracetam",
+       "description": "Healthy subjects and patients in Cohort III will undergo a 120 min. \\[11C\\]-UCB-J PET-MR brain scan followed by intravenous administration of levetiracetam after approx. 60 min. in a displacement paradigm. Before, during and after the intervention arterial spin labeling and resting-state functional MRI will be acquired.\n\nTo measure the radiolabelled tracer's arterial input function, including its radiolabelled metabolites, blood samples will be drawn during the PET scan from an arterial catheter.\n\nThe selected regions for the primary analyses are the epileptogenic lesion(s) (patients) and the neocortex, hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala. \\[11C\\]-UCB-J binding, volume of distribution and SV2A occupancy will be quantified by analyzing the PET images with well-validated kinetic models.",
+       "armGroupLabels": [
+        "Cohort III",
+        "Healthy Controls"
+       ],
+       "otherNames": [
+        "[11C]-UCB-J PET-MR scan"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Levetiracetam Tablets",
+       "description": "Patients in Cohort II will be randomized to treatment with an ASM (levetiracetam) in accordance with standard treatment procedures. The patients will enter a 4 weeks titration period receiving increasing doses. During weeks 5-30, patients will enter an evaluation period where the dose can be increased (continued seizures) or decreased (adverse reactions). In cases of unacceptable seizure control and/or intolerable adverse reactions; shift to lamotrigine arm.",
+       "armGroupLabels": [
+        "Cohort II"
+       ],
+       "otherNames": [
+        "Levetiracetam"
+       ]
+      },
+      {
+       "type": "DRUG",
+       "name": "Lamotrigine tablet",
+       "description": "Patients in Cohort II will be randomized to treatment with an ASM (lamotrigine) in accordance with standard treatment procedures. The patients will enter a 6 weeks titration period receiving increasing doses. During weeks 5-30, patients will enter an evaluation period where the dose can be increased (continued seizures) or decreased (adverse reactions). In cases of unacceptable seizure control and/or intolerable adverse reactions; shift to levetiracetam arm.",
+       "armGroupLabels": [
+        "Cohort II"
+       ],
+       "otherNames": [
+        "Lamotrigine"
+       ]
+      }
+     ]
+    },
+    "outcomesModule": {
+     "primaryOutcomes": [
+      {
+       "measure": "Categorical effect of anti-seizure medication (ASM) on treatment outcome (Cohort II-III).",
+       "description": "1\\) Seizure-free within six months after starting ASM treatment and remained seizure-free for at least one year (last observed seizure within the six months after starting ASM treatment); 2) Seizure-free more than six months after starting ASM treatment and the seizure-free period lasts at least one year; 3) Fluctuations with both seizure-freedom and seizure-relapse; or 4) Never seizure-free for a year at the third- and fifth-year follow-up timepoint.",
+       "timeFrame": "As change over time from the ASM evaluation period (after 4-7 weeks titration period) to six months, one, three and five years after for patients in cohort II-III."
+      },
+      {
+       "measure": "Categorical effect of a second seizure/epilepsy diagnosis for patients in Cohort I.",
+       "description": "The proportion of patients in Cohort I with one epileptic seizure who become diagnosed with epilepsy.",
+       "timeFrame": "As change over time of epilepsy diagnosis at six months, one, three and five years after inclusion of patients in Cohort I."
+      }
+     ],
+     "secondaryOutcomes": [
+      {
+       "measure": "Continuous treatment outcome using a seizure severity index (Cohort II-III).",
+       "description": "Treatment outcome as percentage change in the Seizure Severity Questionnaire (SSQ).",
+       "timeFrame": "As a monthly change over time from the ASM evaluation period (after 4-7 weeks titration period) to one, three and five years after for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous treatment outcome rating adverse events (Cohort II-III).",
+       "description": "Treatment outcome as percentage change in the Liverpool Adverse Event Profile (LAEP).",
+       "timeFrame": "As a monthly change over time from baseline and one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous treatment outcome rating impression of change (Cohort II-III).",
+       "description": "Treatment outcome as percentage change in in Patient's Global Impression of Change (PGIC).",
+       "timeFrame": "As a monthly change over time from the ASM evaluation period (after 4-7 weeks titration period) to one, three and five years after for patients in cohort II-III."
+      },
+      {
+       "measure": "A continuous rating of depression diagnosis (Cohort I-III and healthy).",
+       "description": "Percentage change in Major Depression Inventory (MDI).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "A continuous rating of depressive symptoms (Cohort I-III and healthy).",
+       "description": "Percentage change in Inventory of Depressive Symptomatology (IDS-SR30).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "A continuous rating of specific depressive symptoms associated with neurological disease (Cohort I-III and healthy).",
+       "description": "Percentage change in the Neurological Disorders Depression Inventory for Epilepsy (NDDI-E).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as a monthly change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Categorical outcome of psychiatric symptoms (Cohort I-III and healthy).",
+       "description": "Psychopathology assessed by WHO International Classification of Diseases 10 (ICD-10) diagnostic classification and a semi-structured psychiatric, clinical interview.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "A continuous rating of symptoms of anxiety (Cohort I-III and healthy).",
+       "description": "Percentage change in the Generalized Anxiety Disorder 7-item (GAD-7).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as a monthly change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Performance in EMOTICOM Emotional Recognition Task (ERT-eyes) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in recognizing facial expressions and emotions.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Performance in Rey Auditory Verbal Learning Test (RAVLT) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in verbal learning and memory.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Performance in D-KEFS Color-Word Interference Test (Stroop) (Cohort II-III and healthy).",
+       "description": "Differences between healthy controls and patients in executive function.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Performance in D-KEFS Verbal Fluency (Fluency) (Cohort II-III and healthy).",
+       "description": "Differences between healthy controls and patients in executive function.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "A continuous rating of Wechsler Adult Intelligence Scale (WAIS-IV) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in IQ and specific index scores measured as percentage change in Wechsler Adult Intelligence Scale (WAIS-IV).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Performance in Rey Complex Figure Test (RCFT) (Cohort II-III and healthy).",
+       "description": "Differences between healthy controls and patients in visio-spatial learning.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to 1, 3 and 5 years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Performance in Boston Naming Test (BNT) (Cohort II-III and healthy).",
+       "description": "Differences between patient cohorts in word-retrieval.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Performance in Trail Making Test A & B (Trail A & B) (Cohort II-III and healthy).",
+       "description": "Differences between patient cohorts in psychomotor speed.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "A continuous rating of Quality of Life in Epilepsy (QUOLIE-31) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in quality of life measured as percentage change in Quality of Life in Epilepsy (QUOLIE-31).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to 1, 3 and 5 years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "A continuous rating of Sheehans Disability Score (SDS) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in quality of life measured as percentage change in Sheehans Disability Score (SDS).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "A continuous rating of WHO 5 wellbeing index (WHO-5) (Cohort I-III and healthy).",
+       "description": "Differences between healthy controls and patients in quality of life measured as percentage change in WHO 5 wellbeing index.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as a monthly change over time from baseline and one, three and five years after inclusion for patients in cohort II-III."
+      }
+     ],
+     "otherOutcomes": [
+      {
+       "measure": "Continuous treatment outcome rating state aggression (Cohort II-III and healthy).",
+       "description": "Treatment outcome as percentage change in the State-Trait Anger Expression Inventory 2 (STAXI-2).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as a monthly change over time from baseline and one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous treatment outcome rating trait aggression (Cohort II-III and healthy).",
+       "description": "Treatment outcome as percentage change in the Aggression Questionnaire (AQ).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous treatment outcome as a measure of self-management of epilepsy (Cohort II-III).",
+       "description": "Treatment outcome as percentage change in the Epilepsy Self-management Scale.",
+       "timeFrame": "As change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous treatment outcome as a measure of expectations to treatment outcome (Cohort II-III).",
+       "description": "Treatment outcome as percentage change in the Epilepsy Outcome Expectancy Scale.",
+       "timeFrame": "As change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous outcome as epilepsy stigmatization (Cohort II-III).",
+       "description": "Percentage change in the Epilepsy Stigmatization Scale.",
+       "timeFrame": "As change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "A continuous rating of depression (Cohort I-III and healthy).",
+       "description": "Percentage change in the Becks Depression Inventory (BDI).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of subjective, cognitive complains (Cohort I-III and healthy).",
+       "description": "Percentage change in the self-report Cognitive Complaints in Bipolar Disorder Rating Assesment.(COBRA).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of perceived stress (Cohort I-III and healthy).",
+       "description": "Percentage change in the Cohen's Perceived Stress Scale (PSS).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of personality traits (Cohort I-III and healthy).",
+       "description": "Percentage change in NEO Personality Inventory 3 (NEO-FFI-3).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of the psychological impact of traumatic event (first seizure/epilepsy diagnosis) (Cohort I-III).",
+       "description": "Percentage change in Impact of Event Scale-Revised (IES-R).",
+       "timeFrame": "As change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of coping strategies (Cohort I-III and healthy).",
+       "description": "Percentage change in Coping Self-Efficacy Scale (CSES).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Continuous outcome of sleep quality (Cohort II-III and healthy).",
+       "description": "Percentage change in Pittsburgh Sleep Quality Index (PSQI).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Continuous outcome of negative life events (Cohort II-III and healthy).",
+       "description": "Percentage change in Stressful Life Event scale (SLE).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Genotyping of epilepsy candidate genes at baseline between Cohort I-III and healthy controls.",
+       "description": "Genotyping of epilepsy candidate genes at baseline such as genes involved with GABA-ergic, glutamatergic and dopaminergic neurotransmission, GRIN2A/B, CLDN5, PIGA, PIGV, PIGT, ALDH7A1, PNPO, SLC2A1, PDYN, MTHFR, PCDH7, NRG, BDNF, MMP-2/3, TRKB, SV2A, SYNGAP1, SNAP25, HLA-B\\*15:02, HLA-A\\*31:01, HLA-A\\*11:01, CYP2D6, CYP2C9, CYP2C19, UGT1A1, ABCB1, ABCC1, CLCN4, SCN1-3A, SCN8A, KCNA2, KCNT1, KCNQ2/3, KCNJ10, HCN1A, GABRA1, ASIC1a, AQP4, neuropeptide Y.",
+       "timeFrame": "At baseline between groups (HCs and patients)."
+      },
+      {
+       "measure": "Epigenetic changes in Cohort I-III and healthy controls.",
+       "description": "Epigenetic mechanisms and regulation of microRNA, TSC1/2, NPRL2/3, DEPDC5, AK3, MECP2, ARX, SCN2/3/8A, KCNQ3, GABRG2, GABRA1, GABRB2/3.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Gut microbial biomarkers for drug treatment response (Cohort II-III).",
+       "description": "Identify microbial biomarkers between patients with drug failure vs. patients with no drug failure in Cohort II-III.",
+       "timeFrame": "As change over time from baseline to one year after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Baseline gut microbial biomarkers (Cohort II-III and healthy).",
+       "description": "Identify microbial biomarkers between healthy subjects and patients in cohort II-III.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Gut microbial signatures between epilepsy subtypes (Cohort II-III).",
+       "description": "Identify functional microbial signatures between patients in cohort II-III.",
+       "timeFrame": "As change over time from baseline to one year after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Gut microbial signatures for psychiatric symptoms (Cohort II-III).",
+       "description": "Identify functional microbial signatures between patients with and without psychiatric symptoms in cohort II-III.",
+       "timeFrame": "As change over time from baseline to one year after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Changes from baseline to follow-up in intelligence quotient (IQ) and index scores and cerebral synaptic vesicle glycoprotein 2A (SV2A) binding as imaged by [11C]-UCB-J PET (Cohort III and healthy).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding and IQ measured as percentage change in Wechsler Adult Intelligence Scale (WAIS-IV) and quantification of binding both globally and in primary volumes of interest; neocortex, hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala in patients from cohort III and healthy controls.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding in patients with cognitive impairment vs. no cognitive impairment imaged by [11C]-UCB-J PET (Cohort III and healthy).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding between patients without cognitive impairment vs. patients with cognitive impairment in primary volumes of interest; neocortex, hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala in patients from cohort III and healthy controls.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to the development of a potential cognitive dysfunction and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding as imaged by [11C]-UCB-J PET (Cohort III and healthy).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding both globally and in primary volumes of interest; neocortex, hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala in patients and healthy controls.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding between drug failure vs. no drug failure as imaged by [11C]-UCB-J PET (Cohort III).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding and SV2A occupancy in the epileptogenic lesion(s) in patients with drug failure vs. no drug failure.",
+       "timeFrame": "As change over time from baseline to potential drug failure and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding between patients with drug resistance vs. no drug resistance as imaged by [11C]-UCB-J PET (Cohort III).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding and SV2A occupancy in the epileptogenic lesion(s) in patients with drug resistance vs. no drug resistance.",
+       "timeFrame": "As change over time from baseline to potential drug resistance and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral [11C]-UCB-J PET SV2A occupancy and arterial spin labeling following intravenous administration of the ASM levetiracetam (Cohort III and healthy).",
+       "description": "Latent variable construct of the \\[11C\\]-UCB-J PET SV2A occupancy and arterial spin labeling after a levetiracetam displacement paradigm in healthy controls compared with patients.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to potential drug failure and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral [11C]-UCB-J PET SV2A occupancy and arterial spin labeling following intravenous administration of the ASM levetiracetam (Cohort III and healthy).",
+       "description": "Latent variable construct of the \\[11C\\]-UCB-J PET SV2A occupancy and arterial spin labeling after a levetiracetam displacement paradigm in healthy controls compared with patients.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to potential development of side effects and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral [11C]-UCB-J PET SV2A occupancy and resting-state functional connectivity following intravenous administration of the ASM levetiracetam (Cohort III and healthy).",
+       "description": "Latent variable construct of the \\[11C\\]-UCB-J PET SV2A occupancy and resting-state functional connectivity after a levetiracetam displacement paradigm in healthy controls compared with patients.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to potential drug failure and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral [11C]-UCB-J PET SV2A occupancy and resting-state functional connectivity following intravenous administration of the ASM levetiracetam (Cohort III and healthy).",
+       "description": "Latent variable construct of the \\[11C\\]-UCB-J PET SV2A occupancy and resting-state functional connectivity after a levetiracetam displacement paradigm in healthy controls compared with patients.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to potential development of side effects and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding between patients with side effects vs. no side effects as imaged by [11C]-UCB-J PET (Cohort III).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding and SV2A occupancy in the epileptogenic lesion(s) in patients with side effects vs. no side effects.",
+       "timeFrame": "As change over time from baseline to potential development of side effects and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral SV2A binding in patients with psychiatric symptoms vs. no psychiatric symptoms imaged by [11C]-UCB-J PET (Cohort III and healthy).",
+       "description": "Latent variable construct of \\[11C\\]-UCB-J binding between patients without psychiatric symptoms vs. patients with psychiatric symptoms in primary volumes of interest; neocortex, hippocampus, entorhinal cortex, fusiform gyrus, dorsolateral prefrontal cortex, ventrolateral prefrontal cortex, orbitofrontal cortex, striatum, anterior cingulate cortex and amygdala in patients from cohort III and healthy controls.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to a potential psychiatric diagnosis and one, three and five years after inclusion for patients in cohort III."
+      },
+      {
+       "measure": "Cerebral [11C]-UCB-J PET SV2A occupancy and the plasma concentration of the ASM levetiracetam (Cohort III and healthy).",
+       "description": "Estimation of the occupied SV2A binding sites from the plasma concentration of levetiracetam.",
+       "timeFrame": "At baseline between groups (HCs and patients)."
+      },
+      {
+       "measure": "Hippocampal volume is associated with drug failure (Cohort II-III and healthy).",
+       "description": "Structural MRI scans of hippocampus in healthy subjects and patients in cohort II-III.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort II-III."
+      },
+      {
+       "measure": "Volume of thalamus and hippocampus is associated with seizure recurrence (Cohort I-III and healthy).",
+       "description": "Structural MRI scans and volume of thalamus and hippocampus.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Cortical thickness is associated with seizure recurrence (Cohort I-III and healthy).",
+       "description": "Structural MRI scans of cortical thickness of precentral gyri, parahippocampal cortex, entorhinal and fusiform gyri, precuneus and frontal gyri.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Volume of amygdala is associated with psychiatric symptoms (Cohort I-III and healthy).",
+       "description": "Structural MRI scans and volume of amygdala.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Cortical thickness is associated with psychiatric symptoms (Cohort I-III and healthy).",
+       "description": "Structural MRI scans and cortical thickness of orbitofrontal cortex.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Within network resting-state functional connectivity (rsfMRI) is associated with seizure recurrence (Cohort I-III and healthy).",
+       "description": "Resting-state functional MRI scans and within network connectivity.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Whole-brain structural connectomics is associated with seizure recurrence (Cohort I-III and healthy).",
+       "description": "Diffusion Tensor MRI scans and structural connectomics.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Structural connectivity is associated with psychiatric symptoms and drug failure (Cohort I-III and healthy).",
+       "description": "Diffusion Tensor MRI scan and structural connectivity between temporal lobe, the limbic system and orbitofrontal cortex (DTI).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "Between network resting-state functional connectivity (rsfMRI) is associated with psychiatric symptoms and drug failure (Cohort I-III and healthy).",
+       "description": "Resting-state functional MRI scans and between the anterior cingulate cortex, between prefrontal-limbic systems, angular gyrus, temporal lobe, precuneus, cerebellum, default mode network and executive control network (rsfMRI).",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "High density EEG functional connectivity is associated with seizure recurrence (Cohort I-III and healthy).",
+       "description": "High density EEG functional connectivity in the theta band.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "High density EEG functional connectivity is associated with psychiatric symptoms (Cohort I-III and healthy).",
+       "description": "High density EEG functional connectivity in the anterior cingulate cortex.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      },
+      {
+       "measure": "High density EEG asymmetry and current source is associated with psychiatric symptoms (Cohort I-III and healthy).",
+       "description": "High density EEG and frontal and occipital alpha asymmetry and theta current source density in the anterior cingulate cortex.",
+       "timeFrame": "At baseline between groups (HCs and patients) and as change over time from baseline to one, three and five years after inclusion for patients in cohort I-III."
+      }
+     ]
+    },
+    "eligibilityModule": {
+     "eligibilityCriteria": "Inclusion Criteria for healthy subjects:\n\n* No history of current or past psychiatric or other major medical conditions\n\nExclusion Criteria for healthy subjects:\n\n* Current or previous neurological disease, severe somatic disease, or consumption of medical drugs likely to influence the test results\n* Non-fluent in Danish or pronounced visual or auditory impairments\n* Current or past learning disability\n* Pregnancy or lactation (females)\n* Participation in experiments with radioactivity (\\>10 mSv) within the last year or significant occupational exposure to radioactivity\n* Contraindications for MRI (pacemaker, metal implants, etc.)\n* Severe head injury\n* Alcohol or drug abuse\n* Drug use other than tobacco and alcohol within the last 30 days\n* Hash \\> 50 x lifetime\n* Drugs \\> 10 x lifetime (for each substance)\n* Current psychoactive medication\n* Any current or former primary psychiatric disorder (Axis I WHO ICD-10 diagnostic classification)\n\nInclusion Criteria for patients:\n\n* Cohort I-II: Age between 16 and 55 years\n* Cohort III: Age between 18 and 55 years\n* Cohort I: Semiology of first seizure raises a strong suspicion of epilepsy but do not fulfill International League Against Epilepsy (ILAE) diagnostic criteria\n* Cohort II-III: Diagnosed with epilepsy according to ILAE criteria\n* Cohort III: Epileptogenic lesion on MRI concordant with seizure semiology and/or EEG\n\nExclusion criteria for patients:\n\n* Cohort I-III: Life expectancy \\< 10 years\n* Cohort I-III: Known genetic syndromes, psychomotor retardation or disease associated with gross morphological brain changes such as brain tumor, major stroke or major traumatic brain injury\n* Cohort I-III: Body weight less than 40 kg\n* Cohort I-III: Reduced kidney function (i.e., glomerular filtration rate (GFR) \\< 80 ml/min or 50 ml/min for patients 16-17 years old or \u226518 years old, respectively),\n* Cohort I-III: Moderate reduced liver function\n* Cohort I-III: Cardiac conduction disorders (e.g., Brugada syndrome, long QT-syndrome)\n* Cohort I-III: Medication incompatible with study aims or causing interactions with the administered levetiracetam or lamotrigine therapy (e.g., SV2A binding agents, monoamine oxidase inhibitors, fluvoxamin, methotrexate, benzodiazepines, phenobarbital, carbamazepine, valproate, regular use of other ASMs)\n* Contraindication for MRI (e.g., magnetic implants, pacemaker)\n* Inability to complete PET (Cohort III) or MRI scans (Cohort I-III) (e.g., claustrophobia, issues with back pain)\n* Cohort III: Exposure to radioactivity \\>10 mSv within the last year or significant occupational exposure to radioactivity\n* Pregnancy or lactation\n* Cohort I-III: Non-fluency in Danish or pronounced visual or auditory impairments or severe intellectual disability\n* Cohort I-III: Current or previous alcohol or drug abuse",
+     "healthyVolunteers": true,
+     "sex": "ALL",
+     "minimumAge": "16 Years",
+     "maximumAge": "55 Years",
+     "stdAges": [
+      "CHILD",
+      "ADULT"
+     ],
+     "studyPopulation": "This study consists of three patients cohorts: In Cohort I, we will include a total of 200 patients (\u226516 years old) who have been referred to clinical care after experiencing their first epileptic seizure, but do not fulfill the diagnostic criteria for epilepsy. In Cohort II, we will include a total of 150 newly diagnosed epilepsy patients (\u226516 years old), with the expectation that at least 70 patients from Cohort I will move into Cohort II during the observational period. Additionally, a subset of approximately 45 adult patients (\u226518 years old) from Cohort II with focal onset seizures will be enrolled in Cohort III. We will also collect data from 50 healthy subjects to compare group differences at baseline.",
+     "samplingMethod": "NON_PROBABILITY_SAMPLE"
+    },
+    "contactsLocationsModule": {
+     "centralContacts": [
+      {
+       "name": "Maja Marstrand-J\u00f8rgensen, MD",
+       "role": "CONTACT",
+       "phone": "+45 35 45 36 43",
+       "email": "maja.marstrand-jorgensen@nru.dk"
+      },
+      {
+       "name": "Lars Hageman Pinborg, MD",
+       "role": "CONTACT",
+       "phone": "+45 35 45 67 12",
+       "email": "lars.pinborg@nru.dk"
+      }
+     ],
+     "overallOfficials": [
+      {
+       "name": "Lars Hageman Pinborg, MD",
+       "affiliation": "Neurobiological Research Unit",
+       "role": "PRINCIPAL_INVESTIGATOR"
+      }
+     ],
+     "locations": [
+      {
+       "facility": "Neurobiology Research Unit, Rigshospitalet",
+       "status": "RECRUITING",
+       "city": "Copenhagen",
+       "zip": "2100",
+       "country": "Denmark",
+       "contacts": [
+        {
+         "name": "Gitte M Knudsen, DMSc",
+         "role": "CONTACT",
+         "phone": "+45 35456720",
+         "email": "gmk@nru.dk"
+        },
+        {
+         "name": "Lars H. Pinborg, DMSc",
+         "role": "PRINCIPAL_INVESTIGATOR"
+        },
+        {
+         "name": "Maja R. Marstrand-Joergensen, MD",
+         "role": "SUB_INVESTIGATOR"
+        }
+       ],
+       "geoPoint": {
+        "lat": 55.67594,
+        "lon": 12.56553
+       }
+      }
+     ]
+    },
+    "referencesModule": {
+     "references": [
+      {
+       "pmid": "28276062",
+       "type": "BACKGROUND",
+       "citation": "Scheffer IE, Berkovic S, Capovilla G, Connolly MB, French J, Guilhoto L, Hirsch E, Jain S, Mathern GW, Moshe SL, Nordli DR, Perucca E, Tomson T, Wiebe S, Zhang YH, Zuberi SM. ILAE classification of the epilepsies: Position paper of the ILAE Commission for Classification and Terminology. Epilepsia. 2017 Apr;58(4):512-521. doi: 10.1111/epi.13709. Epub 2017 Mar 8."
+      },
+      {
+       "pmid": "24730690",
+       "type": "BACKGROUND",
+       "citation": "Fisher RS, Acevedo C, Arzimanoglou A, Bogacz A, Cross JH, Elger CE, Engel J Jr, Forsgren L, French JA, Glynn M, Hesdorffer DC, Lee BI, Mathern GW, Moshe SL, Perucca E, Scheffer IE, Tomson T, Watanabe M, Wiebe S. ILAE official report: a practical clinical definition of epilepsy. Epilepsia. 2014 Apr;55(4):475-82. doi: 10.1111/epi.12550. Epub 2014 Apr 14."
+      },
+      {
+       "pmid": "22573629",
+       "type": "BACKGROUND",
+       "citation": "Brodie MJ, Barry SJ, Bamagous GA, Norrie JD, Kwan P. Patterns of treatment response in newly diagnosed epilepsy. Neurology. 2012 May 15;78(20):1548-54. doi: 10.1212/WNL.0b013e3182563b19. Epub 2012 May 9."
+      },
+      {
+       "pmid": "31403463",
+       "type": "BACKGROUND",
+       "citation": "Perucca E. Antiepileptic drugs: evolution of our knowledge and changes in drug trials. Epileptic Disord. 2019 Aug 1;21(4):319-329. doi: 10.1684/epd.2019.1083."
+      },
+      {
+       "pmid": "10660394",
+       "type": "BACKGROUND",
+       "citation": "Kwan P, Brodie MJ. Early identification of refractory epilepsy. N Engl J Med. 2000 Feb 3;342(5):314-9. doi: 10.1056/NEJM200002033420503."
+      },
+      {
+       "pmid": "17267243",
+       "type": "BACKGROUND",
+       "citation": "Chung S, Wang N, Hank N. Comparative retention rates and long-term tolerability of new antiepileptic drugs. Seizure. 2007 Jun;16(4):296-304. doi: 10.1016/j.seizure.2007.01.004. Epub 2007 Jan 30."
+      },
+      {
+       "pmid": "15950714",
+       "type": "BACKGROUND",
+       "citation": "Marson A, Jacoby A, Johnson A, Kim L, Gamble C, Chadwick D; Medical Research Council MESS Study Group. Immediate versus deferred antiepileptic drug treatment for early epilepsy and single seizures: a randomised controlled trial. Lancet. 2005 Jun 11-17;365(9476):2007-13. doi: 10.1016/S0140-6736(05)66694-9."
+      },
+      {
+       "pmid": "11737159",
+       "type": "BACKGROUND",
+       "citation": "Kwan P, Brodie MJ. Effectiveness of first antiepileptic drug. Epilepsia. 2001 Oct;42(10):1255-60. doi: 10.1046/j.1528-1157.2001.04501.x."
+      },
+      {
+       "pmid": "7788108",
+       "type": "BACKGROUND",
+       "citation": "Leach JP, Brodie MJ. New antiepileptic drugs--an explosion of activity. Seizure. 1995 Mar;4(1):5-17. doi: 10.1016/s1059-1311(05)80074-3."
+      },
+      {
+       "pmid": "15210974",
+       "type": "BACKGROUND",
+       "citation": "Lynch BA, Lambeng N, Nocka K, Kensel-Hammes P, Bajjalieh SM, Matagne A, Fuks B. The synaptic vesicle protein SV2A is the binding site for the antiepileptic drug levetiracetam. Proc Natl Acad Sci U S A. 2004 Jun 29;101(26):9861-6. doi: 10.1073/pnas.0308208101. Epub 2004 Jun 21."
+      },
+      {
+       "pmid": "30664067",
+       "type": "BACKGROUND",
+       "citation": "Tomson T, Battino D, Perucca E. Teratogenicity of antiepileptic drugs. Curr Opin Neurol. 2019 Apr;32(2):246-252. doi: 10.1097/WCO.0000000000000659."
+      },
+      {
+       "pmid": "10386529",
+       "type": "BACKGROUND",
+       "citation": "Steiner TJ, Dellaportas CI, Findley LJ, Gross M, Gibberd FB, Perkin GD, Park DM, Abbott R. Lamotrigine monotherapy in newly diagnosed untreated epilepsy: a double-blind comparison with phenytoin. Epilepsia. 1999 May;40(5):601-7. doi: 10.1111/j.1528-1157.1999.tb05562.x."
+      },
+      {
+       "pmid": "17382827",
+       "type": "BACKGROUND",
+       "citation": "Marson AG, Al-Kharusi AM, Alwaidh M, Appleton R, Baker GA, Chadwick DW, Cramp C, Cockerell OC, Cooper PN, Doughty J, Eaton B, Gamble C, Goulding PJ, Howell SJ, Hughes A, Jackson M, Jacoby A, Kellett M, Lawson GR, Leach JP, Nicolaides P, Roberts R, Shackley P, Shen J, Smith DF, Smith PE, Smith CT, Vanoli A, Williamson PR; SANAD Study group. The SANAD study of effectiveness of carbamazepine, gabapentin, lamotrigine, oxcarbazepine, or topiramate for treatment of partial epilepsy: an unblinded randomised controlled trial. Lancet. 2007 Mar 24;369(9566):1000-15. doi: 10.1016/S0140-6736(07)60460-7."
+      },
+      {
+       "pmid": "29536616",
+       "type": "BACKGROUND",
+       "citation": "Yatham LN, Kennedy SH, Parikh SV, Schaffer A, Bond DJ, Frey BN, Sharma V, Goldstein BI, Rej S, Beaulieu S, Alda M, MacQueen G, Milev RV, Ravindran A, O'Donovan C, McIntosh D, Lam RW, Vazquez G, Kapczinski F, McIntyre RS, Kozicky J, Kanba S, Lafer B, Suppes T, Calabrese JR, Vieta E, Malhi G, Post RM, Berk M. Canadian Network for Mood and Anxiety Treatments (CANMAT) and International Society for Bipolar Disorders (ISBD) 2018 guidelines for the management of patients with bipolar disorder. Bipolar Disord. 2018 Mar;20(2):97-170. doi: 10.1111/bdi.12609. Epub 2018 Mar 14."
+      },
+      {
+       "pmid": "27686028",
+       "type": "BACKGROUND",
+       "citation": "Solmi M, Veronese N, Zaninotto L, van der Loos ML, Gao K, Schaffer A, Reis C, Normann C, Anghelescu IG, Correll CU. Lamotrigine compared to placebo and other agents with antidepressant activity in patients with unipolar and bipolar depression: a comprehensive meta-analysis of efficacy and safety outcomes in short-term trials. CNS Spectr. 2016 Oct;21(5):403-418. doi: 10.1017/S1092852916000523."
+      },
+      {
+       "pmid": "7710545",
+       "type": "BACKGROUND",
+       "citation": "Brodie MJ, Richens A, Yuen AW. Double-blind comparison of lamotrigine and carbamazepine in newly diagnosed epilepsy. UK Lamotrigine/Carbamazepine Monotherapy Trial Group. Lancet. 1995 Feb 25;345(8948):476-9. doi: 10.1016/s0140-6736(95)90581-2."
+      },
+      {
+       "pmid": "17283312",
+       "type": "BACKGROUND",
+       "citation": "Brodie MJ, Perucca E, Ryvlin P, Ben-Menachem E, Meencke HJ; Levetiracetam Monotherapy Study Group. Comparison of levetiracetam and controlled-release carbamazepine in newly diagnosed epilepsy. Neurology. 2007 Feb 6;68(6):402-8. doi: 10.1212/01.wnl.0000252941.50833.4a."
+      },
+      {
+       "pmid": "17079191",
+       "type": "BACKGROUND",
+       "citation": "Weintraub D, Buchsbaum R, Resor SR Jr, Hirsch LJ. Psychiatric and behavioral side effects of the newer antiepileptic drugs in adults with epilepsy. Epilepsy Behav. 2007 Feb;10(1):105-10. doi: 10.1016/j.yebeh.2006.08.008. Epub 2006 Oct 31."
+      },
+      {
+       "pmid": "27440727",
+       "type": "BACKGROUND",
+       "citation": "Finnema SJ, Nabulsi NB, Eid T, Detyniecki K, Lin SF, Chen MK, Dhaher R, Matuskey D, Baum E, Holden D, Spencer DD, Mercier J, Hannestad J, Huang Y, Carson RE. Imaging synaptic density in the living human brain. Sci Transl Med. 2016 Jul 20;8(348):348ra96. doi: 10.1126/scitranslmed.aaf6667."
+      },
+      {
+       "pmid": "30948709",
+       "type": "BACKGROUND",
+       "citation": "Holmes SE, Scheinost D, Finnema SJ, Naganawa M, Davis MT, DellaGioia N, Nabulsi N, Matuskey D, Angarita GA, Pietrzak RH, Duman RS, Sanacora G, Krystal JH, Carson RE, Esterlis I. Lower synaptic density is associated with depression severity and network alterations. Nat Commun. 2019 Apr 4;10(1):1529. doi: 10.1038/s41467-019-09562-7."
+      },
+      {
+       "pmid": "32493717",
+       "type": "BACKGROUND",
+       "citation": "Vanhaute H, Ceccarini J, Michiels L, Koole M, Sunaert S, Lemmens R, Triau E, Emsell L, Vandenbulcke M, Van Laere K. In vivo synaptic density loss is related to tau deposition in amnestic mild cognitive impairment. Neurology. 2020 Aug 4;95(5):e545-e553. doi: 10.1212/WNL.0000000000009818. Epub 2020 Jun 3."
+      },
+      {
+       "pmid": "30014145",
+       "type": "BACKGROUND",
+       "citation": "Chen MK, Mecca AP, Naganawa M, Finnema SJ, Toyonaga T, Lin SF, Najafzadeh S, Ropchan J, Lu Y, McDonald JW, Michalak HR, Nabulsi NB, Arnsten AFT, Huang Y, Carson RE, van Dyck CH. Assessing Synaptic Density in Alzheimer Disease With Synaptic Vesicle Glycoprotein 2A Positron Emission Tomographic Imaging. JAMA Neurol. 2018 Oct 1;75(10):1215-1224. doi: 10.1001/jamaneurol.2018.1836."
+      },
+      {
+       "pmid": "32944949",
+       "type": "BACKGROUND",
+       "citation": "Finnema SJ, Toyonaga T, Detyniecki K, Chen MK, Dias M, Wang Q, Lin SF, Naganawa M, Gallezot JD, Lu Y, Nabulsi NB, Huang Y, Spencer DD, Carson RE. Reduced synaptic vesicle protein 2A binding in temporal lobe epilepsy: A [11 C]UCB-J positron emission tomography study. Epilepsia. 2020 Oct;61(10):2183-2193. doi: 10.1111/epi.16653. Epub 2020 Sep 18."
+      },
+      {
+       "pmid": "23583115",
+       "type": "BACKGROUND",
+       "citation": "Mohanraj R, Brodie MJ. Early predictors of outcome in newly diagnosed epilepsy. Seizure. 2013 Jun;22(5):333-44. doi: 10.1016/j.seizure.2013.02.002. Epub 2013 Apr 11."
+      },
+      {
+       "pmid": "31121513",
+       "type": "BACKGROUND",
+       "citation": "Yao L, Cai M, Chen Y, Shen C, Shi L, Guo Y. Prediction of antiepileptic drug treatment outcomes of patients with newly diagnosed epilepsy by machine learning. Epilepsy Behav. 2019 Jul;96:92-97. doi: 10.1016/j.yebeh.2019.04.006. Epub 2019 May 20."
+      },
+      {
+       "pmid": "23032134",
+       "type": "BACKGROUND",
+       "citation": "Pauli C, Thais ME, Claudino LS, Bicalho MA, Bastos AC, Guarnieri R, Nunes JC, Lin K, Linhares MN, Walz R. Predictors of quality of life in patients with refractory mesial temporal lobe epilepsy. Epilepsy Behav. 2012 Oct;25(2):208-13. doi: 10.1016/j.yebeh.2012.06.037. Epub 2012 Sep 30."
+      },
+      {
+       "pmid": "17628429",
+       "type": "BACKGROUND",
+       "citation": "Hitiris N, Mohanraj R, Norrie J, Sills GJ, Brodie MJ. Predictors of pharmacoresistant epilepsy. Epilepsy Res. 2007 Jul;75(2-3):192-6. doi: 10.1016/j.eplepsyres.2007.06.003."
+      },
+      {
+       "pmid": "28555776",
+       "type": "BACKGROUND",
+       "citation": "Nogueira MH, Yasuda CL, Coan AC, Kanner AM, Cendes F. Concurrent mood and anxiety disorders are associated with pharmacoresistant seizures in patients with MTLE. Epilepsia. 2017 Jul;58(7):1268-1276. doi: 10.1111/epi.13781. Epub 2017 May 26."
+      },
+      {
+       "pmid": "10904452",
+       "type": "BACKGROUND",
+       "citation": "DiMatteo MR, Lepper HS, Croghan TW. Depression is a risk factor for noncompliance with medical treatment: meta-analysis of the effects of anxiety and depression on patient adherence. Arch Intern Med. 2000 Jul 24;160(14):2101-7. doi: 10.1001/archinte.160.14.2101."
+      },
+      {
+       "pmid": "21741882",
+       "type": "BACKGROUND",
+       "citation": "Hamid H, Ettinger AB, Mula M. Anxiety symptoms in epilepsy: salient issues for future research. Epilepsy Behav. 2011 Sep;22(1):63-8. doi: 10.1016/j.yebeh.2011.04.064. Epub 2011 Jul 8."
+      },
+      {
+       "pmid": "22926848",
+       "type": "BACKGROUND",
+       "citation": "Kanner AM. Psychiatric comorbidities and epilepsy: is it the old story of the chicken and the egg? Ann Neurol. 2012 Aug;72(2):153-5. doi: 10.1002/ana.23679. No abstract available."
+      },
+      {
+       "pmid": "22282649",
+       "type": "BACKGROUND",
+       "citation": "Adelow C, Andersson T, Ahlbom A, Tomson T. Hospitalization for psychiatric disorders before and after onset of unprovoked seizures/epilepsy. Neurology. 2012 Feb 7;78(6):396-401. doi: 10.1212/WNL.0b013e318245f461. Epub 2012 Jan 25."
+      },
+      {
+       "pmid": "30149996",
+       "type": "BACKGROUND",
+       "citation": "Salpekar JA, Mula M. Common psychiatric comorbidities in epilepsy: How big of a problem is it? Epilepsy Behav. 2019 Sep;98(Pt B):293-297. doi: 10.1016/j.yebeh.2018.07.023. Epub 2018 Aug 25."
+      },
+      {
+       "pmid": "16217743",
+       "type": "BACKGROUND",
+       "citation": "Hesdorffer DC, Hauser WA, Olafsson E, Ludvigsson P, Kjartansson O. Depression and suicide attempt as risk factors for incident unprovoked seizures. Ann Neurol. 2006 Jan;59(1):35-41. doi: 10.1002/ana.20685."
+      },
+      {
+       "pmid": "22887468",
+       "type": "BACKGROUND",
+       "citation": "Hesdorffer DC, Ishihara L, Mynepalli L, Webb DJ, Weil J, Hauser WA. Epilepsy, suicidality, and psychiatric disorders: a bidirectional association. Ann Neurol. 2012 Aug;72(2):184-91. doi: 10.1002/ana.23601. Epub 2012 Aug 7."
+      },
+      {
+       "pmid": "20075009",
+       "type": "BACKGROUND",
+       "citation": "Brandt C, Schoendienst M, Trentowska M, May TW, Pohlmann-Eden B, Tuschen-Caffier B, Schrecke M, Fueratsch N, Witte-Boelt K, Ebner A. Prevalence of anxiety disorders in patients with refractory focal epilepsy--a prospective clinic based survey. Epilepsy Behav. 2010 Feb;17(2):259-63. doi: 10.1016/j.yebeh.2009.12.009. Epub 2010 Jan 13."
+      },
+      {
+       "pmid": "26650853",
+       "type": "BACKGROUND",
+       "citation": "Hesdorffer DC, Ishihara L, Webb DJ, Mynepalli L, Galwey NW, Hauser WA. Occurrence and Recurrence of Attempted Suicide Among People With Epilepsy. JAMA Psychiatry. 2016 Jan;73(1):80-6. doi: 10.1001/jamapsychiatry.2015.2516."
+      },
+      {
+       "pmid": "25799904",
+       "type": "BACKGROUND",
+       "citation": "Witt JA, Helmstaedter C. Cognition in the early stages of adult epilepsy. Seizure. 2015 Mar;26:65-8. doi: 10.1016/j.seizure.2015.01.018. Epub 2015 Feb 7."
+      },
+      {
+       "pmid": "19583779",
+       "type": "BACKGROUND",
+       "citation": "Taylor J, Kolamunnage-Dona R, Marson AG, Smith PE, Aldenkamp AP, Baker GA; SANAD study group. Patients with epilepsy: cognitively compromised before the start of antiepileptic drug treatment? Epilepsia. 2010 Jan;51(1):48-56. doi: 10.1111/j.1528-1167.2009.02195.x. Epub 2009 Jul 2."
+      },
+      {
+       "pmid": "16928696",
+       "type": "BACKGROUND",
+       "citation": "Hermann B, Jones J, Sheth R, Dow C, Koehn M, Seidenberg M. Children with new-onset epilepsy: neuropsychological status and brain structure. Brain. 2006 Oct;129(Pt 10):2609-19. doi: 10.1093/brain/awl196. Epub 2006 Aug 23."
+      },
+      {
+       "pmid": "28284559",
+       "type": "BACKGROUND",
+       "citation": "Helmstaedter C, Witt JA. Epilepsy and cognition - A bidirectional relationship? Seizure. 2017 Jul;49:83-89. doi: 10.1016/j.seizure.2017.02.017. Epub 2017 Mar 1."
+      },
+      {
+       "pmid": "24333577",
+       "type": "BACKGROUND",
+       "citation": "Helmstaedter C, Aldenkamp AP, Baker GA, Mazarati A, Ryvlin P, Sankar R. Disentangling the relationship between epilepsy and its behavioral comorbidities - the need for prospective studies in new-onset epilepsies. Epilepsy Behav. 2014 Feb;31:43-7. doi: 10.1016/j.yebeh.2013.11.010. Epub 2013 Dec 13."
+      },
+      {
+       "pmid": "22580844",
+       "type": "BACKGROUND",
+       "citation": "Witt JA, Helmstaedter C. Should cognition be screened in new-onset epilepsies? A study in 247 untreated patients. J Neurol. 2012 Aug;259(8):1727-31. doi: 10.1007/s00415-012-6526-2. Epub 2012 May 12."
+      },
+      {
+       "pmid": "20658245",
+       "type": "BACKGROUND",
+       "citation": "Westerhuis W, Zijlmans M, Fischer K, van Andel J, Leijten FS. Coping style and quality of life in patients with epilepsy: a cross-sectional study. J Neurol. 2011 Jan;258(1):37-43. doi: 10.1007/s00415-010-5677-2. Epub 2010 Jul 24."
+      },
+      {
+       "pmid": "30831400",
+       "type": "BACKGROUND",
+       "citation": "Johnson AL, McLeish AC, Shear PK, Sheth A, Privitera M. The role of cigarette smoking in epilepsy severity and epilepsy-related quality of life. Epilepsy Behav. 2019 Apr;93:38-42. doi: 10.1016/j.yebeh.2019.01.041. Epub 2019 Mar 1."
+      },
+      {
+       "pmid": "3168960",
+       "type": "BACKGROUND",
+       "citation": "Hauser WA, Ng SK, Brust JC. Alcohol, seizures, and epilepsy. Epilepsia. 1988;29 Suppl 2:S66-78. doi: 10.1111/j.1528-1157.1988.tb05800.x."
+      },
+      {
+       "pmid": "30658320",
+       "type": "BACKGROUND",
+       "citation": "Cano-Lopez I, Hidalgo V, Hampel KG, Garces M, Salvador A, Gonzalez-Bono E, Villanueva V. Cortisol and trait anxiety as relevant factors involved in memory performance in people with drug-resistant epilepsy. Epilepsy Behav. 2019 Mar;92:125-134. doi: 10.1016/j.yebeh.2018.12.022. Epub 2019 Jan 15."
+      },
+      {
+       "pmid": "31195327",
+       "type": "BACKGROUND",
+       "citation": "Alonso NB, de Albuquerque M, Vidal-Dourado M, Cavicchioli LH, Mazetto L, de Araujo Filho GM, de Figueiredo Ferreira Guilhoto LM, Centeno RS, Yacubian EMT. Revisiting personality in epilepsy: Differentiation of personality in two epilepsies starting in adolescence. Epilepsy Behav. 2019 Aug;97:75-82. doi: 10.1016/j.yebeh.2019.05.004. Epub 2019 Jun 10."
+      },
+      {
+       "pmid": "30273276",
+       "type": "BACKGROUND",
+       "citation": "Wang X, Lv Y, Zhang W, Meng H. Cognitive Impairment and Personality Traits in Epilepsy: Characterization and Risk Factor Analysis. J Nerv Ment Dis. 2018 Oct;206(10):794-799. doi: 10.1097/NMD.0000000000000880."
+      },
+      {
+       "pmid": "31387000",
+       "type": "BACKGROUND",
+       "citation": "Rivera Bonet CN, Hermann B, Cook CJ, Hwang G, Dabbs K, Nair V, Forseth C, Mathis J, Allen L, Almane DN, Arkush K, Birn R, Conant LL, DeYoe EA, Felton E, Humphries CJ, Kraegel P, Maganti R, Nencka A, Nwoke O, Raghavan M, Rozman M, Shah U, Sosa VN, Struck AF, Tellapragada N, Ustine C, Ward BD, Prabhakaran V, Binder JR, Meyerand ME. Neuroanatomical correlates of personality traits in temporal lobe epilepsy: Findings from the Epilepsy Connectome Project. Epilepsy Behav. 2019 Sep;98(Pt A):220-227. doi: 10.1016/j.yebeh.2019.07.025. Epub 2019 Aug 3."
+      },
+      {
+       "pmid": "27634349",
+       "type": "BACKGROUND",
+       "citation": "Nimmo-Smith V, Brugha TS, Kerr MP, McManus S, Rai D. Discrimination, domestic violence, abuse, and other adverse life events in people with epilepsy: Population-based study to assess the burden of these events and their contribution to psychopathology. Epilepsia. 2016 Nov;57(11):1870-1878. doi: 10.1111/epi.13561. Epub 2016 Sep 16."
+      },
+      {
+       "pmid": "28418198",
+       "type": "BACKGROUND",
+       "citation": "Baldin E, Hauser WA, Pack A, Hesdorffer DC. Stress is associated with an increased risk of recurrent seizures in adults. Epilepsia. 2017 Jun;58(6):1037-1046. doi: 10.1111/epi.13741. Epub 2017 Apr 18."
+      },
+      {
+       "pmid": "31300385",
+       "type": "BACKGROUND",
+       "citation": "Beghi E. Social functions and socioeconomic vulnerability in epilepsy. Epilepsy Behav. 2019 Nov;100(Pt B):106363. doi: 10.1016/j.yebeh.2019.05.051. Epub 2019 Jul 9."
+      },
+      {
+       "pmid": "31884120",
+       "type": "BACKGROUND",
+       "citation": "Lin PT, Yu HY, Lu YJ, Wang WH, Chou CC, Hsu SPC, Lin CF, Lee CC. Social functioning and health-related quality of life trajectories in people with epilepsy after epilepsy surgery. Epilepsy Behav. 2020 Feb;103(Pt A):106849. doi: 10.1016/j.yebeh.2019.106849. Epub 2019 Dec 27."
+      },
+      {
+       "pmid": "32126366",
+       "type": "BACKGROUND",
+       "citation": "Zutshi D, Yarraguntla K, Mahulikar A, Seraji-Bozorgzad N, Shah AK, Basha MM. Racial variations in lacosamide serum concentrations in adult patients with epilepsy. J Neurol Sci. 2020 May 15;412:116742. doi: 10.1016/j.jns.2020.116742. Epub 2020 Feb 19."
+      },
+      {
+       "pmid": "31135062",
+       "type": "BACKGROUND",
+       "citation": "Bernasconi A, Cendes F, Theodore WH, Gill RS, Koepp MJ, Hogan RE, Jackson GD, Federico P, Labate A, Vaudano AE, Blumcke I, Ryvlin P, Bernasconi N. Recommendations for the use of structural magnetic resonance imaging in the care of patients with epilepsy: A consensus report from the International League Against Epilepsy Neuroimaging Task Force. Epilepsia. 2019 Jun;60(6):1054-1068. doi: 10.1111/epi.15612. Epub 2019 May 28."
+      },
+      {
+       "pmid": "29276500",
+       "type": "BACKGROUND",
+       "citation": "Xia L, Ou S, Pan S. Initial Response to Antiepileptic Drugs in Patients with Newly Diagnosed Epilepsy As a Predictor of Long-term Outcome. Front Neurol. 2017 Dec 8;8:658. doi: 10.3389/fneur.2017.00658. eCollection 2017."
+      },
+      {
+       "pmid": "23429545",
+       "type": "BACKGROUND",
+       "citation": "Kanner AM. Do psychiatric comorbidities have a negative impact on the course and treatment of seizure disorders? Curr Opin Neurol. 2013 Apr;26(2):208-13. doi: 10.1097/WCO.0b013e32835ee579."
+      },
+      {
+       "pmid": "28667464",
+       "type": "BACKGROUND",
+       "citation": "Kanner AM. Can Neurochemical Changes of Mood Disorders Explain the Increase Risk of Epilepsy or its Worse Seizure Control? Neurochem Res. 2017 Jul;42(7):2071-2076. doi: 10.1007/s11064-017-2331-8. Epub 2017 Jul 1."
+      },
+      {
+       "pmid": "22632406",
+       "type": "BACKGROUND",
+       "citation": "Kanner AM, Schachter SC, Barry JJ, Hesdorffer DC, Mula M, Trimble M, Hermann B, Ettinger AE, Dunn D, Caplan R, Ryvlin P, Gilliam F, LaFrance WC Jr. Depression and epilepsy: epidemiologic and neurobiologic perspectives that may explain their high comorbid occurrence. Epilepsy Behav. 2012 Jun;24(2):156-68. doi: 10.1016/j.yebeh.2012.01.007."
+      },
+      {
+       "pmid": "12943932",
+       "type": "BACKGROUND",
+       "citation": "Nilsson FM, Kessing LV, Bolwig TG. On the increased risk of developing late-onset epilepsy for patients with major affective disorder. J Affect Disord. 2003 Sep;76(1-3):39-48. doi: 10.1016/s0165-0327(02)00061-7."
+      },
+      {
+       "pmid": "28532711",
+       "type": "BACKGROUND",
+       "citation": "Kanner AM. Psychiatric comorbidities in new onset epilepsy: Should they be always investigated? Seizure. 2017 Jul;49:79-82. doi: 10.1016/j.seizure.2017.04.007. Epub 2017 Apr 14."
+      },
+      {
+       "pmid": "14745064",
+       "type": "BACKGROUND",
+       "citation": "Boylan LS, Flint LA, Labovitz DL, Jackson SC, Starner K, Devinsky O. Depression but not seizure frequency predicts quality of life in treatment-resistant epilepsy. Neurology. 2004 Jan 27;62(2):258-61. doi: 10.1212/01.wnl.0000103282.62353.85."
+      },
+      {
+       "pmid": "23175727",
+       "type": "BACKGROUND",
+       "citation": "Fiest KM, Dykeman J, Patten SB, Wiebe S, Kaplan GG, Maxwell CJ, Bulloch AG, Jette N. Depression in epilepsy: a systematic review and meta-analysis. Neurology. 2013 Feb 5;80(6):590-9. doi: 10.1212/WNL.0b013e31827b1ae0. Epub 2012 Nov 21."
+      },
+      {
+       "pmid": "19409813",
+       "type": "BACKGROUND",
+       "citation": "Friedman DE, Kung DH, Laowattana S, Kass JS, Hrachovy RA, Levin HS. Identifying depression in epilepsy in a busy clinical setting is enhanced with systematic screening. Seizure. 2009 Jul;18(6):429-33. doi: 10.1016/j.seizure.2009.03.001. Epub 2009 May 5."
+      },
+      {
+       "pmid": "29753295",
+       "type": "BACKGROUND",
+       "citation": "Kim M, Kim YS, Kim DH, Yang TW, Kwon OY. Major depressive disorder in epilepsy clinics: A meta-analysis. Epilepsy Behav. 2018 Jul;84:56-69. doi: 10.1016/j.yebeh.2018.04.015. Epub 2018 May 10."
+      },
+      {
+       "pmid": "17611160",
+       "type": "BACKGROUND",
+       "citation": "Christensen J, Vestergaard M, Mortensen PB, Sidenius P, Agerbo E. Epilepsy and risk of suicide: a population-based case-control study. Lancet Neurol. 2007 Aug;6(8):693-8. doi: 10.1016/S1474-4422(07)70175-8."
+      },
+      {
+       "pmid": "23883699",
+       "type": "BACKGROUND",
+       "citation": "Fazel S, Wolf A, Langstrom N, Newton CR, Lichtenstein P. Premature mortality in epilepsy and the role of psychiatric comorbidity: a total population study. Lancet. 2013 Nov 16;382(9905):1646-54. doi: 10.1016/S0140-6736(13)60899-5. Epub 2013 Jul 22."
+      },
+      {
+       "pmid": "21362451",
+       "type": "BACKGROUND",
+       "citation": "Ravizza T, Balosso S, Vezzani A. Inflammation and prevention of epileptogenesis. Neurosci Lett. 2011 Jun 27;497(3):223-30. doi: 10.1016/j.neulet.2011.02.040. Epub 2011 Feb 26."
+      },
+      {
+       "pmid": "26423537",
+       "type": "BACKGROUND",
+       "citation": "Vezzani A, Fujinami RS, White HS, Preux PM, Blumcke I, Sander JW, Loscher W. Infections, inflammation and epilepsy. Acta Neuropathol. 2016 Feb;131(2):211-234. doi: 10.1007/s00401-015-1481-5. Epub 2015 Sep 30."
+      },
+      {
+       "pmid": "21473909",
+       "type": "BACKGROUND",
+       "citation": "Vezzani A, Maroso M, Balosso S, Sanchez MA, Bartfai T. IL-1 receptor/Toll-like receptor signaling in infection, inflammation, stress and neurodegeneration couples hyperexcitability and seizures. Brain Behav Immun. 2011 Oct;25(7):1281-9. doi: 10.1016/j.bbi.2011.03.018. Epub 2011 Apr 5."
+      },
+      {
+       "pmid": "25282706",
+       "type": "BACKGROUND",
+       "citation": "Shazadi K, Petrovski S, Roten A, Miller H, Huggins RM, Brodie MJ, Pirmohamed M, Johnson MR, Marson AG, O'Brien TJ, Sills GJ. Validation of a multigenic model to predict seizure control in newly treated epilepsy. Epilepsy Res. 2014 Dec;108(10):1797-805. doi: 10.1016/j.eplepsyres.2014.08.022. Epub 2014 Sep 16."
+      },
+      {
+       "pmid": "30610098",
+       "type": "BACKGROUND",
+       "citation": "Sanchez Fernandez I, Loddenkemper T, Gainza-Lein M, Sheidley BR, Poduri A. Diagnostic yield of genetic tests in epilepsy: A meta-analysis and cost-effectiveness study. Neurology. 2019 Jan 28;92(5):e418-e428. doi: 10.1212/WNL.0000000000006850."
+      },
+      {
+       "pmid": "25710836",
+       "type": "BACKGROUND",
+       "citation": "Noebels J. Pathway-driven discovery of epilepsy genes. Nat Neurosci. 2015 Mar;18(3):344-50. doi: 10.1038/nn.3933. Epub 2015 Feb 24."
+      },
+      {
+       "pmid": "27694013",
+       "type": "BACKGROUND",
+       "citation": "An N, Zhao W, Liu Y, Yang X, Chen P. Elevated serum miR-106b and miR-146a in patients with focal and generalized epilepsy. Epilepsy Res. 2016 Nov;127:311-316. doi: 10.1016/j.eplepsyres.2016.09.019. Epub 2016 Sep 26."
+      },
+      {
+       "pmid": "25825351",
+       "type": "BACKGROUND",
+       "citation": "Wang J, Yu JT, Tan L, Tian Y, Ma J, Tan CC, Wang HF, Liu Y, Tan MS, Jiang T, Tan L. Genome-wide circulating microRNA expression profiling indicates biomarkers for epilepsy. Sci Rep. 2015 Mar 31;5:9522. doi: 10.1038/srep09522."
+      },
+      {
+       "pmid": "25984652",
+       "type": "BACKGROUND",
+       "citation": "Wang J, Tan L, Tan L, Tian Y, Ma J, Tan CC, Wang HF, Liu Y, Tan MS, Jiang T, Yu JT. Circulating microRNAs are promising novel biomarkers for drug-resistant epilepsy. Sci Rep. 2015 May 18;5:10201. doi: 10.1038/srep10201."
+      },
+      {
+       "pmid": "30701077",
+       "type": "BACKGROUND",
+       "citation": "Lindefeldt M, Eng A, Darban H, Bjerkner A, Zetterstrom CK, Allander T, Andersson B, Borenstein E, Dahlin M, Prast-Nielsen S. The ketogenic diet influences taxonomic and functional composition of the gut microbiota in children with severe epilepsy. NPJ Biofilms Microbiomes. 2019 Jan 23;5(1):5. doi: 10.1038/s41522-018-0073-2. eCollection 2019."
+      },
+      {
+       "pmid": "30198325",
+       "type": "BACKGROUND",
+       "citation": "Gomez-Eguilaz M, Ramon-Trapero JL, Perez-Martinez L, Blanco JR. The beneficial effect of probiotics as a supplementary treatment in drug-resistant epilepsy: a pilot study. Benef Microbes. 2018 Dec 7;9(6):875-881. doi: 10.3920/BM2018.0018. Epub 2018 Sep 10."
+      },
+      {
+       "pmid": "28242175",
+       "type": "BACKGROUND",
+       "citation": "Rizvi S, Ladino LD, Hernandez-Ronquillo L, Tellez-Zenteno JF. Epidemiology of early stages of epilepsy: Risk of seizure recurrence after a first seizure. Seizure. 2017 Jul;49:46-53. doi: 10.1016/j.seizure.2017.02.006. Epub 2017 Feb 14."
+      },
+      {
+       "pmid": "26316856",
+       "type": "BACKGROUND",
+       "citation": "Krumholz A, Wiebe S, Gronseth GS, Gloss DS, Sanchez AM, Kabir AA, Liferidge AT, Martello JP, Kanner AM, Shinnar S, Hopp JL, French JA. Evidence-Based Guideline: Management of an Unprovoked First Seizure in Adults: Report of the Guideline Development Subcommittee of the American Academy of Neurology and the American Epilepsy Society. Epilepsy Curr. 2015 May-Jun;15(3):144-52. doi: 10.5698/1535-7597-15.3.144. No abstract available."
+      },
+      {
+       "pmid": "9459646",
+       "type": "BACKGROUND",
+       "citation": "Hauser WA, Rich SS, Lee JR, Annegers JF, Anderson VE. Risk of recurrent seizures after two unprovoked seizures. N Engl J Med. 1998 Feb 12;338(7):429-34. doi: 10.1056/NEJM199802123380704."
+      },
+      {
+       "pmid": "31408838",
+       "type": "BACKGROUND",
+       "citation": "Rasmussen PM, Aamand R, Weitzberg E, Christiansen M, Ostergaard L, Lund TE. APOE gene-dependent BOLD responses to a breath-hold across the adult lifespan. Neuroimage Clin. 2019;24:101955. doi: 10.1016/j.nicl.2019.101955. Epub 2019 Jul 22."
+      },
+      {
+       "pmid": "20520774",
+       "type": "BACKGROUND",
+       "citation": "Douw L, de Groot M, van Dellen E, Heimans JJ, Ronner HE, Stam CJ, Reijneveld JC. 'Functional connectivity' is a sensitive predictor of epilepsy diagnosis after the first seizure. PLoS One. 2010 May 26;5(5):e10839. doi: 10.1371/journal.pone.0010839."
+      },
+      {
+       "pmid": "29802758",
+       "type": "BACKGROUND",
+       "citation": "Umemori J, Winkel F, Didio G, Llach Pou M, Castren E. iPlasticity: Induced juvenile-like plasticity in the adult brain as a mechanism of antidepressants. Psychiatry Clin Neurosci. 2018 Sep;72(9):633-653. doi: 10.1111/pcn.12683. Epub 2018 Jul 11."
+      },
+      {
+       "pmid": "27752944",
+       "type": "BACKGROUND",
+       "citation": "Loscher W, Gillard M, Sands ZA, Kaminski RM, Klitgaard H. Synaptic Vesicle Glycoprotein 2A Ligands in the Treatment of Epilepsy and Beyond. CNS Drugs. 2016 Nov;30(11):1055-1077. doi: 10.1007/s40263-016-0384-x."
+      },
+      {
+       "pmid": "30924924",
+       "type": "BACKGROUND",
+       "citation": "Finnema SJ, Rossano S, Naganawa M, Henry S, Gao H, Pracitto R, Maguire RP, Mercier J, Kervyn S, Nicolas JM, Klitgaard H, DeBruyn S, Otoul C, Martin P, Muglia P, Matuskey D, Nabulsi NB, Huang Y, Kaminski RM, Hannestad J, Stockis A, Carson RE. A single-center, open-label positron emission tomography study to evaluate brivaracetam and levetiracetam synaptic vesicle glycoprotein 2A binding in healthy volunteers. Epilepsia. 2019 May;60(5):958-967. doi: 10.1111/epi.14701. Epub 2019 Mar 29."
+      },
+      {
+       "pmid": "29483017",
+       "type": "BACKGROUND",
+       "citation": "Tatum WO, Rubboli G, Kaplan PW, Mirsatari SM, Radhakrishnan K, Gloss D, Caboclo LO, Drislane FW, Koutroumanidis M, Schomer DL, Kasteleijn-Nolst Trenite D, Cook M, Beniczky S. Clinical utility of EEG in diagnosing and monitoring epilepsy in adults. Clin Neurophysiol. 2018 May;129(5):1056-1082. doi: 10.1016/j.clinph.2018.01.019. Epub 2018 Feb 1."
+      },
+      {
+       "pmid": "20227852",
+       "type": "BACKGROUND",
+       "citation": "Tellez-Zenteno JF, Hernandez Ronquillo L, Moien-Afshari F, Wiebe S. Surgical outcomes in lesional and non-lesional epilepsy: a systematic review and meta-analysis. Epilepsy Res. 2010 May;89(2-3):310-8. doi: 10.1016/j.eplepsyres.2010.02.007. Epub 2010 Mar 15."
+      },
+      {
+       "pmid": "20008653",
+       "type": "BACKGROUND",
+       "citation": "Bien CG, Szinay M, Wagner J, Clusmann H, Becker AJ, Urbach H. Characteristics and surgical outcomes of patients with refractory magnetic resonance imaging-negative epilepsies. Arch Neurol. 2009 Dec;66(12):1491-9. doi: 10.1001/archneurol.2009.283."
+      },
+      {
+       "pmid": "16186534",
+       "type": "BACKGROUND",
+       "citation": "Spencer SS, Berg AT, Vickrey BG, Sperling MR, Bazil CW, Shinnar S, Langfitt JT, Walczak TS, Pacia SV; Multicenter Study of Epilepsy Surgery. Predicting long-term seizure outcome after resective epilepsy surgery: the multicenter study. Neurology. 2005 Sep 27;65(6):912-8. doi: 10.1212/01.wnl.0000176055.45774.71."
+      },
+      {
+       "pmid": "23350722",
+       "type": "BACKGROUND",
+       "citation": "Glauser T, Ben-Menachem E, Bourgeois B, Cnaan A, Guerreiro C, Kalviainen R, Mattson R, French JA, Perucca E, Tomson T; ILAE Subcommission on AED Guidelines. Updated ILAE evidence review of antiepileptic drug efficacy and effectiveness as initial monotherapy for epileptic seizures and syndromes. Epilepsia. 2013 Mar;54(3):551-63. doi: 10.1111/epi.12074. Epub 2013 Jan 25."
+      },
+      {
+       "pmid": "23042803",
+       "type": "BACKGROUND",
+       "citation": "Appleton RE, Freeman A, Cross JH. Diagnosis and management of the epilepsies in children: a summary of the partial update of the 2012 NICE epilepsy guideline. Arch Dis Child. 2012 Dec;97(12):1073-6. doi: 10.1136/archdischild-2012-302822. Epub 2012 Oct 6."
+      },
+      {
+       "pmid": "28237319",
+       "type": "BACKGROUND",
+       "citation": "Shih JJ, Whitlock JB, Chimato N, Vargas E, Karceski SC, Frank RD. Epilepsy treatment in adults and adolescents: Expert opinion, 2016. Epilepsy Behav. 2017 Apr;69:186-222. doi: 10.1016/j.yebeh.2016.11.018. Epub 2017 Feb 23."
+      },
+      {
+       "pmid": "21652013",
+       "type": "BACKGROUND",
+       "citation": "Tomson T, Battino D, Bonizzoni E, Craig J, Lindhout D, Sabers A, Perucca E, Vajda F; EURAP study group. Dose-dependent risk of malformations with antiepileptic drugs: an analysis of data from the EURAP epilepsy and pregnancy registry. Lancet Neurol. 2011 Jul;10(7):609-17. doi: 10.1016/S1474-4422(11)70107-7. Epub 2011 Jun 5."
+      },
+      {
+       "pmid": "19889013",
+       "type": "BACKGROUND",
+       "citation": "Kwan P, Arzimanoglou A, Berg AT, Brodie MJ, Allen Hauser W, Mathern G, Moshe SL, Perucca E, Wiebe S, French J. Definition of drug resistant epilepsy: consensus proposal by the ad hoc Task Force of the ILAE Commission on Therapeutic Strategies. Epilepsia. 2010 Jun;51(6):1069-77. doi: 10.1111/j.1528-1167.2009.02397.x. Epub 2009 Nov 3."
+      },
+      {
+       "pmid": "30921021",
+       "type": "BACKGROUND",
+       "citation": "Abou-Khalil BW. Update on Antiepileptic Drugs 2019. Continuum (Minneap Minn). 2019 Apr;25(2):508-536. doi: 10.1212/CON.0000000000000715."
+      },
+      {
+       "pmid": "29602083",
+       "type": "BACKGROUND",
+       "citation": "Shorvon SD, Bermejo PE, Gibbs AA, Huberfeld G, Kalviainen R. Antiepileptic drug treatment of generalized tonic-clonic seizures: An evaluation of regulatory data and five criteria for drug selection. Epilepsy Behav. 2018 May;82:91-103. doi: 10.1016/j.yebeh.2018.01.039. Epub 2018 Mar 27."
+      },
+      {
+       "pmid": "22541979",
+       "type": "BACKGROUND",
+       "citation": "Beniczky SA, Viken J, Jensen LT, Andersen NB. Bone mineral density in adult patients treated with various antiepileptic drugs. Seizure. 2012 Jul;21(6):471-2. doi: 10.1016/j.seizure.2012.04.002. Epub 2012 Apr 26."
+      },
+      {
+       "pmid": "24370319",
+       "type": "BACKGROUND",
+       "citation": "Yilmaz U, Yilmaz TS, Dizdarer G, Akinci G, Guzel O, Tekgul H. Efficacy and tolerability of the first antiepileptic drug in children with newly diagnosed idiopathic epilepsy. Seizure. 2014 Apr;23(4):252-9. doi: 10.1016/j.seizure.2013.12.001. Epub 2013 Dec 9."
+      },
+      {
+       "pmid": "24099051",
+       "type": "BACKGROUND",
+       "citation": "Beghi E, Giussani G, Grosso S, Iudice A, La Neve A, Pisani F, Specchio LM, Verrotti A, Capovilla G, Michelucci R, Zaccara G. Withdrawal of antiepileptic drugs: guidelines of the Italian League Against Epilepsy. Epilepsia. 2013 Oct;54 Suppl 7:2-12. doi: 10.1111/epi.12305."
+      },
+      {
+       "pmid": "25922863",
+       "type": "BACKGROUND",
+       "citation": "Strozzi I, Nolan SJ, Sperling MR, Wingerchuk DM, Sirven J. Early versus late antiepileptic drug withdrawal for people with epilepsy in remission. Cochrane Database Syst Rev. 2015 Feb 11;2015(2):CD001902. doi: 10.1002/14651858.CD001902.pub2."
+      },
+      {
+       "pmid": "31570041",
+       "type": "BACKGROUND",
+       "citation": "Rossano S, Toyonaga T, Finnema SJ, Naganawa M, Lu Y, Nabulsi N, Ropchan J, De Bruyn S, Otoul C, Stockis A, Nicolas JM, Martin P, Mercier J, Huang Y, Maguire RP, Carson RE. Assessment of a white matter reference region for 11C-UCB-J PET quantification. J Cereb Blood Flow Metab. 2020 Sep;40(9):1890-1901. doi: 10.1177/0271678X19879230. Epub 2019 Sep 30."
+      },
+      {
+       "pmid": "31156363",
+       "type": "BACKGROUND",
+       "citation": "Liang KG, Mu RZ, Liu Y, Jiang D, Jia TT, Huang YJ. Increased Serum S100B Levels in Patients With Epilepsy: A Systematic Review and Meta-Analysis Study. Front Neurosci. 2019 May 16;13:456. doi: 10.3389/fnins.2019.00456. eCollection 2019."
+      },
+      {
+       "pmid": "16628124",
+       "type": "BACKGROUND",
+       "citation": "Musshoff F, Madea B. Review of biologic matrices (urine, blood, hair) as indicators of recent or ongoing cannabis use. Ther Drug Monit. 2006 Apr;28(2):155-63. doi: 10.1097/01.ftd.0000197091.07807.22."
+      },
+      {
+       "pmid": "24657679",
+       "type": "BACKGROUND",
+       "citation": "Zhang B, Chen M, Yang H, Wu T, Song C, Guo R. Evidence for involvement of the CD40/CD40L system in post-stroke epilepsy. Neurosci Lett. 2014 May 1;567:6-10. doi: 10.1016/j.neulet.2014.03.003. Epub 2014 Mar 19."
+      },
+      {
+       "pmid": "12790892",
+       "type": "BACKGROUND",
+       "citation": "Kanemoto K, Kawasaki J, Yuasa S, Kumaki T, Tomohiro O, Kaji R, Nishimura M. Increased frequency of interleukin-1beta-511T allele in patients with temporal lobe epilepsy, hippocampal sclerosis, and prolonged febrile convulsion. Epilepsia. 2003 Jun;44(6):796-9. doi: 10.1046/j.1528-1157.2003.43302.x."
+      },
+      {
+       "pmid": "10805326",
+       "type": "BACKGROUND",
+       "citation": "Kanemoto K, Kawasaki J, Miyamoto T, Obayashi H, Nishimura M. Interleukin (IL)1beta, IL-1alpha, and IL-1 receptor antagonist gene polymorphisms in patients with temporal lobe epilepsy. Ann Neurol. 2000 May;47(5):571-4."
+      },
+      {
+       "pmid": "19066720",
+       "type": "BACKGROUND",
+       "citation": "Salzmann A, Perroud N, Crespel A, Lambercy C, Malafosse A. Candidate genes for temporal lobe epilepsy: a replication study. Neurol Sci. 2008 Dec;29(6):397-403. doi: 10.1007/s10072-008-1060-9. Epub 2008 Dec 6."
+      },
+      {
+       "pmid": "20862287",
+       "type": "BACKGROUND",
+       "citation": "Jamali S, Salzmann A, Perroud N, Ponsole-Lenfant M, Cillario J, Roll P, Roeckel-Trevisiol N, Crespel A, Balzar J, Schlachter K, Gruber-Sedlmayr U, Pataraia E, Baumgartner C, Zimprich A, Zimprich F, Malafosse A, Szepetowski P. Functional variant in complement C3 gene promoter and genetic susceptibility to temporal lobe epilepsy and febrile seizures. PLoS One. 2010 Sep 16;5(9):e12740. doi: 10.1371/journal.pone.0012740."
+      },
+      {
+       "pmid": "23293627",
+       "type": "BACKGROUND",
+       "citation": "Pollard JR, Eidelman O, Mueller GP, Dalgard CL, Crino PB, Anderson CT, Brand EJ, Burakgazi E, Ivaturi SK, Pollard HB. The TARC/sICAM5 Ratio in Patient Plasma is a Candidate Biomarker for Drug Resistant Epilepsy. Front Neurol. 2013 Jan 3;3:181. doi: 10.3389/fneur.2012.00181. eCollection 2012."
+      },
+      {
+       "pmid": "24845179",
+       "type": "BACKGROUND",
+       "citation": "Dahl J, Ormstad H, Aass HC, Malt UF, Bendz LT, Sandvik L, Brundin L, Andreassen OA. The plasma levels of various cytokines are increased during ongoing depression and are reduced to normal levels after recovery. Psychoneuroendocrinology. 2014 Jul;45:77-86. doi: 10.1016/j.psyneuen.2014.03.019. Epub 2014 Apr 6."
+      },
+      {
+       "pmid": "19188531",
+       "type": "BACKGROUND",
+       "citation": "Howren MB, Lamkin DM, Suls J. Associations of depression with C-reactive protein, IL-1, and IL-6: a meta-analysis. Psychosom Med. 2009 Feb;71(2):171-86. doi: 10.1097/PSY.0b013e3181907c1b. Epub 2009 Feb 2."
+      },
+      {
+       "pmid": "20015486",
+       "type": "BACKGROUND",
+       "citation": "Dowlati Y, Herrmann N, Swardfager W, Liu H, Sham L, Reim EK, Lanctot KL. A meta-analysis of cytokines in major depression. Biol Psychiatry. 2010 Mar 1;67(5):446-57. doi: 10.1016/j.biopsych.2009.09.033. Epub 2009 Dec 16."
+      },
+      {
+       "pmid": "21872339",
+       "type": "BACKGROUND",
+       "citation": "Liu Y, Ho RC, Mak A. Interleukin (IL)-6, tumour necrosis factor alpha (TNF-alpha) and soluble interleukin-2 receptors (sIL-2R) are elevated in patients with major depressive disorder: a meta-analysis and meta-regression. J Affect Disord. 2012 Aug;139(3):230-9. doi: 10.1016/j.jad.2011.08.003. Epub 2011 Aug 26."
+      },
+      {
+       "pmid": "33599287",
+       "type": "BACKGROUND",
+       "citation": "Beamer E, Lacey A, Alves M, Conte G, Tian F, de Diego-Garcia L, Khalil M, Rosenow F, Delanty N, Dale N, El-Naggar H, Henshall DC, Engel T. Elevated blood purine levels as a biomarker of seizures and epilepsy. Epilepsia. 2021 Mar;62(3):817-828. doi: 10.1111/epi.16839. Epub 2021 Feb 18."
+      },
+      {
+       "pmid": "29992546",
+       "type": "BACKGROUND",
+       "citation": "Myers KA, Johnstone DL, Dyment DA. Epilepsy genetics: Current knowledge, applications, and future directions. Clin Genet. 2019 Jan;95(1):95-111. doi: 10.1111/cge.13414. Epub 2018 Aug 2."
+      },
+      {
+       "pmid": "18255321",
+       "type": "BACKGROUND",
+       "citation": "Kauffman MA, Levy EM, Consalvo D, Mordoh J, Kochen S. GABABR1 (G1465A) gene variation and temporal lobe epilepsy controversy: new evidence. Seizure. 2008 Sep;17(6):567-71. doi: 10.1016/j.seizure.2007.12.006. Epub 2008 Feb 5."
+      },
+      {
+       "pmid": "12601092",
+       "type": "BACKGROUND",
+       "citation": "Gambardella A, Manna I, Labate A, Chifari R, La Russa A, Serra P, Cittadella R, Bonavita S, Andreoli V, LePiane E, Sasanelli F, Di Costanzo A, Zappia M, Tedeschi G, Aguglia U, Quattrone A. GABA(B) receptor 1 polymorphism (G1465A) is associated with temporal lobe epilepsy. Neurology. 2003 Feb 25;60(4):560-3. doi: 10.1212/01.wnl.0000046520.79877.d8."
+      },
+      {
+       "pmid": "18653317",
+       "type": "BACKGROUND",
+       "citation": "Wang X, Sun W, Zhu X, Li L, Wu X, Lin H, Zhu S, Liu A, Du T, Liu Y, Niu N, Wang Y, Liu Y. Association between the gamma-aminobutyric acid type B receptor 1 and 2 gene polymorphisms and mesial temporal lobe epilepsy in a Han Chinese population. Epilepsy Res. 2008 Oct;81(2-3):198-203. doi: 10.1016/j.eplepsyres.2008.06.001. Epub 2008 Jul 23."
+      },
+      {
+       "pmid": "22082659",
+       "type": "BACKGROUND",
+       "citation": "Pernhorst K, Raabe A, Niehusmann P, van Loo KM, Grote A, Hoffmann P, Cichon S, Sander T, Schoch S, Becker AJ. Promoter variants determine gamma-aminobutyric acid homeostasis-related gene transcription in human epileptic hippocampi. J Neuropathol Exp Neurol. 2011 Dec;70(12):1080-8. doi: 10.1097/NEN.0b013e318238b9af."
+      },
+      {
+       "pmid": "26452361",
+       "type": "BACKGROUND",
+       "citation": "Haerian BS, Baum L, Kwan P, Cherny SS, Shin JG, Kim SE, Han BG, Tan HJ, Raymond AA, Tan CT, Mohamed Z. Contribution of GABRG2 Polymorphisms to Risk of Epilepsy and Febrile Seizure: a Multicenter Cohort Study and Meta-analysis. Mol Neurobiol. 2016 Oct;53(8):5457-67. doi: 10.1007/s12035-015-9457-y. Epub 2015 Oct 9."
+      },
+      {
+       "pmid": "24061200",
+       "type": "BACKGROUND",
+       "citation": "Balan S, Sathyan S, Radha SK, Joseph V, Radhakrishnan K, Banerjee M. GABRG2, rs211037 is associated with epilepsy susceptibility, but not with antiepileptic drug resistance and febrile seizures. Pharmacogenet Genomics. 2013 Nov;23(11):605-10. doi: 10.1097/FPC.0000000000000000."
+      },
+      {
+       "pmid": "22840783",
+       "type": "BACKGROUND",
+       "citation": "Darrah SD, Miller MA, Ren D, Hoh NZ, Scanlon JM, Conley YP, Wagner AK. Genetic variability in glutamic acid decarboxylase genes: associations with post-traumatic seizures after severe TBI. Epilepsy Res. 2013 Feb;103(2-3):180-94. doi: 10.1016/j.eplepsyres.2012.07.006. Epub 2012 Jul 26."
+      },
+      {
+       "pmid": "33028830",
+       "type": "BACKGROUND",
+       "citation": "Pfisterer U, Petukhov V, Demharter S, Meichsner J, Thompson JJ, Batiuk MY, Asenjo-Martinez A, Vasistha NA, Thakur A, Mikkelsen J, Adorjan I, Pinborg LH, Pers TH, von Engelhardt J, Kharchenko PV, Khodosevich K. Identification of epilepsy-associated neuronal subtypes and gene expression underlying epileptogenesis. Nat Commun. 2020 Oct 7;11(1):5038. doi: 10.1038/s41467-020-18752-7."
+      },
+      {
+       "pmid": "21964255",
+       "type": "BACKGROUND",
+       "citation": "Rocha L, Alonso-Vanegas M, Villeda-Hernandez J, Mujica M, Cisneros-Franco JM, Lopez-Gomez M, Zavala-Tecuapetla C, Frias-Soria CL, Segovia-Vila J, Borsodi A. Dopamine abnormalities in the neocortex of patients with temporal lobe epilepsy. Neurobiol Dis. 2012 Jan;45(1):499-507. doi: 10.1016/j.nbd.2011.09.006. Epub 2011 Sep 21."
+      },
+      {
+       "pmid": "11835385",
+       "type": "BACKGROUND",
+       "citation": "Stogmann E, Zimprich A, Baumgartner C, Aull-Watschinger S, Hollt V, Zimprich F. A functional polymorphism in the prodynorphin gene promotor is associated with temporal lobe epilepsy. Ann Neurol. 2002 Feb;51(2):260-3. doi: 10.1002/ana.10108."
+      },
+      {
+       "pmid": "21787169",
+       "type": "BACKGROUND",
+       "citation": "Scher AI, Wu H, Tsao JW, Blom HJ, Feit P, Nevin RL, Schwab KA. MTHFR C677T genotype as a risk factor for epilepsy including post-traumatic epilepsy in a representative military cohort. J Neurotrauma. 2011 Sep;28(9):1739-45. doi: 10.1089/neu.2011.1982. Epub 2011 Sep 6."
+      },
+      {
+       "pmid": "25087078",
+       "type": "BACKGROUND",
+       "citation": "International League Against Epilepsy Consortium on Complex Epilepsies. Electronic address: epilepsy-austin@unimelb.edu.au. Genetic determinants of common epilepsies: a meta-analysis of genome-wide association studies. Lancet Neurol. 2014 Sep;13(9):893-903. doi: 10.1016/S1474-4422(14)70171-1. Epub 2014 Jul 30."
+      },
+      {
+       "pmid": "26071373",
+       "type": "BACKGROUND",
+       "citation": "Zhu WY, Jiang P, He X, Cao LJ, Zhang LH, Dang RL, Tang MM, Xue Y, Li HD. Contribution of NRG1 Gene Polymorphisms in Temporal Lobe Epilepsy. J Child Neurol. 2016 Mar;31(3):271-6. doi: 10.1177/0883073815589757. Epub 2015 Jun 12."
+      },
+      {
+       "pmid": "26000807",
+       "type": "BACKGROUND",
+       "citation": "Shen N, Zhu X, Lin H, Li J, Li L, Niu F, Liu A, Wu X, Wang Y, Liu Y. Role of BDNF Val66Met functional polymorphism in temporal lobe epilepsy. Int J Neurosci. 2016;126(5):436-41. doi: 10.3109/00207454.2015.1026967. Epub 2015 Aug 18."
+      },
+      {
+       "pmid": "27016865",
+       "type": "BACKGROUND",
+       "citation": "Wang R, Zeng GQ, Tong RZ, Zhou D, Hong Z. Serum matrix metalloproteinase-2: A potential biomarker for diagnosis of epilepsy. Epilepsy Res. 2016 May;122:114-9. doi: 10.1016/j.eplepsyres.2016.02.009. Epub 2016 Feb 27."
+      },
+      {
+       "pmid": "27423606",
+       "type": "BACKGROUND",
+       "citation": "Wang R, Zeng GQ, Liu X, Tong RZ, Zhou D, Hong Z. Evaluation of serum matrix metalloproteinase-3 as a biomarker for diagnosis of epilepsy. J Neurol Sci. 2016 Aug 15;367:291-7. doi: 10.1016/j.jns.2016.06.031. Epub 2016 Jun 14."
+      },
+      {
+       "pmid": "28179120",
+       "type": "BACKGROUND",
+       "citation": "Clossen BL, Reddy DS. Novel therapeutic approaches for disease-modification of epileptogenesis for curing epilepsy. Biochim Biophys Acta Mol Basis Dis. 2017 Jun;1863(6):1519-1538. doi: 10.1016/j.bbadis.2017.02.003. Epub 2017 Feb 5."
+      },
+      {
+       "pmid": "30980836",
+       "type": "BACKGROUND",
+       "citation": "Loscher W. The holy grail of epilepsy prevention: Preclinical approaches to antiepileptogenic treatments. Neuropharmacology. 2020 May 1;167:107605. doi: 10.1016/j.neuropharm.2019.04.011. Epub 2019 Apr 11."
+      },
+      {
+       "pmid": "21428769",
+       "type": "BACKGROUND",
+       "citation": "McCormack M, Alfirevic A, Bourgeois S, Farrell JJ, Kasperaviciute D, Carrington M, Sills GJ, Marson T, Jia X, de Bakker PI, Chinthapalli K, Molokhia M, Johnson MR, O'Connor GD, Chaila E, Alhusaini S, Shianna KV, Radtke RA, Heinzen EL, Walley N, Pandolfo M, Pichler W, Park BK, Depondt C, Sisodiya SM, Goldstein DB, Deloukas P, Delanty N, Cavalleri GL, Pirmohamed M. HLA-A*3101 and carbamazepine-induced hypersensitivity reactions in Europeans. N Engl J Med. 2011 Mar 24;364(12):1134-43. doi: 10.1056/NEJMoa1013297."
+      },
+      {
+       "pmid": "17509004",
+       "type": "BACKGROUND",
+       "citation": "Man CB, Kwan P, Baum L, Yu E, Lau KM, Cheng AS, Ng MH. Association between HLA-B*1502 allele and antiepileptic drug-induced cutaneous reactions in Han Chinese. Epilepsia. 2007 May;48(5):1015-8. doi: 10.1111/j.1528-1167.2007.01022.x."
+      },
+      {
+       "pmid": "30020991",
+       "type": "BACKGROUND",
+       "citation": "Yang TW, Moon J, Kim TJ, Jun JS, Lim JA, Lee ST, Jung KH, Park KI, Jung KY, Chu K, Lee SK. HLA-A*11:01 is associated with levetiracetam-induced psychiatric adverse events. PLoS One. 2018 Jul 18;13(7):e0200812. doi: 10.1371/journal.pone.0200812. eCollection 2018."
+      },
+      {
+       "pmid": "29636628",
+       "type": "BACKGROUND",
+       "citation": "Silvado CE, Terra VC, Twardowschy CA. CYP2C9 polymorphisms in epilepsy: influence on phenytoin treatment. Pharmgenomics Pers Med. 2018 Mar 29;11:51-58. doi: 10.2147/PGPM.S108113. eCollection 2018."
+      },
+      {
+       "pmid": "33951195",
+       "type": "BACKGROUND",
+       "citation": "He H, Guzman RE, Cao D, Sierra-Marquez J, Yin F, Fahlke C, Peng J, Stauber T. The molecular and phenotypic spectrum of CLCN4-related epilepsy. Epilepsia. 2021 Jun;62(6):1401-1415. doi: 10.1111/epi.16906. Epub 2021 May 5."
+      },
+      {
+       "pmid": "27251580",
+       "type": "BACKGROUND",
+       "citation": "Gallek MJ, Skoch J, Ansay T, Behbahani M, Mount D, Manziello A, Witte M, Bernas M, Labiner DM, Weinand ME. Cortical gene expression: prognostic value for seizure outcome following temporal lobectomy and amygdalohippocampectomy. Neurogenetics. 2016 Oct;17(4):211-218. doi: 10.1007/s10048-016-0484-2. Epub 2016 Jun 2."
+      },
+      {
+       "pmid": "31852985",
+       "type": "BACKGROUND",
+       "citation": "Wickham J, Ledri M, Bengzon J, Jespersen B, Pinborg LH, Englund E, Woldbye DPD, Andersson M, Kokaia M. Inhibition of epileptiform activity by neuropeptide Y in brain tissue from drug-resistant temporal lobe epilepsy patients. Sci Rep. 2019 Dec 18;9(1):19393. doi: 10.1038/s41598-019-56062-1."
+      },
+      {
+       "pmid": "15303102",
+       "type": "BACKGROUND",
+       "citation": "Aston C, Jiang L, Sokolov BP. Transcriptional profiling reveals evidence for signaling and oligodendroglial abnormalities in the temporal cortex from patients with major depressive disorder. Mol Psychiatry. 2005 Mar;10(3):309-22. doi: 10.1038/sj.mp.4001565."
+      },
+      {
+       "pmid": "26433043",
+       "type": "BACKGROUND",
+       "citation": "Luo Y, Hu Q, Zhang Q, Hong S, Tang X, Cheng L, Jiang L. Alterations in hippocampal myelin and oligodendrocyte precursor cells during epileptogenesis. Brain Res. 2015 Nov 19;1627:154-64. doi: 10.1016/j.brainres.2015.09.027. Epub 2015 Oct 4."
+      },
+      {
+       "pmid": "20435093",
+       "type": "BACKGROUND",
+       "citation": "Stefulj J, Bordukalo-Niksic T, Hecimovic H, Demarin V, Jernej B. Epilepsy and serotonin (5HT): variations of 5HT-related genes in temporal lobe epilepsy. Neurosci Lett. 2010 Jun 30;478(1):29-31. doi: 10.1016/j.neulet.2010.04.060. Epub 2010 Apr 29."
+      },
+      {
+       "pmid": "17548158",
+       "type": "BACKGROUND",
+       "citation": "Manna I, Labate A, Gambardella A, Forabosco P, La Russa A, Le Piane E, Aguglia U, Quattrone A. Serotonin transporter gene (5-Htt): association analysis with temporal lobe epilepsy. Neurosci Lett. 2007 Jun 21;421(1):52-6. doi: 10.1016/j.neulet.2007.05.022. Epub 2007 May 21."
+      },
+      {
+       "pmid": "21951270",
+       "type": "BACKGROUND",
+       "citation": "Li J, Lin H, Zhu X, Li L, Wang X, Sun W, Wu X, Liu A, Niu F, Wang Y, Liu Y. Association study of functional polymorphisms in serotonin transporter gene with temporal lobe epilepsy in Han Chinese population. Eur J Neurol. 2012 Feb;19(2):351-3. doi: 10.1111/j.1468-1331.2011.03521.x. Epub 2011 Sep 27."
+      },
+      {
+       "pmid": "31494011",
+       "type": "BACKGROUND",
+       "citation": "Ellis CA, Petrovski S, Berkovic SF. Epilepsy genetics: clinical impacts and biological insights. Lancet Neurol. 2020 Jan;19(1):93-100. doi: 10.1016/S1474-4422(19)30269-8. Epub 2019 Sep 4."
+      },
+      {
+       "pmid": "15120748",
+       "type": "BACKGROUND",
+       "citation": "Buono RJ, Lohoff FW, Sander T, Sperling MR, O'Connor MJ, Dlugos DJ, Ryan SG, Golden GT, Zhao H, Scattergood TM, Berrettini WH, Ferraro TN. Association between variation in the human KCNJ10 potassium ion channel gene and seizure susceptibility. Epilepsy Res. 2004 Feb;58(2-3):175-83. doi: 10.1016/j.eplepsyres.2004.02.003."
+      },
+      {
+       "pmid": "19864112",
+       "type": "BACKGROUND",
+       "citation": "Heuser K, Nagelhus EA, Tauboll E, Indahl U, Berg PR, Lien S, Nakken S, Gjerstad L, Ottersen OP. Variants of the genes encoding AQP4 and Kir4.1 are associated with subgroups of patients with temporal lobe epilepsy. Epilepsy Res. 2010 Jan;88(1):55-64. doi: 10.1016/j.eplepsyres.2009.09.023. Epub 2009 Oct 28."
+      },
+      {
+       "pmid": "21664108",
+       "type": "BACKGROUND",
+       "citation": "Lv RJ, He JS, Fu YH, Zhang YQ, Shao XQ, Wu LW, Lu Q, Jin LR, Liu H. ASIC1a polymorphism is associated with temporal lobe epilepsy. Epilepsy Res. 2011 Sep;96(1-2):74-80. doi: 10.1016/j.eplepsyres.2011.05.002. Epub 2011 Jun 12."
+      },
+      {
+       "pmid": "28111355",
+       "type": "BACKGROUND",
+       "citation": "Kobow K, Blumcke I. Epigenetics in epilepsy. Neurosci Lett. 2018 Feb 22;667:40-46. doi: 10.1016/j.neulet.2017.01.012. Epub 2017 Jan 19."
+      },
+      {
+       "type": "BACKGROUND",
+       "citation": "Hastie T, Tibshirani R, Friedman J. The elements of statistical learning. Cited on. 2009:33."
+      },
+      {
+       "pmid": "27989847",
+       "type": "BACKGROUND",
+       "citation": "Varoquaux G, Raamana PR, Engemann DA, Hoyos-Idrobo A, Schwartz Y, Thirion B. Assessing and tuning brain decoders: Cross-validation, caveats, and guidelines. Neuroimage. 2017 Jan 15;145(Pt B):166-179. doi: 10.1016/j.neuroimage.2016.10.038. Epub 2016 Oct 29."
+      },
+      {
+       "pmid": "31774490",
+       "type": "BACKGROUND",
+       "citation": "Poldrack RA, Huckins G, Varoquaux G. Establishment of Best Practices for Evidence for Prediction: A Review. JAMA Psychiatry. 2020 May 1;77(5):534-540. doi: 10.1001/jamapsychiatry.2019.3671."
+      },
+      {
+       "type": "BACKGROUND",
+       "citation": "Polley E, Van Der Laan M. Super Learner in prediction. UC Berkeley Division of Biostatistics Working Paper Series. Working Paper 266, May 2010, http://biostats.bepress.com/ucbbiostat/paper266; 2010."
+      },
+      {
+       "pmid": "28195567",
+       "type": "BACKGROUND",
+       "citation": "Fisher PM, Ozenne B, Svarer C, Adamsen D, Lehel S, Baare WF, Jensen PS, Knudsen GM. BDNF val66met association with serotonin transporter binding in healthy humans. Transl Psychiatry. 2017 Feb 14;7(2):e1029. doi: 10.1038/tp.2016.295."
+      },
+      {
+       "pmid": "24114861",
+       "type": "BACKGROUND",
+       "citation": "Dmitrienko A, D'Agostino R Sr. Traditional multiplicity adjustment methods in clinical trials. Stat Med. 2013 Dec 20;32(29):5172-218. doi: 10.1002/sim.5990. Epub 2013 Sep 30."
+      },
+      {
+       "type": "BACKGROUND",
+       "citation": "Wood SN. Generalized additive models: an introduction with R: CRC press; 2017."
+      },
+      {
+       "pmid": "25891375",
+       "type": "BACKGROUND",
+       "citation": "Knudsen GM, Jensen PS, Erritzoe D, Baare WFC, Ettrup A, Fisher PM, Gillings N, Hansen HD, Hansen LK, Hasselbalch SG, Henningsson S, Herth MM, Holst KK, Iversen P, Kessing LV, Macoveanu J, Madsen KS, Mortensen EL, Nielsen FA, Paulson OB, Siebner HR, Stenbaek DS, Svarer C, Jernigan TL, Strother SC, Frokjaer VG. The Center for Integrated Molecular Brain Imaging (Cimbi) database. Neuroimage. 2016 Jan 1;124(Pt B):1213-1219. doi: 10.1016/j.neuroimage.2015.04.025. Epub 2015 Apr 17."
+      },
+      {
+       "pmid": "33336131",
+       "type": "BACKGROUND",
+       "citation": "Parviainen L, Kalviainen R, Jutila L. Impact of diagnostic delay on seizure outcome in newly diagnosed focal epilepsy. Epilepsia Open. 2020 Dec 8;5(4):605-610. doi: 10.1002/epi4.12443. eCollection 2020 Dec."
+      },
+      {
+       "pmid": "26692007",
+       "type": "BACKGROUND",
+       "citation": "Andersen LP, Gogenur I, Rosenberg J, Reiter RJ. The Safety of Melatonin in Humans. Clin Drug Investig. 2016 Mar;36(3):169-75. doi: 10.1007/s40261-015-0368-5."
+      },
+      {
+       "pmid": "16861095",
+       "type": "BACKGROUND",
+       "citation": "Ramael S, De Smedt F, Toublanc N, Otoul C, Boulanger P, Riethuisen JM, Stockis A. Single-dose bioavailability of levetiracetam intravenous infusion relative to oral tablets and multiple-dose pharmacokinetics and tolerability of levetiracetam intravenous infusion compared with placebo in healthy subjects. Clin Ther. 2006 May;28(5):734-44. doi: 10.1016/j.clinthera.2006.05.004."
+      },
+      {
+       "pmid": "16886975",
+       "type": "BACKGROUND",
+       "citation": "Ramael S, Daoust A, Otoul C, Toublanc N, Troenaru M, Lu ZS, Stockis A. Levetiracetam intravenous infusion: a randomized, placebo-controlled safety and pharmacokinetic study. Epilepsia. 2006 Jul;47(7):1128-35. doi: 10.1111/j.1528-1167.2006.00586.x."
+      },
+      {
+       "pmid": "26760311",
+       "type": "BACKGROUND",
+       "citation": "Klein P, Tyrlikova I, Brazdil M, Rektor I. Brivaracetam for the treatment of epilepsy. Expert Opin Pharmacother. 2016;17(2):283-95. doi: 10.1517/14656566.2016.1135129. Epub 2016 Jan 13."
+      },
+      {
+       "pmid": "26890734",
+       "type": "BACKGROUND",
+       "citation": "Coito A, Genetti M, Pittau F, Iannotti GR, Thomschewski A, Holler Y, Trinka E, Wiest R, Seeck M, Michel CM, Plomp G, Vulliemoz S. Altered directed functional connectivity in temporal lobe epilepsy in the absence of interictal spikes: A high density EEG study. Epilepsia. 2016 Mar;57(3):402-11. doi: 10.1111/epi.13308. Epub 2016 Feb 18."
+      },
+      {
+       "pmid": "25599821",
+       "type": "BACKGROUND",
+       "citation": "Coito A, Plomp G, Genetti M, Abela E, Wiest R, Seeck M, Michel CM, Vulliemoz S. Dynamic directed interictal connectivity in left and right temporal lobe epilepsy. Epilepsia. 2015 Feb;56(2):207-17. doi: 10.1111/epi.12904. Epub 2015 Jan 20."
+      },
+      {
+       "pmid": "29527470",
+       "type": "BACKGROUND",
+       "citation": "Verhoeven T, Coito A, Plomp G, Thomschewski A, Pittau F, Trinka E, Wiest R, Schaller K, Michel C, Seeck M, Dambre J, Vulliemoz S, van Mierlo P. Automated diagnosis of temporal lobe epilepsy in the absence of interictal spikes. Neuroimage Clin. 2017 Sep 28;17:10-15. doi: 10.1016/j.nicl.2017.09.021. eCollection 2018."
+      },
+      {
+       "pmid": "23360362",
+       "type": "BACKGROUND",
+       "citation": "McCormick C, Quraan M, Cohn M, Valiante TA, McAndrews MP. Default mode network connectivity indicates episodic memory capacity in mesial temporal lobe epilepsy. Epilepsia. 2013 May;54(5):809-18. doi: 10.1111/epi.12098. Epub 2013 Jan 29."
+      },
+      {
+       "pmid": "25068108",
+       "type": "BACKGROUND",
+       "citation": "McCormick C, Protzner AB, Barnett AJ, Cohn M, Valiante TA, McAndrews MP. Linking DMN connectivity to episodic memory capacity: what can we learn from patients with medial temporal lobe damage? Neuroimage Clin. 2014 May 16;5:188-96. doi: 10.1016/j.nicl.2014.05.008. eCollection 2014."
+      },
+      {
+       "pmid": "23124719",
+       "type": "BACKGROUND",
+       "citation": "Holmes M, Folley BS, Sonmezturk HH, Gore JC, Kang H, Abou-Khalil B, Morgan VL. Resting state functional connectivity of the hippocampus associated with neurocognitive function in left temporal lobe epilepsy. Hum Brain Mapp. 2014 Mar;35(3):735-44. doi: 10.1002/hbm.22210. Epub 2012 Nov 5."
+      },
+      {
+       "pmid": "22505284",
+       "type": "BACKGROUND",
+       "citation": "Doucet G, Osipowicz K, Sharan A, Sperling MR, Tracy JI. Extratemporal functional connectivity impairments at rest are related to memory performance in mesial temporal epilepsy. Hum Brain Mapp. 2013 Sep;34(9):2202-16. doi: 10.1002/hbm.22059. Epub 2012 Apr 16."
+      },
+      {
+       "pmid": "26009613",
+       "type": "BACKGROUND",
+       "citation": "Voets NL, Menke RA, Jbabdi S, Husain M, Stacey R, Carpenter K, Adcock JE. Thalamo-Cortical Disruption Contributes to Short-Term Memory Deficits in Patients with Medial Temporal Lobe Damage. Cereb Cortex. 2015 Nov;25(11):4584-95. doi: 10.1093/cercor/bhv109. Epub 2015 May 24."
+      },
+      {
+       "pmid": "24264234",
+       "type": "BACKGROUND",
+       "citation": "Mitchell TJ, Hacker CD, Breshears JD, Szrama NP, Sharma M, Bundy DT, Pahwa M, Corbetta M, Snyder AZ, Shimony JS, Leuthardt EC. A novel data-driven approach to preoperative mapping of functional cortex using resting-state functional magnetic resonance imaging. Neurosurgery. 2013 Dec;73(6):969-82; discussion 982-3. doi: 10.1227/NEU.0000000000000141."
+      },
+      {
+       "pmid": "25708625",
+       "type": "BACKGROUND",
+       "citation": "Doucet GE, Rider R, Taylor N, Skidmore C, Sharan A, Sperling M, Tracy JI. Presurgery resting-state local graph-theory measures predict neurocognitive outcomes after brain surgery in temporal lobe epilepsy. Epilepsia. 2015 Apr;56(4):517-26. doi: 10.1111/epi.12936. Epub 2015 Feb 23."
+      },
+      {
+       "pmid": "30488645",
+       "type": "BACKGROUND",
+       "citation": "Alonazi BK, Keller SS, Fallon N, Adams V, Das K, Marson AG, Sluming V. Resting-state functional brain networks in adults with a new diagnosis of focal epilepsy. Brain Behav. 2019 Jan;9(1):e01168. doi: 10.1002/brb3.1168. Epub 2018 Nov 28."
+      },
+      {
+       "pmid": "21319269",
+       "type": "BACKGROUND",
+       "citation": "Luo C, Li Q, Lai Y, Xia Y, Qin Y, Liao W, Li S, Zhou D, Yao D, Gong Q. Altered functional connectivity in default mode network in absence epilepsy: a resting-state fMRI study. Hum Brain Mapp. 2011 Mar;32(3):438-49. doi: 10.1002/hbm.21034."
+      },
+      {
+       "pmid": "30472489",
+       "type": "BACKGROUND",
+       "citation": "Pressl C, Brandner P, Schaffelhofer S, Blackmon K, Dugan P, Holmes M, Thesen T, Kuzniecky R, Devinsky O, Freiwald WA. Resting state functional connectivity patterns associated with pharmacological treatment resistance in temporal lobe epilepsy. Epilepsy Res. 2019 Jan;149:37-43. doi: 10.1016/j.eplepsyres.2018.11.002. Epub 2018 Nov 17."
+      },
+      {
+       "pmid": "24876189",
+       "type": "BACKGROUND",
+       "citation": "Stretton J, Pope RA, Winston GP, Sidhu MK, Symms M, Duncan JS, Koepp M, Thompson PJ, Foong J. Temporal lobe epilepsy and affective disorders: the role of the subgenual anterior cingulate cortex. J Neurol Neurosurg Psychiatry. 2015 Feb;86(2):144-51. doi: 10.1136/jnnp-2013-306966. Epub 2014 May 29."
+      },
+      {
+       "pmid": "22178816",
+       "type": "BACKGROUND",
+       "citation": "Chen S, Wu X, Lui S, Wu Q, Yao Z, Li Q, Liang D, An D, Zhang X, Fang J, Huang X, Zhou D, Gong QY. Resting-state fMRI study of treatment-naive temporal lobe epilepsy patients with depressive symptoms. Neuroimage. 2012 Mar;60(1):299-304. doi: 10.1016/j.neuroimage.2011.11.092. Epub 2011 Dec 10."
+      },
+      {
+       "pmid": "29406962",
+       "type": "BACKGROUND",
+       "citation": "Zhu X, He Z, Luo C, Qiu X, He S, Peng A, Zhang L, Chen L. Altered spontaneous brain activity in MRI-negative refractory temporal lobe epilepsy patients with major depressive disorder: A resting-state fMRI study. J Neurol Sci. 2018 Mar 15;386:29-35. doi: 10.1016/j.jns.2018.01.010. Epub 2018 Jan 10."
+      },
+      {
+       "pmid": "29883917",
+       "type": "BACKGROUND",
+       "citation": "Peng W, Mao L, Yin D, Sun W, Wang H, Zhang Q, Wang J, Chen C, Zeng M, Ding J, Wang X. Functional network changes in the hippocampus contribute to depressive symptoms in epilepsy. Seizure. 2018 Aug;60:16-22. doi: 10.1016/j.seizure.2018.06.001. Epub 2018 Jun 1."
+      },
+      {
+       "pmid": "30854641",
+       "type": "BACKGROUND",
+       "citation": "Garcia DDS, Polydoro MS, Alvim MKM, Ishikawa A, Moreira JCV, Nogueira MH, Zanao TA, de Campos BM, Betting LEGG, Cendes F, Yasuda CL. Anxiety and depression symptoms disrupt resting state connectivity in patients with genetic generalized epilepsies. Epilepsia. 2019 Apr;60(4):679-688. doi: 10.1111/epi.14687. Epub 2019 Mar 10."
+      },
+      {
+       "pmid": "23250883",
+       "type": "BACKGROUND",
+       "citation": "O'Muircheartaigh J, Vollmar C, Barker GJ, Kumari V, Symms MR, Thompson P, Duncan JS, Koepp MJ, Richardson MP. Abnormal thalamocortical structural and functional connectivity in juvenile myoclonic epilepsy. Brain. 2012 Dec;135(Pt 12):3635-44. doi: 10.1093/brain/aws296."
+      },
+      {
+       "pmid": "23754695",
+       "type": "BACKGROUND",
+       "citation": "Scanlon C, Mueller SG, Cheong I, Hartig M, Weiner MW, Laxer KD. Grey and white matter abnormalities in temporal lobe epilepsy with and without mesial temporal sclerosis. J Neurol. 2013 Sep;260(9):2320-9. doi: 10.1007/s00415-013-6974-3. Epub 2013 Jun 11."
+      },
+      {
+       "pmid": "20533558",
+       "type": "BACKGROUND",
+       "citation": "Liao W, Zhang Z, Pan Z, Mantini D, Ding J, Duan X, Luo C, Wang Z, Tan Q, Lu G, Chen H. Default mode network abnormalities in mesial temporal lobe epilepsy: a study combining fMRI and DTI. Hum Brain Mapp. 2011 Jun;32(6):883-95. doi: 10.1002/hbm.21076. Epub 2010 Jun 9."
+      },
+      {
+       "pmid": "26096728",
+       "type": "BACKGROUND",
+       "citation": "Labate A, Cherubini A, Tripepi G, Mumoli L, Ferlazzo E, Aguglia U, Quattrone A, Gambardella A. White matter abnormalities differentiate severe from benign temporal lobe epilepsy. Epilepsia. 2015 Jul;56(7):1109-16. doi: 10.1111/epi.13027. Epub 2015 Jun 19."
+      },
+      {
+       "pmid": "29046235",
+       "type": "BACKGROUND",
+       "citation": "Kavanaugh B, Correia S, Jones J, Blum A, LaFrance WC Jr, Davis JD. White matter integrity correlates with depressive symptomatology in temporal lobe epilepsy. Epilepsy Behav. 2017 Dec;77:99-105. doi: 10.1016/j.yebeh.2017.07.035. Epub 2017 Oct 16."
+      },
+      {
+       "pmid": "32146320",
+       "type": "BACKGROUND",
+       "citation": "Winston GP, Vos SB, Caldairou B, Hong SJ, Czech M, Wood TC, Wastling SJ, Barker GJ, Bernhardt BC, Bernasconi N, Duncan JS, Bernasconi A. Microstructural imaging in temporal lobe epilepsy: Diffusion imaging changes relate to reduced neurite density. Neuroimage Clin. 2020;26:102231. doi: 10.1016/j.nicl.2020.102231. Epub 2020 Feb 28."
+      },
+      {
+       "pmid": "30113469",
+       "type": "BACKGROUND",
+       "citation": "Xu SW, Xi JH, Lin C, Wang XY, Fu LY, Kralik SF, Chen ZQ. Cognitive decline and white matter changes in mesial temporal lobe epilepsy. Medicine (Baltimore). 2018 Aug;97(33):e11803. doi: 10.1097/MD.0000000000011803."
+      },
+      {
+       "pmid": "23516322",
+       "type": "BACKGROUND",
+       "citation": "Martinez A, Finegersh A, Cannon DM, Dustin I, Nugent A, Herscovitch P, Theodore WH. The 5-HT1A receptor and 5-HT transporter in temporal lobe epilepsy. Neurology. 2013 Apr 16;80(16):1465-71. doi: 10.1212/WNL.0b013e31828cf809. Epub 2013 Mar 20."
+      },
+      {
+       "pmid": "22050514",
+       "type": "BACKGROUND",
+       "citation": "Theodore WH, Wiggs EA, Martinez AR, Dustin IH, Khan OI, Appel S, Reeves-Tyer P, Sato S. Serotonin 1A receptors, depression, and memory in temporal lobe epilepsy. Epilepsia. 2012 Jan;53(1):129-33. doi: 10.1111/j.1528-1167.2011.03309.x. Epub 2011 Nov 2."
+      },
+      {
+       "pmid": "26052981",
+       "type": "BACKGROUND",
+       "citation": "Gershen LD, Zanotti-Fregonara P, Dustin IH, Liow JS, Hirvonen J, Kreisl WC, Jenko KJ, Inati SK, Fujita M, Morse CL, Brouwer C, Hong JS, Pike VW, Zoghbi SS, Innis RB, Theodore WH. Neuroinflammation in Temporal Lobe Epilepsy Measured Using Positron Emission Tomographic Imaging of Translocator Protein. JAMA Neurol. 2015 Aug;72(8):882-8. doi: 10.1001/jamaneurol.2015.0941."
+      },
+      {
+       "pmid": "22238156",
+       "type": "BACKGROUND",
+       "citation": "Hirvonen J, Kreisl WC, Fujita M, Dustin I, Khan O, Appel S, Zhang Y, Morse C, Pike VW, Innis RB, Theodore WH. Increased in vivo expression of an inflammatory marker in temporal lobe epilepsy. J Nucl Med. 2012 Feb;53(2):234-40. doi: 10.2967/jnumed.111.091694. Epub 2012 Jan 11."
+      },
+      {
+       "pmid": "40655979",
+       "type": "DERIVED",
+       "citation": "Marstrand-Joergensen MR, Dam VH, Vinter K, Ip CT, Jensen KR, Jorgensen MB, Hoei-Hansen CE, Ozenne B, Fisher PM, Knudsen GM, Pinborg LH. The BrainDrugs-epilepsy study: A prospective open-label cohort precision medicine study in epilepsy. Neurosci Appl. 2023 Sep 30;2:101136. doi: 10.1016/j.nsa.2023.101136. eCollection 2023."
+      },
+      {
+       "pmid": "38758370",
+       "type": "DERIVED",
+       "citation": "Marstrand-Joergensen MR, Laurell GL, Herrmann S, Nasser A, Johansen A, Lund A, Andersen TL, Knudsen GM, Pinborg LH. Assessment of cerebral drug occupancy in humans using a single PET-scan: A [11C]UCB-J PET study. Eur J Nucl Med Mol Imaging. 2024 Sep;51(11):3292-3304. doi: 10.1007/s00259-024-06759-x. Epub 2024 May 17."
+      }
+     ]
+    },
+    "ipdSharingStatementModule": {
+     "ipdSharing": "YES",
+     "description": "Via database of Center for Integrated Molecular Brain Imaging (Knudsen et al 2016, NeuroImage) data will be available for the research community upon request and after approval by the scientific board at Neurobiological Research Unit. The data will be stored on a password protected survey system behind secure \"firewalls\" in accordance with the General Data Protection Regulation (GDPR, Regulation European Union (EU) 2016/679 April 27, 2016) and the Danish Data Protection Act and the regulation (Act No. 502 of 23 May 2018). Potential further processing in other national and international laboratories may occur, yet always in accordance with the GDPR (Regulation EU 2016/679 April 27, 2016) and the Danish Data Protection Act and the regulation (Act No. 502 of 23 May 2018).",
+     "timeFrame": "Upon completion of the study.",
+     "accessCriteria": "Researchers may apply for access to the data.",
+     "url": "http://www.cimbi.dk/"
+    }
+   },
+   "derivedSection": {
+    "miscInfoModule": {
+     "versionHolder": "2026-10-09"
+    },
+    "conditionBrowseModule": {
+     "meshes": [
+      {
+       "id": "D004827",
+       "term": "Epilepsy"
+      }
+     ],
+     "ancestors": [
+      {
+       "id": "D001927",
+       "term": "Brain Diseases"
+      },
+      {
+       "id": "D002493",
+       "term": "Central Nervous System Diseases"
+      },
+      {
+       "id": "D009422",
+       "term": "Nervous System Diseases"
+      }
+     ]
+    },
+    "interventionBrowseModule": {
+     "meshes": [
+      {
+       "id": "D000077287",
+       "term": "Levetiracetam"
+      },
+      {
+       "id": "D000077213",
+       "term": "Lamotrigine"
+      }
+     ],
+     "ancestors": [
+      {
+       "id": "D000081",
+       "term": "Acetamides"
+      },
+      {
+       "id": "D000577",
+       "term": "Amides"
+      },
+      {
+       "id": "D009930",
+       "term": "Organic Chemicals"
+      },
+      {
+       "id": "D000085",
+       "term": "Acetates"
+      },
+      {
+       "id": "D000144",
+       "term": "Acids, Acyclic"
+      },
+      {
+       "id": "D002264",
+       "term": "Carboxylic Acids"
+      },
+      {
+       "id": "D011760",
+       "term": "Pyrrolidinones"
+      },
+      {
+       "id": "D011759",
+       "term": "Pyrrolidines"
+      },
+      {
+       "id": "D006573",
+       "term": "Heterocyclic Compounds, 1-Ring"
+      },
+      {
+       "id": "D006571",
+       "term": "Heterocyclic Compounds"
+      },
+      {
+       "id": "D014227",
+       "term": "Triazines"
+      }
+     ]
+    }
+   },
+   "hasResults": false
+  }
+ ]
+}

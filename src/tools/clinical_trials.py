@@ -2,12 +2,25 @@
 
 from __future__ import annotations
 
+import logging
+import re
+
 import requests
 
 from .base import BaseTool, EvidenceRecord
 
+logger = logging.getLogger(__name__)
+
 CT_API_URL = "https://clinicaltrials.gov/api/v2/studies"
 CT_WEB_URL = "https://clinicaltrials.gov/study/{nct_id}"
+
+# Overall-status values the v2 API accepts, upper case, comma-joined. Live
+# check 2026-10-11: spaces after commas and lower case are rejected with 400.
+OVERALL_STATUSES = {
+    "ACTIVE_NOT_RECRUITING", "COMPLETED", "ENROLLING_BY_INVITATION", "NOT_YET_RECRUITING",
+    "RECRUITING", "SUSPENDED", "TERMINATED", "WITHDRAWN", "AVAILABLE", "NO_LONGER_AVAILABLE",
+    "TEMPORARILY_NOT_AVAILABLE", "APPROVED_FOR_MARKETING", "WITHHELD", "UNKNOWN",
+}
 
 TIMEOUT = 15
 
@@ -49,9 +62,10 @@ class ClinicalTrialsTool(BaseTool):
                         "status_filter": {
                             "type": "string",
                             "description": (
-                                "Filter by trial status. Options: "
-                                "RECRUITING, ACTIVE_NOT_RECRUITING, COMPLETED, "
-                                "NOT_YET_RECRUITING. Leave empty for all."
+                                "Filter by trial status, one or more of RECRUITING, "
+                                "NOT_YET_RECRUITING, ACTIVE_NOT_RECRUITING, "
+                                "ENROLLING_BY_INVITATION, COMPLETED, TERMINATED; "
+                                "separate several with commas. Leave empty for all."
                             ),
                         },
                     },
@@ -59,6 +73,17 @@ class ClinicalTrialsTool(BaseTool):
                 },
             },
         }
+
+    @staticmethod
+    def _normalise_statuses(text: str) -> tuple[list[str], list[str]]:
+        """Split a status list however it was written; return (accepted, rejected)."""
+        raw = [t.strip().upper().replace(" ", "_") for t in re.split(r"[,|;]|\s{2,}", text) if t.strip()]
+        # A single space-separated list ("RECRUITING NOT_YET_RECRUITING") also splits on spaces.
+        if len(raw) == 1 and " " in text.strip():
+            raw = [t.strip().upper() for t in text.split() if t.strip()]
+        accepted = [r for r in raw if r in OVERALL_STATUSES]
+        rejected = [r for r in raw if r not in OVERALL_STATUSES]
+        return accepted, rejected
 
     def execute(self, **kwargs) -> tuple[str, list[EvidenceRecord]]:
         query = kwargs.get("query", "")
@@ -85,7 +110,13 @@ class ClinicalTrialsTool(BaseTool):
                 params["query.term"] = " ".join(query_parts)
 
             if status_filter:
-                params["filter.overallStatus"] = status_filter
+                statuses, rejected = self._normalise_statuses(status_filter)
+                if rejected:
+                    logger.warning(f"ClinicalTrials.gov status filter: dropped unknown values {rejected} from {status_filter!r}")
+                if statuses:
+                    # The API wants upper-case values joined by commas with no spaces;
+                    # "RECRUITING, NOT_YET_RECRUITING" was rejected with HTTP 400 (run 2).
+                    params["filter.overallStatus"] = ",".join(statuses)
 
             resp = requests.get(CT_API_URL, params=params, timeout=TIMEOUT)
             resp.raise_for_status()
