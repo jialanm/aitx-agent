@@ -8,7 +8,9 @@ from .variant_validation import ValidatedVariant
 # Tool routing per category
 TOOL_PRIORITY = {
     # Phase 1 question categories (retired task, kept for the eval set).
-    "Established_Targeted": ["search_genereviews", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
+    # VEP second: exon-skipping and readthrough eligibility turn on the
+    # consequence, exon and frame, which the model never fetched in run 3.
+    "Established_Targeted": ["search_genereviews", "query_ensembl", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
     "Established_Supportive": ["search_genereviews", "search_omim", "search_pubmed"],
     "Clinical_Trials": ["search_clinical_trials", "search_omim", "search_pubmed"],
     "Drug_Development_and_Repurposing": ["search_pubmed", "search_pharmgkb", "search_fda_labels", "search_clinical_trials"],
