@@ -328,6 +328,34 @@ class TestEmptyResultNotice:
         def execute(self, **kwargs):
             return "one record", [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/clinvar/variation/1/")]
 
+    class _Menu(BaseTool):
+        """A reply with no evidence links that is nevertheless an answer to choose from."""
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_genereviews", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return ("GeneReviews chapters indexed to COL1A1 (3); call again with the accession that matches the patient's phenotype:\n"
+                    "- NBK1244: Classic Ehlers-Danlos Syndrome (PMID 20301422)"), []
+
+    def test_a_menu_reply_does_not_trigger_the_notice(self, monkeypatch):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000007.14:g.117559592_117559594del", gene_symbol="CFTR"))
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "COL1A1"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""),
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        agent = Agent(model=None, tokenizer=None, tools=[self._Menu()])
+
+        agent.run(TaskInput(**TestTrace.TASK))
+
+        assert "empty_result_notice" not in agent.last_trace["events"]
+        assert not any("returned no evidence" in m["content"] for m in agent.last_trace["messages"] if m["role"] == "user")
+
     def test_notice_names_the_next_untried_tool_and_model_writes_the_call(self, monkeypatch):
         import src.agent as agent_module
         from src.variant_validation import ValidatedVariant

@@ -168,6 +168,7 @@ class Agent:
                 break
 
             # Execute tool calls
+            calls_before = len(self.last_trace["tool_calls"])
             for tc in response.tool_calls:
                 tool = self.tools.get(tc.name)
                 if tool is None:
@@ -205,7 +206,14 @@ class Agent:
             # a gene entry for a trial question and a consequence for a domain
             # question). It says so and names the next recommended tool; the
             # model decides and writes the arguments.
-            if not all_evidence and iteration < MAX_ITERATIONS - 1:
+            turn_calls = self.last_trace["tool_calls"][calls_before:]
+            # Only when the results are the adapters' own "nothing found"
+            # replies: a reply with no evidence links can still be an answer,
+            # such as GeneReviews' list of chapters to choose from (run 4,
+            # AITX-00008: the notice steered the model away from the list).
+            if not all_evidence and iteration < MAX_ITERATIONS - 1 and all(
+                self._is_adapter_boilerplate(c.get("summary", "")) for c in turn_calls
+            ):
                 self.last_trace["events"].append("empty_result_notice")
                 tried.update(tc.name for tc in response.tool_calls)
                 messages.append({"role": "user", "content": self._empty_result_notice(context, tried)})
