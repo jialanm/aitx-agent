@@ -506,3 +506,50 @@ class TestGroundedJustifications:
 
         assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
         assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+
+
+class TestAdapterBoilerplateIsNotGrounding:
+    """A citation that quotes the adapter's own 'nothing found' line is unsupported (run 3, AITX-00010)."""
+
+    class _EmptyTrials(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_clinical_trials", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return ("No clinical trials found for query: SLC35A2 seizures. Search URL: https://clinicaltrials.gov/search?term=SLC35A2",
+                    [EvidenceRecord(url="https://clinicaltrials.gov/search?term=SLC35A2")])
+
+    def test_quoted_nothing_found_line_is_marked_unsupported(self, monkeypatch):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.48911634C>T", gene_symbol="SLC35A2"))
+        reply = '1. QUOTE: "No clinical trials found for query: SLC35A2 seizures."\n   WHY: No trials means not eligible.'
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_clinical_trials", arguments={"query": "SLC35A2"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="No", tool_calls=[], raw="No", thinking=""),
+            ModelResponse(text=reply, tool_calls=[], raw=reply, thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["question"] = dict(task["question"], answer_format="binary", prompt="Is this patient eligible for clinical trial NCT05402384? Answer yes or no.")
+        agent = Agent(model=None, tokenizer=None, tools=[self._EmptyTrials()])
+
+        output = agent.run(TaskInput(**task))
+
+        assert output.response == "No"
+        assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
+        assert "citation_unsupported:https://clinicaltrials.gov/search?term=SLC35A2" in agent.last_trace["events"]
+
+    @pytest.mark.parametrize("quote, boilerplate", [
+        ("No clinical trials found for query: KCNT1", True),
+        ("VEP returned nothing for NC_000002.12:g.240871433G>A: HTTP 500", True),
+        ("GeneReviews has no chapter indexed to gene SLC35A2.", True),
+        ("ClinVar API error: 429 Too Many Requests", True),
+        ("No ClinVar record found for the patient's exact variant NM_004006.3:c.7544_9286del", True),
+        ("Targeted therapies: (1) Pyridoxine (vitamin B6) to reduce liver oxalate production", False),
+        ("NCT ID: NCT05402384", False),
+    ])
+    def test_boilerplate_patterns(self, quote, boilerplate):
+        assert Agent._is_adapter_boilerplate(quote) is boilerplate

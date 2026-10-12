@@ -509,7 +509,11 @@ class Agent:
         items = []
         for i, record in enumerate(records):
             quote, sentence = justifications[i] if i < len(justifications) else ("", "")
-            supported = bool(quote) and self._quote_in_text(quote, source_texts[i])
+            supported = (
+                bool(quote)
+                and self._quote_in_text(quote, source_texts[i])
+                and not self._is_adapter_boilerplate(quote)
+            )
             if supported:
                 justification = f'"{quote}" {sentence}'.strip()
             else:
@@ -532,6 +536,22 @@ class Agent:
             if url in call.get("evidence_urls", []):
                 return call.get("summary", "")
         return ""
+
+    # Sentences the adapters themselves write when a lookup finds nothing.
+    # They are verbatim in the tool text, so the quote check would pass them,
+    # but they report an empty search, not a record (run 3, AITX-00010).
+    _BOILERPLATE = re.compile(
+        r"^\W*(?:No (?:clinical trials|ClinVar record|FDA drug labels?|UniProt entry|PubMed articles|OMIM entries|PharmGKB entry|Ensembl data)\b"
+        r"|[\w. ]+ returned nothing\b"
+        r"|[\w. ]+ has no (?:chapter|study|target|dosage curation)\b"
+        r"|[\w. ]+ (?:API|lookup) error\b)",
+        re.IGNORECASE,
+    )
+
+    @classmethod
+    def _is_adapter_boilerplate(cls, quote: str) -> bool:
+        """True if the quote is an adapter's own 'nothing found' sentence rather than a record."""
+        return bool(cls._BOILERPLATE.match(quote.strip()))
 
     @staticmethod
     def _quote_in_text(quote: str, text: str) -> bool:
