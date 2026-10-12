@@ -6,9 +6,13 @@ NCBI E-utilities to look up MIM numbers and gene-disease associations.
 
 from __future__ import annotations
 
+import logging
+
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, ncbi_get, ncbi_params, redact_ncbi_key
+
+logger = logging.getLogger(__name__)
 
 ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 ESUMMARY_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi"
@@ -85,19 +89,14 @@ class OMIMTool(BaseTool):
             return summary[:2000], evidence
 
         except requests.RequestException as e:
-            return f"OMIM lookup error: {e}", evidence
+            return redact_ncbi_key(f"OMIM lookup error: {e}"), evidence
 
     def _search_omim_gene(self, gene: str) -> list[dict]:
         """Search NCBI for OMIM gene entries."""
         try:
             resp = ncbi_get(
                 label="OMIM", url=ESEARCH_URL,
-                params={
-                    "db": "omim",
-                    "term": f"{gene}[gene symbol]",
-                    "retmode": "json",
-                    "retmax": 5,
-                },
+                params=ncbi_params(db="omim", term=f"{gene}[gene symbol]", retmode="json", retmax=5),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -107,11 +106,7 @@ class OMIMTool(BaseTool):
 
             resp2 = ncbi_get(
                 label="OMIM", url=ESUMMARY_URL,
-                params={
-                    "db": "omim",
-                    "id": ",".join(id_list[:5]),
-                    "retmode": "json",
-                },
+                params=ncbi_params(db="omim", id=",".join(id_list[:5]), retmode="json"),
                 timeout=TIMEOUT,
             )
             resp2.raise_for_status()
@@ -124,8 +119,13 @@ class OMIMTool(BaseTool):
                 entries.append(entry)
             return entries
 
-        except Exception:
-            return []
+        except requests.RequestException:
+            raise
+        except Exception as e:
+            # A bug here must not read as "no entries": since 3ce8b72 a missing
+            # import made every OMIM lookup fail this way until 2026-10-11.
+            logger.error(f"OMIM gene search failed for {gene}: {type(e).__name__}: {redact_ncbi_key(str(e))}")
+            raise
 
     def _search_omim_phenotype(self, gene: str, condition: str) -> list[dict]:
         """Search NCBI for OMIM phenotype entries."""
@@ -136,12 +136,7 @@ class OMIMTool(BaseTool):
 
             resp = ncbi_get(
                 label="OMIM", url=ESEARCH_URL,
-                params={
-                    "db": "omim",
-                    "term": query,
-                    "retmode": "json",
-                    "retmax": 5,
-                },
+                params=ncbi_params(db="omim", term=query, retmode="json", retmax=5),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -151,11 +146,7 @@ class OMIMTool(BaseTool):
 
             resp2 = ncbi_get(
                 label="OMIM", url=ESUMMARY_URL,
-                params={
-                    "db": "omim",
-                    "id": ",".join(id_list[:5]),
-                    "retmode": "json",
-                },
+                params=ncbi_params(db="omim", id=",".join(id_list[:5]), retmode="json"),
                 timeout=TIMEOUT,
             )
             resp2.raise_for_status()
@@ -168,7 +159,8 @@ class OMIMTool(BaseTool):
                 entries.append(entry)
             return entries
 
-        except Exception:
+        except Exception as e:
+            logger.warning(f"OMIM phenotype search failed for {gene}: {type(e).__name__}: {redact_ncbi_key(str(e))}")
             return []
 
     def _get_medgen_inheritance(self, gene: str, condition: str) -> str | None:
@@ -180,12 +172,7 @@ class OMIMTool(BaseTool):
 
             resp = ncbi_get(
                 label="OMIM", url=ESEARCH_URL,
-                params={
-                    "db": "medgen",
-                    "term": query,
-                    "retmode": "json",
-                    "retmax": 3,
-                },
+                params=ncbi_params(db="medgen", term=query, retmode="json", retmax=3),
                 timeout=TIMEOUT,
             )
             resp.raise_for_status()
@@ -195,11 +182,7 @@ class OMIMTool(BaseTool):
 
             resp2 = ncbi_get(
                 label="OMIM", url=ESUMMARY_URL,
-                params={
-                    "db": "medgen",
-                    "id": ",".join(id_list[:3]),
-                    "retmode": "json",
-                },
+                params=ncbi_params(db="medgen", id=",".join(id_list[:3]), retmode="json"),
                 timeout=TIMEOUT,
             )
             resp2.raise_for_status()
@@ -221,7 +204,8 @@ class OMIMTool(BaseTool):
 
             return "\n".join(parts) if len(parts) > 1 else None
 
-        except Exception:
+        except Exception as e:
+            logger.warning(f"MedGen inheritance lookup failed for {gene}: {type(e).__name__}: {redact_ncbi_key(str(e))}")
             return None
 
     def _format_gene_entries(

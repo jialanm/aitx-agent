@@ -1,0 +1,18 @@
+{
+ "header": {
+  "type": "esummary",
+  "version": "0.3"
+ },
+ "result": {
+  "uids": [
+   "314375"
+  ],
+  "314375": {
+   "uid": "314375",
+   "oid": "*314375",
+   "title": "SOLUTE CARRIER FAMILY 35 (UDP-GALACTOSE TRANSPORTER), MEMBER 2; SLC35A2",
+   "alttitles": "UDP-GALACTOSE TRANSPORTER, ISOFORM 1, INCLUDED; UGT1, INCLUDED",
+   "locus": "30817854"
+  }
+ }
+}
