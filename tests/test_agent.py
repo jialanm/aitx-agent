@@ -468,6 +468,7 @@ class TestGroundedJustifications:
             ModelResponse(text=justification_reply, tool_calls=[], raw=justification_reply, thinking=""),
         ]
         monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))  # no RxNorm network in tests
         task = dict(TestFabricatedIdentifierCheck.TASK)
         task["id"] = "AITX-00004"
         task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",

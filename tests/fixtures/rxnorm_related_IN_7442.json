@@ -1,0 +1,21 @@
+{
+ "relatedGroup": {
+  "rxcui": null,
+  "conceptGroup": [
+   {
+    "tty": "IN",
+    "conceptProperties": [
+     {
+      "rxcui": "7442",
+      "name": "nitric oxide",
+      "synonym": "",
+      "tty": "IN",
+      "language": "ENG",
+      "suppress": "N",
+      "umlscui": ""
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,21 @@
+{
+ "relatedGroup": {
+  "rxcui": null,
+  "conceptGroup": [
+   {
+    "tty": "IN",
+    "conceptProperties": [
+     {
+      "rxcui": "9671",
+      "name": "serine",
+      "synonym": "L-serine",
+      "tty": "IN",
+      "language": "ENG",
+      "suppress": "N",
+      "umlscui": ""
+     }
+    ]
+   }
+  ]
+ }
+}

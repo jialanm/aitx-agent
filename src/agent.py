@@ -19,6 +19,7 @@ from .prompts import (
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
 from .variant_validation import validate_variant
+from .drug_names import normalise_drug_names
 
 logger = logging.getLogger(__name__)
 
@@ -233,6 +234,14 @@ class Agent:
             normalized = self._retry_for_valid_answer(
                 messages, context["answer_format"], context["prompt"], options
             )
+
+        # Step 6a: brand and salt names in a string answer become the
+        # ingredient (run 3, AITX-00008: "DDAVP" for desmopressin), recorded
+        # in the trace; RxNorm decides, the model's text is not guessed at.
+        if context["answer_format"] == "string_match" and normalized:
+            normalized, changes = normalise_drug_names(normalized)
+            for c in changes:
+                self.last_trace["events"].append(f"drug_name_normalised:{c['from']}->{c['to']}:rxcui{c['rxcui']}")
 
         # Step 6b: an identifier in the answer must occur in a tool result.
         # Run 2 (2026-10-07, AITX-00009): both trial searches failed and the

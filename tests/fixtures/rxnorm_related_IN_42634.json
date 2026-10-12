@@ -1,0 +1,21 @@
+{
+ "relatedGroup": {
+  "rxcui": null,
+  "conceptGroup": [
+   {
+    "tty": "IN",
+    "conceptProperties": [
+     {
+      "rxcui": "3251",
+      "name": "desmopressin",
+      "synonym": "",
+      "tty": "IN",
+      "language": "ENG",
+      "suppress": "N",
+      "umlscui": ""
+     }
+    ]
+   }
+  ]
+ }
+}
