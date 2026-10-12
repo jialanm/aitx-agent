@@ -193,6 +193,12 @@ class TestOptionExtraction:
         assert Agent(model=None, tokenizer=None, tools=[])._extract_options(self.NF1) == []
 
 
+
+def loop_events(trace):
+    """Trace events except the per-citation ones added by the justification step."""
+    return [e for e in trace["events"] if not e.startswith("citation_unsupported")]
+
+
 class TestTrace:
     """run() keeps its working notes on last_trace; the model is scripted."""
 
@@ -246,7 +252,7 @@ class TestTrace:
         assert output.response == "Yes"
         trace = agent.last_trace
         assert trace["id"] == "AITX-TEST"
-        assert trace["events"] == []
+        assert loop_events(trace) == []
         assert len(trace["tool_calls"]) == 1
         recorded = trace["tool_calls"][0]
         assert recorded["tool"] == "search_clinvar"
@@ -271,7 +277,7 @@ class TestTrace:
         output = agent.run(TaskInput(**self.TASK))
 
         assert output.response == "Yes"
-        assert agent.last_trace["events"] == ["evidence_reminder"]
+        assert loop_events(agent.last_trace) == ["evidence_reminder"]
         assert [c["origin"] for c in agent.last_trace["tool_calls"]] == ["model"]
         assert agent.last_trace["tool_calls"][0]["arguments"] == {"gene": "CFTR", "variant": "c.1521_1523del"}
         reminder = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "looking anything up" in m["content"])
@@ -287,7 +293,7 @@ class TestTrace:
         output = agent.run(TaskInput(**self.TASK))
 
         assert output.response == "No"
-        assert agent.last_trace["events"] == ["evidence_reminder", "reminder_ignored"]
+        assert loop_events(agent.last_trace) == ["evidence_reminder", "reminder_ignored"]
         assert agent.last_trace["tool_calls"] == []
 
     def test_validation_result_reaches_trace_and_prompt(self, monkeypatch):
@@ -339,7 +345,7 @@ class TestEmptyResultNotice:
         output = agent.run(TaskInput(**TestTrace.TASK))  # Established_Targeted: genereviews, clinvar, ...
 
         assert output.response == "Yes"
-        assert agent.last_trace["events"] == ["empty_result_notice"]
+        assert loop_events(agent.last_trace) == ["empty_result_notice"]
         assert [(c["tool"], c["origin"]) for c in agent.last_trace["tool_calls"]] == [("search_genereviews", "model"), ("search_clinvar", "model")]
         notice = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "returned no evidence" in m["content"])
         assert "next recommended tool for this question is search_clinvar" in notice["content"]
@@ -366,7 +372,7 @@ class TestModelTurnsInTrace:
         recorded = agent.last_trace["model_turns"]
         assert [(m["kind"], m["iteration"], m["text"]) for m in recorded] == [("loop", 1, "No"), ("loop", 2, "Yes")]
         assert recorded[0]["thinking"] == "I know this one."
-        assert agent.last_trace["events"] == ["evidence_reminder", "reminder_ignored"]
+        assert loop_events(agent.last_trace) == ["evidence_reminder", "reminder_ignored"]
         assert agent.last_trace["final_text"] == "Yes"
         assert agent.last_trace["answer"] == output.response == "Yes"
 
@@ -417,7 +423,7 @@ class TestFabricatedIdentifierCheck:
         output, trace = self._run(monkeypatch, tool, "NCT05678901")
 
         assert output.response == "None"
-        assert trace["events"] == ["fabricated_identifier:NCT05678901"]
+        assert loop_events(trace) == ["fabricated_identifier:NCT05678901"]
 
     def test_trial_id_present_in_a_result_is_kept(self, monkeypatch):
         tool = self._Trials("Found 1 clinical trial.\nNCT ID: NCT05402384\nStatus: RECRUITING", ["https://clinicaltrials.gov/study/NCT05402384"])
@@ -425,7 +431,7 @@ class TestFabricatedIdentifierCheck:
         output, trace = self._run(monkeypatch, tool, "NCT05402384")
 
         assert output.response == "NCT05402384"
-        assert trace["events"] == []
+        assert loop_events(trace) == []
 
     def test_only_the_absent_id_is_removed_from_a_list(self, monkeypatch):
         tool = self._Trials("NCT ID: NCT05402384", ["https://clinicaltrials.gov/study/NCT05402384"])
@@ -433,4 +439,69 @@ class TestFabricatedIdentifierCheck:
         output, trace = self._run(monkeypatch, tool, "NCT05402384,NCT05678901")
 
         assert output.response == "NCT05402384"
-        assert trace["events"] == ["fabricated_identifier:NCT05678901"]
+        assert loop_events(trace) == ["fabricated_identifier:NCT05678901"]
+
+
+class TestGroundedJustifications:
+    """A citation's justification must quote its own retrieved text; invented quotes are replaced and recorded."""
+
+    SOURCE = ("GeneReviews: Primary Hyperoxaluria Type 1 (NBK1283)\nMANAGEMENT: Targeted therapies: (1) Pyridoxine "
+              "(vitamin B6) to reduce liver oxalate production in individuals with missense AGXT variants known to be "
+              "pyridoxine responsive; (2) RNA interference (RNAi) therapeutics (lumasiran and nedosiran).")
+
+    class _GR(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_genereviews", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return TestGroundedJustifications.SOURCE, [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/books/NBK1283/")]
+
+    def _run(self, monkeypatch, justification_reply):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "AGXT"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),
+            ModelResponse(text=justification_reply, tool_calls=[], raw=justification_reply, thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00004"
+        task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
+                                         "variant_protein": "p.(Gly170Arg)", "zygosity": "homozygous"}],
+                           "clinical_context": "Recurrent nephrocalcinosis and chronic kidney disease"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "What targeted, small molecule therapy is available for this patient? Provide the generic name or None.",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[self._GR()])
+        return agent.run(TaskInput(**task)), agent.last_trace
+
+    def test_verbatim_quote_from_the_source_is_kept(self, monkeypatch):
+        reply = ('1. QUOTE: "Pyridoxine (vitamin B6) to reduce liver oxalate production in individuals with missense AGXT '
+                 'variants known to be pyridoxine responsive"\n   WHY: The patient has a missense AGXT variant.')
+
+        output, trace = self._run(monkeypatch, reply)
+
+        assert output.evidence[0].source == "https://www.ncbi.nlm.nih.gov/books/NBK1283/"
+        assert output.evidence[0].justification.startswith('"Pyridoxine (vitamin B6) to reduce liver oxalate production')
+        assert output.evidence[0].justification.endswith("The patient has a missense AGXT variant.")
+        assert not any(e.startswith("citation_unsupported") for e in trace["events"])
+        assert trace["model_turns"][-1]["kind"] == "justifications"
+
+    def test_invented_quote_is_replaced_and_recorded(self, monkeypatch):
+        reply = ('1. QUOTE: "Pyridoxine is first-line therapy for all AGXT patients regardless of genotype"\n'
+                 '   WHY: It supports the answer.')
+
+        output, trace = self._run(monkeypatch, reply)
+
+        assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
+        assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+
+    def test_not_supported_is_honoured(self, monkeypatch):
+        output, trace = self._run(monkeypatch, "1. QUOTE: NOT SUPPORTED\n   WHY: nothing relevant")
+
+        assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
+        assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]

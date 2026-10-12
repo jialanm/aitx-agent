@@ -23,6 +23,9 @@ from .variant_validation import validate_variant
 logger = logging.getLogger(__name__)
 
 MAX_ITERATIONS = 5
+# How much of a source's retrieved text the justification step is shown.
+SOURCE_TEXT_CHARS = 1500
+UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
 
 
 class Agent:
@@ -486,21 +489,26 @@ class Agent:
                 unique_records.append(record)
         evidence_records = unique_records
 
-        # Generate justifications via a separate LLM call
-        justifications = self._generate_justifications(
-            evidence_records, answer, task_input
-        )
+        # Each citation is justified from the text the tool returned for it,
+        # and the quote the model gives is checked against that text. Run 2
+        # (2026-10-07): the model was shown only URLs, so every justification
+        # described what a supporting source would say; none was grounded.
+        records = evidence_records[:5]  # Cap at 5 evidence items
+        source_texts = [self._source_text_for(r.url) for r in records]
+        justifications = self._generate_justifications(records, source_texts, answer, task_input)
 
         items = []
-        for i, record in enumerate(evidence_records[:5]):  # Cap at 5 evidence items
-            justification = justifications[i] if i < len(justifications) else (
-                f"Evidence supporting the answer '{answer}' for the question about "
-                f"{', '.join(v.gene for v in task_input.patient.genotype)}."
-            )
-            # Truncate justification to 500 chars
+        for i, record in enumerate(records):
+            quote, sentence = justifications[i] if i < len(justifications) else ("", "")
+            supported = bool(quote) and self._quote_in_text(quote, source_texts[i])
+            if supported:
+                justification = f'"{quote}" {sentence}'.strip()
+            else:
+                self.last_trace["events"].append(f"citation_unsupported:{record.url}")
+                logger.warning(f"Citation not supported by its retrieved text: {record.url} (quote={quote!r})")
+                justification = UNSUPPORTED_JUSTIFICATION
             if len(justification) > 500:
                 justification = justification[:497] + "..."
-
             items.append(EvidenceItem(
                 source=record.url,
                 time_accessed=record.time_accessed,
@@ -508,6 +516,79 @@ class Agent:
             ))
 
         return items
+
+    def _source_text_for(self, url: str) -> str:
+        """The tool result text that returned this URL, from the run's trace."""
+        for call in self.last_trace.get("tool_calls", []):
+            if url in call.get("evidence_urls", []):
+                return call.get("summary", "")
+        return ""
+
+    @staticmethod
+    def _quote_in_text(quote: str, text: str) -> bool:
+        """True if the quote occurs in the text, ignoring case, spacing and quote marks."""
+        def norm(t: str) -> str:
+            t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")
+            return re.sub(r"\s+", " ", t).strip().lower()
+        q = norm(quote).strip('"\'')
+        return bool(q) and len(q) >= 15 and q in norm(text)
+
+    def _generate_justifications(
+        self,
+        evidence_records: list[EvidenceRecord],
+        source_texts: list[str],
+        answer: str,
+        task_input: TaskInput,
+    ) -> list[tuple[str, str]]:
+        """For each source, (verbatim quote, one sentence) or ("", "") when unsupported."""
+        n = len(evidence_records)
+        blocks = []
+        for i, (record, text) in enumerate(zip(evidence_records, source_texts), 1):
+            shown = text if len(text) <= SOURCE_TEXT_CHARS else text[:SOURCE_TEXT_CHARS - 3] + "..."
+            blocks.append(f"SOURCE {i}: {record.url}\n{shown or '(no text retrieved for this source)'}")
+        prompt = (
+            f"Question: {task_input.question.prompt}\n"
+            f"Answer given: {answer}\n\n"
+            + "\n\n".join(blocks)
+            + f"\n\nFor each of the {n} sources, copy one sentence VERBATIM from that source's text "
+            "that supports the answer, then add one sentence saying how it supports it. If nothing "
+            "in that source's text supports the answer, write exactly NOT SUPPORTED. Never quote "
+            "words that are not in the text.\n\n"
+            f"Format, one block per source, numbered 1 to {n}:\n"
+            "1. QUOTE: <verbatim sentence or NOT SUPPORTED>\n   WHY: <one sentence>"
+        )
+        messages = [
+            {"role": "system", "content": "You cite only what the given text says. Output only the numbered blocks."},
+            {"role": "user", "content": prompt},
+        ]
+        try:
+            response = generate(
+                self.model, self.tokenizer, messages, tools=None, max_new_tokens=1024, enable_thinking=False,
+            )
+        except Exception as e:
+            logger.error(f"Failed to generate justifications: {e}")
+            return []
+        self._record_turn("justifications", 0, response)
+        return self._parse_justifications(response.text, n)
+
+    @staticmethod
+    def _parse_justifications(text: str, n: int) -> list[tuple[str, str]]:
+        out: list[tuple[str, str]] = []
+        for i in range(1, n + 1):
+            block = re.search(rf"(?:^|\n)\s*{i}[.)]\s*(.*?)(?=\n\s*{i + 1}[.)]\s|\Z)", text, re.S)
+            if not block:
+                out.append(("", ""))
+                continue
+            body = block.group(1)
+            q = re.search(r"QUOTE:\s*(.*?)(?:\n\s*WHY:|\Z)", body, re.S)
+            w = re.search(r"WHY:\s*(.*)", body, re.S)
+            quote = (q.group(1) if q else "").strip().strip('"\u201c\u201d')
+            why = re.sub(r"\s+", " ", w.group(1)).strip() if w else ""
+            if not quote or quote.upper().startswith("NOT SUPPORTED"):
+                out.append(("", ""))
+            else:
+                out.append((quote, why))
+        return out
 
     def _fallback_evidence(self, task_input: TaskInput) -> list[EvidenceRecord]:
         """Fallback: search PubMed to get at least one real evidence URL."""
@@ -523,58 +604,3 @@ class Agent:
             logger.error(f"Fallback PubMed search failed: {e}")
             return []
 
-    def _generate_justifications(
-        self,
-        evidence_records: list[EvidenceRecord],
-        answer: str,
-        task_input: TaskInput,
-    ) -> list[str]:
-        """Generate justifications for each evidence source."""
-        urls = [r.url for r in evidence_records[:5]]
-        n = len(urls)
-        numbered_urls = "\n".join(f"{i+1}. {url}" for i, url in enumerate(urls))
-        gene = ", ".join(v.gene for v in task_input.patient.genotype)
-
-        prompt = (
-            f"Question: {task_input.question.prompt}\n"
-            f"Answer: {answer}\n"
-            f"Gene(s): {gene}\n\n"
-            f"Evidence sources:\n{numbered_urls}\n\n"
-            f"Write exactly {n} justifications, one per source, explaining how each "
-            f"source supports the answer. Each justification must be 1-2 sentences "
-            f"and under 400 characters. Do NOT include URLs in justifications.\n\n"
-            f"Format: one justification per line, numbered 1 through {n}."
-        )
-
-        messages = [
-            {"role": "system", "content": "You write brief medical evidence justifications. Output only numbered lines, no other text."},
-            {"role": "user", "content": prompt},
-        ]
-
-        try:
-            response = generate(
-                self.model,
-                self.tokenizer,
-                messages,
-                tools=None,
-                max_new_tokens=1024,
-                enable_thinking=False,
-            )
-            # Parse numbered lines: "1. justification text"
-            cleaned = []
-            for line in response.text.strip().split("\n"):
-                line = line.strip()
-                if not line:
-                    continue
-                # Remove numbering prefixes like "1.", "1)", "- 1."
-                line = re.sub(r"^[-•]\s*", "", line)
-                line = re.sub(r"^\d+[\.\)]\s*", "", line)
-                # Skip lines that are just URLs
-                if line.startswith("http") and " " not in line:
-                    continue
-                if line:
-                    cleaned.append(line)
-            return cleaned
-        except Exception as e:
-            logger.error(f"Failed to generate justifications: {e}")
-            return []
