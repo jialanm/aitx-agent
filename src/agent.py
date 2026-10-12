@@ -99,6 +99,7 @@ class Agent:
         all_evidence: list[EvidenceRecord] = []
         final_text = ""
         reminded = False
+        tried: set[str] = set()
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -195,13 +196,15 @@ class Agent:
                 })
                 messages.append(format_tool_result(tc.name, summary))
 
-            # Auto-chain: if tool returned no evidence, try next priority tool
+            # The lookups returned no evidence. Code does not call the next
+            # tool itself (run 2, 2026-10-07: code-built chained calls fetched
+            # a gene entry for a trial question and a consequence for a domain
+            # question). It says so and names the next recommended tool; the
+            # model decides and writes the arguments.
             if not all_evidence and iteration < MAX_ITERATIONS - 1:
-                self.last_trace["events"].append("auto_chain")
-                self._auto_chain_next_tool(
-                    context, task_input, messages, all_evidence,
-                    used_tools={tc.name for tc in response.tool_calls},
-                )
+                self.last_trace["events"].append("empty_result_notice")
+                tried.update(tc.name for tc in response.tool_calls)
+                messages.append({"role": "user", "content": self._empty_result_notice(context, tried)})
 
             # If this was the last iteration and we still have tool calls
             if iteration == MAX_ITERATIONS - 1:
@@ -294,140 +297,20 @@ class Agent:
             "before the final answer. " + recommended + "Then answer."
         )
 
-    def _build_auto_args(
-        self,
-        tool_name: str,
-        parsed_variants: list,
-        task_input: TaskInput,
-        validated: list | None = None,
-    ) -> dict:
-        """Build tool arguments automatically from input data.
-
-        validated holds the step-1 validator results, one per variant; when
-        the first variant validated, Ensembl gets its genomic form and
-        current transcript instead of the submitted cDNA string.
-        """
-        gene = parsed_variants[0].gene if parsed_variants else ""
-        variant_cdna = parsed_variants[0].variant_cdna if parsed_variants else ""
-        transcript = parsed_variants[0].transcript if parsed_variants else ""
-        clinical_context = task_input.patient.clinical_context
-        first_valid = validated[0] if validated and validated[0].valid else None
-
-        if tool_name == "search_clinvar":
-            return {"gene": gene, "variant": variant_cdna}
-        elif tool_name == "query_ensembl":
-            if first_valid and first_valid.genomic_variant:
-                return {
-                    "genomic_hgvs": first_valid.genomic_variant,
-                    "transcript": first_valid.transcript_variant.split(":")[0],
-                    "gene": gene,
-                }
-            hgvs = f"{transcript}:{variant_cdna}" if transcript else variant_cdna
-            return {"hgvs_cdna": hgvs, "gene": gene}
-        elif tool_name == "search_genereviews":
-            # Gene only: the adapter lists the gene's chapters and the model
-            # picks by phenotype. A code-built condition phrase matched the
-            # wrong chapter in run 2 (2026-10-07).
-            return {"gene": gene}
-        elif tool_name == "search_clinical_trials":
-            return {"query": f"{gene} {clinical_context.split('.')[0][:50]}"}
-        elif tool_name == "search_pubmed":
-            prompt_keywords = task_input.question.prompt[:80]
-            return {"query": f"{gene} {prompt_keywords}"}
-        elif tool_name == "query_uniprot":
-            protein_pos = parsed_variants[0].protein_position if parsed_variants else None
-            args: dict = {"gene": gene}
-            if protein_pos:
-                try:
-                    args["protein_position"] = int(protein_pos)
-                except (ValueError, TypeError):
-                    pass
-            return args
-        elif tool_name == "search_pharmgkb":
-            return {"gene": gene}
-        elif tool_name == "search_omim":
-            return {"gene": gene}
-        elif tool_name == "search_fda_labels":
-            # Try to extract drug name from the question prompt
-            prompt = task_input.question.prompt
-            args = {"drug": gene}  # fallback: use gene as search term
-            # Common patterns: "treatment with X", "eligible for X"
-            import re as _re
-            drug_match = _re.search(
-                r"(?:treatment with|eligible for|treated with|therapy with)\s+(\w[\w\s\-/()]+?)(?:\?|\.|,|based)",
-                prompt,
-                _re.IGNORECASE,
-            )
-            if drug_match:
-                args["drug"] = drug_match.group(1).strip()
-                args["indication"] = gene
-            return args
-        else:
-            return {"query": gene}
-
-    @staticmethod
-    def _extract_condition(clinical_context: str) -> str:
-        """Extract the likely condition name from clinical_context.
-
-        Looks for 'diagnosed with X' or 'diagnosis of X' patterns,
-        falling back to the first sentence minus age/sex preamble.
-        """
-        # Try "diagnosed with X" or "diagnosis of X"
-        m = re.search(
-            r"diagnos(?:ed with|is of)\s+(.+?)(?:\.|,|\s+presents|\s+who|\s+characterized)",
-            clinical_context,
-            re.IGNORECASE,
+    def _empty_result_notice(self, context: dict, tried: set[str]) -> str:
+        """One message saying the lookups found nothing and which untried tool is recommended next."""
+        priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
+        nxt = next((t for t in priority if t in self.tools and t not in tried), None)
+        recommended = (
+            f"The next recommended tool for this question is {nxt}; call it, or another tool that "
+            f"fits better, choosing the arguments from the patient record. "
+            if nxt else "Every recommended tool for this question has been tried. "
         )
-        if m:
-            return m.group(1).strip()
-
-        # Fallback: first sentence, drop leading "A XX-year-old ..." preamble
-        first_sent = clinical_context.split(".")[0]
-        # Remove age/sex preamble like "A 14-year-old male with"
-        cleaned = re.sub(
-            r"^[Aa]n?\s+\d+-year-old\s+\w+\s+(?:with\s+)?(?:a\s+)?",
-            "",
-            first_sent,
-        ).strip()
-        # Cap at 60 chars to keep it focused
-        if len(cleaned) > 60:
-            cleaned = cleaned[:60].rsplit(" ", 1)[0]
-        return cleaned if cleaned else ""
-
-    def _auto_chain_next_tool(
-        self,
-        context: dict,
-        task_input: TaskInput,
-        messages: list[dict],
-        all_evidence: list[EvidenceRecord],
-        used_tools: set[str],
-    ) -> None:
-        """Auto-call the next priority tool when the first returned no evidence."""
-        category = context["category"]
-        priority = TOOL_PRIORITY.get(category, ["search_pubmed"])
-        parsed_variants = context["parsed_variants"]
-
-        for tool_name in priority:
-            if tool_name in used_tools:
-                continue
-            tool = self.tools.get(tool_name)
-            if tool is None:
-                continue
-
-            kwargs = self._build_auto_args(
-                tool_name, parsed_variants, task_input, context.get("validated_variants")
-            )
-            logger.info(f"Auto-chaining to next tool: {tool_name}({kwargs})")
-
-            try:
-                summary, evidence = self._call_tool(tool, tool_name, kwargs, "auto_chain")
-                all_evidence.extend(evidence)
-                messages.append(format_tool_result(tool_name, summary))
-                if evidence:
-                    return  # Got evidence, stop chaining
-            except Exception as e:
-                logger.error(f"Auto-chain tool call failed: {e}")
-                continue
+        return (
+            "The lookup returned no evidence. A result that lacks the fact you need is not "
+            "evidence of absence. " + recommended
+            + "Answer only when a tool result supports the answer, or state that no evidence was found."
+        )
 
     @staticmethod
     def _is_valid_answer(answer: str, answer_format: str, options: list[str] | None = None) -> bool:

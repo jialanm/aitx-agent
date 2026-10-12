@@ -193,29 +193,6 @@ class TestOptionExtraction:
         assert Agent(model=None, tokenizer=None, tools=[])._extract_options(self.NF1) == []
 
 
-class TestExtractCondition:
-    """Test the _extract_condition static method."""
-
-    def test_diagnosed_with(self):
-        ctx = "A 14-year-old male diagnosed with Long QT Syndrome type 1 (LQT1)."
-        result = Agent._extract_condition(ctx)
-        assert "Long QT Syndrome" in result
-
-    def test_diagnosis_of(self):
-        ctx = "A 15-year-old male with a diagnosis of cystic fibrosis presents with chronic symptoms."
-        result = Agent._extract_condition(ctx)
-        assert "cystic fibrosis" in result
-
-    def test_fallback_preamble_strip(self):
-        ctx = "A 42-year-old female with triple-negative breast cancer."
-        result = Agent._extract_condition(ctx)
-        assert "breast cancer" in result
-
-    def test_empty_context(self):
-        result = Agent._extract_condition("")
-        assert result == ""
-
-
 class TestTrace:
     """run() keeps its working notes on last_trace; the model is scripted."""
 
@@ -328,47 +305,44 @@ class TestTrace:
         assert "Genomic position: NC_000007.14:g.117559592_117559594del" in system_prompt
 
 
-class TestEnsemblArgsFromValidation:
-    """Forced/auto-chained Ensembl calls use the validator's genomic form (AITX-00004 variant)."""
+class TestEmptyResultNotice:
+    """A lookup with no evidence gets one notice naming the next untried tool; the model writes the next call."""
 
-    TASK = {
-        "id": "AITX-00004",
-        "patient": {
-            "genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
-                          "variant_protein": "p.(Gly170Arg)", "zygosity": "homozygous"}],
-            "clinical_context": "Primary hyperoxaluria type 1.",
-        },
-        "question": {"category": "Variant_Assessment", "answer_format": "binary",
-                     "prompt": "Is this variant pathogenic?", "date_submitted": "2025-08-01"},
-    }
-
-    class _Ensembl(BaseTool):
+    class _Empty(BaseTool):
         def schema(self):
-            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+            return {"type": "function", "function": {"name": "search_genereviews", "parameters": {}}}
 
         def execute(self, **kwargs):
-            return "vep text", [EvidenceRecord(url="https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433")]
+            return "GeneReviews has no chapter indexed to gene AGXT.", []
 
-    def _args(self, validated):
-        from src.preprocessing import preprocess_input
-        task = TaskInput(**self.TASK)
-        agent = Agent(model=None, tokenizer=None, tools=[self._Ensembl()])
-        return agent._build_auto_args("query_ensembl", preprocess_input(task)["parsed_variants"], task, [validated])
+    class _Found(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_clinvar", "parameters": {}}}
 
-    def test_validated_variant_gives_genomic_form_and_current_transcript(self):
+        def execute(self, **kwargs):
+            return "one record", [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/clinvar/variation/1/")]
+
+    def test_notice_names_the_next_untried_tool_and_model_writes_the_call(self, monkeypatch):
+        import src.agent as agent_module
         from src.variant_validation import ValidatedVariant
-        args = self._args(ValidatedVariant(
-            submitted="NM_000030.3:c.508G>A", valid=True, transcript_variant="NM_000030.3:c.508G>A",
-            genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000007.14:g.117559592_117559594del", gene_symbol="CFTR"))
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "CFTR"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_clinvar", arguments={"gene": "CFTR", "variant": "c.1521_1523del"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        agent = Agent(model=None, tokenizer=None, tools=[self._Empty(), self._Found()])
 
-        assert args == {"genomic_hgvs": "NC_000002.12:g.240871433G>A", "transcript": "NM_000030.3", "gene": "AGXT"}
+        output = agent.run(TaskInput(**TestTrace.TASK))  # Established_Targeted: genereviews, clinvar, ...
 
-    def test_failed_validation_falls_back_to_cdna_form(self):
-        from src.variant_validation import ValidatedVariant
-        args = self._args(ValidatedVariant(
-            submitted="NM_000030.3:c.508G>A", valid=False, warnings=["validator unavailable: timeout after retries"]))
-
-        assert args == {"hgvs_cdna": "NM_000030.3:c.508G>A", "gene": "AGXT"}
+        assert output.response == "Yes"
+        assert agent.last_trace["events"] == ["empty_result_notice"]
+        assert [(c["tool"], c["origin"]) for c in agent.last_trace["tool_calls"]] == [("search_genereviews", "model"), ("search_clinvar", "model")]
+        notice = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "returned no evidence" in m["content"])
+        assert "next recommended tool for this question is search_clinvar" in notice["content"]
 
 
 class TestModelTurnsInTrace:
@@ -385,9 +359,9 @@ class TestModelTurnsInTrace:
             ModelResponse(text="Yes", tool_calls=[], raw="Yes", thinking="Still no lookup."),  # after the reminder, still none
         ]
         monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
-        agent = Agent(model=None, tokenizer=None, tools=[TestEnsemblArgsFromValidation._Ensembl()])
+        agent = Agent(model=None, tokenizer=None, tools=[TestTrace._Tool()])
 
-        output = agent.run(TaskInput(**TestEnsemblArgsFromValidation.TASK))
+        output = agent.run(TaskInput(**TestTrace.TASK))
 
         recorded = agent.last_trace["model_turns"]
         assert [(m["kind"], m["iteration"], m["text"]) for m in recorded] == [("loop", 1, "No"), ("loop", 2, "Yes")]
