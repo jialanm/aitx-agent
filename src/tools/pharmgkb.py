@@ -6,7 +6,7 @@ import logging
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, get_with_retries
 
 logger = logging.getLogger(__name__)
 
@@ -96,8 +96,8 @@ class PharmGKBTool(BaseTool):
     def _search_gene(self, gene: str) -> dict | None:
         """Search for a gene in PharmGKB."""
         try:
-            resp = requests.get(
-                f"{PHARMGKB_API}/gene",
+            resp = get_with_retries(
+                label="ClinPGx", url=f"{PHARMGKB_API}/gene",
                 params={"symbol": gene},
                 timeout=TIMEOUT,
             )
@@ -106,14 +106,15 @@ class PharmGKBTool(BaseTool):
             data = resp.json()
             results = data.get("data", [])
             return results[0] if results else None
-        except Exception:
+        except Exception as e:
+            logger.warning(f"ClinPGx gene search failed for {gene}: {type(e).__name__}: {e}")
             return None
 
     def _get_clinical_annotations(self, gene_id: str) -> list[dict]:
         """Get clinical annotations for a gene."""
         try:
-            resp = requests.get(
-                f"{PHARMGKB_API}/clinicalAnnotation",
+            resp = get_with_retries(
+                label="ClinPGx", url=f"{PHARMGKB_API}/clinicalAnnotation",
                 # view=max returns the full evidence tree (9.6 MB, ~26 s for
                 # CYP2D6) and always exceeded the timeout; the default view
                 # returns the same records in about a second.
@@ -124,14 +125,15 @@ class PharmGKBTool(BaseTool):
                 return []
             data = resp.json()
             return data.get("data", [])[:5]
-        except Exception:
+        except Exception as e:
+            logger.warning(f"ClinPGx lookup failed for {gene_id}: {type(e).__name__}: {e}")
             return []
 
     def _get_drug_labels(self, gene_id: str) -> list[dict]:
         """Get FDA drug label annotations for a gene."""
         try:
-            resp = requests.get(
-                f"{PHARMGKB_API}/drugLabel",
+            resp = get_with_retries(
+                label="ClinPGx", url=f"{PHARMGKB_API}/drugLabel",
                 params={"relatedGenes.accessionId": gene_id},
                 timeout=TIMEOUT,
             )
@@ -139,16 +141,17 @@ class PharmGKBTool(BaseTool):
                 return []
             data = resp.json()
             return data.get("data", [])[:5]
-        except Exception:
+        except Exception as e:
+            logger.warning(f"ClinPGx lookup failed for {gene_id}: {type(e).__name__}: {e}")
             return []
 
     def _get_guidelines(self, gene_id: str) -> list[dict]:
         """Get dosing guideline annotations for a gene."""
         try:
-            resp = requests.get(
-                # /guideline is a different object type and rejects the
-                # relatedGenes filter with HTTP 400; annotations live here.
-                f"{PHARMGKB_API}/guidelineAnnotation",
+            # /guideline is a different object type and rejects the
+            # relatedGenes filter with HTTP 400; annotations live here.
+            resp = get_with_retries(
+                label="ClinPGx", url=f"{PHARMGKB_API}/guidelineAnnotation",
                 params={"relatedGenes.accessionId": gene_id},
                 timeout=TIMEOUT,
             )
@@ -156,7 +159,8 @@ class PharmGKBTool(BaseTool):
                 return []
             data = resp.json()
             return data.get("data", [])[:5]
-        except Exception:
+        except Exception as e:
+            logger.warning(f"ClinPGx lookup failed for {gene_id}: {type(e).__name__}: {e}")
             return []
 
     def _format_annotations(self, annotations: list[dict], drug_filter: str) -> str:

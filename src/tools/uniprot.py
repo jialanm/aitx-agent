@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, get_with_retries
 
 UNIPROT_SEARCH_URL = "https://rest.uniprot.org/uniprotkb/search"
 UNIPROT_ENTRY_URL = "https://www.uniprot.org/uniprotkb/{accession}/entry"
 
-TIMEOUT = 15
+TIMEOUT = 30
 
 
 class UniProtTool(BaseTool):
@@ -54,8 +54,8 @@ class UniProtTool(BaseTool):
 
         try:
             # Search UniProt for human reviewed entry
-            resp = requests.get(
-                UNIPROT_SEARCH_URL,
+            resp = get_with_retries(
+                label="UniProt", url=UNIPROT_SEARCH_URL,
                 params={
                     "query": f"gene_exact:{gene} AND organism_id:9606 AND reviewed:true",
                     "format": "json",

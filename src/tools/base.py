@@ -88,8 +88,8 @@ def redact_ncbi_key(text: str) -> str:
     return text
 
 
-def ncbi_get(url: str, params: dict, timeout: float, label: str = "NCBI") -> "requests.Response":
-    """GET an E-utilities URL, retrying 429, 5xx and timeouts; raises after the last try.
+def get_with_retries(url: str, params: dict, timeout: float, label: str = "HTTP") -> "requests.Response":
+    """GET a URL, retrying 429, 5xx and timeouts; raises after the last try.
 
     Drop-in for requests.get: returns the response for any status below
     500 except 429, so callers keep their own raise_for_status() handling.
@@ -120,3 +120,7 @@ def ncbi_get(url: str, params: dict, timeout: float, label: str = "NCBI") -> "re
         if attempt < NCBI_RETRIES:
             time.sleep(pause)
     raise last_exc  # type: ignore[misc]
+
+
+# The NCBI adapters predate the general name.
+ncbi_get = get_with_retries

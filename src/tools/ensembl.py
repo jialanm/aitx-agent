@@ -303,12 +303,10 @@ class EnsemblTool(BaseTool):
         """Look up gene info from Ensembl."""
         try:
             url = f"{ENSEMBL_REST}/lookup/symbol/homo_sapiens/{gene}"
-            resp = requests.get(
-                url,
-                headers={"Content-Type": "application/json"},
-                params={"content-type": "application/json", "expand": 1},
-                timeout=TIMEOUT,
-            )
+            resp, failure = self._get_with_retries(url, {"content-type": "application/json", "expand": 1}, "Ensembl gene lookup")
+            if resp is None:
+                logger.warning(f"Ensembl gene lookup gave nothing for {gene}: {failure}")
+                return None
             if resp.status_code != 200:
                 logger.warning(f"Ensembl gene lookup HTTP {resp.status_code}: {url}")
                 return None

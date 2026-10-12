@@ -7,7 +7,7 @@ import re
 
 import requests
 
-from .base import BaseTool, EvidenceRecord
+from .base import BaseTool, EvidenceRecord, get_with_retries
 
 logger = logging.getLogger(__name__)
 
@@ -135,7 +135,7 @@ class ClinicalTrialsTool(BaseTool):
                     # "RECRUITING, NOT_YET_RECRUITING" was rejected with HTTP 400 (run 2).
                     params["filter.overallStatus"] = ",".join(statuses)
 
-            resp = requests.get(CT_API_URL, params=params, timeout=TIMEOUT)
+            resp = get_with_retries(label="ClinicalTrials.gov", url=CT_API_URL, params=params, timeout=TIMEOUT)
             resp.raise_for_status()
             data = resp.json()
 
@@ -196,7 +196,7 @@ class ClinicalTrialsTool(BaseTool):
         """One trial in full, with its complete eligibility criteria."""
         evidence: list[EvidenceRecord] = []
         try:
-            resp = requests.get(f"{CT_API_URL}/{nct_id}", params={"format": "json"}, timeout=TIMEOUT)
+            resp = get_with_retries(label="ClinicalTrials.gov", url=f"{CT_API_URL}/{nct_id}", params={"format": "json"}, timeout=TIMEOUT)
             if resp.status_code == 404:
                 logger.warning(f"ClinicalTrials.gov has no study {nct_id}")
                 return f"ClinicalTrials.gov has no study with ID {nct_id}.", evidence
