@@ -280,3 +280,23 @@ class TestInlineMultipleChoice:
 
     def test_partial_word_does_not_match(self):
         assert normalize_answer("outbound", "multiple_choice", self.NF1, self.NF1_OPTS) == "outbound"
+
+
+
+class TestListAnswersOnOneLine:
+    """A string answer given one item per line is joined with ", "."""
+
+    def test_two_lines_become_a_comma_list(self):
+        assert normalize_answer("lumasiran  \nnedosiran", "string_match", "") == "lumasiran, nedosiran"
+
+    def test_bullets_and_numbers_are_stripped(self):
+        assert normalize_answer("- aspirin\n- ibuprofen", "string_match", "") == "aspirin, ibuprofen"
+        assert normalize_answer("1. ascorbic acid\n2) desmopressin", "string_match", "") == "ascorbic acid, desmopressin"
+
+    def test_single_line_is_unchanged(self):
+        assert normalize_answer("18 months", "string_match", "") == "18 months"
+
+    def test_explanatory_lines_are_not_joined(self):
+        text = "Pyridoxine\nThis is recommended because the variant is a missense change."
+        # Lines stay separate; only the trailing period is stripped, as before.
+        assert normalize_answer(text, "string_match", "") == text.rstrip(".")

@@ -257,4 +257,12 @@ def _normalize_string(text: str) -> str:
     # Remove trailing periods and quotes
     cleaned = cleaned.strip().strip('"').strip("'").rstrip(".")
 
+    # A list written one item per line (run 2: "estrogen\nvitamin c"; run 3:
+    # "lumasiran  \nnedosiran") is joined with ", ", the form the answer key
+    # uses for several items. Only short, sentence-free lines are joined, so
+    # an explanation after the answer is left alone.
+    lines = [re.sub(r"^(?:[-*\u2022]|\d+[.)])\s*", "", l.strip()) for l in cleaned.splitlines() if l.strip()]
+    if len(lines) > 1 and all(len(l) <= 60 and len(l.split()) <= 5 for l in lines):
+        cleaned = ", ".join(lines)
+
     return cleaned
