@@ -577,38 +577,51 @@ class Agent:
         answer: str,
         task_input: TaskInput,
     ) -> list[tuple[str, str]]:
-        """For each source, (verbatim quote, one sentence) or ("", "") when unsupported."""
-        n = len(evidence_records)
-        blocks = []
-        for i, (record, text) in enumerate(zip(evidence_records, source_texts), 1):
+        """For each source, (verbatim quote, one sentence) or ("", "") when unsupported.
+
+        One source per model call. Shown all sources at once, the model
+        attached one source's sentence to another's link (runs 3 and 4:
+        the same trial summary under three trials, a GeneReviews sentence
+        under a ClinVar link); with a single text in view that cannot happen.
+        """
+        out: list[tuple[str, str]] = []
+        for record, text in zip(evidence_records, source_texts):
             shown = text if len(text) <= SOURCE_TEXT_CHARS else text[:SOURCE_TEXT_CHARS - 3] + "..."
-            blocks.append(f"SOURCE {i}: {record.url}\n{shown or '(no text retrieved for this source)'}")
-        prompt = (
-            f"Question: {task_input.question.prompt}\n"
-            f"Answer given: {answer}\n\n"
-            + "\n\n".join(blocks)
-            + f"\n\nFor each of the {n} sources, copy one sentence VERBATIM from that source's text "
-            "that supports the answer, then add one sentence saying how it supports it. If nothing "
-            "in that source's text supports the answer, write exactly NOT SUPPORTED. Never quote "
-            "words that are not in the text.\n\n"
-            f"Format, one block per source, numbered 1 to {n}:\n"
-            "1. QUOTE: <verbatim sentence or NOT SUPPORTED>\n   WHY: <one sentence>"
-        )
-        messages = [
-            {"role": "system", "content": "You cite only what the given text says. Output only the numbered blocks."},
-            {"role": "user", "content": prompt},
-        ]
-        try:
-            response = generate(
-                self.model, self.tokenizer, messages, tools=None, max_new_tokens=1024, enable_thinking=False,
+            prompt = (
+                f"Question: {task_input.question.prompt}\n"
+                f"Answer given: {answer}\n\n"
+                f"SOURCE: {record.url}\n{shown or '(no text retrieved for this source)'}\n\n"
+                "Copy one sentence VERBATIM from this source's text that supports the answer, then "
+                "add one sentence saying how it supports it. If nothing in this text supports the "
+                "answer, write exactly NOT SUPPORTED. Never quote words that are not in the text.\n\n"
+                "Format:\nQUOTE: <verbatim sentence or NOT SUPPORTED>\nWHY: <one sentence>"
             )
-        except Exception as e:
-            logger.error(f"Failed to generate justifications: {e}")
-            return []
-        self._record_turn("justifications", 0, response)
-        return self._parse_justifications(response.text, n)
+            messages = [
+                {"role": "system", "content": "You cite only what the given text says. Output only the QUOTE and WHY lines."},
+                {"role": "user", "content": prompt},
+            ]
+            try:
+                response = generate(
+                    self.model, self.tokenizer, messages, tools=None, max_new_tokens=300, enable_thinking=False,
+                )
+            except Exception as e:
+                logger.error(f"Failed to generate a justification for {record.url}: {e}")
+                out.append(("", ""))
+                continue
+            self._record_turn("justifications", len(out) + 1, response)
+            out.append(self._parse_justification(response.text))
+        return out
 
     @staticmethod
+    def _parse_justification(text: str) -> tuple[str, str]:
+        q = re.search(r"QUOTE:\s*(.*?)(?:\n\s*WHY:|\Z)", text, re.S)
+        w = re.search(r"WHY:\s*(.*)", text, re.S)
+        quote = (q.group(1) if q else "").strip().strip('"\u201c\u201d')
+        why = re.sub(r"\s+", " ", w.group(1)).strip() if w else ""
+        if not quote or quote.upper().startswith("NOT SUPPORTED"):
+            return "", ""
+        return quote, why
+
     def _parse_justifications(text: str, n: int) -> list[tuple[str, str]]:
         out: list[tuple[str, str]] = []
         for i in range(1, n + 1):
