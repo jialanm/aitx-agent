@@ -622,24 +622,6 @@ class Agent:
             return "", ""
         return quote, why
 
-    def _parse_justifications(text: str, n: int) -> list[tuple[str, str]]:
-        out: list[tuple[str, str]] = []
-        for i in range(1, n + 1):
-            block = re.search(rf"(?:^|\n)\s*{i}[.)]\s*(.*?)(?=\n\s*{i + 1}[.)]\s|\Z)", text, re.S)
-            if not block:
-                out.append(("", ""))
-                continue
-            body = block.group(1)
-            q = re.search(r"QUOTE:\s*(.*?)(?:\n\s*WHY:|\Z)", body, re.S)
-            w = re.search(r"WHY:\s*(.*)", body, re.S)
-            quote = (q.group(1) if q else "").strip().strip('"\u201c\u201d')
-            why = re.sub(r"\s+", " ", w.group(1)).strip() if w else ""
-            if not quote or quote.upper().startswith("NOT SUPPORTED"):
-                out.append(("", ""))
-            else:
-                out.append((quote, why))
-        return out
-
     def _fallback_evidence(self, task_input: TaskInput) -> list[EvidenceRecord]:
         """Fallback: search PubMed to get at least one real evidence URL."""
         pubmed_tool = self.tools.get("search_pubmed")
