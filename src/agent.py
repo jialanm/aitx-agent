@@ -231,6 +231,14 @@ class Agent:
                 messages, context["answer_format"], context["prompt"], options
             )
 
+        # Step 6b: an identifier in the answer must occur in a tool result.
+        # Run 2 (2026-10-07, AITX-00009): both trial searches failed and the
+        # model answered NCT05678901, which no result contained.
+        fabricated = self._fabricated_identifiers(normalized)
+        if fabricated:
+            logger.warning(f"Answer {normalized!r} names identifiers absent from every tool result: {fabricated}")
+            self.last_trace["events"].append("fabricated_identifier:" + ",".join(fabricated))
+            normalized = self._without_identifiers(normalized, fabricated)
         self.last_trace["answer"] = normalized
 
         # Step 7: Build evidence items
@@ -282,6 +290,33 @@ class Agent:
         entry["evidence_urls"] = [r.url for r in evidence]
         entry["summary"] = summary
         return summary, evidence
+
+    # Identifier shapes the check recognises. Drug names are not shaped and
+    # are left to the citation check that follows later.
+    _IDENTIFIER = re.compile(
+        r"\b(?:NCT\d{8}|rs\d{3,}|NBK\d+|(?:NM|NP|NR|NC)_\d+(?:\.\d+)?|ENS[GT]\d{11}|PA\d{5,}|MONDO:\d+)\b"
+    )
+
+    def _fabricated_identifiers(self, answer: str) -> list[str]:
+        """Identifiers in the answer that no tool result or evidence URL contains."""
+        found = self._IDENTIFIER.findall(answer or "")
+        if not found:
+            return []
+        haystack = "\n".join(
+            [c.get("summary", "") for c in self.last_trace["tool_calls"]]
+            + [u for c in self.last_trace["tool_calls"] for u in c.get("evidence_urls", [])]
+        ).upper()
+        return [i for i in dict.fromkeys(found) if i.upper() not in haystack]
+
+    @staticmethod
+    def _without_identifiers(answer: str, identifiers: list[str]) -> str:
+        """The answer with those identifiers removed; "None" if nothing is left."""
+        text = answer
+        for i in identifiers:
+            text = re.sub(r"\b" + re.escape(i) + r"\b", "", text)
+        text = re.sub(r"\s*,\s*,+", ",", text)
+        text = text.strip(" ,;\n\t")
+        return text or "None"
 
     def _evidence_reminder(self, context: dict) -> str:
         """One message telling the model a lookup is required and which tool is recommended first."""

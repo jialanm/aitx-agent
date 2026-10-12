@@ -369,3 +369,68 @@ class TestModelTurnsInTrace:
         assert agent.last_trace["events"] == ["evidence_reminder", "reminder_ignored"]
         assert agent.last_trace["final_text"] == "Yes"
         assert agent.last_trace["answer"] == output.response == "Yes"
+
+
+class TestFabricatedIdentifierCheck:
+    """An identifier the model answers must occur in some tool result; otherwise it is removed and recorded."""
+
+    TASK = {
+        "id": "AITX-00009",
+        "patient": {
+            "genotype": [{"gene": "SLC35A2", "transcript": "NM_005660.3", "variant_cdna": "c.3G>A",
+                          "variant_protein": "p.Met1Ile", "zygosity": "heterozygous"}],
+            "clinical_context": "Patient with SLC35A2-CDG who is experiencing seizures and global developmental delay",
+        },
+        "question": {"category": "Clinical_Trials", "answer_format": "string_match",
+                     "prompt": "What clinical trial developing a new therapeutic for this condition is recruiting? Return a clinical trials ID",
+                     "date_submitted": "2025-08-01"},
+    }
+
+    class _Trials(BaseTool):
+        def __init__(self, summary, urls):
+            self._summary, self._urls = summary, urls
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_clinical_trials", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return self._summary, [EvidenceRecord(url=u) for u in self._urls]
+
+    def _run(self, monkeypatch, tool, answer):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.48911634C>T", gene_symbol="SLC35A2"))
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_clinical_trials", arguments={"query": "SLC35A2"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text=answer, tool_calls=[], raw=answer, thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        agent = Agent(model=None, tokenizer=None, tools=[tool])
+        return agent.run(TaskInput(**self.TASK)), agent.last_trace
+
+    def test_trial_id_absent_from_every_result_becomes_none(self, monkeypatch):
+        tool = self._Trials("No clinical trials found for query: SLC35A2. Search URL: https://clinicaltrials.gov/search?term=SLC35A2",
+                            ["https://clinicaltrials.gov/search?term=SLC35A2"])
+
+        output, trace = self._run(monkeypatch, tool, "NCT05678901")
+
+        assert output.response == "None"
+        assert trace["events"] == ["fabricated_identifier:NCT05678901"]
+
+    def test_trial_id_present_in_a_result_is_kept(self, monkeypatch):
+        tool = self._Trials("Found 1 clinical trial.\nNCT ID: NCT05402384\nStatus: RECRUITING", ["https://clinicaltrials.gov/study/NCT05402384"])
+
+        output, trace = self._run(monkeypatch, tool, "NCT05402384")
+
+        assert output.response == "NCT05402384"
+        assert trace["events"] == []
+
+    def test_only_the_absent_id_is_removed_from_a_list(self, monkeypatch):
+        tool = self._Trials("NCT ID: NCT05402384", ["https://clinicaltrials.gov/study/NCT05402384"])
+
+        output, trace = self._run(monkeypatch, tool, "NCT05402384,NCT05678901")
+
+        assert output.response == "NCT05402384"
+        assert trace["events"] == ["fabricated_identifier:NCT05678901"]
