@@ -22,6 +22,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from src.agent import Agent
 from src.evaluation import file_sha256, is_exact_match, load_answers, load_questions
 from src.model import MODEL_ID, PRECISION_LABELS, load_model
+from src.prompts import set_prompt_variant
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
 from src.tools.clinical_trials import ClinicalTrialsTool
@@ -39,6 +40,8 @@ from src.tools.clingen_dosage import ClinGenDosageTool
 
 DEFAULT_QUESTIONS = "data/phase1_questions.json"
 DEFAULT_ANSWERS = "data/phase1_answers.json"
+PROMPT_VARIANTS = ("none", "reword", "shuffle_schemas")
+SCHEMA_ORDER_SEED = 20261012
 
 
 def trace_path_for(output_path: str) -> str:
@@ -53,7 +56,7 @@ def trace_path_for(output_path: str) -> str:
     return str(path.with_name(f"{path.stem}_trace{path.suffix}"))
 
 
-def run_metadata(questions_path: str, answers_path: str | None, quantize: bool = False) -> dict:
+def run_metadata(questions_path: str, answers_path: str | None, quantize: bool = False, prompt_variant: str = "none") -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -67,6 +70,8 @@ def run_metadata(questions_path: str, answers_path: str | None, quantize: bool =
         "model_id": MODEL_ID,
         "precision": PRECISION_LABELS[quantize],
         "decoding": "greedy (do_sample=False)",
+        "prompt_variant": prompt_variant,
+        "schema_order_seed": SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None,
         "questions_path": questions_path,
         "questions_sha256": file_sha256(questions_path),
         "answers_path": answers_path,
@@ -112,6 +117,7 @@ def run_evaluation(
     quantize: bool = False,
     output_path: str = "data/eval_results.json",
     outputs_path: str = "data/eval_outputs.json",
+    prompt_variant: str = "none",
 ):
     """Run evaluation on validation set.
 
@@ -138,11 +144,12 @@ def run_evaluation(
         N1CGuidelinesTool(),
         ClinGenDosageTool(),
     ]
-    agent = Agent(model, tokenizer, tools)
+    set_prompt_variant(prompt_variant)
+    agent = Agent(model, tokenizer, tools, schema_order_seed=SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None)
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
-    metadata = run_metadata(validation_path, answers_path, quantize)
+    metadata = run_metadata(validation_path, answers_path, quantize, prompt_variant)
 
     # Answers are loaded separately and consulted only after the agent has
     # answered. The question records passed to the agent never contain them.
@@ -309,6 +316,8 @@ if __name__ == "__main__":
                         help="Load the model in 4-bit NF4 instead of bfloat16 (recorded in run metadata)")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
+    parser.add_argument("--prompt-variant", default="none", choices=PROMPT_VARIANTS,
+                        help="Prompt-sensitivity control: reword two headings, or shuffle the schema order (seeded)")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.answers or None, args.quantize, args.output, args.outputs)
+    run_evaluation(args.validation, args.answers or None, args.quantize, args.output, args.outputs, args.prompt_variant)

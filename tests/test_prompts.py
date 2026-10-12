@@ -72,3 +72,30 @@ class TestValidationInPrompt:
         from src.prompts import _format_variant_summary
         text = _format_variant_summary(self._parsed())
         assert "Validated" not in text and "VALIDATION" not in text
+
+
+class TestPromptVariants:
+    """The sensitivity controls change wording or order only, never content."""
+
+    def _prompt(self):
+        from src.prompts import build_system_prompt
+        return build_system_prompt(category="Established_Targeted", parsed_variants=[], clinical_context="x",
+                                   answer_format="binary", date_submitted="2025-08-01")
+
+    def test_reword_swaps_only_the_two_headings(self, monkeypatch):
+        from src import prompts
+        base = self._prompt()
+        monkeypatch.setattr(prompts, "PROMPT_VARIANT", "reword")
+        reworded = self._prompt()
+
+        assert "## How to use the tools" in reworded and "## Tool Usage Strategy" not in reworded
+        assert "Suggested order of tools for this category:" in reworded
+        restored = reworded.replace("## How to use the tools", "## Tool Usage Strategy").replace(
+            "Suggested order of tools for this category:", "Recommended tool order for this category:")
+        assert restored == base  # nothing else differs
+
+    def test_unknown_variant_is_refused(self):
+        from src.prompts import set_prompt_variant
+        import pytest
+        with pytest.raises(ValueError):
+            set_prompt_variant("louder")

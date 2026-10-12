@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import random
 import re
 import time
 from dataclasses import asdict
@@ -32,11 +33,14 @@ UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its return
 class Agent:
     """ReAct agent that uses tools to answer precision medicine questions."""
 
-    def __init__(self, model, tokenizer, tools: list[BaseTool]):
+    def __init__(self, model, tokenizer, tools: list[BaseTool], schema_order_seed: int | None = None):
         self.model = model
         self.tokenizer = tokenizer
         self.tools = {tool.name: tool for tool in tools}
         self.tool_schemas = [tool.schema() for tool in tools]
+        if schema_order_seed is not None:
+            # Prompt-sensitivity control: same schemas, different listing order.
+            random.Random(schema_order_seed).shuffle(self.tool_schemas)
         self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:

@@ -642,3 +642,14 @@ class TestConsequenceInStepOne:
         agent.run(task)
 
         assert loop_events(agent.last_trace) == ["evidence_reminder", "reminder_ignored"]
+
+
+class TestSchemaOrderShuffle:
+    def test_seeded_shuffle_changes_order_only_and_is_deterministic(self):
+        tools = [TestTrace._Tool(), TestConsequenceInStepOne._VEP(), TestEmptyResultNotice._Found()]
+        base = [s["function"]["name"] for s in Agent(None, None, tools).tool_schemas]
+        a = [s["function"]["name"] for s in Agent(None, None, tools, schema_order_seed=20261012).tool_schemas]
+        b = [s["function"]["name"] for s in Agent(None, None, tools, schema_order_seed=20261012).tool_schemas]
+
+        assert sorted(a) == sorted(base) and a == b
+        assert a != base

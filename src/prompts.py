@@ -104,6 +104,24 @@ def _format_validation(val: ValidatedVariant) -> str:
     return "\n".join(lines)
 
 
+# Prompt-sensitivity control. "reword" swaps two headings for synonyms with
+# the same meaning; a run under it should match the base run if the model is
+# reading content rather than wording. Set once per eval run, recorded in
+# the run metadata.
+PROMPT_VARIANT = "none"
+REWORDINGS = {
+    "## Tool Usage Strategy": "## How to use the tools",
+    "Recommended tool order for this category:": "Suggested order of tools for this category:",
+}
+
+
+def set_prompt_variant(name: str) -> None:
+    global PROMPT_VARIANT
+    if name not in ("none", "reword", "shuffle_schemas"):
+        raise ValueError(f"unknown prompt variant {name!r}")
+    PROMPT_VARIANT = name
+
+
 def build_system_prompt(
     category: str,
     parsed_variants: list[ParsedVariant],
@@ -168,6 +186,9 @@ Start by calling the first recommended tool above. After receiving tool results,
     if category_addendum:
         base_prompt += f"\n\n## Category-Specific Guidance\n{category_addendum}"
 
+    if PROMPT_VARIANT == "reword":
+        for original, synonym in REWORDINGS.items():
+            base_prompt = base_prompt.replace(original, synonym)
     return base_prompt
 
 
