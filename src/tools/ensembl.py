@@ -172,42 +172,76 @@ class EnsemblTool(BaseTool):
         lines = [
             f"VEP (Ensembl, GRCh38) for {notation} on transcript {tc.get('transcript_id')}:",
             self._frame_line(tc, self._exon_info),
-            f"Consequence: {show('consequence_terms')}",
+            f"Consequence{self._as_written(tc, self._exon_info)}: {show('consequence_terms')}",
             f"Impact: {show('impact')}",
             f"Exon: {show('exon')}" + (f" | Intron: {show('intron')}" if tc.get("intron") else ""),
             exon_line,
-            *self._splice_loss_lines(tc),
+            *self._deletion_lines(tc, self._exon_info),
             f"Protein position: {show('protein_start')}"
             + (f"-{tc['protein_end']}" if tc.get("protein_end") not in (None, tc.get("protein_start")) else ""),
             f"Amino acid change: {show('amino_acids')}",
-            f"HGVS protein: {show('hgvsp')}",
-            f"HGVS cDNA: {show('hgvsc')}",
+            f"HGVS protein{self._as_written(tc, self._exon_info)}: {show('hgvsp')}",
+            f"HGVS cDNA{self._as_written(tc, self._exon_info)}: {show('hgvsc')}",
             *self._other_transcript_line(entry, tc),
         ]
         return "\n".join(lines)
 
+    # A deletion that removes splice sites across one or more exons. What is
+    # known from the two replies is stated as fact (which exons are deleted
+    # entirely, how much of a partly covered exon is gone); what the cell is
+    # expected to do with a remnant too short to be an exon is stated as an
+    # expectation, with the reason, and VEP's lines for the letters as
+    # written are labelled as such (32B rerun 2026-10-13, AITX-00001: the
+    # model read "inframe_deletion" first and never reconciled the rest).
     @staticmethod
-    def _frame_line(tc: dict, exon_info: dict | None) -> str:
-        """The frame verdict, first in the block, computed by code.
-
-        Both models read the block top-down and took VEP's first label
-        ("inframe_deletion") as the verdict, never reaching the correcting
-        lines below it (32B rerun 2026-10-13, AITX-00001). When a deletion
-        removes splice sites the exons VEP named are lost whole, and the
-        verdict comes from their summed coding length (transcript record);
-        otherwise it restates VEP's own label. Present on every variant so
-        the model learns it is always there.
-        """
+    def _splice_deletion(tc: dict, info: dict | None) -> dict | None:
         terms = set(tc.get("consequence_terms") or [])
-        hgvsc = tc.get("hgvsc") or ""
-        splice_deletion = bool(terms & {"splice_acceptor_variant", "splice_donor_variant"}) and "del" in hgvsc
-        if splice_deletion and exon_info:
-            verdict = "in frame" if exon_info["rest"] == 0 else "out of frame"
-            lost = exon_info["which"].lower().replace("exons ", "exons ").replace("exon ", "exon ")
-            return (
-                f"Frame: {verdict}: {lost} lost whole (splice sites removed), "
-                f"{exon_info['bases']} coding bases, remainder {exon_info['rest']}"
-            )
+        if not info or not (terms & {"splice_acceptor_variant", "splice_donor_variant"}) or "del" not in (tc.get("hgvsc") or ""):
+            return None
+        cs, ce = tc.get("cds_start"), tc.get("cds_end")
+        if not isinstance(cs, int) or not isinstance(ce, int):
+            return None
+        rows = []  # (exon index, coding length, deleted bases)
+        for idx in range(info["lo"], info["hi"] + 1):
+            span, length = info["spans"][idx - 1], info["lengths"][idx - 1]
+            deleted = max(0, min(ce, span[1]) - max(cs, span[0]) + 1) if span else 0
+            rows.append((idx, length, deleted))
+        whole = info["bases"]
+        written = sum(d for _, _, d in rows)
+        # Only arithmetic from the two replies is stated: how much of each
+        # touched exon the deletion covers, the count as written, and the
+        # count if the touched exons were lost whole. Whether a remnant is
+        # spliced in is biology, not arithmetic; it is left to the genetics
+        # reference, where it carries a citation (decided 2026-10-13).
+        return {"rows": rows, "whole": whole, "written": written, "remnant": whole - written,
+                "partial": [(i, l, d) for i, l, d in rows if 0 < d < l]}
+
+    @classmethod
+    def _as_written(cls, tc: dict, info: dict | None) -> str:
+        """Qualifier for VEP's literal lines when they count fewer bases than the touched exons hold."""
+        d = cls._splice_deletion(tc, info)
+        return " (for the letters as written)" if d and d["remnant"] else ""
+
+    @staticmethod
+    def _in_words(n: int) -> str:
+        rest = n % 3
+        if rest == 0:
+            return f"{n} coding bases, a multiple of three, so the reading frame is kept"
+        more = "one" if rest == 1 else "two"
+        return f"{n} coding bases, {more} more than a multiple of three, so every codon after the gap is misread"
+
+    @classmethod
+    def _frame_line(cls, tc: dict, info: dict | None) -> str:
+        """The frame verdict, first in the block, computed by code. Present on
+        every variant so the model learns it is always there."""
+        d = cls._splice_deletion(tc, info)
+        if d:
+            lost = info["which"].lower()
+            line = f"Frame, as written: {cls._in_words(d['written'])} (VEP: {cls._vep_frame_term(tc)})"
+            if d["remnant"]:
+                line += f". Frame if {lost} are lost whole: {cls._in_words(d['whole'])}"
+            return line
+        terms = set(tc.get("consequence_terms") or [])
         if "frameshift_variant" in terms:
             return "Frame: frameshift (frameshift_variant)"
         inframe = next((t for t in ("inframe_deletion", "inframe_insertion") if t in terms), None)
@@ -217,13 +251,55 @@ class EnsemblTool(BaseTool):
         return f"Frame: not applicable ({first})"
 
     @staticmethod
+    def _vep_frame_term(tc: dict) -> str:
+        terms = tc.get("consequence_terms") or []
+        return next((t for t in ("inframe_deletion", "frameshift_variant") if t in terms), "no frame term")
+
+    @classmethod
+    def _deletion_lines(cls, tc: dict, info: dict | None) -> list[str]:
+        """Coverage as fact, outcome as expectation, and what would repair the frame."""
+        d = cls._splice_deletion(tc, info)
+        if not d:
+            return []
+        lines = []
+        entire = [i for i, l, dd in d["rows"] if dd == l]
+        if entire:
+            rng = f"exon {entire[0]}" if len(entire) == 1 else f"exons {entire[0]}-{entire[-1]}"
+            lines.append(f"Deleted entirely: {rng} ({sum(l for i, l, _ in d['rows'] if i in entire)} coding bases).")
+        for i, l, dd in d["partial"]:
+            lines.append(f"Exon {i}: {dd} of {l} coding bases deleted, {l - dd} base{'s' if l - dd != 1 else ''} and the exon's splice signal on that side remain.")
+        if d["remnant"]:
+            lines.append(
+                f"The deletion as written covers {d['written']} of the {d['whole']} coding bases of {info['which'].lower()}; "
+                f"{d['remnant']} base{'s' if d['remnant'] != 1 else ''} of a touched exon {'is' if d['remnant'] == 1 else 'are'} not deleted, "
+                f"and the splice sites between these exons are. Whether such a remnant is spliced into the transcript is "
+                f"not stated by VEP; the genetics reference (topic: splicing) gives the rule and its source."
+            )
+        if d["whole"] % 3 != 0:
+            # Arithmetic only: which neighbouring exon, if removed together with
+            # the whole touched exons, makes the total a multiple of three.
+            parts = []
+            for idx in (info["lo"] - 1, info["hi"] + 1):
+                if 1 <= idx <= info["n"]:
+                    length = info["lengths"][idx - 1]
+                    total = d["whole"] + length
+                    parts.append(
+                        f"exon {idx} ({length} coding bases) gives {total}, "
+                        + ("a multiple of three" if total % 3 == 0 else "not a multiple of three")
+                    )
+            if parts:
+                lines.append(
+                    f"If {info['which'].lower()} were lost whole ({d['whole']} bases), removing one neighbouring exon "
+                    "as well: " + "; ".join(parts) + "."
+                )
+        return lines
+
+    @staticmethod
     def _other_transcript_line(entry: dict, tc: dict) -> list[str]:
         """VEP's most_severe_consequence is the worst effect on any transcript
-        overlapping the position, not the patient's. It used to be printed as
-        "Most severe consequence across all transcripts: transcript_ablation"
-        and was read as the patient's transcript being ablated (run 5,
-        AITX-00001). Now it is shown only when it differs from the patient's
-        transcript, and says whose it is."""
+        overlapping the position, not the patient's; shown only when it differs
+        from the patient's transcript, and says whose it is (run 5, AITX-00001:
+        "transcript_ablation" was read as the patient's)."""
         severe = entry.get("most_severe_consequence")
         if not severe or severe in set(tc.get("consequence_terms") or []):
             return []
@@ -231,32 +307,6 @@ class EnsemblTool(BaseTool):
             f"Note: on another transcript overlapping this position the most severe consequence "
             f"is {severe}; the lines above describe the patient's transcript {tc.get('transcript_id')}."
         ]
-
-    @staticmethod
-    def _splice_loss_lines(tc: dict) -> list[str]:
-        """One line when a deletion removes splice sites, so the exons it
-        touches are lost whole from the transcript.
-
-        VEP's in-frame/frameshift label counts only the coding letters the
-        variant names; a deletion written one letter inside an exon edge is
-        counted in frame even though, with its splice sites gone, the whole
-        exon drops out of the message (AITX-00001: c.7544_9286del names 1743
-        letters, in frame; exons 52-63 whole are 1744, out of frame).
-        """
-        terms = set(tc.get("consequence_terms") or [])
-        hgvsc = tc.get("hgvsc") or ""
-        if not (terms & {"splice_acceptor_variant", "splice_donor_variant"}) or "del" not in hgvsc:
-            return []
-        label = next((t for t in ("inframe_deletion", "frameshift_variant") if t in terms), None)
-        m = re.search(r"c\.(\d+)_(\d+)del", hgvsc)
-        literal = f" the {int(m.group(2)) - int(m.group(1)) + 1} coding letters written in the variant" if m else " the coding letters written in the variant"
-        line = (
-            "Splice sites removed: the exons listed above are lost whole from the transcript; "
-            "use the exon line's length and frame."
-        )
-        if label:
-            line += f" VEP's {label} label counts only{literal}."
-        return [line]
 
     def _get_with_retries(self, url: str, params: dict, label: str) -> tuple[requests.Response | None, str]:
         """GET with the VEP retry policy: timeouts and 5xx retried, 4xx returned at once.
@@ -354,7 +404,17 @@ class EnsemblTool(BaseTool):
         # and the model read that as the patient's variant shifting the frame
         # (run 5, AITX-00003).
         codons, rest = divmod(bases, 3)
-        self._exon_info = {"which": which, "bases": bases, "rest": rest, "lo": lo_idx, "hi": hi_idx}
+        # CDS coordinates of each exon (1-based, transcript order), so a
+        # deletion's CDS span from VEP can be measured against them.
+        spans, pos = [], 0
+        for e in exons:
+            c = coding(e)
+            spans.append((pos + 1, pos + c) if c else None)
+            pos += c
+        self._exon_info = {
+            "which": which, "bases": bases, "rest": rest, "lo": lo_idx, "hi": hi_idx, "n": n_exons,
+            "lengths": [coding(e) for e in exons], "spans": spans,
+        }
         these = "this exon" if lo_idx == hi_idx else "these exons"
         frame = (
             f"removing {these} keeps the reading frame" if rest == 0

@@ -80,7 +80,7 @@ def test_dmd_deletion_reads_the_patients_transcript_not_the_headline(recorded):
     assert "inframe_deletion" in summary
     assert "Exon: 52-63/79" in summary
     assert "Protein position: 2515-3095" in summary
-    assert "HGVS protein: NP_003997.2:p.Thr2516_Ala3096del" in summary
+    assert "HGVS protein (for the letters as written): NP_003997.2:p.Thr2516_Ala3096del" in summary
     # The headline across all transcripts is reported separately, not as the consequence.
     assert ("Note: on another transcript overlapping this position the most severe consequence is "
             "transcript_ablation; the lines above describe the patient's transcript NM_004006.3.") in summary
@@ -226,19 +226,25 @@ def test_exon_length_is_marked_not_returned_when_ensembl_has_no_transcript(monke
     assert "No Ensembl transcript for NM_000030.3" in caplog.text
 
 
-def test_splice_site_deletion_states_whole_exon_loss_and_the_literal_count(recorded):
-    # AITX-00001: VEP says inframe_deletion for the 1743 letters c.7544_9286del names,
-    # but with every splice site gone exons 52-63 (1744 bases) drop out whole, out of frame.
+def test_splice_site_deletion_states_coverage_as_fact_and_frame_as_arithmetic(recorded):
+    # AITX-00001: VEP says inframe_deletion for the 1743 letters c.7544_9286del names; the
+    # touched exons 52-63 hold 1744. The block states both counts, which exons are deleted
+    # entirely, what remains of the partly covered one, and the neighbouring-exon arithmetic.
+    # It does not say what the cell does with the remnant: that is the genetics reference's.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31260956_31729748del", transcript="NM_004006.3")
 
     lines = summary.splitlines()
-    exon_i = next(i for i, l in enumerate(lines) if l.startswith("Exons 52-63 of 79"))
-    assert lines[exon_i + 1] == (
-        "Splice sites removed: the exons listed above are lost whole from the transcript; "
-        "use the exon line's length and frame. VEP's inframe_deletion label counts only "
-        "the 1743 coding letters written in the variant."
+    assert lines[1] == (
+        "Frame, as written: 1743 coding bases, a multiple of three, so the reading frame is kept (VEP: inframe_deletion). "
+        "Frame if exons 52-63 are lost whole: 1744 coding bases, one more than a multiple of three, so every codon after the gap is misread"
     )
-    assert lines[1] == "Frame: out of frame: exons 52-63 lost whole (splice sites removed), 1744 coding bases, remainder 1"
+    assert "Deleted entirely: exons 52-62 (1682 coding bases)." in lines
+    assert "Exon 63: 61 of 62 coding bases deleted, 1 base and the exon's splice signal on that side remain." in lines
+    assert any(l.startswith("The deletion as written covers 1743 of the 1744 coding bases of exons 52-63; 1 base of a touched exon is not deleted")
+               and "genetics reference (topic: splicing)" in l for l in lines)
+    assert ("If exons 52-63 were lost whole (1744 bases), removing one neighbouring exon as well: exon 51 (233 coding bases) "
+            "gives 1977, a multiple of three; exon 64 (75 coding bases) gives 1819, not a multiple of three.") in lines
+    assert "expected" not in summary.lower()   # no inferred outcome in the block
 
 
 def test_single_exon_variant_gets_no_splice_loss_line(recorded):
