@@ -832,6 +832,17 @@ class TestUnverifiedTerms:
         assert output.response == "GRD"
         assert loop_events(trace) == ["unverified_term:GRD", "unverified_term_kept:GRD"]
 
+    def test_drug_named_on_the_last_turn_is_settled_without_a_reminder(self, monkeypatch):
+        # Five loop turns, the fifth answers with a drug no tool text names: no turn is
+        # left for a reminder, so the settlement alone applies and removes it.
+        import src.agent as agent_module
+        turns = [self._call("search_genereviews", gene="DMD")] * (agent_module.MAX_ITERATIONS - 1) + [self._say("Ataluren")]
+        output, trace = self._run(monkeypatch, turns)
+
+        assert output.response == "None"
+        assert "unverified_term_removed:Ataluren" in trace["events"]
+        assert not any(e.startswith("unverified_term:") for e in trace["events"])
+
     def test_term_present_in_a_tool_text_is_not_challenged(self, monkeypatch):
         output, trace = self._run(monkeypatch, [
             self._call("search_genereviews", gene="DMD"),

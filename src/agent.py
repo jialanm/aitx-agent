@@ -333,22 +333,25 @@ class Agent:
             self.last_trace["events"].append("fabricated_identifier:" + ",".join(fabricated))
             normalized = self._without_identifiers(normalized, fabricated)
 
-        # Step 6c: terms the model was told were unverified. Verified if a tool
-        # text now contains them; otherwise removed when RxNorm knows them as
-        # drugs, kept and recorded when not.
-        if term_reminded:
-            still = self._unverified_terms(normalized, context, options)
-            for term in term_reminded:
-                if term not in still:
-                    self.last_trace["events"].append(f"unverified_term_verified:{term}")
-            drugs = [t for t in still if is_drug_name(t)]
-            kept = [t for t in still if t not in drugs]
-            if drugs:
-                logger.warning(f"Answer {normalized!r} names drugs absent from every tool result: {drugs}")
-                self.last_trace["events"].append("unverified_term_removed:" + ",".join(drugs))
-                normalized = self._without_identifiers(normalized, drugs)
-            if kept:
-                self.last_trace["events"].append("unverified_term_kept:" + ",".join(kept))
+        # Step 6c: settle the answer's terms, reminded or not. A term the
+        # model was told about and that a tool text now contains is verified.
+        # A term still in no tool text is removed when RxNorm knows it as a
+        # drug, kept and recorded when not. This runs on every answer: a
+        # name produced on the last loop turn got no reminder (32B run 3,
+        # 2026-10-13, AITX-00002: "Ataluren" on turn 5, no tool text named
+        # it, and it went out unchecked).
+        still = self._unverified_terms(normalized, context, options)
+        for term in term_reminded:
+            if term not in still:
+                self.last_trace["events"].append(f"unverified_term_verified:{term}")
+        drugs = [t for t in still if is_drug_name(t)]
+        kept = [t for t in still if t not in drugs]
+        if drugs:
+            logger.warning(f"Answer {normalized!r} names drugs absent from every tool result: {drugs}")
+            self.last_trace["events"].append("unverified_term_removed:" + ",".join(drugs))
+            normalized = self._without_identifiers(normalized, drugs)
+        if kept:
+            self.last_trace["events"].append("unverified_term_kept:" + ",".join(kept))
         self.last_trace["answer"] = normalized
 
         # Step 7: Build evidence items
