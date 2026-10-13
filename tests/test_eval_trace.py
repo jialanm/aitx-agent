@@ -113,6 +113,8 @@ def test_run_files_are_written_after_every_question(tmp_path, monkeypatch):
     outputs = tmp_path / "eval_outputs_test.json"
 
     class _Agent:
+        max_iterations = 5
+
         def __init__(self, *a, **k):
             self.last_trace = {}
 
