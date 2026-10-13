@@ -44,6 +44,21 @@ def normalise_drug_names(answer: str) -> tuple[str, list[dict]]:
     return ", ".join(out), changes
 
 
+def is_drug_name(name: str) -> bool | None:
+    """True if RxNorm knows the name as a drug concept, False if not, None
+    when RxNorm could not be reached. Used to decide whether an answer term
+    that no tool text contains is a drug name (removed) or a code such as a
+    protein domain or GOF/LOF (kept): the lookup, not the answer format,
+    decides."""
+    if not name or len(name) < 3 or _SKIP.match(name):
+        return False
+    found = _get(f"{RXNORM_API}/rxcui.json", {"name": name, "search": 2})
+    if found is None:
+        return None
+    ids = (found.get("idGroup") or {}).get("rxnormId") or []
+    return bool(ids)
+
+
 def _ingredient_for(name: str) -> dict | None:
     """The single ingredient when RxNorm types the name as a brand or salt; else None."""
     found = _get(f"{RXNORM_API}/rxcui.json", {"name": name, "search": 2})

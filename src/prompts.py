@@ -179,7 +179,8 @@ Start by calling the first recommended tool above. After receiving tool results,
 2. Use tools to find real evidence. Do NOT hallucinate facts or URLs.
 3. After gathering evidence from tools, provide your final answer directly as plain text (no tool calls).
 4. Keep your reasoning concise. Focus on answering the specific question asked.
-5. Your final response should be ONLY the answer — no explanation, no preamble."""
+5. Your final response should be ONLY the answer — no explanation, no preamble.
+6. A fact you remember is a hypothesis, not evidence. Before a remembered fact decides your answer, confirm it with a tool call and say which tool. A drug, trial, gene or guideline named in your answer must appear in a tool result of this conversation."""
 
     # Category-specific additions
     category_addendum = _get_category_addendum(category)

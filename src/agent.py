@@ -21,7 +21,7 @@ from .prompts import (
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
 from .variant_validation import validate_variant
-from .drug_names import normalise_drug_names
+from .drug_names import is_drug_name, normalise_drug_names
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +129,7 @@ class Agent:
         final_text = ""
         reminded = False
         tried: set[str] = set()
+        term_reminded: list[str] = []  # answer terms the model was told no tool text contains
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -157,10 +158,25 @@ class Agent:
                     messages.append({"role": "assistant", "content": response.raw})
                     messages.append({"role": "user", "content": self._evidence_reminder(context)})
                     continue
-                if not all_evidence and reminded:
+                if not all_evidence and reminded and "reminder_ignored" not in self.last_trace["events"]:
                     # Told once, still no lookup: accept the answer, record it, no loop.
                     self.last_trace["events"].append("reminder_ignored")
                     logger.warning("Model answered without a tool call after the evidence reminder")
+
+                # A name in the answer that no tool text contains came from
+                # memory (32B run, 2026-10-13: ataluren on AITX-00002 and
+                # eteplirsen on 00001 were named with no source naming them).
+                # The model is told once, by term, and chooses the tool; code
+                # writes no query. What is still unverified at the end is
+                # removed if RxNorm knows it as a drug, kept and recorded if
+                # it is a code the sources may express in other words.
+                unverified = self._unverified_terms(response.text, context, options)
+                if unverified and not term_reminded and iteration < MAX_ITERATIONS - 1:
+                    term_reminded.extend(unverified)
+                    self.last_trace["events"].append("unverified_term:" + ",".join(unverified))
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append({"role": "user", "content": self._unverified_term_reminder(unverified, context, tried)})
+                    continue
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
@@ -211,6 +227,7 @@ class Agent:
                     continue
 
                 logger.info(f"Executing tool: {tc.name}({tc.arguments})")
+                tried.add(tc.name)
                 try:
                     summary, evidence = self._call_tool(tool, tc.name, tc.arguments, "model")
                     all_evidence.extend(evidence)
@@ -284,6 +301,23 @@ class Agent:
             logger.warning(f"Answer {normalized!r} names identifiers absent from every tool result: {fabricated}")
             self.last_trace["events"].append("fabricated_identifier:" + ",".join(fabricated))
             normalized = self._without_identifiers(normalized, fabricated)
+
+        # Step 6c: terms the model was told were unverified. Verified if a tool
+        # text now contains them; otherwise removed when RxNorm knows them as
+        # drugs, kept and recorded when not.
+        if term_reminded:
+            still = self._unverified_terms(normalized, context, options)
+            for term in term_reminded:
+                if term not in still:
+                    self.last_trace["events"].append(f"unverified_term_verified:{term}")
+            drugs = [t for t in still if is_drug_name(t)]
+            kept = [t for t in still if t not in drugs]
+            if drugs:
+                logger.warning(f"Answer {normalized!r} names drugs absent from every tool result: {drugs}")
+                self.last_trace["events"].append("unverified_term_removed:" + ",".join(drugs))
+                normalized = self._without_identifiers(normalized, drugs)
+            if kept:
+                self.last_trace["events"].append("unverified_term_kept:" + ",".join(kept))
         self.last_trace["answer"] = normalized
 
         # Step 7: Build evidence items
@@ -385,6 +419,39 @@ class Agent:
         text = re.sub(r"\s*,\s*,+", ",", text)
         text = text.strip(" ,;\n\t")
         return text or "None"
+
+    def _unverified_terms(self, answer: str, context: dict, options: list[str] | None) -> list[str]:
+        """Answer terms (string or multiple-choice formats) that no tool text or evidence URL contains."""
+        if context["answer_format"] not in ("string_match", "multiple_choice") or not answer:
+            return []
+        items = [i.strip(" .;\n\t\"'") for i in answer.split(",")]
+        items = [
+            i for i in items
+            if len(i) >= 3 and i.lower() not in ("none", "n/a", "not applicable", "unknown")
+            and not self._IDENTIFIER.fullmatch(i)  # identifiers have their own check (step 6b)
+        ]
+        if not items:
+            return []
+        haystack = "\n".join(
+            [c.get("summary", "") for c in self.last_trace["tool_calls"]]
+            + [u for c in self.last_trace["tool_calls"] for u in c.get("evidence_urls", [])]
+        ).lower()
+        return [i for i in dict.fromkeys(items) if i.lower() not in haystack]
+
+    def _unverified_term_reminder(self, terms: list[str], context: dict, tried: set[str]) -> str:
+        """One message naming the unverified term(s) and the recommended tools not yet called."""
+        priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
+        uncalled = [t for t in priority if t in self.tools and t not in tried]
+        names = ", ".join(terms)
+        where = (
+            f"Recommended tools for this question not yet called: {', '.join(uncalled)}. "
+            if uncalled else "Every recommended tool for this question has been called; another tool may fit. "
+        )
+        return (
+            f"Your answer names {names}, which appears in no tool result of this conversation. "
+            "Confirm it with a tool call before answering, choosing the arguments from the patient "
+            "record and the question. " + where + "Then answer from the evidence you have."
+        )
 
     def _evidence_reminder(self, context: dict) -> str:
         """One message telling the model a lookup is required and which tool is recommended first."""

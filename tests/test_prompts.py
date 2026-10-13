@@ -99,3 +99,16 @@ class TestPromptVariants:
         import pytest
         with pytest.raises(ValueError):
             set_prompt_variant("louder")
+
+
+class TestMemoryRule:
+    def test_prompt_tells_the_model_a_remembered_fact_is_a_hypothesis(self):
+        from src.preprocessing import ParsedVariant
+        from src.prompts import build_system_prompt
+        v = ParsedVariant(gene="DMD", transcript="NM_004006.3", variant_cdna="c.70T>C", variant_protein="p.(Trp24Arg)",
+                          zygosity="hemizygous", variant_type="missense", cdna_position="70", protein_position="24",
+                          amino_acid_change="Trp24Arg")
+        prompt = build_system_prompt("Established_Targeted", [v], "Progressive muscle weakness", "string_match", "2025-08-01")
+        assert "A fact you remember is a hypothesis, not evidence" in prompt
+        assert "must appear in a tool result of this conversation" in prompt
+

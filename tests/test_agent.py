@@ -661,6 +661,7 @@ class TestConsequenceInStepOne:
                                                           genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
         monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
         monkeypatch.setattr(agent_module, "normalise_drug_names", lambda x: (x, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)  # no RxNorm network in tests
         task = dict(TestFabricatedIdentifierCheck.TASK)
         task["id"] = "AITX-00004"
         task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
@@ -675,6 +676,7 @@ class TestConsequenceInStepOne:
         agent, task = self._agent(monkeypatch, [
             ModelResponse(text="", tool_calls=[ToolCall(name="search_clinvar", arguments={})], raw="<tool_call>", thinking=""),
             ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # after the unverified-term reminder
             ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
             ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
         ])
@@ -693,12 +695,15 @@ class TestConsequenceInStepOne:
         agent, task = self._agent(monkeypatch, [
             ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # no lookup of its own
             ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # ignores the reminder
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),   # ignores the term reminder too
             ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: none", tool_calls=[], raw="", thinking=""),
         ])
 
         agent.run(task)
 
-        assert loop_events(agent.last_trace) == ["evidence_reminder", "reminder_ignored"]
+        assert loop_events(agent.last_trace) == [
+            "evidence_reminder", "reminder_ignored", "unverified_term:Pyridoxine", "unverified_term_kept:Pyridoxine",
+        ]
 
 
 class TestSchemaOrderShuffle:
@@ -737,4 +742,110 @@ class TestShowThinking:
         agent._record_turn("loop", 1, self._response())
         assert capsys.readouterr().out == ""
         assert len(agent.last_trace["model_turns"]) == 1
+
+
+class TestUnverifiedTerms:
+    """A name in the answer that no tool text contains is challenged once; the model
+    chooses the tool. Still unverified at the end: removed if RxNorm knows it as a
+    drug, kept and recorded if it is a code (32B run 2026-10-13, AITX-00002/00001)."""
+
+    CHAPTER = ("GeneReviews: Dystrophinopathies (NBK1119)\nMANAGEMENT: Targeted therapies: dystrophin restoration "
+               "therapy (antisense oligonucleotide) for those with DMD pathogenic variants in select exons")
+    ABSTRACT = ("PubMed search: DMD nonsense ataluren\nPMID: 1\nTitle: Ataluren in nonsense mutation Duchenne\n"
+                "Abstract: Ataluren promotes read-through of premature stop codons in dystrophin.")
+
+    class _GR(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_genereviews", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return TestUnverifiedTerms.CHAPTER, [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/books/NBK1119/")]
+
+    class _PubMed(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_pubmed", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return TestUnverifiedTerms.ABSTRACT, [EvidenceRecord(url="https://pubmed.ncbi.nlm.nih.gov/1/")]
+
+    def _run(self, monkeypatch, turns, answer_format="string_match", prompt=None, drug_lookup=None):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.31169542_31169543delinsTA", gene_symbol="DMD"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", drug_lookup or (lambda name: name.lower() in ("ataluren", "eteplirsen")))
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00002"
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3", "variant_cdna": "c.10453_10454delinsTA",
+                                         "variant_protein": "p.(Leu3485Ter)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": answer_format,
+                            "prompt": prompt or "To which targeted therapy is this variant most likely amenable? Provide the generic name or None.",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[self._GR(), self._PubMed()])
+        return agent.run(TaskInput(**task)), agent.last_trace
+
+    @staticmethod
+    def _call(name, **args):
+        return ModelResponse(text="", tool_calls=[ToolCall(name=name, arguments=args)], raw="<tool_call>", thinking="")
+
+    @staticmethod
+    def _say(text):
+        return ModelResponse(text=text, tool_calls=[], raw=text, thinking="")
+
+    def test_unverified_drug_is_challenged_then_verified_by_the_models_own_lookup(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            self._call("search_genereviews", gene="DMD"),
+            self._say("Ataluren"),                                   # no tool text names it
+            self._call("search_pubmed", query="DMD nonsense ataluren"),  # the model chooses the tool
+            self._say("Ataluren"),
+        ])
+
+        assert output.response == "Ataluren"
+        assert loop_events(trace) == ["unverified_term:Ataluren", "unverified_term_verified:Ataluren"]
+        assert "appears in no tool result" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+        assert "search_pubmed" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+
+    def test_drug_still_unverified_after_the_reminder_is_removed(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            self._call("search_genereviews", gene="DMD"),
+            self._say("Ataluren"),
+            self._say("Ataluren"),  # answers again without looking
+        ])
+
+        assert output.response == "None"
+        assert loop_events(trace) == ["unverified_term:Ataluren", "unverified_term_removed:Ataluren"]
+
+    def test_code_that_rxnorm_does_not_know_is_kept_and_recorded(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            self._say('["CSRD", "TBD", "GRD", "Sec14-PH", "HLR", "NLS", "SBR"]'),  # option extraction, thinking off
+            self._call("search_genereviews", gene="DMD"),
+            self._say("GRD"),
+            self._say("GRD"),
+        ], answer_format="multiple_choice",
+           prompt="In which functional domain does this variant occur? Answer choices: CSRD, TBD, GRD, Sec14-PH, HLR, NLS, SBR.",
+           drug_lookup=lambda name: False)
+
+        assert output.response == "GRD"
+        assert loop_events(trace) == ["unverified_term:GRD", "unverified_term_kept:GRD"]
+
+    def test_term_present_in_a_tool_text_is_not_challenged(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            self._call("search_genereviews", gene="DMD"),
+            self._say("antisense oligonucleotide"),
+        ])
+
+        assert output.response == "antisense oligonucleotide"
+        assert loop_events(trace) == []
+
+    def test_numeric_answers_are_never_challenged(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            self._call("search_genereviews", gene="DMD"),
+            self._say("0.1"),
+        ], answer_format="numeric_match", prompt="What fraction? Answer with a decimal.")
+
+        assert loop_events(trace) == []
 
