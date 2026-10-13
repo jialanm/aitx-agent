@@ -11,6 +11,7 @@ import pytest
 
 import src.agent as agent_module
 from src.model import ModelResponse, ToolCall
+from src.schemas import TaskOutput
 from src.tools.base import BaseTool, EvidenceRecord
 
 # scripts/ is not a package; load eval.py as a module by path.
@@ -101,3 +102,34 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
     # Step 1 fetches the consequence automatically; the model's own call follows.
     assert [(c["tool"], c["origin"]) for c in recorded] == [("query_ensembl", "step1"), ("search_clinvar", "model")]
     assert written["traces"][0]["messages"][0]["role"] == "system"
+
+
+def test_run_files_are_written_after_every_question(tmp_path, monkeypatch):
+    """A run stopped mid-way (Ctrl-C) keeps the questions it finished."""
+    second = dict(QUESTION, id="AITX-TEST2")
+    questions = tmp_path / "q.json"
+    questions.write_text(json.dumps([QUESTION, second]))
+    results = tmp_path / "eval_results_test.json"
+    outputs = tmp_path / "eval_outputs_test.json"
+
+    class _Agent:
+        def __init__(self, *a, **k):
+            self.last_trace = {}
+
+        def run(self, task_input):
+            if task_input.id == "AITX-TEST2":
+                raise KeyboardInterrupt
+            self.last_trace = {"id": task_input.id, "tool_calls": []}
+            return TaskOutput(id=task_input.id, response="Yes", evidence=[])
+
+    monkeypatch.setattr(eval_script, "load_model", lambda **kwargs: (None, None))
+    monkeypatch.setattr(eval_script, "Agent", _Agent)
+    monkeypatch.setattr(eval_script, "run_metadata", lambda *a, **k: {"git_commit": "test"})
+
+    with pytest.raises(KeyboardInterrupt):
+        eval_script.run_evaluation(str(questions), None, "bf16", str(results), str(outputs))
+
+    assert [t["id"] for t in json.loads((tmp_path / "eval_trace_test.json").read_text())["traces"]] == ["AITX-TEST"]
+    assert [r["id"] for r in json.loads(results.read_text())["results"]] == ["AITX-TEST"]
+    assert [o["id"] for o in json.loads(outputs.read_text())] == ["AITX-TEST"]
+

@@ -79,6 +79,24 @@ def run_metadata(questions_path: str, answers_path: str | None, precision: str =
     }
 
 
+def write_run_files(output_path: str, outputs_path: str, metadata: dict,
+                    results: list, stats: dict, task_outputs: list, traces: list) -> str:
+    """Write the stats, the spec outputs and the trace. Called after every
+    question so a stopped or crashed run keeps what it had; the last call
+    is the complete run. Returns the trace path."""
+    with open(outputs_path, "w") as f:
+        json.dump(task_outputs, f, indent=2)
+    with open(output_path, "w") as f:
+        json.dump(
+            {"metadata": metadata, "results": results, "stats": dict(stats)},
+            f, indent=2, default=dict,
+        )
+    trace_path = trace_path_for(output_path)
+    with open(trace_path, "w") as f:
+        json.dump({"metadata": metadata, "traces": traces}, f, indent=2, default=str)
+    return trace_path
+
+
 def validate_output(output_dict: dict) -> list[str]:
     """Validate that output matches the project.md spec.
 
@@ -251,6 +269,8 @@ def run_evaluation(
                 "evidence": [],
             })
 
+        write_run_files(output_path, outputs_path, metadata, results, stats, task_outputs, traces)
+
     # Print summary
     print("\n" + "=" * 60)
     print("EVALUATION SUMMARY")
@@ -285,24 +305,9 @@ def run_evaluation(
             status = " CORRECT" if r["correct"] else " WRONG"
         print(f"  {r['id']} | {r['response']:<30} | evidence={ev_count} | {valid_mark}{status}")
 
-    # Save spec-compliant outputs
-    with open(outputs_path, "w") as f:
-        json.dump(task_outputs, f, indent=2)
+    trace_path = write_run_files(output_path, outputs_path, metadata, results, stats, task_outputs, traces)
     print(f"\nSpec-compliant outputs saved to {outputs_path}")
-
-    # Save evaluation stats
-    with open(output_path, "w") as f:
-        json.dump(
-            {"metadata": metadata, "results": results, "stats": dict(stats)},
-            f, indent=2, default=dict,
-        )
     print(f"Evaluation stats saved to {output_path}")
-
-    # Save the tool trace: what each question's run actually did, so a
-    # failure can be classified from the run's own artifacts.
-    trace_path = trace_path_for(output_path)
-    with open(trace_path, "w") as f:
-        json.dump({"metadata": metadata, "traces": traces}, f, indent=2, default=str)
     print(f"Tool traces saved to {trace_path}")
 
     # Print example output for verification
