@@ -16,7 +16,7 @@ def _description(tool) -> str:
 
 
 def test_us_only_sources_say_so_and_point_to_pubmed():
-    assert "United States" in _description(GeneReviewsTool())
+    assert "names approvals by region" in _description(GeneReviewsTool())
     assert "search PubMed" in _description(GeneReviewsTool())
     assert "United States label" in _description(OpenFDATool())
     assert "not evidence that no such drug exists" in _description(OpenFDATool())

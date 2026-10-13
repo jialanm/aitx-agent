@@ -64,12 +64,15 @@ class GeneReviewsTool(BaseTool):
                     "under investigation; ask for 'clinical', 'diagnosis', "
                     "'counseling' or 'all' for the other sections. A gene with "
                     "one chapter is fetched at once. Use it for Tier 1 targeted "
-                    "and supportive therapies and contraindications. Coverage: "
-                    "the management text reflects United States practice, so a "
-                    "therapy approved only in another country, withdrawn, or "
-                    "still investigational may not be named; when no listed "
-                    "therapy matches the variant's consequence, search PubMed by "
-                    "that consequence before answering None."
+                    "and supportive therapies and contraindications. The "
+                    "management text names approvals by region where they exist "
+                    "(for example a therapy approved in the EU and UK, with its "
+                    "age limit), so read it before concluding that no approval "
+                    "exists anywhere. A therapy that is withdrawn, still "
+                    "investigational, or approved only in another country may be "
+                    "absent; when no listed therapy matches the variant's "
+                    "consequence, search PubMed by that consequence before "
+                    "answering None."
                 ),
                 "parameters": {
                     "type": "object",
