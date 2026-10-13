@@ -758,7 +758,10 @@ class Agent:
         def norm(t: str) -> str:
             t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")
             return re.sub(r"\s+", " ", t).strip().lower()
-        q = norm(quote).strip('"\'')
+        # A quote may end its sentence with a full stop the source continues
+        # past (32B run 2, 2026-10-13, AITX-00006: the lumasiran indication
+        # sentence runs into "[see Clinical Pharmacology ...]" in the label).
+        q = norm(quote).strip('"\'').rstrip(".,;: ")
         return bool(q) and len(q) >= 15 and q in norm(text)
 
     def _generate_justifications(

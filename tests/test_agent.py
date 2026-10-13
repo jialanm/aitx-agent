@@ -520,6 +520,17 @@ class TestGroundedJustifications:
         assert not any(e.startswith("citation_unsupported") for e in trace["events"])
         assert trace["model_turns"][-1]["kind"] == "justifications"
 
+    def test_quote_ending_in_a_full_stop_the_source_lacks_is_still_verbatim(self, monkeypatch):
+        # The source sentence runs on ("...pyridoxine responsive; (2) RNA interference"); the
+        # model closes its quote with a full stop. Every word is in the text, so it is supported.
+        reply = ('1. QUOTE: "Pyridoxine (vitamin B6) to reduce liver oxalate production in individuals with missense AGXT '
+                 'variants known to be pyridoxine responsive."\n   WHY: It names the therapy.')
+
+        output, trace = self._run(monkeypatch, reply)
+
+        assert output.evidence[0].justification.startswith('"Pyridoxine (vitamin B6)')
+        assert not any(e.startswith("citation_unsupported") for e in trace["events"])
+
     def test_invented_quote_is_replaced_and_recorded(self, monkeypatch):
         reply = ('1. QUOTE: "Pyridoxine is first-line therapy for all AGXT patients regardless of genotype"\n'
                  '   WHY: It supports the answer.')
