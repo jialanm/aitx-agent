@@ -903,3 +903,40 @@ class TestNoneReminder:
         assert output.response == "None"
         assert loop_events(trace) == []
 
+
+class TestFinalAnswerTurn:
+    """When the last loop iteration ends in a tool call, one more generation with
+    tools disabled reads the result and answers (32B rerun 2026-10-13, AITX-00001)."""
+
+    def test_result_of_the_last_tool_call_is_read_before_answering(self, monkeypatch):
+        import src.agent as agent_module
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        seen = []
+        turns = [call("search_genereviews", gene="DMD")] * agent_module.MAX_ITERATIONS + [say("antisense oligonucleotide")]
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: __import__("src.variant_validation", fromlist=["ValidatedVariant"]).ValidatedVariant(
+                                submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                genomic_variant="NC_000023.11:g.31169542_31169543delinsTA", gene_symbol="DMD"))
+
+        def scripted(model, tokenizer, messages, tools=None, **kwargs):
+            seen.append(tools)
+            return turns.pop(0)
+        monkeypatch.setattr(agent_module, "generate", scripted)
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3", "variant_cdna": "c.10453_10454delinsTA",
+                                         "variant_protein": "p.(Leu3485Ter)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "Which targeted therapy applies? Provide the generic name or None.", "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[TestUnverifiedTerms._GR()])
+
+        output = agent.run(TaskInput(**task))
+
+        assert output.response == "antisense oligonucleotide"
+        assert "final_answer_turn" in agent.last_trace["events"]
+        assert seen[-1] is None                                   # the extra turn had no tools
+        assert agent.last_trace["model_turns"][-1]["kind"] == "final_answer"
+        assert "No further tool calls are possible" in agent.last_trace["messages"][-1]["content"]
+

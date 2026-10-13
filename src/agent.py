@@ -277,9 +277,23 @@ class Agent:
                 tried.update(tc.name for tc in response.tool_calls)
                 messages.append({"role": "user", "content": self._empty_result_notice(context, tried)})
 
-            # If this was the last iteration and we still have tool calls
+            # The last iteration ended in a tool call, so its result would go
+            # unread (32B rerun, 2026-10-13, AITX-00001: the eteplirsen label
+            # was fetched in turn 5 and never seen). One more generation with
+            # tools disabled lets the model read it and answer; it cannot
+            # start another lookup.
             if iteration == MAX_ITERATIONS - 1:
-                final_text = response.text or "Unable to determine answer."
+                self.last_trace["events"].append("final_answer_turn")
+                messages.append({
+                    "role": "user",
+                    "content": (
+                        "No further tool calls are possible. Answer now from the tool results above, "
+                        "in the required format, or answer None if they do not support an answer."
+                    ),
+                })
+                last = generate(self.model, self.tokenizer, messages, tools=None)
+                self._record_turn("final_answer", iteration + 1, last)
+                final_text = last.text or response.text or "Unable to determine answer."
         else:
             if not final_text:
                 final_text = "Unable to determine answer."
