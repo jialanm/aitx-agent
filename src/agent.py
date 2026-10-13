@@ -562,9 +562,24 @@ class Agent:
         source_texts = [self._source_text_for(r.url) for r in records]
         justifications = self._generate_justifications(records, source_texts, answer, task_input)
 
+        # Three outcomes per source. Supported: the quote is verbatim in the
+        # source's text and is cited. Declined: the model answered NOT
+        # SUPPORTED, so the source is not evidence for this answer and is
+        # left out (run 5: the step-1 VEP page was declined on five drug and
+        # trial questions, where the consequence played no part). Unsupported:
+        # the model quoted words the text does not contain; the source stays,
+        # marked, because the model did claim it as evidence.
         items = []
+        declined: list[EvidenceItem] = []
         for i, record in enumerate(records):
             quote, sentence = justifications[i] if i < len(justifications) else ("", "")
+            if quote is None:
+                self.last_trace["events"].append(f"citation_declined:{record.url}")
+                logger.info(f"Citation declined by the model (NOT SUPPORTED): {record.url}")
+                declined.append(EvidenceItem(
+                    source=record.url, time_accessed=record.time_accessed, justification=UNSUPPORTED_JUSTIFICATION,
+                ))
+                continue
             supported = (
                 bool(quote)
                 and self._quote_in_text(quote, source_texts[i])
@@ -584,6 +599,12 @@ class Agent:
                 justification=justification,
             ))
 
+        if not items and declined:
+            # The output must carry at least one source. Keep the declined
+            # ones, marked, rather than invent a citation.
+            self.last_trace["events"].append("all_citations_declined")
+            logger.warning("Every source was declined; keeping them marked as not stating the answer")
+            return declined
         return items
 
     def _source_text_for(self, url: str) -> str:
@@ -625,7 +646,7 @@ class Agent:
         answer: str,
         task_input: TaskInput,
     ) -> list[tuple[str, str]]:
-        """For each source, (verbatim quote, one sentence) or ("", "") when unsupported.
+        """For each source, (verbatim quote, one sentence); (None, "") when the model declines, ("", "") when unreadable.
 
         One source per model call. Shown all sources at once, the model
         attached one source's sentence to another's link (runs 3 and 4:
@@ -666,8 +687,10 @@ class Agent:
         w = re.search(r"WHY:\s*(.*)", text, re.S)
         quote = (q.group(1) if q else "").strip().strip('"\u201c\u201d')
         why = re.sub(r"\s+", " ", w.group(1)).strip() if w else ""
-        if not quote or quote.upper().startswith("NOT SUPPORTED"):
-            return "", ""
+        if quote.upper().startswith("NOT SUPPORTED"):
+            return None, ""  # declined: the model says the text does not support the answer
+        if not quote:
+            return "", ""  # unreadable reply: treated as an unsupported claim
         return quote, why
 
     def _fallback_evidence(self, task_input: TaskInput) -> list[EvidenceRecord]:

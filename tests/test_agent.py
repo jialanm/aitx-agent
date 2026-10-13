@@ -196,7 +196,7 @@ class TestOptionExtraction:
 
 def loop_events(trace):
     """Trace events except the per-citation ones added by the justification step."""
-    return [e for e in trace["events"] if not e.startswith("citation_unsupported")]
+    return [e for e in trace["events"] if not e.startswith(("citation_", "all_citations_declined"))]
 
 
 class TestTrace:
@@ -529,11 +529,68 @@ class TestGroundedJustifications:
         assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
         assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
 
-    def test_not_supported_is_honoured(self, monkeypatch):
+    def test_declined_only_source_is_kept_and_marked(self, monkeypatch):
+        # The output must carry a source, so with nothing else the declined one stays, marked.
         output, trace = self._run(monkeypatch, "1. QUOTE: NOT SUPPORTED\n   WHY: nothing relevant")
 
         assert output.evidence[0].justification == "This record was retrieved and consulted; its returned text does not state the answer."
-        assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert "citation_declined:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert "all_citations_declined" in trace["events"]
+        assert not any(e.startswith("citation_unsupported") for e in trace["events"])
+
+
+class TestDeclinedCitationIsDropped:
+    """A source the model declines (NOT SUPPORTED) is left out of the evidence when another source supports the answer.
+
+    Run 5: the step-1 VEP page was attached to every answer and declined on
+    the drug and trial questions, where the consequence played no part.
+    """
+
+    def _run(self, monkeypatch, replies):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000002.12:g.240871433G>A", gene_symbol="AGXT"))
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "AGXT"})], raw="<tool_call>", thinking=""),
+            ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),
+        ] + [ModelResponse(text=r, tool_calls=[], raw=r, thinking="") for r in replies]
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00004"
+        task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.508G>A",
+                                         "variant_protein": "p.(Gly170Arg)", "zygosity": "homozygous"}],
+                           "clinical_context": "Recurrent nephrocalcinosis and chronic kidney disease"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "What targeted, small molecule therapy is available for this patient? Provide the generic name or None.",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[TestConsequenceInStepOne._VEP(), TestGroundedJustifications._GR()])
+        return agent.run(TaskInput(**task)), agent.last_trace
+
+    def test_declined_step1_source_is_left_out(self, monkeypatch):
+        # Sources are justified in order: the step-1 VEP page first, then GeneReviews.
+        output, trace = self._run(monkeypatch, [
+            "QUOTE: NOT SUPPORTED\nWHY: the text is about the variant's consequence, not a therapy",
+            'QUOTE: "Pyridoxine (vitamin B6) to reduce liver oxalate production in individuals with missense AGXT variants known to be pyridoxine responsive"\nWHY: It names the therapy.',
+        ])
+
+        assert [e.source for e in output.evidence] == ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]
+        assert "citation_declined:https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433" in trace["events"]
+        assert not any(e.startswith("citation_unsupported") for e in trace["events"])
+
+    def test_step1_source_is_cited_when_the_model_quotes_it(self, monkeypatch):
+        output, trace = self._run(monkeypatch, [
+            "QUOTE: Consequence: missense_variant\nWHY: Pyridoxine response is reported for missense variants.",
+            'QUOTE: "Pyridoxine (vitamin B6) to reduce liver oxalate production in individuals with missense AGXT variants known to be pyridoxine responsive"\nWHY: It names the therapy.',
+        ])
+
+        assert [e.source for e in output.evidence] == [
+            "https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433",
+            "https://www.ncbi.nlm.nih.gov/books/NBK1283/",
+        ]
+        assert not any(e.startswith("citation_") for e in trace["events"])
 
 
 class TestAdapterBoilerplateIsNotGrounding:
