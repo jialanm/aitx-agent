@@ -300,10 +300,10 @@ noise; the brittleness is to inputs, and it is deterministic.
 | 00008 | Ascorbic acid, Desmopressin (correct) | correct_supported | chapter chosen by phenotype; DDAVP mapped to desmopressin through RxNorm |
 | 00009 | NCT05402384 (correct) | correct_supported | |
 | 00010 | No (correct) | correct_supported | trial fetched by ID |
-| 00011 | NCT07227857 | reference_questionable | |
+| 00011 | NCT07227857 | reference_questionable | a recruiting KCNT1 DEE trial for ages 2 to 12; registered after the key's date, so the key says None (see below) |
 | 00012 | Memantine | synthesis_wrong | PHAROS first, stopped there, in all five runs |
 | 00013 | 66 (correct) | correct_supported | |
-| 00014 | 10 | format_mismatch | the same line read as a percentage again (0.1 in run 4) |
+| 00014 | 10 | format_mismatch | the question asks for a percentage and the tool line says 10.0%; the key's 0.1 is the fraction (see below) |
 | 00015 | No (correct) | correct_supported | |
 | 00016 | TBD | synthesis_wrong | boundary disagreement |
 
@@ -318,7 +318,32 @@ per-source justification call removed the cross-attached quotes.
 2. Nine of sixteen correct and supported is the best result so far, and two
    of the gains (00004, 00008) came from giving the model the consequence
    and the chosen chapter before it reasons, which is the step-1 pipeline.
-3. The remaining wrong answers are the model's: three reasoning failures
-   (00001, 00002, 00012), two condition misses (00006, 00014), one
-   source-boundary case (00016), and one stale key (00011).
+3. Of the seven exact-match misses, four are the model's: 00001 and 00002
+   reason wrongly from evidence it was given, and 00012 and 00006 stop
+   after one tool and answer from memory. Three are at least partly the
+   key's, reviewed on 2026-10-13:
+   - 00014 asks for a percentage to the nearest tenth; the exon is 198 of
+     1,983 coding bases, the tool says "10.0%", and the model answered 10.0.
+     The key's 0.1 is the same quantity written as a fraction. We record
+     10.0 as a correct answer to the question as asked; the exact-match
+     scorer still marks it wrong, and the scored tables above keep the
+     scorer's count.
+   - 00011 names NCT07227857, a recruiting first-in-human trial for
+     children aged 2 to 12 with KCNT1-related developmental and epileptic
+     encephalopathy, which matches the patient's gene and presentation;
+     the model correctly left out a healthy-volunteer study and a general
+     epilepsy biomarker study. The key says None because both KCNT1 trials
+     were registered after the question's date (2025-08-01). Judged live,
+     which is how the challenge frames the task, the answer is right and
+     the key is stale; the one open point is that the patient's age is not
+     given.
+   - 00016 is a mixed case: UniProt bounds the Ras-GAP domain at residues
+     1251 to 1482, so the variant at 1243 falls outside it by the tool,
+     while the key's GRD spans 1198 to 1549 from the literature. On top of
+     that disagreement the model read the option "TBD" as "to be
+     determined" rather than as a domain name, which is its own error.
+
+   Counting 00014 and 00011 as correct gives 11 of 16 by review against
+   9 of 16 by exact match; both numbers are reported, and the reviewed one
+   is not a score.
 
