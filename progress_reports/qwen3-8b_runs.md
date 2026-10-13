@@ -278,7 +278,13 @@ result texts, and answer are byte-for-byte the same in all five; only
 timing varies (1,685 to 1,994 s of agent time per run). pass^1 through
 pass^5 are all 0.562, 9 of 16. Under greedy decoding with batch size one,
 neither GPU arithmetic nor the live APIs introduced any variance over the
-two and a half hours. The six first-tool changes between runs 3 and 4 were
+two and a half hours.
+
+![pass^k over five repeats](pass_k_run5.png)
+
+The curve was drawn from the five results files with
+`uv run --with matplotlib python` and the `pass_k_curve` function in
+scripts/pass_k.py; matplotlib is not a project dependency. The six first-tool changes between runs 3 and 4 were
 therefore caused entirely by the prompt edits between those runs, not by
 noise; the brittleness is to inputs, and it is deterministic.
 
