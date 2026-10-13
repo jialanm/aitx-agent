@@ -143,3 +143,105 @@ Next: rerun both models from the current commit, so the comparison above
 has a before and after; split the trial-search text per trial; keep the
 hand label of reasoning (evidence, memory, imagined) as a per-run table
 beside the exact-match score.
+
+## 5. Run 2 (2026-10-13, commit 84f8cff): the harness changes, same model
+
+Same model, precision and hardware as run 1. The agent changed in response
+to run 1's traces and the 8B reading; the model did not. Changes between
+d886b7c and 84f8cff that touch behaviour:
+
+- the prompt says a remembered fact is a hypothesis to confirm with a tool
+  (rule 6), asks for a NOTES line before each tool call because the thinking
+  of earlier turns is not kept, and allows several tool calls in a turn;
+- an answer term that no tool text contains is named back to the model once,
+  with the recommended tools not yet called; a None answer while a
+  recommended tool is uncalled gets one reminder naming the tools;
+- when the fifth loop turn ends in a tool call, one more generation with
+  tools disabled reads the result and answers;
+- the GeneReviews, openFDA and PubMed schemas state the United States
+  coverage limit and point to PubMed for therapies approved elsewhere;
+- the VEP block opens with a Frame line, has the splice-sites line, and no
+  longer prints the most-severe consequence of another transcript as the
+  patient's;
+- a citation the model declines is left out instead of marked unsupported.
+
+(A run at 47cc322 between the two was stopped after three questions and is
+not reported.)
+
+| Patient | Expected | Run 2 | Run 1 | Run 2 s | Run 1 s |
+|---|---|---|---|---|---|
+| 00001 | Eteplirsen | Eteplirsen | Eteplirsen | 772 | 853 |
+| 00002 | Ataluren | Ataluren | None | 617 | 507 |
+| 00003 | None | None | None | 483 | 238 |
+| 00004 | Pyridoxine | pyridoxine | pyridoxine | 198 | 196 |
+| 00005 | No | No | No | 212 | 153 |
+| 00006 | Lumasiran | lumasiran | lumasiran, nedosiran | 347 | 213 |
+| 00007 | 18 months | 18 months | Not applicable | 430 | 400 |
+| 00008 | ascorbic acid, desmopressin | same | same | 229 | 207 |
+| 00009 | NCT05402384 | NCT05402384 | NCT05402384 | 212 | 137 |
+| 00010 | No | No | No | 150 | 146 |
+| 00011 | None | None | NCT07600736, NCT07227857 | 314 | 362 |
+| 00012 | L-Serine | Memantine | L-serine | 283 | 221 |
+| 00013 | 66 | 66 | 66 | 174 | 242 |
+| 00014 | 0.1 | 10 | 10 | 212 | 344 |
+| 00015 | No | Yes | No | 386 | 472 |
+| 00016 | GRD | TBD | TBD | 243 | 174 |
+
+| | Run 2 (84f8cff) | Run 1 (d886b7c) | 8B run 5 |
+|---|---|---|---|
+| Exact match | 12/16 | 10/16 | 9/16 |
+| Citations emitted / marked unsupported | 24 / 6 | 37 / 19 | 38 / 6 |
+| Declined citations left out | 13 | (marked) | (marked) |
+| Agent time | 88 min | 81 min | 30 min |
+| Reminders fired: term, None, evidence | 2, 4, 2 | 0, 0, 1 | 0, 0, 1 |
+
+### What changed, question by question
+
+- **00006, lumasiran (first time right for either model).** The term check
+  fired on "lumasiran nedosiran"; the model fetched both FDA labels, read
+  nedosiran's kidney-function restriction against the patient's chronic
+  kidney disease, and chose lumasiran. This is the behaviour the check was
+  built for: evidence fetched, read, and applied to the patient.
+- **00002, Ataluren (first time right for either model).** Turn 3 answered
+  None; the None reminder sent the model to ClinVar, which had nothing; on
+  the last turn it reversed to Ataluren, reasoning that the N1C guidelines
+  "would say" nonsense variants are eligible for read-through agents, a
+  tool it never called, and that its earlier None "maybe" was a mistake.
+  Right, from memory under reminder pressure; no tool text names ataluren.
+  The term check could not act because no turn was left; the settlement now
+  applies on every answer (0c85519), so the same answer would be removed
+  unless the model looks the drug up, which the coverage note tells it to.
+- **00007, 18 months (recovered).** GeneReviews was called first this time.
+- **00011, None (matches the key).** The model put the condition text into
+  the trial query, which returned nothing where "KCNT1" alone returned four
+  trials in run 1; it then tried OMIM and answered None. A retrieval miss
+  that happens to agree with a key the live registry has outrun; not a
+  gain.
+- **00015, Yes (lost).** The model computed the stop as 63 bases from the
+  end of the transcript and applied "more than 55 means decay"; the rule
+  concerns distance from the last exon-exon junction, and a stop in the last
+  exon escapes. Misapplied from memory, as the 8B's reading of this rule
+  was unstable too; the genetics reference's nonsense-mediated-decay
+  section, added after this run, states the rule with its sources.
+- **00012, Memantine (still wrong).** The model wrote the correct mechanism
+  (loss of function needs an enhancer; a blocker is "counterintuitive") and
+  then deferred to PHAROS's list of drugs with activity at the protein,
+  reasoning that "the rules say to call at least one tool" and it had. Three
+  changes followed: the prompt asks for a supporting result per step rather
+  than a call count, the PHAROS line says the list is measured activity in
+  any direction, and the reference gains a mechanism-direction rule.
+- **00001, Eteplirsen (kept).** Reached again by the "closest exon before
+  the deletion" heuristic; the Frame line of this commit was read in turn 1
+  and then discounted in favour of VEP's inframe_deletion label, which led
+  to the numbers-only block with coverage lines (cbedd91, 6282ad4).
+
+### Reading
+
+The two real gains, 00006 and 00002, came from the model being pushed back
+to the tools after it had answered; one of them was then grounded (a label
+read and applied), the other was not (a drug named from memory). The loss,
+00015, and the standing miss, 00012, are both a rule applied wrongly or
+set aside, which is what the genetics reference is for; whether a model
+reads a rule it is offered is what run 3 (from 0c85519) tests. Reminders
+are now a visible cost: four questions reached the fifth turn, against one
+in run 1.
