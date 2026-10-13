@@ -25,7 +25,11 @@ from .drug_names import is_drug_name, normalise_drug_names
 
 logger = logging.getLogger(__name__)
 
-MAX_ITERATIONS = 5
+# Loop turns per question: one per tool, so the model can consult every
+# adapter once before it must answer (decided 2026-10-13; it was a fixed 5
+# from the first commit). The loop ends as soon as a turn answers.
+def max_iterations_for(tools) -> int:
+    return max(1, len(tools))
 # How much of a source's retrieved text the justification step is shown.
 SOURCE_TEXT_CHARS = 1500
 UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
@@ -52,6 +56,7 @@ class Agent:
         # Echo each model turn's thinking and text to stdout as the turn
         # ends, for watching a run live. The trace keeps them regardless.
         self.show_thinking = show_thinking
+        self.max_iterations = max_iterations_for(self.tools)
         self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:
@@ -132,8 +137,8 @@ class Agent:
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
 
-        for iteration in range(MAX_ITERATIONS):
-            logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
+        for iteration in range(self.max_iterations):
+            logger.info(f"Agent iteration {iteration + 1}/{self.max_iterations}")
 
             response = generate(
                 self.model,
@@ -172,7 +177,7 @@ class Agent:
                 # removed if RxNorm knows it as a drug, kept and recorded if
                 # it is a code the sources may express in other words.
                 unverified = self._unverified_terms(response.text, context, options)
-                if unverified and not term_reminded and iteration < MAX_ITERATIONS - 1:
+                if unverified and not term_reminded and iteration < self.max_iterations - 1:
                     term_reminded.extend(unverified)
                     self.last_trace["events"].append("unverified_term:" + ",".join(unverified))
                     messages.append({"role": "assistant", "content": response.raw})
@@ -186,7 +191,7 @@ class Agent:
                 # decides whether to call one and with what.
                 uncalled = self._uncalled_recommended(context, tried)
                 if (self._is_none_answer(response.text, context) and uncalled
-                        and not none_reminded and iteration < MAX_ITERATIONS - 1):
+                        and not none_reminded and iteration < self.max_iterations - 1):
                     none_reminded = True
                     self.last_trace["events"].append("none_reminder:" + ",".join(uncalled))
                     messages.append({"role": "assistant", "content": response.raw})
@@ -270,7 +275,7 @@ class Agent:
             # replies: a reply with no evidence links can still be an answer,
             # such as GeneReviews' list of chapters to choose from (run 4,
             # AITX-00008: the notice steered the model away from the list).
-            if not all_evidence and iteration < MAX_ITERATIONS - 1 and all(
+            if not all_evidence and iteration < self.max_iterations - 1 and all(
                 self._is_adapter_boilerplate(c.get("summary", "")) for c in turn_calls
             ):
                 self.last_trace["events"].append("empty_result_notice")
@@ -282,7 +287,7 @@ class Agent:
             # was fetched in turn 5 and never seen). One more generation with
             # tools disabled lets the model read it and answer; it cannot
             # start another lookup.
-            if iteration == MAX_ITERATIONS - 1:
+            if iteration == self.max_iterations - 1:
                 self.last_trace["events"].append("final_answer_turn")
                 messages.append({
                     "role": "user",
