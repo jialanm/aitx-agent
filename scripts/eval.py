@@ -220,7 +220,7 @@ def run_evaluation(
                     stats["by_format"][answer_format]["correct"] += 1
 
                 status = "CORRECT" if is_correct else "WRONG"
-                print(f"  Response: {output.response} | Expected: {expected} | {status}")
+                print(f"  Response: {output.response} | Expected: {expected} | {status} | {elapsed:.1f}s")
             else:
                 print(f"  Response: {output.response} | Evidence: {len(output.evidence)} items | {elapsed:.1f}s")
 
