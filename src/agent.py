@@ -29,9 +29,7 @@ logger = logging.getLogger(__name__)
 # adapter once before it must answer (decided 2026-10-13; it was a fixed 5
 # from the first commit). The loop ends as soon as a turn answers.
 def max_iterations_for(tools) -> int:
-    # Floor of 5 keeps the reminders workable with a short tool list (tests,
-    # a cut-down deployment); with the twelve adapters it is 12.
-    return max(5, len(tools))
+    return max(1, len(tools))
 # How much of a source's retrieved text the justification step is shown.
 SOURCE_TEXT_CHARS = 1500
 UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
