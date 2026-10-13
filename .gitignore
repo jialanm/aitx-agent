@@ -37,3 +37,4 @@ data/validation.json
 
 # Local decision log, kept out of the public repo
 decision_logs.md
+!src/tools/genetics_reference.md

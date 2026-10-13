@@ -35,6 +35,7 @@ from src.tools.omim import OMIMTool
 from src.tools.openfda import OpenFDATool
 from src.tools.pharos import PharosTool
 from src.tools.n1c import N1CGuidelinesTool
+from src.tools.genetics_reference import GeneticsReferenceTool
 from src.tools.clingen_dosage import ClinGenDosageTool
 
 
@@ -165,6 +166,7 @@ def run_evaluation(
         OpenFDATool(),
         PharosTool(),
         N1CGuidelinesTool(),
+        GeneticsReferenceTool(),
         ClinGenDosageTool(),
     ]
     set_prompt_variant(prompt_variant)

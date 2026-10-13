@@ -40,6 +40,10 @@ see the evaluation section.
 | PharmGKB | ClinPGx API (formerly PharmGKB) | Drug-gene interactions, pharmacogenomics |
 | OMIM | NCBI E-utilities | Gene-disease relationships, inheritance patterns |
 | FDA Labels | openFDA API | Approved drug indications, contraindications |
+| PHAROS | NCATS Pharos GraphQL | Target development level, approved drugs acting on the protein |
+| N1C guidelines | PMC (Cheerie et al. 2025, CC BY 4.0) | ASO eligibility rules, with the paper's sections on request |
+| ClinGen dosage | ClinGen gene curation TSV | Haploinsufficiency and triplosensitivity scores |
+| Genetics reference | src/tools/genetics_reference.md (cited rules) | Reading frame, splicing, exon skipping, nonsense-mediated decay, read-through |
 
 No API keys are required. The three NCBI tools (ClinVar, GeneReviews, PubMed)
 share E-utilities' limit of three requests per second per address, which a single

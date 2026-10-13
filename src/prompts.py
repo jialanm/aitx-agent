@@ -10,11 +10,11 @@ TOOL_PRIORITY = {
     # Phase 1 question categories (retired task, kept for the eval set).
     # VEP is not listed: the consequence, exon and frame are fetched for
     # every variant in step 1, before the model runs.
-    "Established_Targeted": ["search_genereviews", "search_clinvar", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
+    "Established_Targeted": ["search_genereviews", "search_clinvar", "genetics_reference", "search_fda_labels", "search_pharmgkb", "search_pubmed"],
     "Established_Supportive": ["search_genereviews", "search_omim", "search_pubmed"],
     "Clinical_Trials": ["search_clinical_trials", "search_omim", "search_pubmed"],
     "Drug_Development_and_Repurposing": ["search_pubmed", "search_pharmgkb", "search_fda_labels", "search_clinical_trials"],
-    "Variant_Assessment": ["search_clinvar", "query_uniprot", "search_pubmed"],
+    "Variant_Assessment": ["search_clinvar", "genetics_reference", "query_uniprot", "search_pubmed"],
     # Phase 3 report goals, in the order the report is built. Only tools
     # with an adapter are listed; a name here is a promise the model can
     # call it. Planned sources move in as their adapters are built:
@@ -23,7 +23,7 @@ TOOL_PRIORITY = {
     "goal2_existing_supportive": ["search_genereviews", "search_pubmed", "search_clinical_trials"],
     "goal3_ongoing_trials": ["search_clinical_trials"],
     "goal4_drug_repurposing": ["query_pharos", "clingen_dosage"],
-    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "clingen_dosage", "query_uniprot"],
+    "goal5_personalized_therapeutics": ["n1c_aso_guidelines", "genetics_reference", "clingen_dosage", "query_uniprot"],
 }
 
 # Asked once per multiple-choice question, with thinking off, before the
