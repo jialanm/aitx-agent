@@ -178,7 +178,6 @@ def run_evaluation(
     print("Loading questions...")
     validation_data = load_questions(validation_path)
     metadata = run_metadata(validation_path, answers_path, precision, prompt_variant, model_id, decoding_label)
-    metadata["max_loop_turns"] = agent.max_iterations
 
     # Answers are loaded separately and consulted only after the agent has
     # answered. The question records passed to the agent never contain them.

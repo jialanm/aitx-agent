@@ -912,7 +912,7 @@ class TestFinalAnswerTurn:
         import src.agent as agent_module
         call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
         seen = []
-        turns = [call("search_genereviews", gene="DMD")] * 1 + [say("antisense oligonucleotide")]  # one tool, so one iteration
+        turns = [call("search_genereviews", gene="DMD")] * agent_module.MAX_ITERATIONS + [say("antisense oligonucleotide")]
         monkeypatch.setattr(agent_module, "validate_variant",
                             lambda t, c: __import__("src.variant_validation", fromlist=["ValidatedVariant"]).ValidatedVariant(
                                 submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
@@ -939,11 +939,4 @@ class TestFinalAnswerTurn:
         assert seen[-1] is None                                   # the extra turn had no tools
         assert agent.last_trace["model_turns"][-1]["kind"] == "final_answer"
         assert "No further tool calls are possible" in agent.last_trace["messages"][-1]["content"]
-
-
-class TestIterationBudget:
-    def test_one_loop_turn_per_tool(self):
-        tools = [TestTrace._Tool(), TestConsequenceInStepOne._VEP(), TestEmptyResultNotice._Found()]
-        assert Agent(None, None, tools).max_iterations == 3
-        assert Agent(None, None, [TestTrace._Tool()]).max_iterations == 1
 
