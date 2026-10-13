@@ -190,7 +190,7 @@ def test_exon_coding_length_for_ano10_matches_the_reference(recorded):
     # AITX-00013/00014: exon 3 of NM_018075.5 encodes 66 aa, 10.0% of a 660-aa protein.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
 
-    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons (a multiple of three), 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
+    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons, 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
     assert [c["url"].rsplit("/", 2)[-2:] for c in recorded[1:]] == [
         ["homo_sapiens", "NM_018075.5"], ["id", "ENST00000292246"]
     ]
@@ -204,7 +204,7 @@ def test_exon_range_sums_the_deleted_exons_for_dmd(recorded):
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31260956_31729748del", transcript="NM_004006.3")
 
     line = next(l for l in summary.splitlines() if l.startswith("Exons 52-63 of 79"))
-    assert "1744 coding bases = 581 codons + 1 bases (not a multiple of three, 1 over)" in line
+    assert "1744 coding bases = 581 codons + 1 bases, 15.8%" in line
     assert "protein length 3685 aa" in line
 
 
@@ -239,12 +239,12 @@ def test_splice_site_deletion_states_coverage_as_fact_and_frame_as_arithmetic(re
         "If exons 52-63 were lost whole: 1744 coding bases, one more than a multiple of three"
     )
     assert "Deleted entirely: exons 52-62 (1682 coding bases)." in lines
-    assert "Exon 63: 61 of 62 coding bases deleted, 1 base not deleted." in lines
-    assert any(l.startswith("The deletion as written covers 1743 of the 1744 coding bases of exons 52-63; 1 base of a touched exon is not deleted")
+    assert "Exon 63: 61 of 62 coding bases deleted." in lines
+    assert any(l.startswith("The deletion as written covers 1743 of the 1744 coding bases of exons 52-63; VEP reports splice acceptor")
                and "genetics reference (topic: splicing)" in l for l in lines)
     assert ("If exons 52-63 were lost whole (1744 bases) together with one neighbouring exon: exon 51 (233 coding bases) "
             "gives 1977, a multiple of three; exon 64 (75 coding bases) gives 1819, not a multiple of three.") in lines
-    for word in ("expected", "misread", "remain", "removing"):   # no inferred outcome in the block
+    for word in ("expected", "misread", "remain", "removing", "not deleted"):   # no inferred outcome, no remnant talk
         assert word not in summary.lower()
 
 

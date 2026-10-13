@@ -650,7 +650,7 @@ class TestConsequenceInStepOne:
         def execute(self, **kwargs):
             assert kwargs == {"genomic_hgvs": "NC_000002.12:g.240871433G>A", "transcript": "NM_000030.3"}
             text = ("VEP (Ensembl, GRCh38) for NC_000002.12:g.240871433G>A on transcript NM_000030.3:\nConsequence: missense_variant\n"
-                    "Exon: 4/11\nExon 4 of 11 (ENST00000307503): 101 coding bases = 33 codons + 2 bases (not a multiple of three, 2 over)")
+                    "Exon: 4/11\nExon 4 of 11 (ENST00000307503): 101 coding bases = 33 codons + 2 bases, 8.6% of the 1179-base coding sequence")
             return text, [EvidenceRecord(url="https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433")]
 
     def _agent(self, monkeypatch, turns):
@@ -687,7 +687,7 @@ class TestConsequenceInStepOne:
         assert [(c["tool"], c["origin"]) for c in calls] == [("query_ensembl", "step1"), ("search_clinvar", "model")]
         system_prompt = agent.last_trace["messages"][0]["content"]
         assert "Predicted consequence (Ensembl VEP, fetched automatically):" in system_prompt
-        assert "Consequence: missense_variant" in system_prompt and "not a multiple of three, 2 over" in system_prompt
+        assert "Consequence: missense_variant" in system_prompt and "33 codons + 2 bases" in system_prompt
         assert "Variant type:" not in system_prompt
         assert "https://www.ensembl.org/Homo_sapiens/Location/View?r=2:240871433-240871433" in [e.source for e in output.evidence]
 

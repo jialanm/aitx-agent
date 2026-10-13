@@ -268,13 +268,12 @@ class EnsemblTool(BaseTool):
             rng = f"exon {entire[0]}" if len(entire) == 1 else f"exons {entire[0]}-{entire[-1]}"
             lines.append(f"Deleted entirely: {rng} ({sum(l for i, l, _ in d['rows'] if i in entire)} coding bases).")
         for i, l, dd in d["partial"]:
-            lines.append(f"Exon {i}: {dd} of {l} coding bases deleted, {l - dd} base{'s' if l - dd != 1 else ''} not deleted.")
+            lines.append(f"Exon {i}: {dd} of {l} coding bases deleted.")
         if d["remnant"]:
             lines.append(
                 f"The deletion as written covers {d['written']} of the {d['whole']} coding bases of {info['which'].lower()}; "
-                f"{d['remnant']} base{'s' if d['remnant'] != 1 else ''} of a touched exon {'is' if d['remnant'] == 1 else 'are'} not deleted; "
-                f"VEP reports splice acceptor and donor sites among the consequences. Whether such a remnant stays in the "
-                f"transcript is not stated by VEP; the genetics reference (topic: splicing) gives the rule and its source."
+                f"VEP reports splice acceptor and donor sites among the consequences. What the transcript keeps of a "
+                f"partly deleted exon is not stated by VEP; the genetics reference (topic: splicing) gives the rule and its source."
             )
         if d["whole"] % 3 != 0:
             # Arithmetic only: which neighbouring exon, if removed together with
@@ -399,11 +398,10 @@ class EnsemblTool(BaseTool):
         which = f"Exon {lo_idx}" if lo_idx == hi_idx else f"Exons {lo_idx}-{hi_idx}"
         share = 100 * bases / total_cds if total_cds else 0
         # Exon edges rarely fall on codon boundaries, so give codons and the
-        # leftover bases rather than a fractional amino-acid count. The frame
-        # remark is about removing the exon(s), which is what exon skipping and
-        # whole-exon deletions do; it was worded "out of frame by 2" before,
-        # and the model read that as the patient's variant shifting the frame
-        # (run 5, AITX-00003).
+        # leftover bases rather than a fractional amino-acid count. Nothing
+        # about the frame is said here (decided 2026-10-13): the codon count
+        # shows the arithmetic, and the deletion lines carry the sums that
+        # matter for a whole-exon loss.
         codons, rest = divmod(bases, 3)
         # CDS coordinates of each exon (1-based, transcript order), so a
         # deletion's CDS span from VEP can be measured against them.
@@ -416,11 +414,10 @@ class EnsemblTool(BaseTool):
             "which": which, "bases": bases, "rest": rest, "lo": lo_idx, "hi": hi_idx, "n": n_exons,
             "lengths": [coding(e) for e in exons], "spans": spans,
         }
-        frame = "a multiple of three" if rest == 0 else f"not a multiple of three, {rest} over"
         return (
             f"{which} of {n_exons} ({ensembl_id}): {bases} coding bases = {codons} codons"
             + (f" + {rest} bases" if rest else "")
-            + f" ({frame}), {share:.1f}% of the {total_cds}-base coding sequence; "
+            + f", {share:.1f}% of the {total_cds}-base coding sequence; "
             f"protein length {translation.get('length')} aa"
         )
 
