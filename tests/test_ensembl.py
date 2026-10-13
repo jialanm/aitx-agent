@@ -190,7 +190,7 @@ def test_exon_coding_length_for_ano10_matches_the_reference(recorded):
     # AITX-00013/00014: exon 3 of NM_018075.5 encodes 66 aa, 10.0% of a 660-aa protein.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
 
-    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons (removing this exon keeps the reading frame), 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
+    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons (a multiple of three), 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
     assert [c["url"].rsplit("/", 2)[-2:] for c in recorded[1:]] == [
         ["homo_sapiens", "NM_018075.5"], ["id", "ENST00000292246"]
     ]
@@ -204,7 +204,7 @@ def test_exon_range_sums_the_deleted_exons_for_dmd(recorded):
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31260956_31729748del", transcript="NM_004006.3")
 
     line = next(l for l in summary.splitlines() if l.startswith("Exons 52-63 of 79"))
-    assert "1744 coding bases = 581 codons + 1 bases (removing these exons shifts the reading frame by 1)" in line
+    assert "1744 coding bases = 581 codons + 1 bases (not a multiple of three, 1 over)" in line
     assert "protein length 3685 aa" in line
 
 
@@ -235,32 +235,33 @@ def test_splice_site_deletion_states_coverage_as_fact_and_frame_as_arithmetic(re
 
     lines = summary.splitlines()
     assert lines[1] == (
-        "Frame, as written: 1743 coding bases, a multiple of three, so the reading frame is kept (VEP: inframe_deletion). "
-        "Frame if exons 52-63 are lost whole: 1744 coding bases, one more than a multiple of three, so every codon after the gap is misread"
+        "Frame, as written: 1743 coding bases, a multiple of three deleted (VEP: inframe_deletion). "
+        "If exons 52-63 were lost whole: 1744 coding bases, one more than a multiple of three"
     )
     assert "Deleted entirely: exons 52-62 (1682 coding bases)." in lines
-    assert "Exon 63: 61 of 62 coding bases deleted, 1 base and the exon's splice signal on that side remain." in lines
+    assert "Exon 63: 61 of 62 coding bases deleted, 1 base not deleted." in lines
     assert any(l.startswith("The deletion as written covers 1743 of the 1744 coding bases of exons 52-63; 1 base of a touched exon is not deleted")
                and "genetics reference (topic: splicing)" in l for l in lines)
-    assert ("If exons 52-63 were lost whole (1744 bases), removing one neighbouring exon as well: exon 51 (233 coding bases) "
+    assert ("If exons 52-63 were lost whole (1744 bases) together with one neighbouring exon: exon 51 (233 coding bases) "
             "gives 1977, a multiple of three; exon 64 (75 coding bases) gives 1819, not a multiple of three.") in lines
-    assert "expected" not in summary.lower()   # no inferred outcome in the block
+    for word in ("expected", "misread", "remain", "removing"):   # no inferred outcome in the block
+        assert word not in summary.lower()
 
 
 def test_single_exon_variant_gets_no_splice_loss_line(recorded):
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
 
     assert "Splice sites removed" not in summary
-    assert summary.splitlines()[1] == "Frame: frameshift (frameshift_variant)"
+    assert summary.splitlines()[1] == "Frame (VEP): frameshift_variant; 1 base deleted"
 
 
 def test_frame_line_is_first_on_every_variant(recorded):
     # Missense: the frame question does not arise, and the line says so.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240871433G>A", transcript="NM_000030.3")
-    assert summary.splitlines()[1] == "Frame: not applicable (missense_variant)"
+    assert summary.splitlines()[1] == "Frame (VEP): missense_variant; no change in length"
     # Nonsense: likewise, with VEP's own term.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31169542_31169543delinsTA", transcript="NM_004006.3")
-    assert summary.splitlines()[1] == "Frame: not applicable (stop_gained)"
+    assert summary.splitlines()[1] == "Frame (VEP): stop_gained; no change in length"
 
 
 

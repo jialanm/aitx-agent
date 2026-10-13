@@ -171,7 +171,7 @@ class EnsemblTool(BaseTool):
         exon_line = self._exon_length_line(tc.get("transcript_id") or transcript, tc.get("exon"))
         lines = [
             f"VEP (Ensembl, GRCh38) for {notation} on transcript {tc.get('transcript_id')}:",
-            self._frame_line(tc, self._exon_info),
+            self._frame_line(tc, self._exon_info, entry.get("allele_string") or ""),
             f"Consequence{self._as_written(tc, self._exon_info)}: {show('consequence_terms')}",
             f"Impact: {show('impact')}",
             f"Exon: {show('exon')}" + (f" | Intron: {show('intron')}" if tc.get("intron") else ""),
@@ -226,29 +226,30 @@ class EnsemblTool(BaseTool):
     def _in_words(n: int) -> str:
         rest = n % 3
         if rest == 0:
-            return f"{n} coding bases, a multiple of three, so the reading frame is kept"
-        more = "one" if rest == 1 else "two"
-        return f"{n} coding bases, {more} more than a multiple of three, so every codon after the gap is misread"
+            return f"{n} coding bases, a multiple of three"
+        return f"{n} coding bases, {'one' if rest == 1 else 'two'} more than a multiple of three"
 
     @classmethod
-    def _frame_line(cls, tc: dict, info: dict | None) -> str:
-        """The frame verdict, first in the block, computed by code. Present on
-        every variant so the model learns it is always there."""
+    def _frame_line(cls, tc: dict, info: dict | None, allele_string: str = "") -> str:
+        """First line of the block: VEP's frame term and the length change, as
+        numbers. Present on every variant so the model learns it is always
+        there. No judgment is added; what a count means for the protein is
+        the genetics reference's to say, with a citation."""
         d = cls._splice_deletion(tc, info)
         if d:
-            lost = info["which"].lower()
-            line = f"Frame, as written: {cls._in_words(d['written'])} (VEP: {cls._vep_frame_term(tc)})"
+            line = f"Frame, as written: {cls._in_words(d['written'])} deleted (VEP: {cls._vep_frame_term(tc)})"
             if d["remnant"]:
-                line += f". Frame if {lost} are lost whole: {cls._in_words(d['whole'])}"
+                line += f". If {info['which'].lower()} were lost whole: {cls._in_words(d['whole'])}"
             return line
-        terms = set(tc.get("consequence_terms") or [])
-        if "frameshift_variant" in terms:
-            return "Frame: frameshift (frameshift_variant)"
-        inframe = next((t for t in ("inframe_deletion", "inframe_insertion") if t in terms), None)
-        if inframe:
-            return f"Frame: in frame ({inframe})"
+        ref, _, alt = allele_string.partition("/")
+        change = ""
+        if ref or alt:
+            n = len(alt.replace("-", "")) - len(ref.replace("-", ""))
+            change = "no change in length" if n == 0 else f"{abs(n)} base{'s' if abs(n) != 1 else ''} {'inserted' if n > 0 else 'deleted'}"
+        term = cls._vep_frame_term(tc)
         first = next(iter(tc.get("consequence_terms") or ["unknown"]))
-        return f"Frame: not applicable ({first})"
+        label = term if term != "no frame term" else first
+        return f"Frame (VEP): {label}" + (f"; {change}" if change else "")
 
     @staticmethod
     def _vep_frame_term(tc: dict) -> str:
@@ -267,13 +268,13 @@ class EnsemblTool(BaseTool):
             rng = f"exon {entire[0]}" if len(entire) == 1 else f"exons {entire[0]}-{entire[-1]}"
             lines.append(f"Deleted entirely: {rng} ({sum(l for i, l, _ in d['rows'] if i in entire)} coding bases).")
         for i, l, dd in d["partial"]:
-            lines.append(f"Exon {i}: {dd} of {l} coding bases deleted, {l - dd} base{'s' if l - dd != 1 else ''} and the exon's splice signal on that side remain.")
+            lines.append(f"Exon {i}: {dd} of {l} coding bases deleted, {l - dd} base{'s' if l - dd != 1 else ''} not deleted.")
         if d["remnant"]:
             lines.append(
                 f"The deletion as written covers {d['written']} of the {d['whole']} coding bases of {info['which'].lower()}; "
-                f"{d['remnant']} base{'s' if d['remnant'] != 1 else ''} of a touched exon {'is' if d['remnant'] == 1 else 'are'} not deleted, "
-                f"and the splice sites between these exons are. Whether such a remnant is spliced into the transcript is "
-                f"not stated by VEP; the genetics reference (topic: splicing) gives the rule and its source."
+                f"{d['remnant']} base{'s' if d['remnant'] != 1 else ''} of a touched exon {'is' if d['remnant'] == 1 else 'are'} not deleted; "
+                f"VEP reports splice acceptor and donor sites among the consequences. Whether such a remnant stays in the "
+                f"transcript is not stated by VEP; the genetics reference (topic: splicing) gives the rule and its source."
             )
         if d["whole"] % 3 != 0:
             # Arithmetic only: which neighbouring exon, if removed together with
@@ -289,8 +290,8 @@ class EnsemblTool(BaseTool):
                     )
             if parts:
                 lines.append(
-                    f"If {info['which'].lower()} were lost whole ({d['whole']} bases), removing one neighbouring exon "
-                    "as well: " + "; ".join(parts) + "."
+                    f"If {info['which'].lower()} were lost whole ({d['whole']} bases) together with one neighbouring exon: "
+                    + "; ".join(parts) + "."
                 )
         return lines
 
@@ -415,11 +416,7 @@ class EnsemblTool(BaseTool):
             "which": which, "bases": bases, "rest": rest, "lo": lo_idx, "hi": hi_idx, "n": n_exons,
             "lengths": [coding(e) for e in exons], "spans": spans,
         }
-        these = "this exon" if lo_idx == hi_idx else "these exons"
-        frame = (
-            f"removing {these} keeps the reading frame" if rest == 0
-            else f"removing {these} shifts the reading frame by {rest}"
-        )
+        frame = "a multiple of three" if rest == 0 else f"not a multiple of three, {rest} over"
         return (
             f"{which} of {n_exons} ({ensembl_id}): {bases} coding bases = {codons} codons"
             + (f" + {rest} bases" if rest else "")
