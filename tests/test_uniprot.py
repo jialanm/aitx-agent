@@ -74,7 +74,7 @@ def test_interpro_nearest_matches_when_none_covers_the_position(recorded):
 
     line = next(l for l in summary.splitlines() if l.startswith("InterPro matches covering position 1560"))
     assert line.startswith("InterPro matches covering position 1560: none; nearest: ")
-    assert "CRAL-TRIO" in line
+    assert "Ras GTPase-activating domain (1187-1557)" in line   # three residues away; CRAL-TRIO starts at 1580
 
 
 def test_interpro_failure_is_reported_not_hidden(monkeypatch, caplog):
