@@ -98,7 +98,10 @@ class PharosTool(BaseTool):
 
         drugs = target.get("ligands") or []
         if drugs:
-            lines.append("Approved drugs acting on this target:")
+            lines.append(
+                "Approved drugs with measured activity at this protein (any indication, any direction; "
+                "PHAROS records the activity, not whether the drug treats disorders of this gene):"
+            )
             for lig in drugs:
                 acts = lig.get("activities") or []
                 moa = next((a.get("moa") for a in acts if a.get("moa")), None)
@@ -106,7 +109,7 @@ class PharosTool(BaseTool):
         else:
             counts = {c["name"]: c["value"] for c in target.get("ligandCounts") or []}
             lines.append(
-                "Approved drugs acting on this target: none in PHAROS"
+                "Approved drugs with measured activity at this protein: none in PHAROS"
                 + (f" (ligands: {counts})" if counts else "")
             )
 

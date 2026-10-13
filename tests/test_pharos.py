@@ -52,7 +52,7 @@ def test_agxt_has_no_approved_drug_and_says_so(recorded):
     summary, evidence = PharosTool().execute(gene="AGXT")
 
     assert "Target development level: Tbio (biology known, no potent binder)" in summary
-    assert "Approved drugs acting on this target: none in PHAROS" in summary
+    assert "Approved drugs with measured activity at this protein: none in PHAROS" in summary
     assert "primary hyperoxaluria type 1" in summary
     assert len(evidence) == 1
 

@@ -3,9 +3,10 @@ body, and comes back verbatim with its PubMed links as evidence."""
 
 from src.tools.genetics_reference import GeneticsReferenceTool, load_sections
 
-TOPICS = ["reading-frame", "splicing", "exon-skipping", "nonsense-mediated-decay", "read-through"]
+TOPICS = ["reading-frame", "splicing", "exon-skipping", "nonsense-mediated-decay", "read-through", "mechanism-direction"]
 # Names that would make a rule a hint rather than a rule.
 LEAKS = ["eteplirsen", "ataluren", "golodirsen", "viltolarsen", "casimersen", "pyridoxine", "lumasiran",
+         "memantine", "serine", "radiprodil", "NMDA",
          "GRIN2B", "AGXT", "ANO10", "KMT2B", "NF1", "KCNT1", "SLC35A2", "COL1A1", "DDC"]
 
 

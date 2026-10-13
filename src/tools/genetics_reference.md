@@ -107,3 +107,27 @@ Applies when: the consequence is stop_gained with no change in length.
 Source: Keeling KM, Bedwell DM, "Suppression of nonsense mutations as a
 therapeutic approach to treat genetic diseases", WIREs RNA 2:837-852 (2011),
 https://pubmed.ncbi.nlm.nih.gov/21976286/
+
+## mechanism-direction: Matching a treatment's direction to the variant's effect
+
+A variant can lower a protein's activity (loss of function: a truncating
+variant, a destabilising substitution, loss of the gene copy) or raise it
+(gain of function: a substitution that keeps the protein active or
+prolongs its signal). A drug that blocks or inhibits the protein lowers its
+activity, so it suits a gain of function and works against a loss of
+function; a drug or supplement that raises the protein's activity, or
+supplies what the protein needs to act, suits a loss of function and works
+against a gain of function. Knowing which effect the variant has is the
+step that orients the choice, and a drug listed as acting on the protein
+is not a candidate until its direction matches.
+
+Applies when: the answer is a choice between agents acting on the variant's
+protein; the Frame line and consequence (stop_gained, frameshift_variant,
+a whole-gene loss) point to a loss of function, while gain of function is
+usually a substitution reported as such in the literature for that gene.
+
+Source: Musto E et al., "Recent advances in treatment of epilepsy-related
+sodium channelopathies", Eur J Paediatr Neurol 24:123-128 (2020),
+https://pubmed.ncbi.nlm.nih.gov/31889633/ ; Brunklaus A et al., "Gene variant
+effects across sodium channelopathies predict function and guide precision
+therapy", Brain 145:4275-4286 (2022), https://pubmed.ncbi.nlm.nih.gov/35037686/

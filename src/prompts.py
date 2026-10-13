@@ -167,7 +167,7 @@ The question was submitted on {date_submitted}. When evaluating time-sensitive i
 ## Tool Usage Strategy
 Recommended tool order for this category: {tool_order_str}
 
-**MANDATORY: You MUST call at least one tool before providing your final answer.** Even if you think you know the answer, you must verify it with a tool call first. Your evidence must come from real API responses, not from memory.
+**Every step your answer rests on needs a tool result that supports that step.** One tool call is the minimum, not the target: a result that names a drug, gene or trial without saying it applies to this patient's condition and variant does not support a step about it. Even if you think you know the answer, verify it with a tool call first; your evidence must come from real API responses, not from memory.
 
 Start by calling the first recommended tool above. After receiving tool results, you may answer or call additional tools.
 
@@ -177,7 +177,7 @@ Your thinking is not kept between turns; only what you write outside it is. So b
 {format_instruction}
 
 ## Critical Rules
-1. **ALWAYS call at least one tool before answering.** Never skip tool calls. This is required for evidence collection.
+1. **Call the tools the answer needs, never none.** A step with no supporting tool result is a guess.
 2. Use tools to find real evidence. Do NOT hallucinate facts or URLs.
 3. After gathering evidence from tools, provide your final answer directly as plain text (no tool calls).
 4. Keep your reasoning concise. Focus on answering the specific question asked.
