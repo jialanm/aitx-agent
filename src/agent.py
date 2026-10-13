@@ -502,10 +502,15 @@ class Agent:
             f"Recommended tools for this question not yet called: {', '.join(uncalled)}. "
             if uncalled else "Every recommended tool for this question has been called; another tool may fit. "
         )
+        code_hint = (
+            "If it is an abbreviation or a code (a domain name, a mechanism class), search PubMed for it "
+            "together with the gene to find what it stands for, then match that to the tool results. "
+            if context["answer_format"] == "multiple_choice" else ""
+        )
         return (
             f"Your answer names {names}, which appears in no tool result of this conversation. "
             "Confirm it with a tool call before answering, choosing the arguments from the patient "
-            "record and the question. " + where + "Then answer from the evidence you have."
+            "record and the question. " + code_hint + where + "Then answer from the evidence you have."
         )
 
     def _evidence_reminder(self, context: dict) -> str:

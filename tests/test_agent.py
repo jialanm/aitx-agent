@@ -817,8 +817,9 @@ class TestUnverifiedTerms:
 
         assert output.response == "Ataluren"
         assert loop_events(trace) == ["unverified_term:Ataluren", "unverified_term_verified:Ataluren"]
-        assert "appears in no tool result" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
-        assert "search_pubmed" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+        reminders = "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+        assert "appears in no tool result" in reminders and "search_pubmed" in reminders
+        assert "abbreviation or a code" not in reminders   # the code hint is for multiple-choice options only
 
     def test_drug_still_unverified_after_the_reminder_is_removed(self, monkeypatch):
         output, trace = self._run(monkeypatch, [
@@ -842,6 +843,8 @@ class TestUnverifiedTerms:
 
         assert output.response == "GRD"
         assert loop_events(trace) == ["unverified_term:GRD", "unverified_term_kept:GRD"]
+        reminder = next(m["content"] for m in trace["messages"] if m["role"] == "user" and "appears in no tool result" in m["content"])
+        assert "abbreviation or a code" in reminder and "search PubMed for it together with the gene" in reminder
 
     def test_drug_named_on_the_last_turn_is_settled_without_a_reminder(self, monkeypatch):
         # Five loop turns, the fifth answers with a drug no tool text names: no turn is
