@@ -223,3 +223,26 @@ def test_exon_length_is_marked_not_returned_when_ensembl_has_no_transcript(monke
     assert "Exon coding length: not returned (no Ensembl transcript found for NM_000030.3)" in summary
     assert "Exon: 4/11" in summary
     assert "No Ensembl transcript for NM_000030.3" in caplog.text
+
+
+def test_splice_site_deletion_states_whole_exon_loss_and_the_literal_count(recorded):
+    # AITX-00001: VEP says inframe_deletion for the 1743 letters c.7544_9286del names,
+    # but with every splice site gone exons 52-63 (1744 bases) drop out whole, out of frame.
+    summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31260956_31729748del", transcript="NM_004006.3")
+
+    lines = summary.splitlines()
+    exon_i = next(i for i, l in enumerate(lines) if l.startswith("Exons 52-63 of 79"))
+    assert lines[exon_i + 1] == (
+        "Splice sites removed: the exons listed above are lost whole from the transcript; "
+        "use the exon line's length and frame. VEP's inframe_deletion label counts only "
+        "the 1743 coding letters written in the variant."
+    )
+    assert lines[-1] == ensembl.READING_NOTE
+
+
+def test_single_exon_variant_gets_no_splice_loss_line(recorded):
+    summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
+
+    assert "Splice sites removed" not in summary
+    assert summary.splitlines()[-1] == ensembl.READING_NOTE
+

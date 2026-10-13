@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 import time
 
 import requests
@@ -26,6 +27,14 @@ VEP_RETRIES = 5
 VEP_RETRY_INTERVAL_SECONDS = 5
 # Fields the model needs from the entry for the patient's transcript. A
 # missing one is logged by name and shown as "not returned", never blank.
+# Closes the VEP block. The consequence label and the exon line count
+# different things, and the model must know which governs when they differ.
+READING_NOTE = (
+    "Reading these lines: the Consequence label counts the coding letters of the variant "
+    "as written; the exon line counts whole exons. When splice sites are removed, the "
+    "listed exons are lost whole and the exon line's frame governs."
+)
+
 VEP_REQUIRED_FIELDS = ("consequence_terms", "impact", "exon", "protein_start", "amino_acids", "hgvsp")
 
 
@@ -171,14 +180,42 @@ class EnsemblTool(BaseTool):
             f"Impact: {show('impact')}",
             f"Exon: {show('exon')}" + (f" | Intron: {show('intron')}" if tc.get("intron") else ""),
             self._exon_length_line(tc.get("transcript_id") or transcript, tc.get("exon")),
+            *self._splice_loss_lines(tc),
             f"Protein position: {show('protein_start')}"
             + (f"-{tc['protein_end']}" if tc.get("protein_end") not in (None, tc.get("protein_start")) else ""),
             f"Amino acid change: {show('amino_acids')}",
             f"HGVS protein: {show('hgvsp')}",
             f"HGVS cDNA: {show('hgvsc')}",
             f"Most severe consequence across all transcripts: {entry.get('most_severe_consequence', 'unknown')}",
+            READING_NOTE,
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def _splice_loss_lines(tc: dict) -> list[str]:
+        """One line when a deletion removes splice sites, so the exons it
+        touches are lost whole from the transcript.
+
+        VEP's in-frame/frameshift label counts only the coding letters the
+        variant names; a deletion written one letter inside an exon edge is
+        counted in frame even though, with its splice sites gone, the whole
+        exon drops out of the message (AITX-00001: c.7544_9286del names 1743
+        letters, in frame; exons 52-63 whole are 1744, out of frame).
+        """
+        terms = set(tc.get("consequence_terms") or [])
+        hgvsc = tc.get("hgvsc") or ""
+        if not (terms & {"splice_acceptor_variant", "splice_donor_variant"}) or "del" not in hgvsc:
+            return []
+        label = next((t for t in ("inframe_deletion", "frameshift_variant") if t in terms), None)
+        m = re.search(r"c\.(\d+)_(\d+)del", hgvsc)
+        literal = f" the {int(m.group(2)) - int(m.group(1)) + 1} coding letters written in the variant" if m else " the coding letters written in the variant"
+        line = (
+            "Splice sites removed: the exons listed above are lost whole from the transcript; "
+            "use the exon line's length and frame."
+        )
+        if label:
+            line += f" VEP's {label} label counts only{literal}."
+        return [line]
 
     def _get_with_retries(self, url: str, params: dict, label: str) -> tuple[requests.Response | None, str]:
         """GET with the VEP retry policy: timeouts and 5xx retried, 4xx returned at once.
