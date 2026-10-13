@@ -12,6 +12,7 @@ the score.
 | Run 2 | 2026-10-07 | 1b01179 | 3/16 | 0 of 43 |
 | Run 3 | 2026-10-11 | e44bc4c | 8/16 | 22 of 33 |
 | Run 4 | 2026-10-12 | b91fa95 | 7/16 | 15 of 26 |
+| Run 5, five repeats | 2026-10-12 | d5ae047 | 9/16 in every repeat | 32 of 38 in every repeat |
 
 Correct answers that are also supported by a quoted record (the
 `correct_supported` label), which is the number that matters for a clinical
@@ -23,6 +24,7 @@ answer:
 | Run 2 | 3 | 0 | 3 (00003, 00005, 00010) |
 | Run 3 | 8 | 7 (00003, 00005, 00007, 00009, 00012, 00013, 00015) | 1 (00010) |
 | Run 4 | 7 | 6 (00003, 00009, 00010, 00013, 00014, 00015) | 1 (00005: both citations quoted the right facts under the wrong links) |
+| Run 5 (each of 5 repeats) | 9 | 9 (00003, 00004, 00005, 00007, 00008, 00009, 00010, 00013, 00015) | 0 |
 
 Per category, run 2 to run 3: Established_Targeted 2/7 to 3/7;
 Established_Supportive 0/1 to 0/1; Clinical_Trials 1/3 to 2/3;
@@ -260,4 +262,57 @@ chapter list no longer adds links.
    its traces for tool choice and grounding, as a check against tuning to the
    validator set.
 5. Phase 3: the report task on the five goals, goal 1 first.
+
+## 7. Run 5: five repeats of one configuration (2026-10-12, commit d5ae047)
+
+The four changes after run 4 were in: the empty-result notice ignores a
+menu reply (3f62adc), one source per justification call (06f0374), VEP run
+for every variant in step 1 with its consequence in the variant block
+(06518e0), and the prompt-variant flag, unused here (d5ae047). To measure
+run-to-run variance, the same configuration ran five times in sequence with
+nothing changed but the clock; pass^k over the five was computed with the
+estimator C(c, j) / C(k, j) per question.
+
+**Result: the five runs are identical.** Every question's tool calls, tool
+result texts, and answer are byte-for-byte the same in all five; only
+timing varies (1,685 to 1,994 s of agent time per run). pass^1 through
+pass^5 are all 0.562, 9 of 16. Under greedy decoding with batch size one,
+neither GPU arithmetic nor the live APIs introduced any variance over the
+two and a half hours. The six first-tool changes between runs 3 and 4 were
+therefore caused entirely by the prompt edits between those runs, not by
+noise; the brittleness is to inputs, and it is deterministic.
+
+| Patient | Answer | Label | Note |
+|---|---|---|---|
+| 00001 | None | synthesis_wrong | VEP's out-of-frame verdict in the prompt; still not reasoned to exon 51 |
+| 00002 | None | extraction_wrong | as before |
+| 00003 | None (correct) | correct_supported | |
+| 00004 | pyridoxine (correct) | correct_supported | first time: with the consequence (missense) in the prompt, the chapter's "missense AGXT variants" sentence was applied |
+| 00005 | No (correct) | correct_supported | citations now attached to their own sources |
+| 00006 | lumasiran, nedosiran | synthesis_wrong | label never fetched |
+| 00007 | 18 months (correct) | correct_supported | GeneReviews first again |
+| 00008 | Ascorbic acid, Desmopressin (correct) | correct_supported | chapter chosen by phenotype; DDAVP mapped to desmopressin through RxNorm |
+| 00009 | NCT05402384 (correct) | correct_supported | |
+| 00010 | No (correct) | correct_supported | trial fetched by ID |
+| 00011 | NCT07227857 | reference_questionable | |
+| 00012 | Memantine | synthesis_wrong | PHAROS first, stopped there, in all five runs |
+| 00013 | 66 (correct) | correct_supported | |
+| 00014 | 10 | format_mismatch | the same line read as a percentage again (0.1 in run 4) |
+| 00015 | No (correct) | correct_supported | |
+| 00016 | TBD | synthesis_wrong | boundary disagreement |
+
+Grounded citations: 32 of 38 in every repeat, against 15 of 26 in run 4; the
+per-source justification call removed the cross-attached quotes.
+
+### What run 5 shows
+
+1. The system is deterministic at this commit; repeated runs add no
+   information, so the budget for reliability measurement should go to
+   sampling or to prompt variants, not to repeats of greedy runs.
+2. Nine of sixteen correct and supported is the best result so far, and two
+   of the gains (00004, 00008) came from giving the model the consequence
+   and the chosen chapter before it reasons, which is the step-1 pipeline.
+3. The remaining wrong answers are the model's: three reasoning failures
+   (00001, 00002, 00012), two condition misses (00006, 00014), one
+   source-boundary case (00016), and one stale key (00011).
 
