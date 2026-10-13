@@ -42,7 +42,11 @@ class PubMedTool(BaseTool):
                     "the variant consequence or mechanism, and the therapy or "
                     "question, not a general topic. Use it for evidence on a "
                     "therapy's effect, human treatment precedent for off-label "
-                    "use, and mechanistic rationale for repurposing."
+                    "use, and mechanistic rationale for repurposing. It is the "
+                    "only source here that covers therapies approved outside the "
+                    "United States or still investigational: when GeneReviews and "
+                    "the FDA labels name no therapy for the variant's consequence, "
+                    "search here by gene and consequence before answering None."
                 ),
                 "parameters": {
                     "type": "object",

@@ -31,7 +31,10 @@ class OpenFDATool(BaseTool):
                     "contraindications, warnings and dosing sections of the label "
                     "for a named drug. Requires a drug name; it cannot search by "
                     "gene or disease, so find the candidate drug first, then use "
-                    "this to confirm what it is approved for."
+                    "this to confirm what it is approved for. Only drugs with a "
+                    "United States label appear: a drug approved only in another "
+                    "country returns nothing, which is not evidence that no such "
+                    "drug exists."
                 ),
                 "parameters": {
                     "type": "object",
