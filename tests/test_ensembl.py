@@ -82,7 +82,8 @@ def test_dmd_deletion_reads_the_patients_transcript_not_the_headline(recorded):
     assert "Protein position: 2515-3095" in summary
     assert "HGVS protein: NP_003997.2:p.Thr2516_Ala3096del" in summary
     # The headline across all transcripts is reported separately, not as the consequence.
-    assert "Most severe consequence across all transcripts: transcript_ablation" in summary
+    assert ("Note: on another transcript overlapping this position the most severe consequence is "
+            "transcript_ablation; the lines above describe the patient's transcript NM_004006.3.") in summary
     assert "not returned" not in summary
     assert [e.url for e in evidence] == [
         ENSEMBL_LOCATION_URL.format(chrom="X", start=31260956, end=31729748)
@@ -189,7 +190,7 @@ def test_exon_coding_length_for_ano10_matches_the_reference(recorded):
     # AITX-00013/00014: exon 3 of NM_018075.5 encodes 66 aa, 10.0% of a 660-aa protein.
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
 
-    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons (in frame), 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
+    assert "Exon 3 of 13 (ENST00000292246): 198 coding bases = 66 codons (removing this exon keeps the reading frame), 10.0% of the 1983-base coding sequence; protein length 660 aa" in summary
     assert [c["url"].rsplit("/", 2)[-2:] for c in recorded[1:]] == [
         ["homo_sapiens", "NM_018075.5"], ["id", "ENST00000292246"]
     ]
@@ -203,7 +204,7 @@ def test_exon_range_sums_the_deleted_exons_for_dmd(recorded):
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31260956_31729748del", transcript="NM_004006.3")
 
     line = next(l for l in summary.splitlines() if l.startswith("Exons 52-63 of 79"))
-    assert "1744 coding bases = 581 codons + 1 bases (out of frame by 1)" in line
+    assert "1744 coding bases = 581 codons + 1 bases (removing these exons shifts the reading frame by 1)" in line
     assert "protein length 3685 aa" in line
 
 
@@ -246,3 +247,12 @@ def test_single_exon_variant_gets_no_splice_loss_line(recorded):
     assert "Splice sites removed" not in summary
     assert summary.splitlines()[-1] == ensembl.READING_NOTE
 
+
+
+def test_other_transcript_note_is_absent_when_the_worst_consequence_is_the_patients(recorded):
+    # ANO10 c.289del: frameshift on the patient's transcript is also the worst anywhere,
+    # so there is nothing to say about other transcripts.
+    summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
+
+    assert "another transcript" not in summary
+    assert "Most severe consequence" not in summary

@@ -186,10 +186,26 @@ class EnsemblTool(BaseTool):
             f"Amino acid change: {show('amino_acids')}",
             f"HGVS protein: {show('hgvsp')}",
             f"HGVS cDNA: {show('hgvsc')}",
-            f"Most severe consequence across all transcripts: {entry.get('most_severe_consequence', 'unknown')}",
+            *self._other_transcript_line(entry, tc),
             READING_NOTE,
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def _other_transcript_line(entry: dict, tc: dict) -> list[str]:
+        """VEP's most_severe_consequence is the worst effect on any transcript
+        overlapping the position, not the patient's. It used to be printed as
+        "Most severe consequence across all transcripts: transcript_ablation"
+        and was read as the patient's transcript being ablated (run 5,
+        AITX-00001). Now it is shown only when it differs from the patient's
+        transcript, and says whose it is."""
+        severe = entry.get("most_severe_consequence")
+        if not severe or severe in set(tc.get("consequence_terms") or []):
+            return []
+        return [
+            f"Note: on another transcript overlapping this position the most severe consequence "
+            f"is {severe}; the lines above describe the patient's transcript {tc.get('transcript_id')}."
+        ]
 
     @staticmethod
     def _splice_loss_lines(tc: dict) -> list[str]:
@@ -306,10 +322,17 @@ class EnsemblTool(BaseTool):
         which = f"Exon {lo_idx}" if lo_idx == hi_idx else f"Exons {lo_idx}-{hi_idx}"
         share = 100 * bases / total_cds if total_cds else 0
         # Exon edges rarely fall on codon boundaries, so give codons and the
-        # leftover bases rather than a fractional amino-acid count; a remainder
-        # of zero means removing these exons keeps the reading frame.
+        # leftover bases rather than a fractional amino-acid count. The frame
+        # remark is about removing the exon(s), which is what exon skipping and
+        # whole-exon deletions do; it was worded "out of frame by 2" before,
+        # and the model read that as the patient's variant shifting the frame
+        # (run 5, AITX-00003).
         codons, rest = divmod(bases, 3)
-        frame = "in frame" if rest == 0 else f"out of frame by {rest}"
+        these = "this exon" if lo_idx == hi_idx else "these exons"
+        frame = (
+            f"removing {these} keeps the reading frame" if rest == 0
+            else f"removing {these} shifts the reading frame by {rest}"
+        )
         return (
             f"{which} of {n_exons} ({ensembl_id}): {bases} coding bases = {codons} codons"
             + (f" + {rest} bases" if rest else "")
