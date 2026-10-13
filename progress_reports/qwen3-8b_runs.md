@@ -14,6 +14,11 @@ the score.
 | Run 4 | 2026-10-12 | b91fa95 | 7/16 | 15 of 26 |
 | Run 5, five repeats | 2026-10-12 | d5ae047 | 9/16 in every repeat | 32 of 38 in every repeat |
 
+Counting 00014 as correct wherever the answer was 10.0 (decided 2026-10-13: the
+question asks for a percentage, and 10.0 is the percentage; the key's 0.1 is
+the same quantity as a fraction), the scores are: run 3 9/16, run 4 7/16
+(it answered 0.1), run 5 10/16. The exact-match scorer still counts 9 and 8.
+
 Correct answers that are also supported by a quoted record (the
 `correct_supported` label), which is the number that matters for a clinical
 answer:
@@ -22,9 +27,9 @@ answer:
 |---|---|---|---|
 | Baseline | 5 | not measured (no trace) | not measured |
 | Run 2 | 3 | 0 | 3 (00003, 00005, 00010) |
-| Run 3 | 8 | 7 (00003, 00005, 00007, 00009, 00012, 00013, 00015) | 1 (00010) |
+| Run 3 | 8 (9 with 00014) | 8 (00003, 00005, 00007, 00009, 00012, 00013, 00014, 00015) | 1 (00010) |
 | Run 4 | 7 | 6 (00003, 00009, 00010, 00013, 00014, 00015) | 1 (00005: both citations quoted the right facts under the wrong links) |
-| Run 5 (each of 5 repeats) | 9 | 9 (00003, 00004, 00005, 00007, 00008, 00009, 00010, 00013, 00015) | 0 |
+| Run 5 (each of 5 repeats) | 9 (10 with 00014) | 10 (00003, 00004, 00005, 00007, 00008, 00009, 00010, 00013, 00014, 00015) | 0 |
 
 Per category, run 2 to run 3: Established_Targeted 2/7 to 3/7;
 Established_Supportive 0/1 to 0/1; Clinical_Trials 1/3 to 2/3;
@@ -80,7 +85,7 @@ failure wins, plus flags. Definitions are in the local `error_taxonomy.md`.
 Every one of the 43 citations in run 2 was unsupported by its source text:
 the justification step was given URLs, not the retrieved text.
 
-### Run 3 (8/16)
+### Run 3 (8/16 by exact match; 9/16 counting 00014)
 
 | Patient | Answer | Primary label | Cause in the trace |
 |---|---|---|---|
@@ -97,7 +102,7 @@ the justification step was given URLs, not the retrieved text.
 | 00011 | NCT07227857 | reference_questionable | as run 2 |
 | 00012 | L-serine (correct) | correct_supported | five abstracts report L-serine for loss-of-function variants |
 | 00013 | 66 (correct) | correct_supported | exon coding length from the Ensembl exon map |
-| 00014 | 10.0 | format_mismatch | the same fact as a percentage; the key uses the fraction 0.1 |
+| 00014 | 10.0 (correct: the percentage asked for) | correct_supported | the key writes the same quantity as the fraction 0.1; exact match fails |
 | 00015 | No (correct) | correct_supported | VEP "exon 37 of 37"; model applied the last-exon rule |
 | 00016 | TBD | synthesis_wrong | UniProt places 1243 outside its Ras-GAP domain (1251-1482) where the key's GRD spans 1198-1549; model then read "TBD" as "to be determined" |
 
@@ -303,7 +308,7 @@ noise; the brittleness is to inputs, and it is deterministic.
 | 00011 | NCT07227857 | reference_questionable | a recruiting KCNT1 DEE trial for ages 2 to 12; registered after the key's date, so the key says None (see below) |
 | 00012 | Memantine | synthesis_wrong | PHAROS first, stopped there, in all five runs |
 | 00013 | 66 (correct) | correct_supported | |
-| 00014 | 10 | format_mismatch | the question asks for a percentage and the tool line says 10.0%; the key's 0.1 is the fraction (see below) |
+| 00014 | 10 (correct: the percentage asked for) | correct_supported | the tool line says 10.0%; the key's 0.1 is the fraction (see below); exact match fails |
 | 00015 | No (correct) | correct_supported | |
 | 00016 | TBD | synthesis_wrong | boundary disagreement |
 

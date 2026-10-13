@@ -28,13 +28,14 @@ across five repeats).
 | 00011 | None | NCT07600736, NCT07227857 | NCT07227857 | 362 | 116 |
 | 00012 | L-Serine | L-serine | Memantine | 221 | 64 |
 | 00013 | 66 | 66 | 66 | 242 | 68 |
-| 00014 | 0.1 | 10 | 10 | 344 | 60 |
+| 00014 | 0.1 | 10 (correct: the percentage asked for) | 10 (correct) | 344 | 60 |
 | 00015 | No | No | No | 472 | 89 |
 | 00016 | GRD | TBD | TBD | 174 | 78 |
 
 | | 32B fp8 | 8B bf16 |
 |---|---|---|
 | Exact match | 10/16 | 9/16 |
+| Counting 00014 (10.0 percent is the percentage asked for; the key's 0.1 is the fraction) | 11/16 | 10/16 |
 | Gained / lost against the 8B | +00001, +00012 / -00007 | |
 | Citations verbatim in their source (code check) | 18 of 37 | 32 of 38 |
 | Citations good by hand (right link, relevant quote, sensible reason) | 13 of 37 | 18 of 38 |
@@ -68,7 +69,7 @@ from memory, or from neither.
 | 00011 | ages checked, both pediatric KCNT1 trials listed; long deliberation on the answer format | one trial | sound on live data; the key predates the trials |
 | 00012 | memory: loss of function needs an enhancer, antagonists go the wrong way; the PubMed query (gene, "nonsense", three drugs joined by OR) returned gastric-cancer abstracts, which it then said "support L-serine" | PHAROS lists memantine as approved on the target, so memantine | right by memory; evidence irrelevant |
 | 00013 | exon line; answered without a tool, reminded, fetched, answered | exon line | sound |
-| 00014 | exon line's 10.0% | same | key convention |
+| 00014 | exon line's 10.0% | same | correct; the key writes the fraction |
 | 00015 | turn 1 derived "yes, NMD"; turn 2 derived "no" by a different muddled route | applied the last-exon rule once | right, unstable |
 | 00016 | UniProt's boundary; did not know the NF1 domain abbreviations | same | key plus nomenclature |
 
@@ -183,13 +184,14 @@ not reported.)
 | 00011 | None | None | NCT07600736, NCT07227857 | 314 | 362 |
 | 00012 | L-Serine | Memantine | L-serine | 283 | 221 |
 | 00013 | 66 | 66 | 66 | 174 | 242 |
-| 00014 | 0.1 | 10 | 10 | 212 | 344 |
+| 00014 | 0.1 | 10 (correct: the percentage asked for) | 10 (correct) | 212 | 344 |
 | 00015 | No | Yes | No | 386 | 472 |
 | 00016 | GRD | TBD | TBD | 243 | 174 |
 
 | | Run 2 (84f8cff) | Run 1 (d886b7c) | 8B run 5 |
 |---|---|---|---|
 | Exact match | 12/16 | 10/16 | 9/16 |
+| Counting 00014 as correct | 13/16 | 11/16 | 10/16 |
 | Citations emitted / marked unsupported | 24 / 6 | 37 / 19 | 38 / 6 |
 | Declined citations left out | 13 | (marked) | (marked) |
 | Agent time | 88 min | 81 min | 30 min |
