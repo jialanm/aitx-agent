@@ -653,3 +653,31 @@ class TestSchemaOrderShuffle:
 
         assert sorted(a) == sorted(base) and a == b
         assert a != base
+
+
+class TestShowThinking:
+    def _response(self):
+        return ModelResponse(
+            text="",
+            tool_calls=[ToolCall(name="search_clinvar", arguments={"gene": "CFTR"})],
+            raw="",
+            thinking="The variant is in CFTR, so ClinVar first.",
+        )
+
+    def test_echoes_each_turn_when_on(self, capsys):
+        agent = Agent(None, None, [TestTrace._Tool()], show_thinking=True)
+        agent.last_trace = {"model_turns": []}
+        agent._record_turn("loop", 1, self._response())
+        out = capsys.readouterr().out
+        assert "[thinking, loop turn 1]" in out
+        assert "so ClinVar first." in out
+        assert 'search_clinvar({"gene": "CFTR"})' in out
+        assert len(agent.last_trace["model_turns"]) == 1
+
+    def test_silent_by_default(self, capsys):
+        agent = Agent(None, None, [TestTrace._Tool()])
+        agent.last_trace = {"model_turns": []}
+        agent._record_turn("loop", 1, self._response())
+        assert capsys.readouterr().out == ""
+        assert len(agent.last_trace["model_turns"]) == 1
+

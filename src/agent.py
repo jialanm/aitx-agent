@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import random
 import re
@@ -33,7 +34,14 @@ UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its return
 class Agent:
     """ReAct agent that uses tools to answer precision medicine questions."""
 
-    def __init__(self, model, tokenizer, tools: list[BaseTool], schema_order_seed: int | None = None):
+    def __init__(
+        self,
+        model,
+        tokenizer,
+        tools: list[BaseTool],
+        schema_order_seed: int | None = None,
+        show_thinking: bool = False,
+    ):
         self.model = model
         self.tokenizer = tokenizer
         self.tools = {tool.name: tool for tool in tools}
@@ -41,6 +49,9 @@ class Agent:
         if schema_order_seed is not None:
             # Prompt-sensitivity control: same schemas, different listing order.
             random.Random(schema_order_seed).shuffle(self.tool_schemas)
+        # Echo each model turn's thinking and text to stdout as the turn
+        # ends, for watching a run live. The trace keeps them regardless.
+        self.show_thinking = show_thinking
         self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:
@@ -313,6 +324,13 @@ class Agent:
             "text": response.text,
             "tool_calls": [{"tool": tc.name, "arguments": tc.arguments} for tc in response.tool_calls],
         })
+        if self.show_thinking:
+            calls = ", ".join(f"{tc.name}({json.dumps(tc.arguments)})" for tc in response.tool_calls) or "none"
+            print(
+                f"\n[thinking, {kind} turn {iteration}]\n{response.thinking.strip() or '(no thinking)'}"
+                f"\n[text] {response.text.strip() or '(empty)'}\n[tool calls] {calls}\n",
+                flush=True,
+            )
 
     def _call_tool(
         self,

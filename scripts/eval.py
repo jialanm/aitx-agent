@@ -119,6 +119,7 @@ def run_evaluation(
     outputs_path: str = "data/eval_outputs.json",
     prompt_variant: str = "none",
     model_id: str = MODEL_ID,
+    show_thinking: bool = False,
 ):
     """Run evaluation on validation set.
 
@@ -146,7 +147,11 @@ def run_evaluation(
         ClinGenDosageTool(),
     ]
     set_prompt_variant(prompt_variant)
-    agent = Agent(model, tokenizer, tools, schema_order_seed=SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None)
+    agent = Agent(
+        model, tokenizer, tools,
+        schema_order_seed=SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None,
+        show_thinking=show_thinking,
+    )
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
@@ -319,8 +324,10 @@ if __name__ == "__main__":
                         help="bf16 (default), nf4 (4-bit at load time), or fp8 (publisher's pre-quantised checkpoint); recorded in run metadata")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
+    parser.add_argument("--show-thinking", action="store_true",
+                        help="Print each model turn's thinking, text and tool calls as the turn ends (the trace records them either way)")
     parser.add_argument("--prompt-variant", default="none", choices=PROMPT_VARIANTS,
                         help="Prompt-sensitivity control: reword two headings, or shuffle the schema order (seeded)")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.answers or None, args.precision, args.output, args.outputs, args.prompt_variant, args.model)
+    run_evaluation(args.validation, args.answers or None, args.precision, args.output, args.outputs, args.prompt_variant, args.model, args.show_thinking)
