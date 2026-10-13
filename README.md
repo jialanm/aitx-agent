@@ -84,6 +84,7 @@ Input follows the Phase 1 task schema: `id`, `patient` (`genotype` list and
 
 ```bash
 uv run python scripts/eval.py              # runs the Phase 1 validator set, reports exact-match accuracy
+uv run python scripts/eval.py --model Qwen/Qwen3-32B-FP8 --precision fp8   # another model; both are recorded in the run metadata
 uv run python scripts/debug_question.py 0  # trace a single question by index
 uv run python scripts/fetch_validator.py   # re-download the set at its pinned revision and verify checksum
 ```

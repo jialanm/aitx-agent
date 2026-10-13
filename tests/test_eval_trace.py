@@ -73,7 +73,7 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
                                       genomic_variant="NC_000007.14:g.117559592_117559594del", gene_symbol="CFTR"),
     )
     # No model: generate() is scripted to call one tool, then answer.
-    monkeypatch.setattr(eval_script, "load_model", lambda quantize=False: (None, None))
+    monkeypatch.setattr(eval_script, "load_model", lambda **kwargs: (None, None))
     call = ToolCall(name="search_clinvar", arguments={"gene": "CFTR", "variant": "c.1521_1523del"})
     queue = [ModelResponse(text="", tool_calls=[call], raw="<tool_call>", thinking="")]
     monkeypatch.setattr(
@@ -90,7 +90,7 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
         monkeypatch.setattr(eval_script, cls, lambda n=tool_name: _Tool(n))
     monkeypatch.setattr(eval_script, "run_metadata", lambda *a, **k: {"git_commit": "test"})
 
-    eval_script.run_evaluation(str(questions), str(answers), False, str(results), str(outputs))
+    eval_script.run_evaluation(str(questions), str(answers), "bf16", str(results), str(outputs))
 
     trace_file = tmp_path / "eval_trace_test.json"
     assert trace_file.exists()

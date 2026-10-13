@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agent import Agent
 from src.evaluation import file_sha256, is_exact_match, load_answers, load_questions
-from src.model import MODEL_ID, PRECISION_LABELS, load_model
+from src.model import MODEL_ID, PRECISIONS, load_model
 from src.prompts import set_prompt_variant
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
@@ -56,7 +56,7 @@ def trace_path_for(output_path: str) -> str:
     return str(path.with_name(f"{path.stem}_trace{path.suffix}"))
 
 
-def run_metadata(questions_path: str, answers_path: str | None, quantize: bool = False, prompt_variant: str = "none") -> dict:
+def run_metadata(questions_path: str, answers_path: str | None, precision: str = "bf16", prompt_variant: str = "none", model_id: str = MODEL_ID) -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -67,8 +67,8 @@ def run_metadata(questions_path: str, answers_path: str | None, quantize: bool =
     return {
         "timestamp": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "git_commit": commit,
-        "model_id": MODEL_ID,
-        "precision": PRECISION_LABELS[quantize],
+        "model_id": model_id,
+        "precision": PRECISIONS[precision],
         "decoding": "greedy (do_sample=False)",
         "prompt_variant": prompt_variant,
         "schema_order_seed": SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None,
@@ -114,10 +114,11 @@ def validate_output(output_dict: dict) -> list[str]:
 def run_evaluation(
     validation_path: str = DEFAULT_QUESTIONS,
     answers_path: str | None = DEFAULT_ANSWERS,
-    quantize: bool = False,
+    precision: str = "bf16",
     output_path: str = "data/eval_results.json",
     outputs_path: str = "data/eval_outputs.json",
     prompt_variant: str = "none",
+    model_id: str = MODEL_ID,
 ):
     """Run evaluation on validation set.
 
@@ -128,7 +129,7 @@ def run_evaluation(
         outputs_path: Path to save spec-compliant TaskOutput JSONs.
     """
     print("Loading model...")
-    model, tokenizer = load_model(quantize=quantize)
+    model, tokenizer = load_model(model_id=model_id, precision=precision)
 
     tools = [
         ClinVarTool(),
@@ -149,7 +150,7 @@ def run_evaluation(
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
-    metadata = run_metadata(validation_path, answers_path, quantize, prompt_variant)
+    metadata = run_metadata(validation_path, answers_path, precision, prompt_variant, model_id)
 
     # Answers are loaded separately and consulted only after the agent has
     # answered. The question records passed to the agent never contain them.
@@ -312,12 +313,14 @@ if __name__ == "__main__":
     parser.add_argument("--validation", default=DEFAULT_QUESTIONS, help="Path to question set JSON")
     parser.add_argument("--answers", default=DEFAULT_ANSWERS,
                         help="Path to answers JSON ({id, answer_expected} records); pass '' to run unscored")
-    parser.add_argument("--quantize", action="store_true",
-                        help="Load the model in 4-bit NF4 instead of bfloat16 (recorded in run metadata)")
+    parser.add_argument("--model", default=MODEL_ID,
+                        help="Hugging Face model id (recorded in run metadata)")
+    parser.add_argument("--precision", default="bf16", choices=sorted(PRECISIONS),
+                        help="bf16 (default), nf4 (4-bit at load time), or fp8 (publisher's pre-quantised checkpoint); recorded in run metadata")
     parser.add_argument("--output", default="data/eval_results.json", help="Path to save eval stats")
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
     parser.add_argument("--prompt-variant", default="none", choices=PROMPT_VARIANTS,
                         help="Prompt-sensitivity control: reword two headings, or shuffle the schema order (seeded)")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.answers or None, args.quantize, args.output, args.outputs, args.prompt_variant)
+    run_evaluation(args.validation, args.answers or None, args.precision, args.output, args.outputs, args.prompt_variant, args.model)

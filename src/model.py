@@ -11,8 +11,14 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 
 MODEL_ID = "Qwen/Qwen3-8B"
 
-# Human-readable precision labels, recorded in eval run metadata.
-PRECISION_LABELS = {False: "bfloat16", True: "nf4 4-bit (bitsandbytes, double quant)"}
+# Precision modes and their labels, recorded in eval run metadata. "fp8"
+# loads a checkpoint that was already quantised by its publisher (for
+# example Qwen/Qwen3-32B-FP8); the other two quantise or cast at load time.
+PRECISIONS = {
+    "bf16": "bfloat16",
+    "nf4": "nf4 4-bit (bitsandbytes, double quant)",
+    "fp8": "fp8 (publisher's pre-quantised checkpoint)",
+}
 
 # Regex for extracting tool calls from model output
 _TOOL_CALL_RE = re.compile(
@@ -90,17 +96,22 @@ class RepetitionStoppingCriteria(StoppingCriteria):
 
 def load_model(
     model_id: str = MODEL_ID,
-    quantize: bool = False,
+    precision: str = "bf16",
 ) -> tuple:
-    """Load the model in bfloat16, or in 4-bit NF4 if quantize is set.
+    """Load the model at the given precision: bf16, nf4, or fp8.
 
-    Full precision is the default so that eval numbers reflect the model
-    itself, not rounding from quantization. The 4-bit path is kept for a
-    measured comparison and for hardware that cannot hold the full weights.
+    bf16 is the default so that eval numbers reflect the model itself, not
+    rounding from quantization. nf4 quantises at load time for hardware
+    that cannot hold the full weights. fp8 expects a checkpoint the
+    publisher already quantised and refuses to run if the loaded model
+    carries no quantization config, so the precision recorded for a run is
+    the precision that actually ran.
 
     Returns:
         (model, tokenizer) tuple
     """
+    if precision not in PRECISIONS:
+        raise ValueError(f"unknown precision {precision!r}; choose from {sorted(PRECISIONS)}")
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 
     kwargs = {
@@ -108,7 +119,7 @@ def load_model(
         "device_map": "auto",
     }
 
-    if quantize:
+    if precision == "nf4":
         bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_quant_type="nf4",
@@ -116,10 +127,15 @@ def load_model(
             bnb_4bit_compute_dtype=torch.bfloat16,
         )
         kwargs["quantization_config"] = bnb_config
-    else:
+    elif precision == "bf16":
         kwargs["dtype"] = torch.bfloat16
 
     model = AutoModelForCausalLM.from_pretrained(model_id, **kwargs)
+    if precision == "fp8" and getattr(model.config, "quantization_config", None) is None:
+        raise ValueError(
+            f"{model_id} carries no quantization config, so it is not an fp8 checkpoint; "
+            "pass the publisher's FP8 release or choose bf16/nf4"
+        )
     model.eval()
 
     return model, tokenizer
