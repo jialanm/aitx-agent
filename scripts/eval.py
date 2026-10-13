@@ -21,7 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.agent import Agent
 from src.evaluation import file_sha256, is_exact_match, load_answers, load_questions
-from src.model import MODEL_ID, PRECISIONS, load_model
+from src.model import DECODING_PRESETS, MODEL_ID, PRECISIONS, load_model, set_decoding
 from src.prompts import set_prompt_variant
 from src.schemas import TaskInput
 from src.tools.clinvar import ClinVarTool
@@ -42,6 +42,7 @@ DEFAULT_QUESTIONS = "data/phase1_questions.json"
 DEFAULT_ANSWERS = "data/phase1_answers.json"
 PROMPT_VARIANTS = ("none", "reword", "shuffle_schemas")
 SCHEMA_ORDER_SEED = 20261012
+SAMPLING_SEED = 20261013
 
 
 def trace_path_for(output_path: str) -> str:
@@ -56,7 +57,7 @@ def trace_path_for(output_path: str) -> str:
     return str(path.with_name(f"{path.stem}_trace{path.suffix}"))
 
 
-def run_metadata(questions_path: str, answers_path: str | None, precision: str = "bf16", prompt_variant: str = "none", model_id: str = MODEL_ID) -> dict:
+def run_metadata(questions_path: str, answers_path: str | None, precision: str = "bf16", prompt_variant: str = "none", model_id: str = MODEL_ID, decoding: str = "greedy (do_sample=False)") -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -69,7 +70,7 @@ def run_metadata(questions_path: str, answers_path: str | None, precision: str =
         "git_commit": commit,
         "model_id": model_id,
         "precision": PRECISIONS[precision],
-        "decoding": "greedy (do_sample=False)",
+        "decoding": decoding,
         "prompt_variant": prompt_variant,
         "schema_order_seed": SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None,
         "questions_path": questions_path,
@@ -138,6 +139,8 @@ def run_evaluation(
     prompt_variant: str = "none",
     model_id: str = MODEL_ID,
     show_thinking: bool = False,
+    decoding: str = "greedy",
+    thinking_budget: int | None = None,
 ):
     """Run evaluation on validation set.
 
@@ -165,6 +168,7 @@ def run_evaluation(
         ClinGenDosageTool(),
     ]
     set_prompt_variant(prompt_variant)
+    decoding_label = set_decoding(decoding, thinking_budget, SAMPLING_SEED if decoding != "greedy" else None)
     agent = Agent(
         model, tokenizer, tools,
         schema_order_seed=SCHEMA_ORDER_SEED if prompt_variant == "shuffle_schemas" else None,
@@ -173,7 +177,7 @@ def run_evaluation(
 
     print("Loading questions...")
     validation_data = load_questions(validation_path)
-    metadata = run_metadata(validation_path, answers_path, precision, prompt_variant, model_id)
+    metadata = run_metadata(validation_path, answers_path, precision, prompt_variant, model_id, decoding_label)
 
     # Answers are loaded separately and consulted only after the agent has
     # answered. The question records passed to the agent never contain them.
@@ -331,8 +335,12 @@ if __name__ == "__main__":
     parser.add_argument("--outputs", default="data/eval_outputs.json", help="Path to save spec-compliant outputs")
     parser.add_argument("--show-thinking", action="store_true",
                         help="Print each model turn's thinking, text and tool calls as the turn ends (the trace records them either way)")
+    parser.add_argument("--decoding", default="greedy", choices=sorted(DECODING_PRESETS),
+                        help="greedy everywhere (default), or qwen_thinking: thinking sampled at Qwen's published settings, answer greedy; recorded in run metadata")
+    parser.add_argument("--thinking-budget", type=int, default=None,
+                        help="Cap on thinking tokens per turn; when hit the model is told to answer from what it has (recorded in run metadata)")
     parser.add_argument("--prompt-variant", default="none", choices=PROMPT_VARIANTS,
                         help="Prompt-sensitivity control: reword two headings, or shuffle the schema order (seeded)")
     args = parser.parse_args()
 
-    run_evaluation(args.validation, args.answers or None, args.precision, args.output, args.outputs, args.prompt_variant, args.model, args.show_thinking)
+    run_evaluation(args.validation, args.answers or None, args.precision, args.output, args.outputs, args.prompt_variant, args.model, args.show_thinking, args.decoding, args.thinking_budget)

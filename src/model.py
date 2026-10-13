@@ -20,6 +20,43 @@ PRECISIONS = {
     "fp8": "fp8 (publisher's pre-quantised checkpoint)",
 }
 
+# Decoding settings, set once per run by the eval script and recorded in
+# its metadata. Greedy everywhere is the default and what runs 1-5 used.
+# "qwen_thinking" samples the thinking phase with the settings Qwen
+# publishes for thinking mode and keeps the answer phase greedy, so the
+# reasoning can explore while the final words stay the most probable ones.
+# A thinking budget caps the thinking phase; when it is hit the model is
+# told to answer from what it has, in Qwen's own wording for that case.
+DECODING_PRESETS = {
+    "greedy": None,
+    "qwen_thinking": {"do_sample": True, "temperature": 0.6, "top_p": 0.95, "top_k": 20},
+}
+THINKING_SAMPLING: dict | None = None
+THINKING_BUDGET: int | None = None
+BUDGET_EXHAUSTED_TEXT = (
+    "\n\nConsidering the limited time by the user, I have to give the solution "
+    "based on the thinking directly now.\n</think>\n\n"
+)
+
+
+def set_decoding(preset: str = "greedy", thinking_budget: int | None = None, seed: int | None = None) -> str:
+    """Choose the decoding for this process and return its description for the run metadata."""
+    global THINKING_SAMPLING, THINKING_BUDGET
+    if preset not in DECODING_PRESETS:
+        raise ValueError(f"unknown decoding preset {preset!r}; choose from {sorted(DECODING_PRESETS)}")
+    THINKING_SAMPLING = DECODING_PRESETS[preset]
+    THINKING_BUDGET = thinking_budget
+    if seed is not None:
+        torch.manual_seed(seed)
+    parts = ["greedy (do_sample=False)" if THINKING_SAMPLING is None
+             else "thinking sampled (temperature 0.6, top_p 0.95, top_k 20), answer greedy"]
+    if thinking_budget:
+        parts.append(f"thinking budget {thinking_budget} tokens")
+    if seed is not None and THINKING_SAMPLING is not None:
+        parts.append(f"seed {seed}")
+    return "; ".join(parts)
+
+
 # Regex for extracting tool calls from model output
 _TOOL_CALL_RE = re.compile(
     r"<tool_call>\s*(\{.*?\})\s*</tool_call>", re.DOTALL
@@ -44,6 +81,7 @@ class ModelResponse:
     tool_calls: list[ToolCall]
     raw: str  # Full raw output
     thinking: str  # Extracted thinking content
+    thinking_truncated: bool = False  # the thinking budget was hit and the model was told to answer
 
 
 class RepetitionStoppingCriteria(StoppingCriteria):
@@ -178,27 +216,51 @@ def generate(
     inputs = tokenizer(text, return_tensors="pt").to(model.device)
     prompt_length = inputs["input_ids"].shape[1]
 
-    # Detect think-loops: stop early if model repeats itself
-    rep_criteria = RepetitionStoppingCriteria(
-        tokenizer=tokenizer,
-        prompt_length=prompt_length,
-    )
+    two_phase = enable_thinking and (THINKING_SAMPLING is not None or THINKING_BUDGET is not None)
+    if not two_phase:
+        new_tokens = _generate_tokens(model, tokenizer, inputs["input_ids"], max_new_tokens, prompt_length)
+        return parse_response(tokenizer.decode(new_tokens, skip_special_tokens=True))
 
+    # Phase 1, the thinking: sampled if a preset says so, stopped at </think>
+    # or at the budget. Phase 2, the answer: always greedy, continuing from
+    # the thinking (closed by the model, or closed for it when the budget ran
+    # out, with the sentence Qwen uses for that).
+    think_end = tokenizer.convert_tokens_to_ids("</think>")
+    budget = min(THINKING_BUDGET or max_new_tokens, max_new_tokens)
+    thinking_ids = _generate_tokens(
+        model, tokenizer, inputs["input_ids"], budget, prompt_length,
+        sampling=THINKING_SAMPLING, stop_ids=[think_end],
+    )
+    truncated = len(thinking_ids) == 0 or int(thinking_ids[-1]) != think_end
+    if truncated:
+        closing = tokenizer(BUDGET_EXHAUSTED_TEXT, return_tensors="pt", add_special_tokens=False)["input_ids"][0].to(thinking_ids.device)
+        thinking_ids = torch.cat([thinking_ids, closing])
+    ids = torch.cat([inputs["input_ids"][0], thinking_ids]).unsqueeze(0)
+    answer_budget = max(256, max_new_tokens - len(thinking_ids))
+    answer_ids = _generate_tokens(model, tokenizer, ids, answer_budget, ids.shape[1])
+    raw_output = tokenizer.decode(torch.cat([thinking_ids, answer_ids]), skip_special_tokens=True)
+    response = parse_response(raw_output)
+    response.thinking_truncated = truncated
+    return response
+
+
+def _generate_tokens(model, tokenizer, input_ids, max_new_tokens: int, prompt_length: int,
+                     sampling: dict | None = None, stop_ids: list[int] | None = None):
+    """One generate call; returns only the new tokens. Greedy unless sampling settings are given."""
+    rep_criteria = RepetitionStoppingCriteria(tokenizer=tokenizer, prompt_length=prompt_length)
+    kwargs = dict(sampling) if sampling else {"do_sample": False, "temperature": None, "top_p": None, "top_k": None}
+    if stop_ids:
+        eos = tokenizer.eos_token_id
+        kwargs["eos_token_id"] = list(dict.fromkeys(([eos] if isinstance(eos, int) else list(eos or [])) + stop_ids))
     with torch.no_grad():
         outputs = model.generate(
-            **inputs,
+            input_ids=input_ids,
+            attention_mask=torch.ones_like(input_ids),
             max_new_tokens=max_new_tokens,
-            do_sample=False,
-            temperature=None,
-            top_p=None,
             stopping_criteria=StoppingCriteriaList([rep_criteria]),
+            **kwargs,
         )
-
-    # Decode only the new tokens
-    new_tokens = outputs[0][prompt_length:]
-    raw_output = tokenizer.decode(new_tokens, skip_special_tokens=True)
-
-    return parse_response(raw_output)
+    return outputs[0][prompt_length:]
 
 
 def parse_response(raw_output: str) -> ModelResponse:
