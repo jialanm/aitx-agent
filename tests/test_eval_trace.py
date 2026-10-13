@@ -96,7 +96,7 @@ def test_eval_writes_one_trace_per_question(tmp_path, monkeypatch):
     trace_file = tmp_path / "eval_trace_test.json"
     assert trace_file.exists()
     written = json.loads(trace_file.read_text())
-    assert written["metadata"] == {"git_commit": "test", "max_loop_turns": 12}
+    assert written["metadata"] == {"git_commit": "test"}
     assert [t["id"] for t in written["traces"]] == ["AITX-TEST"]
     recorded = written["traces"][0]["tool_calls"]
     # Step 1 fetches the consequence automatically; the model's own call follows.

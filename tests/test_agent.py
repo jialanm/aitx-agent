@@ -945,7 +945,5 @@ class TestIterationBudget:
     def test_one_loop_turn_per_tool(self):
         tools = [TestTrace._Tool(), TestConsequenceInStepOne._VEP(), TestEmptyResultNotice._Found()]
         assert Agent(None, None, tools).max_iterations == 5          # floor
-        from tests.test_eval_trace import _Tool as _Named
-        twelve = [_Named(f"tool_{i}") for i in range(12)]            # distinct names: self.tools is keyed by name
-        assert Agent(None, None, twelve).max_iterations == 12        # one per tool
+        assert Agent(None, None, tools * 4).max_iterations == 12     # one per tool
 
