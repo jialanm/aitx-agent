@@ -940,3 +940,37 @@ class TestFinalAnswerTurn:
         assert agent.last_trace["model_turns"][-1]["kind"] == "final_answer"
         assert "No further tool calls are possible" in agent.last_trace["messages"][-1]["content"]
 
+
+class TestNotesPersist:
+    """The NOTES line the model writes before a tool call stays in the conversation it
+    sees next turn (the thinking does not), and is kept in the trace."""
+
+    def test_notes_line_is_in_the_history_and_the_trace(self, monkeypatch):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        notes = "NOTES: nonsense variant in exon 74, no listed ASO targets it; next: confirm ataluren via search_pubmed."
+        turns = [
+            ModelResponse(text=notes, tool_calls=[ToolCall(name="search_pubmed", arguments={"query": "DMD nonsense ataluren"})],
+                          raw=f"<think>long reasoning</think>\n{notes}\n<tool_call>{{}}</tool_call>", thinking="long reasoning"),
+            ModelResponse(text="Ataluren", tool_calls=[], raw="Ataluren", thinking=""),
+        ]
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.31169542_31169543delinsTA", gene_symbol="DMD"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3", "variant_cdna": "c.10453_10454delinsTA",
+                                         "variant_protein": "p.(Leu3485Ter)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "Which targeted therapy applies? Provide the generic name or None.", "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[TestUnverifiedTerms._PubMed()])
+
+        agent.run(TaskInput(**task))
+
+        assistant_turns = [m["content"] for m in agent.last_trace["messages"] if m["role"] == "assistant"]
+        assert any(notes in c for c in assistant_turns)
+        assert agent.last_trace["model_turns"][0]["text"] == notes
+

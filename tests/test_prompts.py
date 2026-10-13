@@ -112,3 +112,16 @@ class TestMemoryRule:
         assert "A fact you remember is a hypothesis, not evidence" in prompt
         assert "must appear in a tool result of this conversation" in prompt
 
+
+class TestNotesInstruction:
+    def test_prompt_asks_for_a_notes_line_and_allows_several_calls_per_turn(self):
+        from src.preprocessing import ParsedVariant
+        from src.prompts import build_system_prompt
+        v = ParsedVariant(gene="DMD", transcript="NM_004006.3", variant_cdna="c.70T>C", variant_protein="p.(Trp24Arg)",
+                          zygosity="hemizygous", variant_type="missense", cdna_position="70", protein_position="24",
+                          amino_acid_change="Trp24Arg")
+        prompt = build_system_prompt("Established_Targeted", [v], "Progressive muscle weakness", "string_match", "2025-08-01")
+        assert "Your thinking is not kept between turns" in prompt
+        assert "starts with NOTES:" in prompt
+        assert "more than one tool in the same turn" in prompt
+
