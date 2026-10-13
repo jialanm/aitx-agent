@@ -238,14 +238,23 @@ def test_splice_site_deletion_states_whole_exon_loss_and_the_literal_count(recor
         "use the exon line's length and frame. VEP's inframe_deletion label counts only "
         "the 1743 coding letters written in the variant."
     )
-    assert lines[-1] == ensembl.READING_NOTE
+    assert lines[1] == "Frame: out of frame: exons 52-63 lost whole (splice sites removed), 1744 coding bases, remainder 1"
 
 
 def test_single_exon_variant_gets_no_splice_loss_line(recorded):
     summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000003.12:g.43600432del", transcript="NM_018075.5")
 
     assert "Splice sites removed" not in summary
-    assert summary.splitlines()[-1] == ensembl.READING_NOTE
+    assert summary.splitlines()[1] == "Frame: frameshift (frameshift_variant)"
+
+
+def test_frame_line_is_first_on_every_variant(recorded):
+    # Missense: the frame question does not arise, and the line says so.
+    summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000002.12:g.240871433G>A", transcript="NM_000030.3")
+    assert summary.splitlines()[1] == "Frame: not applicable (missense_variant)"
+    # Nonsense: likewise, with VEP's own term.
+    summary, _ = EnsemblTool().execute(genomic_hgvs="NC_000023.11:g.31169542_31169543delinsTA", transcript="NM_004006.3")
+    assert summary.splitlines()[1] == "Frame: not applicable (stop_gained)"
 
 
 

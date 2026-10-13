@@ -29,12 +29,6 @@ VEP_RETRY_INTERVAL_SECONDS = 5
 # missing one is logged by name and shown as "not returned", never blank.
 # Closes the VEP block. The consequence label and the exon line count
 # different things, and the model must know which governs when they differ.
-READING_NOTE = (
-    "Reading these lines: the Consequence label counts the coding letters of the variant "
-    "as written; the exon line counts whole exons. When splice sites are removed, the "
-    "listed exons are lost whole and the exon line's frame governs."
-)
-
 VEP_REQUIRED_FIELDS = ("consequence_terms", "impact", "exon", "protein_start", "amino_acids", "hgvsp")
 
 
@@ -174,12 +168,14 @@ class EnsemblTool(BaseTool):
             text = str(value)
             return text if len(text) <= 60 else text[:57] + "..."
 
+        exon_line = self._exon_length_line(tc.get("transcript_id") or transcript, tc.get("exon"))
         lines = [
             f"VEP (Ensembl, GRCh38) for {notation} on transcript {tc.get('transcript_id')}:",
+            self._frame_line(tc, self._exon_info),
             f"Consequence: {show('consequence_terms')}",
             f"Impact: {show('impact')}",
             f"Exon: {show('exon')}" + (f" | Intron: {show('intron')}" if tc.get("intron") else ""),
-            self._exon_length_line(tc.get("transcript_id") or transcript, tc.get("exon")),
+            exon_line,
             *self._splice_loss_lines(tc),
             f"Protein position: {show('protein_start')}"
             + (f"-{tc['protein_end']}" if tc.get("protein_end") not in (None, tc.get("protein_start")) else ""),
@@ -187,9 +183,38 @@ class EnsemblTool(BaseTool):
             f"HGVS protein: {show('hgvsp')}",
             f"HGVS cDNA: {show('hgvsc')}",
             *self._other_transcript_line(entry, tc),
-            READING_NOTE,
         ]
         return "\n".join(lines)
+
+    @staticmethod
+    def _frame_line(tc: dict, exon_info: dict | None) -> str:
+        """The frame verdict, first in the block, computed by code.
+
+        Both models read the block top-down and took VEP's first label
+        ("inframe_deletion") as the verdict, never reaching the correcting
+        lines below it (32B rerun 2026-10-13, AITX-00001). When a deletion
+        removes splice sites the exons VEP named are lost whole, and the
+        verdict comes from their summed coding length (transcript record);
+        otherwise it restates VEP's own label. Present on every variant so
+        the model learns it is always there.
+        """
+        terms = set(tc.get("consequence_terms") or [])
+        hgvsc = tc.get("hgvsc") or ""
+        splice_deletion = bool(terms & {"splice_acceptor_variant", "splice_donor_variant"}) and "del" in hgvsc
+        if splice_deletion and exon_info:
+            verdict = "in frame" if exon_info["rest"] == 0 else "out of frame"
+            lost = exon_info["which"].lower().replace("exons ", "exons ").replace("exon ", "exon ")
+            return (
+                f"Frame: {verdict}: {lost} lost whole (splice sites removed), "
+                f"{exon_info['bases']} coding bases, remainder {exon_info['rest']}"
+            )
+        if "frameshift_variant" in terms:
+            return "Frame: frameshift (frameshift_variant)"
+        inframe = next((t for t in ("inframe_deletion", "inframe_insertion") if t in terms), None)
+        if inframe:
+            return f"Frame: in frame ({inframe})"
+        first = next(iter(tc.get("consequence_terms") or ["unknown"]))
+        return f"Frame: not applicable ({first})"
 
     @staticmethod
     def _other_transcript_line(entry: dict, tc: dict) -> list[str]:
@@ -268,6 +293,7 @@ class EnsemblTool(BaseTool):
         CDS bounds, so the coding bases per exon follow by overlap. Two
         requests: the RefSeq name to its Ensembl transcript, then the record.
         """
+        self._exon_info = None  # set on success; the Frame line reads it
         if not exon_field or "/" not in exon_field:
             return "Exon coding length: not returned (no exon index from VEP)"
         index, _, total = exon_field.partition("/")
@@ -328,6 +354,7 @@ class EnsemblTool(BaseTool):
         # and the model read that as the patient's variant shifting the frame
         # (run 5, AITX-00003).
         codons, rest = divmod(bases, 3)
+        self._exon_info = {"which": which, "bases": bases, "rest": rest, "lo": lo_idx, "hi": hi_idx}
         these = "this exon" if lo_idx == hi_idx else "these exons"
         frame = (
             f"removing {these} keeps the reading frame" if rest == 0
