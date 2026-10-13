@@ -130,6 +130,7 @@ class Agent:
         reminded = False
         tried: set[str] = set()
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
+        none_reminded = False
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -177,6 +178,22 @@ class Agent:
                     messages.append({"role": "assistant", "content": response.raw})
                     messages.append({"role": "user", "content": self._unverified_term_reminder(unverified, context, tried)})
                     continue
+
+                # A None answer while a recommended tool for the category has
+                # not been consulted (32B run, 2026-10-13: AITX-00007 answered
+                # "not applicable" after OMIM and ClinVar, never GeneReviews,
+                # which held the answer). Code names the tools once; the model
+                # decides whether to call one and with what.
+                uncalled = self._uncalled_recommended(context, tried)
+                if (self._is_none_answer(response.text, context) and uncalled
+                        and not none_reminded and iteration < MAX_ITERATIONS - 1):
+                    none_reminded = True
+                    self.last_trace["events"].append("none_reminder:" + ",".join(uncalled))
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append({"role": "user", "content": self._none_reminder(uncalled)})
+                    continue
+                if none_reminded and self._is_none_answer(response.text, context):
+                    self.last_trace["events"].append("none_reminder_ignored")
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
@@ -357,6 +374,7 @@ class Agent:
             "thinking": response.thinking,
             "text": response.text,
             "tool_calls": [{"tool": tc.name, "arguments": tc.arguments} for tc in response.tool_calls],
+            "thinking_truncated": getattr(response, "thinking_truncated", False),
         })
         if self.show_thinking:
             calls = ", ".join(f"{tc.name}({json.dumps(tc.arguments)})" for tc in response.tool_calls) or "none"
@@ -437,6 +455,26 @@ class Agent:
             + [u for c in self.last_trace["tool_calls"] for u in c.get("evidence_urls", [])]
         ).lower()
         return [i for i in dict.fromkeys(items) if i.lower() not in haystack]
+
+    @staticmethod
+    def _is_none_answer(text: str, context: dict) -> bool:
+        """A string or multiple-choice answer that says there is nothing."""
+        if context["answer_format"] not in ("string_match", "multiple_choice"):
+            return False
+        return (text or "").strip().strip(".").lower() in ("none", "not applicable", "n/a", "no approved therapy")
+
+    def _uncalled_recommended(self, context: dict, tried: set[str]) -> list[str]:
+        priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
+        return [t for t in priority if t in self.tools and t not in tried]
+
+    @staticmethod
+    def _none_reminder(uncalled: list[str]) -> str:
+        return (
+            "You answered None, but the recommended tools for this question have not all been "
+            f"consulted: {', '.join(uncalled)}. A fact absent from the sources you read is not "
+            "evidence of absence. Call one of them, choosing the arguments from the patient record "
+            "and the question, or confirm None if the evidence you have already rules the alternatives out."
+        )
 
     def _unverified_term_reminder(self, terms: list[str], context: dict, tried: set[str]) -> str:
         """One message naming the unverified term(s) and the recommended tools not yet called."""

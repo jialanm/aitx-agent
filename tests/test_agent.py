@@ -849,3 +849,57 @@ class TestUnverifiedTerms:
 
         assert loop_events(trace) == []
 
+
+class TestNoneReminder:
+    """A None answer while a recommended tool is uncalled gets one reminder naming the
+    tools; the model decides (32B run 2026-10-13, AITX-00007 never called GeneReviews)."""
+
+    def _run(self, monkeypatch, turns, category="Established_Targeted"):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.31169542_31169543delinsTA", gene_symbol="DMD"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00007"
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3", "variant_cdna": "c.10453_10454delinsTA",
+                                         "variant_protein": "p.(Leu3485Ter)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": category, "answer_format": "string_match",
+                            "prompt": "Which targeted therapy applies? Provide the generic name or None.", "date_submitted": "2025-08-01"}
+        tools = [TestUnverifiedTerms._GR(), TestUnverifiedTerms._PubMed()]
+        agent = Agent(model=None, tokenizer=None, tools=tools)
+        return agent.run(TaskInput(**task)), agent.last_trace
+
+    def test_none_with_an_uncalled_recommended_tool_is_challenged_once(self, monkeypatch):
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        output, trace = self._run(monkeypatch, [
+            call("search_pubmed", query="DMD"),
+            say("None"),                                   # GeneReviews, first in the order, never called
+            call("search_genereviews", gene="DMD"),        # the model chooses to call it
+            say("antisense oligonucleotide"),
+        ])
+
+        assert output.response == "antisense oligonucleotide"
+        assert loop_events(trace) == ["none_reminder:search_genereviews"]
+        assert "search_genereviews" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+
+    def test_none_repeated_after_the_reminder_stands_and_is_recorded(self, monkeypatch):
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        output, trace = self._run(monkeypatch, [call("search_pubmed", query="DMD"), say("None"), say("None")])
+
+        assert output.response == "None"
+        assert loop_events(trace) == ["none_reminder:search_genereviews", "none_reminder_ignored"]
+
+    def test_none_after_every_recommended_tool_is_accepted_silently(self, monkeypatch):
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        output, trace = self._run(monkeypatch, [
+            call("search_genereviews", gene="DMD"), call("search_pubmed", query="DMD"), say("None"),
+        ])
+
+        assert output.response == "None"
+        assert loop_events(trace) == []
+
