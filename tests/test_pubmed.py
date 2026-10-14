@@ -71,3 +71,16 @@ def test_max_results_is_clamped_to_ten(recorded):
     PubMedTool().execute(query="GRIN2B loss of function L-serine", max_results=50)
 
     assert recorded[0][1]["retmax"] == 10
+
+
+def test_gene_mention_count_shows_whether_the_results_are_on_topic(recorded):
+    on_topic, _ = PubMedTool().execute(query="GRIN2B loss of function L-serine", gene="GRIN2B")
+    assert "Articles mentioning GRIN2B in title or abstract: 5 of 5" in on_topic
+
+    # The same recorded articles against another gene: the count says the set missed.
+    off_topic, _ = PubMedTool().execute(query="GRIN2B loss of function L-serine", gene="ANO10")
+    assert "Articles mentioning ANO10 in title or abstract: 0 of 5" in off_topic
+
+    without, _ = PubMedTool().execute(query="GRIN2B loss of function L-serine")
+    assert "Articles mentioning" not in without
+

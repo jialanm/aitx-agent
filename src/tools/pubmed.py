@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 import logging
 import xml.etree.ElementTree as ET
 
@@ -63,6 +65,14 @@ class PubMedTool(BaseTool):
                             "type": "integer",
                             "description": "Maximum number of articles (default 5, max 10)",
                         },
+                        "gene": {
+                            "type": "string",
+                            "description": (
+                                "The patient's gene symbol. When given, the result says how many of "
+                                "the returned articles mention it in their title or abstract, so a "
+                                "query that drifted to other topics is visible before you read on."
+                            ),
+                        },
                     },
                     "required": ["query"],
                 },
@@ -71,6 +81,7 @@ class PubMedTool(BaseTool):
 
     def execute(self, **kwargs) -> tuple[str, list[EvidenceRecord]]:
         query = kwargs.get("query", "")
+        gene = (kwargs.get("gene") or "").strip()
         max_results = max(1, min(int(kwargs.get("max_results") or 5), MAX_RESULTS))
         evidence: list[EvidenceRecord] = []
 
@@ -98,7 +109,16 @@ class PubMedTool(BaseTool):
                 logger.warning(f"PubMed efetch returned no parsable articles for ids {id_list}")
                 return f"PubMed search '{query}' found {total} articles but their records could not be read.", evidence
 
-            parts = [f"PubMed search: {query}\nTotal results: {total}; showing {len(articles)} with abstracts\n"]
+            header = f"PubMed search: {query}\nTotal results: {total}; showing {len(articles)} with abstracts"
+            if gene:
+                # A count, not a judgment: a result set that never names the
+                # gene is one the model should notice before reasoning from
+                # it (32B run 1, AITX-00012: five gastric-cancer abstracts
+                # were read as support for a GRIN2B answer).
+                pat = re.compile(r"(?<![A-Za-z0-9])" + re.escape(gene) + r"(?![A-Za-z0-9])", re.I)
+                n = sum(1 for a in articles if pat.search(a["title"] or "") or pat.search(a["abstract"] or ""))
+                header += f"\nArticles mentioning {gene} in title or abstract: {n} of {len(articles)}"
+            parts = [header + "\n"]
             for a in articles:
                 url = PUBMED_WEB.format(pmid=a["pmid"])
                 evidence.append(EvidenceRecord(url=url))
