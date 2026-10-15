@@ -1,7 +1,7 @@
 ---
 title: AI-Tx Challenge
 sdk: gradio
-sdk_version: "4.44.1"
+sdk_version: "6.28.0"
 app_file: app.py
 license: apache-2.0
 ---
@@ -12,12 +12,14 @@ ReAct agent built on Qwen3-8B for the [AI-Tx Challenge](https://aitxchallenge.or
 Tier 1 (open weights). Given a rare disease patient's genotype and clinical context, the agent
 retrieves evidence from live biomedical APIs and answers with verifiable source URLs.
 
-**Status (September 2026).** The code implements the challenge's Phase 1
-question-answering task, which closed on June 30, 2026. The final task,
-[Actionability Report Generation](https://aitxchallenge.org/#markdown-report-template),
-takes the same patient input without a question and returns a structured markdown
-report. That task is not implemented yet. No accuracy numbers are claimed here;
-see the evaluation section.
+**Status (October 2026).** The code implements the challenge's Phase 1
+question-answering task, which closed on June 30, 2026, and a first version of
+the final task, [Actionability Report Generation](https://aitxchallenge.org/#markdown-report-template),
+which takes the same patient input without a question and returns a structured
+markdown report. The report is built as a chain of goals, one short conversation
+per report subsection; goal 1 (existing targeted therapies) is implemented and
+the other subsections state that they are not yet assessed. No accuracy numbers
+are claimed here; see the evaluation section.
 
 ## How it works
 
@@ -69,20 +71,29 @@ installs from it; `pyproject.toml` is the source of truth.
 
 ## API
 
-The Gradio app exposes one named endpoint, `/predict`, which takes and returns
-JSON strings. With `gradio_client`:
+The Gradio app exposes two named endpoints that take and return JSON strings.
+With `gradio_client`:
 
 ```python
 from gradio_client import Client
 
 client = Client("http://localhost:7860")
-output_json = client.predict(input_json, api_name="/predict")
+report_json = client.predict(patient_json, api_name="/actionability_report")  # final task
+output_json = client.predict(input_json, api_name="/predict")                 # Phase 1 QA
 ```
 
-Input follows the Phase 1 task schema: `id`, `patient` (`genotype` list and
-`clinical_context`), and `question` (`category`, `answer_format`, `prompt`,
-`date_submitted`). Output is `id`, `response`, and an `evidence` list of
-`source`, `time_accessed`, and `justification` records.
+`/actionability_report` takes `id` and `patient` (`genotype` list and
+`clinical_context`) and returns `id` and `report_markdown`, with the template's
+sections in order. Each subsection is built by one goal: a short conversation
+with its own tools, whose patient arguments the harness fixes, ending in a JSON
+list of records; a record is kept only if its source URL came from a tool in that
+goal, its quote is verbatim in that source's text, and a second model call
+judges that the quote supports the claim. Every verdict is in the trace.
+
+`/predict` follows the Phase 1 task schema: `id`, `patient`, and `question`
+(`category`, `answer_format`, `prompt`, `date_submitted`); it returns `id`,
+`response`, and an `evidence` list of `source`, `time_accessed`, and
+`justification` records.
 
 ## Evaluation
 
