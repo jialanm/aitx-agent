@@ -280,7 +280,7 @@ class TestTrace:
         assert loop_events(agent.last_trace) == ["evidence_reminder"]
         assert [c["origin"] for c in agent.last_trace["tool_calls"]] == ["model"]
         assert agent.last_trace["tool_calls"][0]["arguments"] == {"gene": "CFTR", "variant": "c.1521_1523del"}
-        reminder = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "looking anything up" in m["content"])
+        reminder = next(m for m in agent.last_trace["messages"] if m["role"] == "system" and "looking anything up" in m["content"])
         assert "recommended first tool for this question is search_clinvar" in reminder["content"]
 
     def test_reminder_ignored_is_recorded_and_the_answer_accepted(self, monkeypatch):
@@ -354,7 +354,7 @@ class TestEmptyResultNotice:
         agent.run(TaskInput(**TestTrace.TASK))
 
         assert "empty_result_notice" not in agent.last_trace["events"]
-        assert not any("returned no evidence" in m["content"] for m in agent.last_trace["messages"] if m["role"] == "user")
+        assert not any("returned no evidence" in m["content"] for m in agent.last_trace["messages"] if m["role"] == "system")
 
     def test_notice_names_the_next_untried_tool_and_model_writes_the_call(self, monkeypatch):
         import src.agent as agent_module
@@ -375,7 +375,7 @@ class TestEmptyResultNotice:
         assert output.response == "Yes"
         assert loop_events(agent.last_trace) == ["empty_result_notice"]
         assert [(c["tool"], c["origin"]) for c in agent.last_trace["tool_calls"]] == [("search_genereviews", "model"), ("search_clinvar", "model")]
-        notice = next(m for m in agent.last_trace["messages"] if m["role"] == "user" and "returned no evidence" in m["content"])
+        notice = next(m for m in agent.last_trace["messages"] if m["role"] == "system" and "returned no evidence" in m["content"])
         assert "next recommended tool for this question is search_clinvar" in notice["content"]
 
 
@@ -817,7 +817,7 @@ class TestUnverifiedTerms:
 
         assert output.response == "Ataluren"
         assert loop_events(trace) == ["unverified_term:Ataluren", "unverified_term_verified:Ataluren"]
-        reminders = "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+        reminders = "".join(m["content"] for m in trace["messages"] if m["role"] == "system")
         assert "appears in no tool result" in reminders and "search_pubmed" in reminders
         assert "abbreviation or a code" not in reminders   # the code hint is for multiple-choice options only
 
@@ -843,7 +843,7 @@ class TestUnverifiedTerms:
 
         assert output.response == "GRD"
         assert loop_events(trace) == ["unverified_term:GRD", "unverified_term_kept:GRD"]
-        reminder = next(m["content"] for m in trace["messages"] if m["role"] == "user" and "appears in no tool result" in m["content"])
+        reminder = next(m["content"] for m in trace["messages"] if m["role"] == "system" and "appears in no tool result" in m["content"])
         assert "abbreviation or a code" in reminder and "search PubMed for it together with the gene" in reminder
 
     def test_drug_named_on_the_last_turn_is_settled_without_a_reminder(self, monkeypatch):
@@ -910,7 +910,7 @@ class TestNoneReminder:
 
         assert output.response == "antisense oligonucleotide"
         assert loop_events(trace) == ["none_reminder:search_genereviews"]
-        assert "search_genereviews" in "".join(m["content"] for m in trace["messages"] if m["role"] == "user")
+        assert "search_genereviews" in "".join(m["content"] for m in trace["messages"] if m["role"] == "system")
 
     def test_none_repeated_after_the_reminder_stands_and_is_recorded(self, monkeypatch):
         call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say

@@ -157,7 +157,7 @@ class Agent:
                     reminded = True
                     self.last_trace["events"].append("evidence_reminder")
                     messages.append({"role": "assistant", "content": response.raw})
-                    messages.append({"role": "user", "content": self._evidence_reminder(context)})
+                    messages.append(self._harness_message(self._evidence_reminder(context)))
                     continue
                 if not all_evidence and reminded and "reminder_ignored" not in self.last_trace["events"]:
                     # Told once, still no lookup: accept the answer, record it, no loop.
@@ -176,7 +176,7 @@ class Agent:
                     term_reminded.extend(unverified)
                     self.last_trace["events"].append("unverified_term:" + ",".join(unverified))
                     messages.append({"role": "assistant", "content": response.raw})
-                    messages.append({"role": "user", "content": self._unverified_term_reminder(unverified, context, tried)})
+                    messages.append(self._harness_message(self._unverified_term_reminder(unverified, context, tried)))
                     continue
 
                 # A None answer while a recommended tool for the category has
@@ -190,7 +190,7 @@ class Agent:
                     none_reminded = True
                     self.last_trace["events"].append("none_reminder:" + ",".join(uncalled))
                     messages.append({"role": "assistant", "content": response.raw})
-                    messages.append({"role": "user", "content": self._none_reminder(uncalled)})
+                    messages.append(self._harness_message(self._none_reminder(uncalled)))
                     continue
                 if none_reminded and self._is_none_answer(response.text, context):
                     self.last_trace["events"].append("none_reminder_ignored")
@@ -199,14 +199,11 @@ class Agent:
                 if not response.text and response.thinking and all_evidence:
                     logger.warning("Empty answer after think-loop, re-prompting...")
                     self.last_trace["events"].append("empty_answer_retry")
-                    messages.append({
-                        "role": "user",
-                        "content": (
-                            "You already have tool results above. "
-                            "Respond with ONLY the answer — no reasoning, no explanation. "
-                            "Just the answer."
-                        ),
-                    })
+                    messages.append(self._harness_message(
+                        "You already have tool results above. "
+                        "Respond with ONLY the answer — no reasoning, no explanation. "
+                        "Just the answer."
+                    ))
                     # Generate with thinking disabled to avoid another loop
                     retry_response = generate(
                         self.model,
@@ -275,7 +272,7 @@ class Agent:
             ):
                 self.last_trace["events"].append("empty_result_notice")
                 tried.update(tc.name for tc in response.tool_calls)
-                messages.append({"role": "user", "content": self._empty_result_notice(context, tried)})
+                messages.append(self._harness_message(self._empty_result_notice(context, tried)))
 
             # The last iteration ended in a tool call, so its result would go
             # unread (32B rerun, 2026-10-13, AITX-00001: the eteplirsen label
@@ -284,13 +281,10 @@ class Agent:
             # start another lookup.
             if iteration == MAX_ITERATIONS - 1:
                 self.last_trace["events"].append("final_answer_turn")
-                messages.append({
-                    "role": "user",
-                    "content": (
-                        "No further tool calls are possible. Answer now from the tool results above, "
-                        "in the required format, or answer None if they do not support an answer."
-                    ),
-                })
+                messages.append(self._harness_message(
+                    "No further tool calls are possible. Answer now from the tool results above, "
+                    "in the required format, or answer None if they do not support an answer."
+                ))
                 last = generate(self.model, self.tokenizer, messages, tools=None)
                 self._record_turn("final_answer", iteration + 1, last)
                 final_text = last.text or response.text or "Unable to determine answer."
@@ -513,6 +507,20 @@ class Agent:
             "record and the question. " + code_hint + where + "Then answer from the evidence you have."
         )
 
+    @staticmethod
+    def _harness_message(text: str) -> dict:
+        """A notice from the harness, as a system message.
+
+        Qwen3's template drops the thinking of every assistant turn before
+        the last user message; a notice sent as a user message cut the
+        model off from its own reasoning at exactly the moment it was being
+        asked to reconsider (32B run 3, 2026-10-13: reversals at reminders,
+        and the model calling its earlier answer "the user's"). A system
+        message is rendered as a system turn and leaves the thinking in
+        place (checked against the template 2026-10-15).
+        """
+        return {"role": "system", "content": text}
+
     def _evidence_reminder(self, context: dict) -> str:
         """One message telling the model a lookup is required and which tool is recommended first."""
         priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
@@ -616,14 +624,11 @@ class Agent:
             "string_match": "Respond with a concise, exact term.",
         }.get(answer_format, "Respond concisely.")
 
-        retry_messages = messages + [{
-            "role": "user",
-            "content": (
-                f"Your previous answer was invalid. {format_hint} "
-                "Use the tool results already provided. "
-                "Respond with ONLY the answer — nothing else."
-            ),
-        }]
+        retry_messages = messages + [self._harness_message(
+            f"Your previous answer was invalid. {format_hint} "
+            "Use the tool results already provided. "
+            "Respond with ONLY the answer — nothing else."
+        )]
 
         try:
             response = generate(

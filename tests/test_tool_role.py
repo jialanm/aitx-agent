@@ -43,3 +43,33 @@ def test_qwen_template_keeps_thinking_across_tool_turns_with_the_tool_role():
 
     assert rendered(history(tool_role=False)).count("reasoning ") == 1   # only the last turn survives
     assert rendered(history(tool_role=True)).count("reasoning ") == 4    # every turn survives
+
+
+def test_harness_notices_carry_the_system_role():
+    from src.agent import Agent
+    msg = Agent._harness_message("You answered without looking anything up.")
+    assert msg == {"role": "system", "content": "You answered without looking anything up."}
+
+
+@pytest.mark.slow
+def test_qwen_template_keeps_thinking_across_a_system_role_reminder():
+    from transformers import AutoTokenizer
+    tok = AutoTokenizer.from_pretrained("Qwen/Qwen3-8B")
+
+    def turn(i, final=False):
+        body = f"<think>\nreasoning {i}\n</think>\n\n"
+        body += "Answer" if final else '<tool_call>\n{"name": "x", "arguments": {}}\n</tool_call>'
+        return {"role": "assistant", "content": body}
+
+    def history(role):
+        return [{"role": "system", "content": "sys"}, {"role": "user", "content": "q"},
+                turn(1), {"role": "tool", "content": "r1"}, turn(2),
+                {"role": role, "content": "You answered None; a recommended tool is uncalled."},
+                turn(3), {"role": "tool", "content": "r3"}, turn(4, final=True)]
+
+    def rendered(msgs):
+        return tok.apply_chat_template(msgs, tokenize=False, add_generation_prompt=True, enable_thinking=True)
+
+    assert rendered(history("user")).count("reasoning ") == 2    # the reminder cut turns 1 and 2
+    assert rendered(history("system")).count("reasoning ") == 4  # nothing cut
+
