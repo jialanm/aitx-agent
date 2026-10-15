@@ -262,7 +262,7 @@ class TestTrace:
         assert recorded["summary"] == "one record"
         assert recorded["seconds"] >= 0
         assert trace["messages"][0]["role"] == "system"
-        assert any(m["role"] == "user" and "one record" in m["content"] for m in trace["messages"])
+        assert any(m["role"] == "tool" and "one record" in m["content"] for m in trace["messages"])
 
     def test_answer_without_lookup_gets_one_reminder_and_the_model_writes_the_call(self, monkeypatch):
         # Turn 1: the model answers without a tool. Turn 2, after the reminder: it calls

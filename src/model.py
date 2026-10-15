@@ -326,6 +326,10 @@ def _build_chat_text_fallback(
         for msg in messages:
             role = msg["role"]
             content = msg.get("content", "")
+            if role == "tool":
+                # ChatML has no tool role; Qwen renders tool results as a
+                # user turn carrying <tool_response> tags.
+                role, content = "user", f"<tool_response>\n{content}\n</tool_response>"
             text += f"<|im_start|>{role}\n{content}<|im_end|>\n"
         text += "<|im_start|>assistant\n"
 
@@ -355,12 +359,18 @@ def _build_chat_text_fallback(
 
 
 def format_tool_result(tool_name: str, result_text: str) -> dict:
-    """Format a tool result as a message for the conversation.
+    """A tool result as a message with the tool role.
 
-    Tries the 'tool' role first, falls back to wrapping in a user message.
+    Qwen3's chat template keeps the thinking of every assistant turn after
+    the last real user message and drops the thinking before it; a tool
+    result sent as a user message counted as a real user message, so each
+    lookup cut the model off from its own earlier reasoning (March 2026
+    design "for compatibility"; found 2026-10-15 by rendering run 3's
+    history: one of four thinking blocks survived). With the tool role the
+    template wraps the result in <tool_response> tags and keeps the
+    thinking across the question's tool turns.
     """
-    # Use a user message with tool result prefix for maximum compatibility
     return {
-        "role": "user",
+        "role": "tool",
         "content": f"[Tool Result: {tool_name}]\n{result_text}",
     }
