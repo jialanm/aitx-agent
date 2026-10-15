@@ -395,6 +395,66 @@ class Agent:
                 flush=True,
             )
 
+    def converse(
+        self,
+        system_prompt: str,
+        user_message: str,
+        tools: list[BaseTool],
+        max_turns: int = MAX_ITERATIONS,
+        kind: str = "goal",
+    ) -> tuple[str, list[EvidenceRecord]]:
+        """One short conversation with its own tool set: the unit of the
+        report chain (decided 2026-10-15). Same loop as the question
+        answerer, with the evidence reminder, tool results in the tool role,
+        harness notices in the system role, and an answer-only turn when the
+        last turn ends in a tool call. Tool calls go to self.last_trace, so
+        the caller sets that up. Returns (final text, evidence the model
+        retrieved)."""
+        by_name = {t.name: t for t in tools}
+        schemas = [t.schema() for t in tools]
+        messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_message}]
+        evidence: list[EvidenceRecord] = []
+        reminded = False
+        response = None
+        for turn in range(max_turns):
+            response = generate(self.model, self.tokenizer, messages, tools=schemas)
+            self._record_turn(kind, turn + 1, response)
+            if not response.tool_calls:
+                if not evidence and not reminded and turn < max_turns - 1:
+                    reminded = True
+                    self.last_trace["events"].append("evidence_reminder")
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append(self._harness_message(
+                        "You answered without looking anything up. Evidence from a tool is required; "
+                        "call the tool that fits, choosing the arguments from the patient record. Then answer."
+                    ))
+                    continue
+                self.last_trace["messages"].extend(messages)
+                return response.text, evidence
+            messages.append({"role": "assistant", "content": response.raw})
+            for tc in response.tool_calls:
+                tool = by_name.get(tc.name)
+                if tool is None:
+                    self.last_trace["events"].append(f"unknown_tool:{tc.name}")
+                    messages.append(format_tool_result(tc.name, f"Error: unknown tool '{tc.name}'. Available: {list(by_name)}"))
+                    continue
+                try:
+                    summary, found = self._call_tool(tool, tc.name, tc.arguments, "model")
+                    evidence.extend(found)
+                except Exception as e:
+                    logger.error(f"Tool execution error: {e}")
+                    summary = f"Error executing {tc.name}: {e}"
+                messages.append(format_tool_result(tc.name, summary))
+        # Every turn called a tool: read the last result and answer.
+        self.last_trace["events"].append("final_answer_turn")
+        messages.append(self._harness_message(
+            "No further tool calls are possible. Answer now from the tool results above, in the required format."
+        ))
+        last = generate(self.model, self.tokenizer, messages, tools=None)
+        self._record_turn("final_answer", max_turns, last)
+        self.last_trace["messages"].extend(messages)
+        return last.text or (response.text if response else ""), evidence
+
     def _call_tool(
         self,
         tool: BaseTool,

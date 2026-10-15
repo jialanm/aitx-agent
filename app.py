@@ -105,8 +105,25 @@ def predict(input_json: str) -> str:
         return error_output.model_dump_json(indent=2)
 
 
+def actionability_report(input_json: str) -> str:
+    """The final task's endpoint: a patient in, a markdown report out."""
+    from src.report import ReportBuilder
+    from src.schemas import ReportInput, ReportOutput
+    try:
+        report_input = ReportInput(**json.loads(input_json))
+    except Exception as e:
+        logger.error(f"Report input error: {e}")
+        return json.dumps({"id": "error", "report_markdown": f"Invalid input: {e}"}, indent=2)
+    try:
+        output = ReportBuilder(get_agent()).build(report_input)
+        return output.model_dump_json(indent=2)
+    except Exception as e:
+        logger.error(f"Report error: {e}\n{traceback.format_exc()}")
+        return ReportOutput(id=report_input.id, report_markdown=f"Report generation failed: {e}").model_dump_json(indent=2)
+
+
 # Build Gradio interface
-demo = gr.Interface(
+qa_demo = gr.Interface(
     fn=predict,
     inputs=gr.Textbox(
         label="Input JSON",
@@ -126,6 +143,18 @@ demo = gr.Interface(
     ),
     api_name="predict",
 )
+
+report_demo = gr.Interface(
+    fn=actionability_report,
+    inputs=gr.Textbox(label="Patient JSON", placeholder='{"id": ..., "patient": {"genotype": [...], "clinical_context": ...}}', lines=16),
+    outputs=gr.Textbox(label="Report JSON", lines=30),
+    title="AI-Tx Challenge: Therapeutic Actionability Report",
+    description="The final task's endpoint, /actionability_report: a patient's genotype and clinical context in, "
+                "{id, report_markdown} out, built as a chain of goals with every claim checked against its source.",
+    api_name="actionability_report",
+)
+
+demo = gr.TabbedInterface([report_demo, qa_demo], ["Actionability report", "Phase 1 QA"])
 
 if __name__ == "__main__":
     # Pre-load the agent

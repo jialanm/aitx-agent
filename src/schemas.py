@@ -41,3 +41,15 @@ class TaskOutput(BaseModel):
     id: str
     response: str
     evidence: list[EvidenceItem] = Field(default_factory=list)
+
+
+class ReportInput(BaseModel):
+    """Final-task input: a patient, no question."""
+
+    id: str
+    patient: Patient
+
+
+class ReportOutput(BaseModel):
+    id: str
+    report_markdown: str
