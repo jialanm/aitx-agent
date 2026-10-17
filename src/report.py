@@ -80,7 +80,9 @@ GOALS = [
             "or modify because of the variant or disease, including anesthesia risks and clinically relevant "
             "drug interactions. Surveillance and monitoring are excluded, and so is any therapy already "
             "recorded as an established targeted therapy. The disease chapter's management text is the "
-            "primary source; one record per agent or procedure, with kind 'supportive' or 'avoid'."
+            "primary source. If the clinical context names medications the patient takes, fetch each one's "
+            "label and record any interaction or warning that the disease or an established therapy makes "
+            "relevant. One record per agent or procedure, with kind 'supportive' or 'avoid'."
         ),
         "fields": {
             "agent": "drug, procedure or measure",
@@ -126,14 +128,17 @@ GOALS = [
             "a published report of the compound given to a patient with the same gene, disease or variant "
             "context: if one exists, human_precedent is 'yes' and the record belongs under off-label use, with "
             "that report as its source; if none exists, 'no' and it belongs under drug repurposing, with the "
-            "underlying facts as its source and the reasoning that links them. The PHAROS drug list is measured "
-            "activity at the protein in any direction, not a treatment lead."
+            "underlying facts as its source and the reasoning that links them. Also search PubMed for the disease "
+            "with 'treatment' or 'case report', without a compound in mind: a therapy with a published human "
+            "report may act on the pathway rather than the protein and would not appear in PHAROS. The PHAROS "
+            "drug list is measured activity at the protein in any direction, not a treatment lead."
         ),
         "fields": {
             "compound": "generic name",
             "mechanism": "how it acts on the protein or pathway, and the direction",
             "human_precedent": "yes | no",
             "rationale": "why it fits this variant's effect, as the sources state it",
+            "outcome_measure": "the objective, age-appropriate metric a source uses for this compound's safety or efficacy, as stated, or 'none stated'",
         },
         "label": "compound",
         "claim": "{compound} ({mechanism}) is a candidate for this variant; human precedent: {human_precedent}; {rationale}",
@@ -157,6 +162,7 @@ GOALS = [
             "strategy": "splice correction | exon skipping | transcript knockdown | gene replacement | other: <name>",
             "verdict": "eligible | likely eligible | unlikely eligible | not eligible | unable to assess",
             "basis": "the criterion that decides the verdict, as the source states it",
+            "outcome_measure": "the readout a source names for judging this strategy's effect (transcript, protein or clinical), as stated, or 'none stated'",
         },
         "label": "strategy",
         "claim": "{strategy} is {verdict} for this variant because {basis}",
@@ -433,21 +439,25 @@ class ReportBuilder:
     def _outcome_measures(filled: dict[str, list[dict]]) -> str:
         """Tier 3's last subsection, written by code from the Tier 3 records:
         the hypothesised actions ranked by a stated rule, each with the
-        safety considerations its modality carries."""
+        measure its own source names and the safety considerations its
+        modality carries."""
         order = {"eligible": 0, "likely eligible": 1, "unlikely eligible": 3, "unable to assess": 4, "not eligible": 5}
+
+        def measure(r):
+            m = str(r.get("outcome_measure") or "").strip()
+            return m if m and m.lower() != "none stated" else "no metric stated by the sources; one must be defined before use"
+
         hyp = []
         for r in filled.get("Bespoke Therapies", []):
             rank = order.get(str(r.get("verdict", "")).strip().lower(), 4)
             if rank <= 1:
                 hyp.append((rank, f"{r.get('strategy')} (bespoke; {r.get('verdict')})",
-                            "safety: delivery route, dosing and off-target effects assessed per the N1C guidelines' "
-                            "preclinical requirements before first use; efficacy: the transcript or protein readout the "
-                            "strategy targets, then an age-appropriate clinical measure of the presenting features"))
+                            f"efficacy: {measure(r)}; safety: delivery route, dosing and off-target effects assessed per "
+                            "the N1C guidelines' preclinical requirements before first use"))
         for r in filled.get("Drug Repurposing", []):
             hyp.append((2, f"{r.get('compound')} (repurposing; no human precedent)",
-                        "safety: the compound's existing label and dose range, with age-appropriate monitoring; efficacy: "
-                        "a disease-specific biomarker and an age-appropriate clinical measure, after testing in a model "
-                        "of the variant"))
+                        f"efficacy: {measure(r)}; safety: the compound's existing label and dose range with "
+                        "age-appropriate monitoring, after testing in a model of the variant"))
         if not hyp:
             return ("No hypothesized action was recorded in Tier 3, so no outcome measures are proposed; established "
                     "and emerging actions are measured by the endpoints of their own labels and trials.")

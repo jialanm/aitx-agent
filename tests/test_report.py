@@ -121,9 +121,11 @@ TRIAL_REC = record(nct_id="NCT00000001", title="A study of X in PH1", status="RE
                    eligibility="conditional: If eGFR is 30 or above, then eligible; otherwise excluded",
                    source_url=TRIAL_URL, quote="* eGFR below 30 mL/min/1.73 m2", reasoning="the record gives chronic kidney disease but no eGFR")
 REPURP = record(compound="compound-x", mechanism="raises AGT activity", human_precedent="no",
-                rationale="loss of function needs activity raised", source_url="https://pharos.nih.gov/targets/P21549",
+                rationale="loss of function needs activity raised", outcome_measure="urinary oxalate excretion",
+                source_url="https://pharos.nih.gov/targets/P21549",
                 quote="PHAROS target AGXT: no approved drugs", reasoning="no approved drug acts on AGT; a chaperone would raise activity")
 BESPOKE = record(strategy="exon skipping", verdict="not eligible", basis="the variant is in the first coding exon",
+                 outcome_measure="none stated",
                  source_url=N1C_URL, quote="it is the first coding exon", reasoning="the patient block places c.33dup in exon 1 of 11")
 
 SUPPORTED = say("SUPPORTED\nStated in the source.")
@@ -184,7 +186,7 @@ def test_summary_states_conditional_actions_and_outcome_measures_rank_tier3(scri
     assert "NCT00000001 (conditional: If eGFR is 30 or above, then eligible; otherwise excluded)" in summary
     assert "Conditional actions, depending on information not in the patient record: Clinical Trial Eligibility, NCT00000001: If eGFR is 30 or above" in summary
     assert "Ranking rule:" in outcomes
-    assert "1. compound-x (repurposing; no human precedent)" in outcomes           # not-eligible bespoke is not ranked
+    assert "1. compound-x (repurposing; no human precedent). Outcome measures: efficacy: urinary oxalate excretion;" in outcomes
     assert "exon skipping" not in outcomes
 
 
