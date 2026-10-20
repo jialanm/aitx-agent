@@ -1,6 +1,6 @@
 """Build one actionability report and write its trace.
 
-Usage: uv run python scripts/debug_report.py path/to/patient.json [--model ID --precision bf16|nf4|fp8] [--show-thinking]
+Usage: uv run python scripts/debug_report.py path/to/patient.json [--model ID --precision bf16|nf4|fp8] [--show-thinking] [--tag v3]
 Writes the report markdown and the trace beside the input file.
 """
 
@@ -38,6 +38,7 @@ def main() -> None:
     parser.add_argument("--model", default=MODEL_ID)
     parser.add_argument("--precision", default="bf16", choices=sorted(PRECISIONS))
     parser.add_argument("--show-thinking", action="store_true")
+    parser.add_argument("--tag", default="", help="Run label put into the output file names, e.g. v3, so reruns do not overwrite")
     args = parser.parse_args()
 
     report_input = ReportInput(**json.loads(Path(args.patient_json).read_text()))
@@ -48,7 +49,7 @@ def main() -> None:
     agent = Agent(model, tokenizer, tools, show_thinking=args.show_thinking)
     output = ReportBuilder(agent).build(report_input)
 
-    stem = Path(args.patient_json).with_suffix("")
+    stem = str(Path(args.patient_json).with_suffix("")) + (f"_{args.tag}" if args.tag else "")
     Path(f"{stem}_report.md").write_text(output.report_markdown)
     Path(f"{stem}_trace.json").write_text(json.dumps(agent.last_trace, indent=2, default=str))
     print(output.report_markdown)
