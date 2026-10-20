@@ -193,9 +193,9 @@ def test_summary_states_conditional_actions_and_outcome_measures_rank_tier3(scri
 def test_source_check_and_evaluator_drop_records(scripted):
     bad_url = LUMASIRAN.replace(LABEL_URL, "https://example.org/made-up")
     builder, agent, _, _ = scripted([
-        call("search_fda_labels", drug="lumasiran"), say(bad_url),                       # goal 1: URL not from a tool
+        call("search_fda_labels", drug="lumasiran"), say(bad_url), say("NOT SUPPORTED\nThe quote names the drug only."),  # goal 1: URL replaced, evaluator rejects
         call("search_genereviews"), say(SUPPORTIVE.replace("Goal is to reduce stone formation", "Goal is to cure")),  # record 1 quote wrong
-        SUPPORTED, say("NOT SUPPORTED\nThe quote names the drug only."),                 # evaluator: loop diuretics ok, lumasiran not
+        SUPPORTED, SUPPORTED,                                                              # evaluator: loop diuretics, lumasiran-repeat (then dropped as a repeat? no: tier 1 is empty)
         call("search_clinical_trials", query="AGXT"), say("[]"),
         call("query_pharos"), say("[]"),
         call("n1c_aso_guidelines"), say("[]"),
@@ -204,11 +204,14 @@ def test_source_check_and_evaluator_drop_records(scripted):
     md = builder.build(PATIENT).report_markdown
     events = agent.last_trace["events"]
 
-    assert "record_dropped:no_source:lumasiran" in events
+    # The lumasiran record cited a made-up URL but its quote is verbatim in the label the
+    # tool returned, so the URL is replaced and the record goes on to the evaluator.
+    assert f"record_url_replaced:lumasiran:https://example.org/made-up->{LABEL_URL}" in events
     assert "record_dropped:quote_not_in_source:hydration" in events
-    assert "record_verdict:lumasiran:NOT_SUPPORTED" in events
+    assert "record_verdict:lumasiran:NOT_SUPPORTED" in events          # the evaluator then rejects it
     assert "None found. Sources consulted: " + LABEL_URL in md
     assert "**loop diuretics**" in md and "**hydration**" not in md
+    assert "record_verdict:lumasiran:SUPPORTED" in events               # goal 2's lumasiran record, no longer a repeat since Tier 1 is empty
 
 
 def test_prose_instead_of_json_gets_one_retry_and_a_failed_goal_does_not_lose_the_others(scripted, monkeypatch):
@@ -234,3 +237,37 @@ def test_prose_instead_of_json_gets_one_retry_and_a_failed_goal_does_not_lose_th
     assert "goal_failed:goal3_trials:registry down" in agent.last_trace["events"]
     assert "### Clinical Trial Eligibility\nNone found." in md
     assert "### Bespoke Therapies\nNone found." in md
+
+
+def test_multi_fragment_quote_is_verbatim_if_each_fragment_is(scripted):
+    frag = record(nct_id="NCT00000001", title="A study of X in PH1", status="RECRUITING",
+                  eligibility="conditional: If eGFR is 30 or above, then eligible; otherwise excluded",
+                  source_url=TRIAL_URL, quote="* Age 2 years and older ... * eGFR below 30 mL/min/1.73 m2", reasoning="")
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="lumasiran"), say("[]"), say("[]"),       # goal 1: [] then the empty-section reminder, [] again
+        call("search_genereviews"), say("[]"), say("[]"),
+        call("search_clinical_trials", query="AGXT"), call("search_clinical_trials", nct_id="NCT00000001"), say(frag), SUPPORTED,
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say("[]"), say("[]"),
+    ])
+
+    md = builder.build(PATIENT).report_markdown
+
+    assert "**NCT00000001**" in md
+    assert "empty_section_reminder:goal1_existing_targeted:search_genereviews,search_pubmed" in agent.last_trace["events"]
+
+
+def test_short_list_item_quote_is_accepted(scripted):
+    short = SUPPORTIVE.replace('"quote": "intake of vitamin C exceeding the recommended daily allowance; loop diuretics"', '"quote": "loop diuretics"')
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="lumasiran"), say(LUMASIRAN), SUPPORTED,
+        call("search_genereviews"), say(short), SUPPORTED, SUPPORTED,
+        call("search_clinical_trials", query="AGXT"), say("[]"), say("[]"),
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say("[]"), say("[]"),
+    ])
+
+    md = builder.build(PATIENT).report_markdown
+
+    assert "**loop diuretics**" in md
+

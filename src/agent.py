@@ -402,6 +402,7 @@ class Agent:
         tools: list[BaseTool],
         max_turns: int = MAX_ITERATIONS,
         kind: str = "goal",
+        require_evidence: bool = True,
     ) -> tuple[str, list[EvidenceRecord]]:
         """One short conversation with its own tool set: the unit of the
         report chain (decided 2026-10-15). Same loop as the question
@@ -420,7 +421,7 @@ class Agent:
             response = generate(self.model, self.tokenizer, messages, tools=schemas)
             self._record_turn(kind, turn + 1, response)
             if not response.tool_calls:
-                if not evidence and not reminded and turn < max_turns - 1:
+                if require_evidence and not evidence and not reminded and turn < max_turns - 1:
                     reminded = True
                     self.last_trace["events"].append("evidence_reminder")
                     messages.append({"role": "assistant", "content": response.raw})

@@ -80,7 +80,10 @@ GOALS = [
             "or modify because of the variant or disease, including anesthesia risks and clinically relevant "
             "drug interactions. Surveillance and monitoring are excluded, and so is any therapy already "
             "recorded as an established targeted therapy. The disease chapter's management text is the "
-            "primary source. If the clinical context names medications the patient takes, fetch each one's "
+            "primary source: its 'Supportive care' and 'Treatment of manifestations' sentences (hydration, "
+            "diet, crystallisation inhibitors, dialysis, transplantation of an organ damaged by the disease, "
+            "symptom control) are supportive records, and its 'Agents/circumstances to avoid' sentences are "
+            "avoid records. If the clinical context names medications the patient takes, fetch each one's "
             "label and record any interaction or warning that the disease or an established therapy makes "
             "relevant. One record per agent or procedure, with kind 'supportive' or 'avoid'."
         ),
@@ -303,8 +306,27 @@ class ReportBuilder:
             f"## Output\n{RECORD_FORMAT_NOTE.format(fields=fields)}\n\n{RULES}"
         )
         sections = " and ".join(goal["subsections"])
-        text, _ = self.agent.converse(system_prompt, f"Build the section: {sections}.", self._tools_for(goal, inputs), kind=goal["key"])
+        tools = self._tools_for(goal, inputs)
+        calls_before = len(self.agent.last_trace["tool_calls"])
+        text, _ = self.agent.converse(system_prompt, f"Build the section: {sections}.", tools, kind=goal["key"])
         records = self._parse_records(text)
+        if records == []:
+            # An empty section while a listed tool was never consulted (first
+            # live report, 2026-10-20: goal 4 returned [] after PHAROS and one
+            # PubMed query, never the disease-plus-treatment search). One
+            # reminder naming the uncalled tools; the model decides.
+            called = {c["tool"] for c in self.agent.last_trace["tool_calls"][calls_before:]}
+            uncalled = [t.name for t in tools if t.name not in called and t.name != "genetics_reference"]
+            if uncalled:
+                self.agent.last_trace["events"].append(f"empty_section_reminder:{goal['key']}:{','.join(uncalled)}")
+                text, _ = self.agent.converse(
+                    system_prompt + "\n\n## Harness notice\nYour previous reply for this section was [] before these tools were "
+                    f"consulted: {', '.join(uncalled)}. Call the ones that fit, then reply with the records found, or [] "
+                    "if the sources still give none.",
+                    f"Build the section: {sections}.", tools, kind=goal["key"] + "_after_reminder",
+                    require_evidence=False,  # the goal already looked things up; [] may stand
+                )
+                records = self._parse_records(text)
         if records is None:
             # One retry with thinking off, asking for the array alone.
             self.agent.last_trace["events"].append(f"records_unparsable:{goal['key']}")
@@ -337,10 +359,31 @@ class ReportBuilder:
 
     # ----- the checks -----
 
+    @staticmethod
+    def _quote_fragments(quote: str) -> list[str]:
+        """A quote may be several verbatim fragments joined by '...' or ' / '
+        (a trial's criteria, a chapter's list items); each must occur in the
+        source. Fragments shorter than 8 characters are ignored."""
+        parts = re.split(r"\s*(?:\.\.\.|…|\s/\s)\s*", quote or "")
+        return [f.strip().strip('"\u201c\u201d') for f in parts if len(f.strip()) >= 8]
+
+    @classmethod
+    def _fragments_in_text(cls, quote: str, text: str) -> bool:
+        frags = cls._quote_fragments(quote)
+        if not frags or Agent._is_adapter_boilerplate(quote):
+            return False
+        norm = lambda t: re.sub(r"\s+", " ", t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")).strip().lower()
+        hay = norm(text)
+        return all(norm(f).rstrip(".,;: ") in hay for f in frags)
+
     def _check_sources(self, goal: dict, records: list[dict], goal_calls: list[dict]) -> list[dict]:
-        """Keep a record only if its URL came from a tool in this goal and its
-        quote is verbatim in that source's text."""
-        urls = {u for c in goal_calls for u in c.get("evidence_urls", [])}
+        """Keep a record only if its quote is verbatim in the text of a tool
+        call made in this goal. The source is identified by the quote, not by
+        the URL string: the model rewrote DailyMed links as FDA PDF links and
+        a PMC link as its DOI (first live report, 2026-10-20), naming the
+        same documents. If the quote is found under a different URL than the
+        record cites, the URL is replaced by the tool's and the substitution
+        is logged; a record whose quote is in no tool text is dropped."""
         kept = []
         for r in records:
             url, quote = str(r.get("source_url") or ""), str(r.get("quote") or "")
@@ -348,15 +391,20 @@ class ReportBuilder:
             if not label:
                 self.agent.last_trace["events"].append(f"record_dropped:no_{goal['label']}")
                 continue
-            if url not in urls:
-                self.agent.last_trace["events"].append(f"record_dropped:no_source:{label}")
-                logger.warning(f"Record {label!r} cites {url!r}, which no tool returned in this goal")
-                continue
-            text = next((c.get("summary", "") for c in goal_calls if url in c.get("evidence_urls", [])), "")
-            if not Agent._quote_in_text(quote, text) or Agent._is_adapter_boilerplate(quote):
+            # Prefer the call whose URL the record cites; otherwise any call in this goal.
+            cited = [c for c in goal_calls if url in c.get("evidence_urls", [])]
+            others = [c for c in goal_calls if c not in cited]
+            match = next((c for c in cited + others if self._fragments_in_text(quote, c.get("summary", ""))), None)
+            if match is None:
                 self.agent.last_trace["events"].append(f"record_dropped:quote_not_in_source:{label}")
-                logger.warning(f"Record {label!r}: quote not found verbatim in {url}")
+                logger.warning(f"Record {label!r}: quote not found verbatim in any tool text of this goal")
                 continue
+            urls = match.get("evidence_urls", [])
+            if url not in urls:
+                replacement = urls[0] if len(urls) == 1 else next((u for u in urls if u == url), urls[0] if urls else "")
+                self.agent.last_trace["events"].append(f"record_url_replaced:{label}:{url}->{replacement}")
+                logger.info(f"Record {label!r}: cited {url}, quote found under {replacement}; URL replaced")
+                r["source_url"] = replacement
             kept.append(r)
         return kept
 
