@@ -117,6 +117,11 @@ GOALS = [
         },
         "label": "nct_id",
         "claim": "trial {nct_id} ({status}) is relevant to this patient and the patient is {eligibility}",
+        # A trial's one-line search summary cannot settle eligibility; the
+        # record must rest on the trial fetched by its ID (third live report,
+        # 2026-10-20: three records were judged from summaries alone, the
+        # model's own thinking saying it still needed the criteria).
+        "requires_fetch": {"field": "nct_id", "argument": "nct_id"},
     },
     {
         "key": "goal4_offlabel_and_repurposing",
@@ -276,6 +281,7 @@ class ReportBuilder:
                 records = []
             goal_calls = agent.last_trace["tool_calls"][calls_before:]
             records = self._check_sources(goal, records, goal_calls)
+            records = self._require_fetch(goal, records, calls_before)
             records = self._evaluate(goal, records)
             records = self._enforce_conditions(goal, records)
             records = self._drop_repeats(goal, records, filled)
@@ -352,7 +358,7 @@ class ReportBuilder:
         tools = self._tools_for(goal, inputs)
         calls_before = len(self.agent.last_trace["tool_calls"])
         text, _ = self.agent.converse(system_prompt, f"Build the section: {sections}.", tools, kind=goal["key"],
-                                      max_new_tokens=GOAL_MAX_NEW_TOKENS)
+                                      max_new_tokens=GOAL_MAX_NEW_TOKENS, stop_on_repetition=False)
         records = self._parse_records(text)
         if records == []:
             # An empty section while a listed tool was never consulted (first
@@ -369,7 +375,7 @@ class ReportBuilder:
                     "if the sources still give none.",
                     f"Build the section: {sections}.", tools, kind=goal["key"] + "_after_reminder",
                     require_evidence=False,  # the goal already looked things up; [] may stand
-                    max_new_tokens=GOAL_MAX_NEW_TOKENS,
+                    max_new_tokens=GOAL_MAX_NEW_TOKENS, stop_on_repetition=False,
                 )
                 records = self._parse_records(text)
         if records is None:
@@ -380,11 +386,37 @@ class ReportBuilder:
                 [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": "Your previous reply was not a JSON array. Reply with ONLY the JSON array of "
                                              f"records for: {sections}, using the tool results you already have:\n\n{text}"}],
-                tools=None, max_new_tokens=GOAL_MAX_NEW_TOKENS, enable_thinking=False,
+                tools=None, max_new_tokens=GOAL_MAX_NEW_TOKENS, enable_thinking=False, stop_on_repetition=False,
             )
             self.agent._record_turn(f"{goal['key']}_records_retry", 0, retry)
             records = self._parse_records(retry.text) or []
+        records = self._remind_to_fetch(goal, records, system_prompt, sections, tools, calls_before)
         return records[:MAX_RECORDS_PER_GOAL]
+
+    def _unfetched(self, goal: dict, records: list[dict], calls_before: int) -> list[str]:
+        """Record ids the goal never fetched by id, for a goal that requires it."""
+        req = goal.get("requires_fetch")
+        if not req:
+            return []
+        fetched = {str((c.get("arguments") or {}).get(req["argument"]) or "").strip().upper()
+                   for c in self.agent.last_trace["tool_calls"][calls_before:]}
+        ids = [str(r.get(req["field"]) or "").strip() for r in records]
+        return [i for i in ids if i and i.upper() not in fetched]
+
+    def _remind_to_fetch(self, goal: dict, records: list[dict], system_prompt: str, sections: str,
+                         tools: list[BaseTool], calls_before: int) -> list[dict]:
+        missing = self._unfetched(goal, records, calls_before)
+        if not missing:
+            return records
+        self.agent.last_trace["events"].append(f"fetch_reminder:{goal['key']}:{','.join(missing)}")
+        text, _ = self.agent.converse(
+            system_prompt + "\n\n## Harness notice\nThese records rest on a search summary, not on the record itself: "
+            f"{', '.join(missing)}. Fetch each one by its identifier and judge it against its own criteria, then reply "
+            "with the records. A record not fetched this way will be discarded.",
+            f"Build the section: {sections}.", tools, kind=goal["key"] + "_after_fetch_reminder",
+            require_evidence=False, max_new_tokens=GOAL_MAX_NEW_TOKENS, stop_on_repetition=False,
+        )
+        return self._parse_records(text) or records
 
     @staticmethod
     def _parse_records(text: str) -> list[dict] | None:
@@ -480,6 +512,21 @@ class ReportBuilder:
             self.agent.last_trace["events"].append(f"record_verdict:{label}:{'SUPPORTED' if supported else 'NOT_SUPPORTED'}")
             if supported:
                 kept.append(r)
+        return kept
+
+    def _require_fetch(self, goal: dict, records: list[dict], calls_before: int) -> list[dict]:
+        """Drop a record whose item the goal never fetched by id, after the reminder."""
+        missing = set(self._unfetched(goal, records, calls_before))
+        if not missing:
+            return records
+        field = goal["requires_fetch"]["field"]
+        kept = []
+        for r in records:
+            if str(r.get(field) or "").strip() in missing:
+                self.agent.last_trace["events"].append(f"record_dropped:not_fetched:{r.get(field)}")
+                logger.warning(f"Record {r.get(field)!r} rests on a search summary; the item was never fetched by id")
+                continue
+            kept.append(r)
         return kept
 
     def _enforce_conditions(self, goal: dict, records: list[dict]) -> list[dict]:

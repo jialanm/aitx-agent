@@ -404,6 +404,7 @@ class Agent:
         kind: str = "goal",
         require_evidence: bool = True,
         max_new_tokens: int = 2048,
+        stop_on_repetition: bool = True,
     ) -> tuple[str, list[EvidenceRecord]]:
         """One short conversation with its own tool set: the unit of the
         report chain (decided 2026-10-15). Same loop as the question
@@ -419,7 +420,8 @@ class Agent:
         reminded = False
         response = None
         for turn in range(max_turns):
-            response = generate(self.model, self.tokenizer, messages, tools=schemas, max_new_tokens=max_new_tokens)
+            response = generate(self.model, self.tokenizer, messages, tools=schemas, max_new_tokens=max_new_tokens,
+                                stop_on_repetition=stop_on_repetition)
             self._record_turn(kind, turn + 1, response)
             if not response.tool_calls:
                 if require_evidence and not evidence and not reminded and turn < max_turns - 1:
@@ -452,7 +454,8 @@ class Agent:
         messages.append(self._harness_message(
             "No further tool calls are possible. Answer now from the tool results above, in the required format."
         ))
-        last = generate(self.model, self.tokenizer, messages, tools=None, max_new_tokens=max_new_tokens)
+        last = generate(self.model, self.tokenizer, messages, tools=None, max_new_tokens=max_new_tokens,
+                        stop_on_repetition=stop_on_repetition)
         self._record_turn("final_answer", max_turns, last)
         self.last_trace["messages"].extend(messages)
         return last.text or (response.text if response else ""), evidence

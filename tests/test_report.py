@@ -328,3 +328,44 @@ def test_evaluator_instruction_names_the_overreach_cases():
     for phrase in ("restriction", "organ function", "model system", "general statement of goals", "NOT SUPPORTED"):
         assert phrase in EVALUATOR_INSTRUCTION
 
+
+def test_trial_record_from_a_search_summary_is_reminded_then_dropped(scripted):
+    """Third live report: three trial records were judged from one-line search
+    summaries, the model's own thinking saying it still needed the criteria."""
+    from_summary = record(nct_id="NCT00000001", title="A study of X in PH1", status="RECRUITING",
+                          eligibility="likely eligible", source_url=TRIAL_URL,
+                          quote="Title: A study of X in PH1", reasoning="the patient has PH1")
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="lumasiran"), say("[]"), say("[]"),
+        call("search_genereviews"), say("[]"), say("[]"),
+        call("search_clinical_trials", query="AGXT"), say(from_summary),      # searched, not fetched
+        say(from_summary),                                                    # after the fetch reminder: still not fetched
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say("[]"), say("[]"),
+    ])
+
+    md = builder.build(PATIENT).report_markdown
+    events = agent.last_trace["events"]
+
+    assert "fetch_reminder:goal3_trials:NCT00000001" in events
+    assert "record_dropped:not_fetched:NCT00000001" in events
+    assert "**NCT00000001**" not in md
+
+
+def test_trial_record_is_kept_when_the_trial_was_fetched_by_id(scripted):
+    fetched = record(nct_id="NCT00000001", title="A study of X in PH1", status="RECRUITING",
+                     eligibility="likely eligible", source_url=TRIAL_URL,
+                     quote="* Age 2 years and older", reasoning="the patient is 7")
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="lumasiran"), say("[]"), say("[]"),
+        call("search_genereviews"), say("[]"), say("[]"),
+        call("search_clinical_trials", query="AGXT"), call("search_clinical_trials", nct_id="NCT00000001"), say(fetched), SUPPORTED,
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say("[]"), say("[]"),
+    ])
+
+    md = builder.build(PATIENT).report_markdown
+
+    assert "**NCT00000001**" in md
+    assert not any(e.startswith(("fetch_reminder", "record_dropped:not_fetched")) for e in agent.last_trace["events"])
+

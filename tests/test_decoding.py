@@ -44,7 +44,7 @@ class _Model:
         self.calls = []                # kwargs per call
 
     def generate(self, input_ids, attention_mask=None, max_new_tokens=None, stopping_criteria=None, **kwargs):
-        self.calls.append(kwargs)
+        self.calls.append({**kwargs, "criteria": len(stopping_criteria or [])})
         new = self.scripts.pop(0)[:max_new_tokens]
         stop = set(kwargs.get("eos_token_id") or [])
         out = []
@@ -102,3 +102,19 @@ def test_metadata_label_states_what_ran():
     )
     with pytest.raises(ValueError):
         set_decoding("beam")
+
+
+def test_repetition_criterion_can_be_switched_off():
+    """A JSON array of records repeats field names and URLs, which trips the
+    think-loop detector: the report chain's goal-2 reply was cut mid-record
+    twice (2026-10-20), its last 100 characters recurring four times."""
+    set_decoding("greedy")
+    tok = _Tokenizer()
+    on = _Model([[2, 3, 4, 5]])
+    generate(on, tok, [{"role": "user", "content": "q"}])
+    off = _Model([[2, 3, 4, 5]])
+    generate(off, tok, [{"role": "user", "content": "q"}], stop_on_repetition=False)
+
+    assert on.calls[0]["criteria"] == 1
+    assert off.calls[0]["criteria"] == 0
+

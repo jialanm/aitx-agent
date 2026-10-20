@@ -186,6 +186,7 @@ def generate(
     tools: list[dict] | None = None,
     max_new_tokens: int = 2048,
     enable_thinking: bool = True,
+    stop_on_repetition: bool = True,
 ) -> ModelResponse:
     """Generate a response from the model.
 
@@ -196,6 +197,10 @@ def generate(
         tools: List of tool schemas (OpenAI format).
         max_new_tokens: Maximum tokens to generate.
         enable_thinking: Whether to enable Qwen3's thinking mode.
+        stop_on_repetition: Stop when a 100-character window recurs three
+            times. Right for prose, wrong for a JSON array of records, whose
+            repeated field names and source URLs trip it: the report chain's
+            goal-2 reply was cut mid-record twice (2026-10-20).
 
     Returns:
         Parsed ModelResponse.
@@ -218,7 +223,8 @@ def generate(
 
     two_phase = enable_thinking and (THINKING_SAMPLING is not None or THINKING_BUDGET is not None)
     if not two_phase:
-        new_tokens = _generate_tokens(model, tokenizer, inputs["input_ids"], max_new_tokens, prompt_length)
+        new_tokens = _generate_tokens(model, tokenizer, inputs["input_ids"], max_new_tokens, prompt_length,
+                                      stop_on_repetition=stop_on_repetition)
         return parse_response(tokenizer.decode(new_tokens, skip_special_tokens=True))
 
     # Phase 1, the thinking: sampled if a preset says so, stopped at </think>
@@ -229,7 +235,7 @@ def generate(
     budget = min(THINKING_BUDGET or max_new_tokens, max_new_tokens)
     thinking_ids = _generate_tokens(
         model, tokenizer, inputs["input_ids"], budget, prompt_length,
-        sampling=THINKING_SAMPLING, stop_ids=[think_end],
+        sampling=THINKING_SAMPLING, stop_ids=[think_end], stop_on_repetition=stop_on_repetition,
     )
     truncated = len(thinking_ids) == 0 or int(thinking_ids[-1]) != think_end
     if truncated:
@@ -237,7 +243,8 @@ def generate(
         thinking_ids = torch.cat([thinking_ids, closing])
     ids = torch.cat([inputs["input_ids"][0], thinking_ids]).unsqueeze(0)
     answer_budget = max(256, max_new_tokens - len(thinking_ids))
-    answer_ids = _generate_tokens(model, tokenizer, ids, answer_budget, ids.shape[1])
+    answer_ids = _generate_tokens(model, tokenizer, ids, answer_budget, ids.shape[1],
+                                  stop_on_repetition=stop_on_repetition)
     raw_output = tokenizer.decode(torch.cat([thinking_ids, answer_ids]), skip_special_tokens=True)
     response = parse_response(raw_output)
     response.thinking_truncated = truncated
@@ -245,9 +252,10 @@ def generate(
 
 
 def _generate_tokens(model, tokenizer, input_ids, max_new_tokens: int, prompt_length: int,
-                     sampling: dict | None = None, stop_ids: list[int] | None = None):
+                     sampling: dict | None = None, stop_ids: list[int] | None = None,
+                     stop_on_repetition: bool = True):
     """One generate call; returns only the new tokens. Greedy unless sampling settings are given."""
-    rep_criteria = RepetitionStoppingCriteria(tokenizer=tokenizer, prompt_length=prompt_length)
+    criteria = [RepetitionStoppingCriteria(tokenizer=tokenizer, prompt_length=prompt_length)] if stop_on_repetition else []
     kwargs = dict(sampling) if sampling else {"do_sample": False, "temperature": None, "top_p": None, "top_k": None}
     if stop_ids:
         eos = tokenizer.eos_token_id
@@ -257,7 +265,7 @@ def _generate_tokens(model, tokenizer, input_ids, max_new_tokens: int, prompt_le
             input_ids=input_ids,
             attention_mask=torch.ones_like(input_ids),
             max_new_tokens=max_new_tokens,
-            stopping_criteria=StoppingCriteriaList([rep_criteria]),
+            stopping_criteria=StoppingCriteriaList(criteria),
             **kwargs,
         )
     return outputs[0][prompt_length:]
