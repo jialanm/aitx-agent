@@ -31,7 +31,8 @@ from .variant_validation import validate_variant
 
 logger = logging.getLogger(__name__)
 
-MAX_RECORDS_PER_GOAL = 8
+MAX_RECORDS_PER_GOAL = 6
+GOAL_MAX_NEW_TOKENS = 4096  # a JSON array of six records with quotes outgrows the 2048 default (second live report)
 
 # The template's sections, in the required order. A goal fills one or two
 # subsections; an unfilled subsection says so rather than being left out.
@@ -182,7 +183,7 @@ COMMON_FIELDS = {
 
 RECORD_FORMAT_NOTE = (
     "When you have the evidence, reply with ONLY a JSON array of records and nothing else; reply with [] if "
-    "there is none. Each record has exactly these fields:\n{fields}\n"
+    "there is none. At most six records, the most important first. Each record has exactly these fields:\n{fields}\n"
     "Every record must cite a source_url that a tool returned in this conversation and a quote copied "
     "verbatim from that source's text; a record without both will be discarded by the harness. A source "
     "need not be a paper: a database record, drug label, guideline or trial registry entry is one. If no "
@@ -199,6 +200,36 @@ RULES = (
 )
 
 NOT_ASSESSED = "Not yet assessed in this version."
+
+# The evaluator's question. Second live report (2026-10-20): three records
+# passed whose claims went past their quotes (a label restricting use to
+# preserved kidney function, cited for "applies: yes" in a patient with
+# chronic kidney disease; a chapter's general supportive-care sentence,
+# cited for a specific measure it never names; a rat base-editing study
+# of a point mutation, cited for "likely eligible" on a duplication). The
+# instruction now names those cases.
+EVALUATOR_INSTRUCTION = (
+    "You judge whether a quoted sentence from a source supports a claim. Reply SUPPORTED only if every "
+    "part of the claim is stated by the quote, or follows from the quote by the reasoning given. Reply "
+    "NOT SUPPORTED if any of these holds: the quote carries a restriction (age, organ function, variant "
+    "type, population, species or model system) that the claim ignores or does not satisfy; the claim "
+    "names a specific agent, measure or verdict the quote does not name and the reasoning does not derive; "
+    "the quote is a general statement of goals rather than a statement about the claimed item. Reply with "
+    "SUPPORTED or NOT SUPPORTED on the first line, then one sentence naming the part of the claim the "
+    "quote does or does not cover."
+)
+
+# Restrictions a quote can carry that make "applies: yes" an overstatement
+# unless the patient record settles them. Found by pattern in the quote;
+# the record is then marked conditional and logged (second live report:
+# nedosiran's eGFR clause was quoted and ignored).
+RESTRICTION_PATTERNS = [
+    (r"\b(\d+)\s*(?:years?|months?)\s+of\s+age\b|\baged?\s+\d+|\b\d+\s*years?\s+(?:and|or)\s+older", "age"),
+    (r"\beGFR\b|\bpreserved (?:kidney|renal) function\b|\b(?:kidney|renal) impairment\b|\bcreatinine clearance\b|\bdialysis\b", "kidney function"),
+    (r"\bhepatic impairment\b|\bliver function\b", "liver function"),
+    (r"\bmissense\b|\bnonsense\b|\bframeshift\b|\btruncating\b|\bsplice\b|\bamenable to\b|\bconfirmed mutation\b", "variant type"),
+    (r"\bin (?:mice|rats|a (?:mouse|rat) model|cell|cells|fibroblasts|organoids)\b|\bPH1 rats\b|\bmouse model\b|\brat model\b|\bin vitro\b", "model system, not patients"),
+]
 
 
 _SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
@@ -246,6 +277,7 @@ class ReportBuilder:
             goal_calls = agent.last_trace["tool_calls"][calls_before:]
             records = self._check_sources(goal, records, goal_calls)
             records = self._evaluate(goal, records)
+            records = self._enforce_conditions(goal, records)
             records = self._drop_repeats(goal, records, filled)
             agent.last_trace["goals"][goal["key"]] = {
                 "records": records,
@@ -319,7 +351,8 @@ class ReportBuilder:
         sections = " and ".join(goal["subsections"])
         tools = self._tools_for(goal, inputs)
         calls_before = len(self.agent.last_trace["tool_calls"])
-        text, _ = self.agent.converse(system_prompt, f"Build the section: {sections}.", tools, kind=goal["key"])
+        text, _ = self.agent.converse(system_prompt, f"Build the section: {sections}.", tools, kind=goal["key"],
+                                      max_new_tokens=GOAL_MAX_NEW_TOKENS)
         records = self._parse_records(text)
         if records == []:
             # An empty section while a listed tool was never consulted (first
@@ -336,6 +369,7 @@ class ReportBuilder:
                     "if the sources still give none.",
                     f"Build the section: {sections}.", tools, kind=goal["key"] + "_after_reminder",
                     require_evidence=False,  # the goal already looked things up; [] may stand
+                    max_new_tokens=GOAL_MAX_NEW_TOKENS,
                 )
                 records = self._parse_records(text)
         if records is None:
@@ -346,7 +380,7 @@ class ReportBuilder:
                 [{"role": "system", "content": system_prompt},
                  {"role": "user", "content": "Your previous reply was not a JSON array. Reply with ONLY the JSON array of "
                                              f"records for: {sections}, using the tool results you already have:\n\n{text}"}],
-                tools=None, max_new_tokens=1024, enable_thinking=False,
+                tools=None, max_new_tokens=GOAL_MAX_NEW_TOKENS, enable_thinking=False,
             )
             self.agent._record_turn(f"{goal['key']}_records_retry", 0, retry)
             records = self._parse_records(retry.text) or []
@@ -430,9 +464,7 @@ class ReportBuilder:
             if r.get("reasoning"):
                 user += f"\nReasoning given: {r.get('reasoning')}"
             messages = [
-                {"role": "system", "content": "You judge whether a quoted sentence from a source supports a claim, directly or "
-                                              "through the reasoning given, if any. Reply with SUPPORTED or NOT SUPPORTED on the "
-                                              "first line, then one sentence saying why."},
+                {"role": "system", "content": EVALUATOR_INSTRUCTION},
                 {"role": "user", "content": user},
             ]
             try:
@@ -449,6 +481,26 @@ class ReportBuilder:
             if supported:
                 kept.append(r)
         return kept
+
+    def _enforce_conditions(self, goal: dict, records: list[dict]) -> list[dict]:
+        """A record that says "applies: yes" (or "likely eligible") while its
+        own quote carries a restriction the patient record may not satisfy
+        is marked conditional on that restriction, and logged. The model
+        was asked for "If X, then Y"; this makes it hold where it was
+        skipped. Only quotes are read; nothing is inferred about the patient."""
+        field = "applies_to_patient" if "applies_to_patient" in goal["fields"] else ("eligibility" if "eligibility" in goal["fields"] else None)
+        for r in records:
+            quote = str(r.get("quote") or "")
+            hits = [name for pat, name in RESTRICTION_PATTERNS if re.search(pat, quote, re.I)]
+            label = r.get(goal["label"])
+            if field and hits and str(r.get(field, "")).strip().lower() in ("yes", "likely eligible"):
+                r[field] = f"conditional: If the patient meets the source's restriction on {', '.join(hits)} (\"{quote[:160]}\"), then yes; otherwise no"
+                self.agent.last_trace["events"].append(f"record_made_conditional:{label}:{','.join(hits)}")
+            if goal["key"] == "goal5_bespoke" and "model system, not patients" in hits and str(r.get("verdict", "")).lower() in ("eligible", "likely eligible"):
+                r["verdict"] = "unable to assess"
+                r["basis"] = f"{r.get('basis', '')} (the cited evidence is from a model system, not patients; verdict reduced by the harness)".strip()
+                self.agent.last_trace["events"].append(f"record_verdict_reduced:{label}:model_system")
+        return records
 
     def _drop_repeats(self, goal: dict, records: list[dict], filled: dict[str, list[dict]]) -> list[dict]:
         """Each action belongs in one section: a record whose name already

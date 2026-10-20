@@ -271,3 +271,60 @@ def test_short_list_item_quote_is_accepted(scripted):
 
     assert "**loop diuretics**" in md
 
+
+def test_quoted_restriction_makes_applies_yes_conditional(scripted):
+    # Second live report: nedosiran's label restricts to preserved kidney function (eGFR >= 30);
+    # the model wrote "applies: yes" for a patient with chronic kidney disease and no eGFR.
+    nedosiran = record(therapy="nedosiran", status="approved", indication="PH1 with preserved kidney function",
+                       applies_to_patient="yes", source_url=LABEL_URL, reasoning="",
+                       quote="OXLUMO is indicated for the treatment of primary hyperoxaluria type 1 (PH1) to lower urinary and plasma oxalate levels in pediatric and adult patients.")
+    # make the stub label carry a kidney-function clause the quote includes
+    import src.report as rm
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="nedosiran"), say(nedosiran.replace("in pediatric and adult patients.", "in pediatric and adult patients with relatively preserved kidney function, e.g., eGFR >=30 mL/min/1.73 m2.")), SUPPORTED,
+        call("search_genereviews"), say("[]"), say("[]"),
+        call("search_clinical_trials", query="AGXT"), say("[]"), say("[]"),
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say("[]"), say("[]"),
+    ])
+    # the stub label text must contain the quoted sentence for the source check
+    rm_label = LABEL.replace("in pediatric and adult patients.", "in pediatric and adult patients with relatively preserved kidney function, e.g., eGFR >=30 mL/min/1.73 m2.")
+    for t in agent.tools.values():
+        if t.name == "search_fda_labels":
+            t.execute = lambda **kw: (rm_label, [EvidenceRecord(url=LABEL_URL)])
+
+    md = builder.build(PATIENT).report_markdown
+
+    assert "record_made_conditional:nedosiran:kidney function" in agent.last_trace["events"]
+    assert "Applies to this patient: conditional: If the patient meets the source's restriction on kidney function" in md
+    assert "Conditional actions, depending on information not in the patient record" in md
+
+
+def test_model_system_evidence_cannot_make_a_bespoke_strategy_eligible(scripted):
+    rat = record(strategy="other: gene replacement", verdict="likely eligible",
+                 basis="base editing corrected the variant", outcome_measure="urinary oxalate",
+                 source_url=N1C_URL, reasoning="the principle applies to small indels",
+                 quote="Canonical exon skipping: for truncating loss-of-function variants, an ASO skips the variant's exon to restore the reading frame.")
+    builder, agent, _, _ = scripted([
+        call("search_fda_labels", drug="lumasiran"), say("[]"), say("[]"),
+        call("search_genereviews"), say("[]"), say("[]"),
+        call("search_clinical_trials", query="AGXT"), say("[]"), say("[]"),
+        call("query_pharos"), say("[]"), say("[]"),
+        call("n1c_aso_guidelines"), say(rat.replace("restore the reading frame.", "restore the reading frame in PH1 rats.")), SUPPORTED,
+    ])
+    for t in agent.tools.values():
+        if t.name == "n1c_aso_guidelines":
+            t.execute = lambda **kw: (N1C.replace("restore the reading frame.", "restore the reading frame in PH1 rats."), [EvidenceRecord(url=N1C_URL)])
+
+    md = builder.build(PATIENT).report_markdown
+
+    assert "record_verdict_reduced:other: gene replacement:model_system" in agent.last_trace["events"]
+    assert "**other: gene replacement**: unable to assess." in md
+    assert "No hypothesized action was recorded in Tier 3" in md       # not ranked once reduced
+
+
+def test_evaluator_instruction_names_the_overreach_cases():
+    from src.report import EVALUATOR_INSTRUCTION
+    for phrase in ("restriction", "organ function", "model system", "general statement of goals", "NOT SUPPORTED"):
+        assert phrase in EVALUATOR_INSTRUCTION
+
