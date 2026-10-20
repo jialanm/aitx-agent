@@ -827,8 +827,11 @@ class Agent:
     def _quote_in_text(quote: str, text: str) -> bool:
         """True if the quote occurs in the text, ignoring case, spacing and quote marks."""
         def norm(t: str) -> str:
+            # Superscript digits plain and whitespace removed: a label prints
+            # "m 2" where the model writes "m²" (first live report, 2026-10-20).
             t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")
-            return re.sub(r"\s+", " ", t).strip().lower()
+            t = t.translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789"))
+            return re.sub(r"\s+", "", t).lower()
         # A quote may end its sentence with a full stop the source continues
         # past (32B run 2, 2026-10-13, AITX-00006: the lumasiran indication
         # sentence runs into "[see Clinical Pharmacology ...]" in the label).

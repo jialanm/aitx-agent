@@ -201,6 +201,17 @@ RULES = (
 NOT_ASSESSED = "Not yet assessed in this version."
 
 
+_SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+
+
+def _norm(t: str) -> str:
+    """Text for verbatim comparison: quote marks unified, superscript digits
+    plain, all whitespace removed (a label prints "m 2" where the model
+    writes "m²"; first live report, 2026-10-20), lower case."""
+    t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'").translate(_SUPERSCRIPTS)
+    return re.sub(r"\s+", "", t).lower()
+
+
 def by_sub_label(subsection: str) -> str:
     """The record field that names a record in this subsection."""
     return next(g["label"] for g in GOALS if subsection in g["subsections"])
@@ -372,9 +383,8 @@ class ReportBuilder:
         frags = cls._quote_fragments(quote)
         if not frags or Agent._is_adapter_boilerplate(quote):
             return False
-        norm = lambda t: re.sub(r"\s+", " ", t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")).strip().lower()
-        hay = norm(text)
-        return all(norm(f).rstrip(".,;: ") in hay for f in frags)
+        hay = _norm(text)
+        return all(_norm(f).rstrip(".,;: ") in hay for f in frags)
 
     def _check_sources(self, goal: dict, records: list[dict], goal_calls: list[dict]) -> list[dict]:
         """Keep a record only if its quote is verbatim in the text of a tool
