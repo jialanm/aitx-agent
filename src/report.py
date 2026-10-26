@@ -121,7 +121,7 @@ GOALS = [
         # record must rest on the trial fetched by its ID (third live report,
         # 2026-10-20: three records were judged from summaries alone, the
         # model's own thinking saying it still needed the criteria).
-        "requires_fetch": {"field": "nct_id", "argument": "nct_id"},
+        "requires_fetch": {"field": "nct_id", "argument": "nct_id", "tool": "search_clinical_trials"},
     },
     {
         "key": "goal4_offlabel_and_repurposing",
@@ -408,13 +408,20 @@ class ReportBuilder:
         missing = self._unfetched(goal, records, calls_before)
         if not missing:
             return records
+        req = goal["requires_fetch"]
+        tool_name = req.get("tool") or next((t.name for t in tools), "")
         self.agent.last_trace["events"].append(f"fetch_reminder:{goal['key']}:{','.join(missing)}")
+        # Name the call to make, as the None reminder does, and give the goal
+        # its own turns to make them: the fourth live report (2026-10-26) got
+        # one turn, answered from the summaries again, and lost four trials.
         text, _ = self.agent.converse(
             system_prompt + "\n\n## Harness notice\nThese records rest on a search summary, not on the record itself: "
-            f"{', '.join(missing)}. Fetch each one by its identifier and judge it against its own criteria, then reply "
-            "with the records. A record not fetched this way will be discarded.",
+            f"{', '.join(missing)}. Call {tool_name} once per item with {req['argument']} set to the identifier "
+            f"(for example {{\"{req['argument']}\": \"{missing[0]}\"}}), read the criteria it returns, and judge each "
+            "against them. Then reply with the records; a record whose item was not fetched this way is discarded.",
             f"Build the section: {sections}.", tools, kind=goal["key"] + "_after_fetch_reminder",
             require_evidence=False, max_new_tokens=GOAL_MAX_NEW_TOKENS, stop_on_repetition=False,
+            max_turns=len(missing) + 2,
         )
         return self._parse_records(text) or records
 

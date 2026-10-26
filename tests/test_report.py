@@ -350,6 +350,9 @@ def test_trial_record_from_a_search_summary_is_reminded_then_dropped(scripted):
     assert "fetch_reminder:goal3_trials:NCT00000001" in events
     assert "record_dropped:not_fetched:NCT00000001" in events
     assert "**NCT00000001**" not in md
+    notice = next(m["content"] for m in agent.last_trace["messages"] if m["role"] == "system" and "rest on a search summary" in m["content"])
+    assert 'Call search_clinical_trials once per item with nct_id set to the identifier' in notice
+    assert '{"nct_id": "NCT00000001"}' in notice
 
 
 def test_trial_record_is_kept_when_the_trial_was_fetched_by_id(scripted):
