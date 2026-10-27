@@ -1031,3 +1031,92 @@ class TestRemindersNameTheDrugLookup:
         assert '{"drug": "Ataluren"}' in notice
         assert "openFDA holds only drugs with a United States label" in notice
 
+
+class TestRulesAttachedAndReminded:
+    """The rules a consequence calls for are attached in step 1, and an answer
+    that turns on a rule the model never read gets one notice naming the topic
+    (AITX-00001, five runs: it read "1743 bases, a multiple of three", ruled
+    out every exon-skipping drug from memory, and never read the rule)."""
+
+    class _Ref(BaseTool):
+        def __init__(self):
+            self.topics = []
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "genetics_reference", "parameters": {}}}
+
+        def execute(self, topic=None, **kwargs):
+            self.topics.append(topic)
+            return f"Genetics reference, {topic}: rule text", [EvidenceRecord(url=f"https://pubmed.ncbi.nlm.nih.gov/{len(self.topics)}/")]
+
+    class _SpliceVEP(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return ("VEP (Ensembl, GRCh38) for NC_000023.11:g.1_2del on transcript NM_004006.3:\n"
+                    "Frame, as written: 1743 coding bases, a multiple of three deleted (VEP: inframe_deletion). "
+                    "If exons 52-63 were lost whole: 1744 coding bases, one more than a multiple of three\n"
+                    "Splice sites removed: the exons listed above are lost whole from the transcript."), [
+                EvidenceRecord(url="https://www.ensembl.org/x")]
+
+    def _run(self, monkeypatch, turns, tools):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.1_2del", gene_symbol="DMD"))
+        queue = list(turns)
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: queue.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3", "variant_cdna": "c.7544_9286del",
+                                         "variant_protein": "p.(Thr2516_Ala3096del)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "Which targeted therapy applies? Provide the generic name or None.", "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=tools)
+        return agent.run(TaskInput(**task)), agent
+
+    def test_splice_deletion_attaches_the_splicing_and_skipping_rules(self, monkeypatch):
+        ref = self._Ref()
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        _, agent = self._run(monkeypatch, [say("antisense oligonucleotide"), say("QUOTE: NOT SUPPORTED\nWHY: none"),
+                                           say("QUOTE: NOT SUPPORTED\nWHY: none"), say("QUOTE: NOT SUPPORTED\nWHY: none")],
+                             [self._SpliceVEP(), ref, TestUnverifiedTerms._PubMed()])
+
+        # The text names splice-site loss and VEP's inframe_deletion, so three rules apply.
+        assert ref.topics == ["splicing", "exon-skipping", "reading-frame"]
+        assert "rules_attached:splicing,exon-skipping,reading-frame" in agent.last_trace["events"]
+        system_prompt = agent.last_trace["messages"][0]["content"]
+        assert "### Rules that apply" in system_prompt
+        assert "Genetics reference, splicing: rule text" in system_prompt
+        assert "quotable evidence" in system_prompt
+
+    class _PlainVEP(BaseTool):
+        """A missense consequence: no rule trigger, so nothing is attached."""
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return "VEP (Ensembl, GRCh38):\nFrame (VEP): missense_variant; no change in length", [EvidenceRecord(url="https://www.ensembl.org/x")]
+
+    def test_answer_resting_on_an_unread_rule_is_reminded_once(self, monkeypatch):
+        ref = self._Ref()
+        call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
+        on_a_rule = ModelResponse(text="None", tool_calls=[], raw="None",
+                                  thinking="The deletion is in-frame, so exon skipping is not needed.")
+        output, agent = self._run(monkeypatch, [
+            call("search_pubmed", query="DMD"),     # a lookup, so the evidence reminder does not fire
+            on_a_rule,                               # answers on rules it never read
+            say("None"),                              # after the rule reminder
+            say("QUOTE: NOT SUPPORTED\nWHY: none"), say("QUOTE: NOT SUPPORTED\nWHY: none"),
+        ], [TestUnverifiedTerms._PubMed(), ref, self._PlainVEP()])
+
+        assert ref.topics == []                      # nothing attached: a missense triggers no rule
+        assert "rule_reminder:reading-frame,exon-skipping" in agent.last_trace["events"]
+        notice = next(m["content"] for m in agent.last_trace["messages"] if m["role"] == "system" and "general rule" in m["content"])
+        assert '{"topic": "reading-frame"}' in notice
+

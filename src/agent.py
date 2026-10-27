@@ -96,6 +96,11 @@ class Agent:
         # it does not count as the model having looked anything up.
         step1_evidence: list[EvidenceRecord] = []
         consequences = [self._predict_consequence(g.gene, v, step1_evidence) for g, v in zip(task_input.patient.genotype, validated)]
+        # Step 1c: the rules that consequence calls for, attached rather than
+        # left to the model to request (AITX-00001, five runs: it read VEP's
+        # "1743 bases, a multiple of three" and ruled out every exon-skipping
+        # drug from memory, never reading the splicing or exon-skipping rule).
+        rules_text = self._rules_for(consequences, step1_evidence)
 
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
@@ -115,6 +120,7 @@ class Agent:
             options=options,
             validated=validated,
             consequences=consequences,
+            rules=rules_text,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
@@ -131,6 +137,7 @@ class Agent:
         tried: set[str] = set()
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
+        rule_reminded = False
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -163,6 +170,15 @@ class Agent:
                     # Told once, still no lookup: accept the answer, record it, no loop.
                     self.last_trace["events"].append("reminder_ignored")
                     logger.warning("Model answered without a tool call after the evidence reminder")
+
+                # The answer turns on a general rule the model never read.
+                unread = self._unread_rules(f"{response.text}\n{response.thinking}", {c["tool"] for c in self.last_trace["tool_calls"]})
+                if unread and not rule_reminded and iteration < MAX_ITERATIONS - 1:
+                    rule_reminded = True
+                    self.last_trace["events"].append("rule_reminder:" + ",".join(unread))
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append(self._harness_message(self._rule_reminder(unread)))
+                    continue
 
                 # A name in the answer that no tool text contains came from
                 # memory (32B run, 2026-10-13: ataluren on AITX-00002 and
@@ -376,6 +392,73 @@ class Agent:
             return f"Predicted consequence: not available (Ensembl lookup failed: {e})"
         evidence.extend(found)
         return "Predicted consequence (Ensembl VEP, fetched automatically):\n" + summary
+
+    # Which rule a fact in the retrieved consequence calls for. The trigger is
+    # in the data, not in the model's judgment: pointing at the reference from
+    # the tool text was ignored in every run to 2026-10-27, and the NOTES
+    # instruction in 28 of 28 turns, so the rules are attached rather than
+    # waited for.
+    _RULE_TRIGGERS = [
+        ("Splice sites removed", ["splicing", "exon-skipping"]),
+        ("frameshift_variant", ["reading-frame", "nonsense-mediated-decay"]),
+        ("stop_gained", ["nonsense-mediated-decay", "read-through"]),
+        ("inframe_deletion", ["reading-frame"]),
+        ("start_lost", ["reading-frame"]),
+    ]
+    # Wording in the model's own answer or thinking that rests on a general
+    # rule; if the reference was never read, one notice names the topic.
+    _RULE_WORDING = [
+        (r"\bin[- ]frame\b|\bout of frame\b|\bframeshift\b|\breading frame\b", "reading-frame"),
+        (r"\bexon skipping\b|\bskip(?:ping)? exon\b", "exon-skipping"),
+        (r"\bnonsense[- ]mediated decay\b|\bNMD\b", "nonsense-mediated-decay"),
+        (r"\bread[- ]through\b", "read-through"),
+        (r"\bgain of function\b|\bloss of function\b|\bantagonist\b|\bagonist\b", "mechanism-direction"),
+        (r"\bspliced?\b|\bsplice site\b", "splicing"),
+    ]
+
+    def _rules_for(self, consequences: list[str], evidence: list[EvidenceRecord]) -> str:
+        """The reference rules the retrieved consequence calls for, as prompt
+        text with their sources, fetched in step 1 like the consequence."""
+        tool = self.tools.get("genetics_reference")
+        if tool is None:
+            return ""
+        text = "\n".join(consequences)
+        topics: list[str] = []
+        for trigger, rules in self._RULE_TRIGGERS:
+            if trigger in text:
+                topics += [r for r in rules if r not in topics]
+        parts = []
+        for topic in topics[:3]:
+            try:
+                summary, found = self._call_tool(tool, "genetics_reference", {"topic": topic}, "step1")
+            except Exception as e:
+                logger.error(f"Step-1 rule lookup failed for {topic}: {e}")
+                continue
+            evidence.extend(found)
+            parts.append(summary)
+        if not parts:
+            return ""
+        self.last_trace["events"].append("rules_attached:" + ",".join(topics[:3]))
+        return ("These rules of molecular genetics apply to the consequence above and are quotable "
+                "evidence; read them before judging the variant's effect.\n\n" + "\n\n".join(parts))
+
+    def _unread_rules(self, text: str, called: set[str]) -> list[str]:
+        """Rules the model's own wording rests on that it never read."""
+        if "genetics_reference" in called or "genetics_reference" not in self.tools:
+            return []
+        topics = []
+        for pattern, topic in self._RULE_WORDING:
+            if re.search(pattern, text or "", re.I) and topic not in topics:
+                topics.append(topic)
+        return topics[:2]
+
+    def _rule_reminder(self, topics: list[str]) -> str:
+        return (
+            f"Your answer turns on a general rule of molecular genetics ({', '.join(topics)}), and the "
+            "genetics reference has not been read in this conversation. Call genetics_reference with "
+            f"{{\"topic\": \"{topics[0]}\"}} and check your reasoning against the rule and its source, "
+            "then answer."
+        )
 
     def _record_turn(self, kind: str, iteration: int, response: ModelResponse) -> None:
         """Keep one model turn in the trace: kind is loop, empty_answer_retry or validation_retry."""

@@ -131,6 +131,7 @@ def build_system_prompt(
     options: list[str] | None = None,
     validated: list[ValidatedVariant] | None = None,
     consequences: list[str] | None = None,
+    rules: str = "",
 ) -> str:
     """Build the system prompt for the ReAct agent.
 
@@ -139,6 +140,7 @@ def build_system_prompt(
     """
 
     variant_summary = _format_variant_summary(parsed_variants, validated, consequences)
+    rules_block = f"\n### Rules that apply\n{rules}\n" if rules else ""
     format_instruction = ANSWER_FORMAT_INSTRUCTIONS.get(answer_format, "")
     if answer_format == "multiple_choice" and options:
         format_instruction = (
@@ -158,7 +160,7 @@ def build_system_prompt(
 
 ### Clinical Context
 {clinical_context}
-
+{rules_block}
 ## Question Category: {category}
 
 ## Date Context

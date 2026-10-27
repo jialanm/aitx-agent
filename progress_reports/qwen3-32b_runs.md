@@ -247,3 +247,86 @@ set aside, which is what the genetics reference is for; whether a model
 reads a rule it is offered is what run 3 (from 0c85519) tests. Reminders
 are now a visible cost: four questions reached the fifth turn, against one
 in run 1.
+
+## 6. Runs 3 and 4 (2026-10-26 and 2026-10-27): grounding the two answers that came from memory
+
+Run 3 (VM file name run4) ran at f23051e, after the numbers-only VEP block,
+the genetics reference, InterPro domain matches in UniProt, the PubMed
+gene-mention count, the per-step evidence wording, and the tool and system
+message roles. Run 4 (VM file name run5) ran at 488fa62, after three changes
+aimed at the two questions run 3 lost: openFDA's empty result now states that
+it holds only drugs with a United States label and names PubMed; the None
+reminder on a multiple-choice question lists the options as agents and names
+the label call for each; the unverified-term reminder names the label call
+for the drug the model wrote.
+
+| Patient | Expected | Run 4 | Run 3 | Run 2 | Run 4 s |
+|---|---|---|---|---|---|
+| 00001 | Eteplirsen | None | None | Eteplirsen | 676 |
+| 00002 | Ataluren | Ataluren | None | Ataluren | 1074 |
+| 00003 | None | None | None | None | 468 |
+| 00004 | Pyridoxine | Pyridoxine | Pyridoxine | pyridoxine | 291 |
+| 00005 | No | No | No | No | 140 |
+| 00006 | Lumasiran | lumasiran, nedosiran | lumasiran, nedosiran | lumasiran | 237 |
+| 00007 | 18 months | 18 months | 18 months | 18 months | 179 |
+| 00008 | ascorbic acid, desmopressin | same | same | same | 180 |
+| 00009 | NCT05402384 | NCT05402384 | NCT04199000, NCT05402384 | NCT05402384 | 291 |
+| 00010 | No | No | No | No | 133 |
+| 00011 | None | NCT07600736, NCT07227857 | NCT07600736, NCT07227857 | None | 260 |
+| 00012 | L-Serine | L-serine | L-serine | Memantine | 470 |
+| 00013 | 66 | 66 | 66 | 66 | 147 |
+| 00014 | 0.1 | 10 | 10 | 10 | 199 |
+| 00015 | No | No | No | Yes | 296 |
+| 00016 | GRD | GRD | GRD | TBD | 252 |
+
+| | Run 4 (488fa62) | Run 3 (f23051e) | Run 2 (84f8cff) |
+|---|---|---|---|
+| Exact match | 12/16 | 10/16 | 12/16 |
+| Counting the reviewed cases (00011, 00014) | 14/16 | 12/16 | 13/16 |
+| Citations verbatim in their source | 34 of 39 | 29 of 36 | 18 of 24 |
+| Agent time | 88 min | 85 min | 88 min |
+
+**Run 4 is the best run of the project.** It is the first to hold the
+knowledge gains and the grounding at once: 00012, 00015 and 00016, which run 2
+answered wrongly, stay correct through the genetics reference's
+mechanism-direction and decay rules and InterPro's domain boundaries, while
+00002 returns to Ataluren by a different route than run 2's. In run 2 the
+model named the drug from memory and no source mentioned it; in run 4 it
+called the label, read openFDA's new statement that an empty reply is not
+evidence of absence, and went to PubMed, so the answer rests on a retrieved
+source. 00009 also returned to a single trial identifier.
+
+Counting 00011 and 00014 as correct, which the review on 2026-10-13 settled,
+the score is 14 of 16. 00011 names two recruiting KCNT1 trials that fit the
+patient, where the key says None because both were registered after the
+question's date; 00014 answers the percentage the question asks for, where
+the key writes the same quantity as a fraction.
+
+### The two real misses
+
+- **00001 (None, expected Eteplirsen).** The None reminder went out with all
+  five option names and an example label call, and the model ignored it:
+  turns 4 and 5 answered None with no tool call, recorded twice as the
+  reminder being ignored. Its thinking rules out each drug in turn, on one
+  premise: "the VEP result says the deletion is 1743 bases, a multiple of
+  three, so the reading frame is preserved. Exon-skipping is for out-of-frame
+  deletions." Our own Frame line gives that reading first, the whole-exon
+  reading second, and the model never reaches the second or the line computing
+  that exon 51 completes the frame. It never called the genetics reference,
+  whose splicing and exon-skipping rules resolve exactly this.
+- **00006 (lumasiran, nedosiran, expected Lumasiran).** Both labels were
+  fetched; nedosiran's restricts it to preserved kidney function, eGFR 30 or
+  above, and the patient has chronic kidney disease with no eGFR given. The
+  model named both without the condition. The report chain gets this right by
+  recording nedosiran as conditional, which a one-word answer cannot express.
+
+### What followed
+
+Pointing at the reference from the tool text has now been ignored in five
+runs, and the NOTES instruction in 28 of 28 tool-call turns, so the rules are
+no longer waited for: step 1 attaches the rules a consequence calls for
+(splice-site loss attaches splicing and exon skipping; a frameshift or stop
+attaches the frame and decay rules), and an answer whose own wording turns on
+a rule the model never read gets one notice naming the topic to call. The
+trigger is a fact in the retrieved data or the model's own words, not its
+judgment of what it needs.
