@@ -52,6 +52,9 @@ class Agent:
         # Echo each model turn's thinking and text to stdout as the turn
         # ends, for watching a run live. The trace keeps them regardless.
         self.show_thinking = show_thinking
+        # Repeated-call guard scope: one conversation. The report chain sets
+        # it per goal; the question answerer leaves it at 0.
+        self.call_segment = 0
         self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:
@@ -556,7 +559,27 @@ class Agent:
         An exception is recorded, then re-raised so each call site keeps
         its own handling.
         """
-        entry = {"tool": name, "arguments": kwargs, "origin": origin}
+        # A call the model has already made returns its first result with a
+        # note, instead of being made again (32B run 4, 2026-10-27, AITX-00012:
+        # the same three PharmGKB lookups were repeated four times because each
+        # returned an empty record, spending four turns on nothing).
+        repeat = self._earlier_identical_call(name, kwargs)
+        if repeat is not None:
+            self.last_trace["events"].append(f"repeated_call:{name}")
+            logger.info(f"Repeated call to {name}({kwargs}); returning the first result")
+            self.last_trace["tool_calls"].append({"tool": name, "arguments": kwargs, "origin": origin,
+                                                 "segment": self.call_segment,
+                                                 "seconds": 0.0, "repeat_of": repeat["seconds"],
+                                                 "evidence_urls": repeat.get("evidence_urls", []),
+                                                 "summary": repeat.get("summary", "")})
+            return (
+                f"{repeat.get('summary', '')}\n\n[This is the result of the identical earlier call to {name}; "
+                "it has not changed. A result that lacks the fact you need is not evidence of absence: try a "
+                "different tool or different arguments.]",
+                [],
+            )
+
+        entry = {"tool": name, "arguments": kwargs, "origin": origin, "segment": self.call_segment}
         start = time.time()
         try:
             summary, evidence = tool.execute(**kwargs)
@@ -569,6 +592,17 @@ class Agent:
         entry["evidence_urls"] = [r.url for r in evidence]
         entry["summary"] = summary
         return summary, evidence
+
+    def _earlier_identical_call(self, name: str, kwargs: dict) -> dict | None:
+        """The first call to this tool with these arguments in this
+        conversation. Scoped to the segment: the report chain bumps it per
+        goal, because a later goal legitimately re-reads the same chapter and
+        its records are checked against its own calls."""
+        for call in self.last_trace.get("tool_calls", []):
+            if (call["tool"] == name and call.get("arguments") == kwargs and "summary" in call
+                    and "repeat_of" not in call and call.get("segment") == self.call_segment):
+                return call
+        return None
 
     # Identifier shapes the check recognises. Drug names are not shaped and
     # are left to the citation check that follows later.
