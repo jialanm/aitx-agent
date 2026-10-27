@@ -1,0 +1,15 @@
+{
+  "id": "AITX-40001",
+  "patient": {
+    "genotype": [
+      {
+        "gene": "ACTL6B",
+        "transcript": "NM_016188.5",
+        "variant_cdna": "c.1099dup",
+        "variant_protein": "p.(Gln367ProfsTer48)",
+        "zygosity": "homozygous"
+      }
+    ],
+    "clinical_context": "A 3-year-old male presented with seizure onset in the first months of life, developmental delay, and impaired intellectual development."
+  }
+}

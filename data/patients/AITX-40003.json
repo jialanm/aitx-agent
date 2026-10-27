@@ -1,0 +1,15 @@
+{
+  "id": "AITX-40003",
+  "patient": {
+    "genotype": [
+      {
+        "gene": "SPTLC1",
+        "transcript": "NM_006415.4",
+        "variant_cdna": "c.116T>A",
+        "variant_protein": "p.Leu39His",
+        "zygosity": "heterozygous"
+      }
+    ],
+    "clinical_context": "The individual is a 14 year old male with slowly progressive loss of sensation in their lower extremities. They initially had good growth but around 10 years of age began losing weight and now appear very thin. Their caloric intake is poor. They have a positive Gower sign."
+  }
+}

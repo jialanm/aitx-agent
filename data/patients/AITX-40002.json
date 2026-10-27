@@ -1,0 +1,15 @@
+{
+  "id": "AITX-40002",
+  "patient": {
+    "genotype": [
+      {
+        "gene": "ITPR1",
+        "transcript": "NM_001378452.1",
+        "variant_cdna": "c.100G>A",
+        "variant_protein": "p.Asp34Asn",
+        "zygosity": "heterozygous"
+      }
+    ],
+    "clinical_context": "7-year-old male with history of hypotonia, mild motor delay, nystagmus, spasticity, and episodes of tremors. These episodes began during childhood. Family reports that tremor episodes seem to be happening more frequently and with greater intensity as he is getting older. Trio genetic testing was performed, which revealed a de novo variant in ITPR1."
+  }
+}
