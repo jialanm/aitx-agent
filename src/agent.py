@@ -190,7 +190,7 @@ class Agent:
                     none_reminded = True
                     self.last_trace["events"].append("none_reminder:" + ",".join(uncalled))
                     messages.append({"role": "assistant", "content": response.raw})
-                    messages.append(self._harness_message(self._none_reminder(uncalled)))
+                    messages.append(self._harness_message(self._none_reminder(uncalled, context, options)))
                     continue
                 if none_reminded and self._is_none_answer(response.text, context):
                     self.last_trace["events"].append("none_reminder_ignored")
@@ -543,13 +543,28 @@ class Agent:
         priority = TOOL_PRIORITY.get(context["category"], ["search_pubmed"])
         return [t for t in priority if t in self.tools and t not in tried]
 
-    @staticmethod
-    def _none_reminder(uncalled: list[str]) -> str:
+    def _none_reminder(self, uncalled: list[str], context: dict, options: list[str] | None = None) -> str:
+        """One notice naming what has not been consulted. When the question
+        offers named agents as options, name them and the lookup that settles
+        each: the label states which variants a drug is indicated for (32B
+        run 4, 2026-10-26, AITX-00001: after this notice the model called
+        ClinVar, first in the category's order and unable to answer, while
+        the eteplirsen label was third and never called)."""
+        agents = [o for o in (options or []) if o.strip().lower() not in ("none", "n/a") and len(o.strip()) >= 4]
+        by_option = ""
+        if agents and "search_fda_labels" in self.tools:
+            by_option = (
+                f"The options name agents: {', '.join(agents)}. A drug's own label states which variants and "
+                f"ages it is indicated for, so call search_fda_labels with drug set to each option still in "
+                f"question (for example {{\"drug\": \"{agents[0]}\"}}) before answering None; if a label search "
+                f"returns nothing, search PubMed for that drug with the gene. "
+            )
         return (
             "You answered None, but the recommended tools for this question have not all been "
             f"consulted: {', '.join(uncalled)}. A fact absent from the sources you read is not "
-            "evidence of absence. Call one of them, choosing the arguments from the patient record "
-            "and the question, or confirm None if the evidence you have already rules the alternatives out."
+            "evidence of absence. " + by_option + "Call the tools that can settle it, choosing the arguments "
+            "from the patient record and the question, or confirm None if the evidence you have already "
+            "rules the alternatives out."
         )
 
     def _unverified_term_reminder(self, terms: list[str], context: dict, tried: set[str]) -> str:
@@ -566,10 +581,20 @@ class Agent:
             "together with the gene to find what it stands for, then match that to the tool results. "
             if context["answer_format"] == "multiple_choice" else ""
         )
+        # Name the call that can confirm a drug name: its own label, then the
+        # literature if no United States label exists (32B run 4: ataluren's
+        # label search returned nothing and the model stopped there).
+        drug_hint = ""
+        if "search_fda_labels" in self.tools:
+            drug_hint = (
+                f"If it is a drug, its label states what it treats and in which variants: call "
+                f"search_fda_labels with {{\"drug\": \"{terms[0]}\"}}, and if that returns no label, search "
+                f"PubMed for it with the gene, since openFDA holds only drugs with a United States label. "
+            )
         return (
             f"Your answer names {names}, which appears in no tool result of this conversation. "
             "Confirm it with a tool call before answering, choosing the arguments from the patient "
-            "record and the question. " + code_hint + where + "Then answer from the evidence you have."
+            "record and the question. " + drug_hint + code_hint + where + "Then answer from the evidence you have."
         )
 
     @staticmethod

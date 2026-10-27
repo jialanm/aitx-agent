@@ -69,8 +69,16 @@ class OpenFDATool(BaseTool):
             results = self._search_drug(drug)
 
             if not results:
+                # The empty result carries openFDA's coverage, where the model
+                # reads it: a drug approved only abroad returns nothing here,
+                # and ataluren did (32B run 4, 2026-10-26, AITX-00002: the
+                # model took the empty reply as evidence of absence).
                 return (
-                    f"No FDA drug labels found for: {drug}",
+                    f"No FDA drug labels found for: {drug}. openFDA holds only drugs with a United States "
+                    f"label; a drug approved only in another country, withdrawn, or investigational returns "
+                    f"nothing here, which is not evidence that it does not exist or does not treat this "
+                    f"condition. Search PubMed for {drug} with the gene or condition to establish what it "
+                    f"treats and in which variants.",
                     evidence,
                 )
 

@@ -999,3 +999,35 @@ class TestNotesPersist:
         assert any(notes in c for c in assistant_turns)
         assert agent.last_trace["model_turns"][0]["text"] == notes
 
+
+class TestRemindersNameTheDrugLookup:
+    """A drug the answer names is settled by its own label, and by PubMed when
+    no United States label exists (32B run 4, 2026-10-26: AITX-00001 was sent
+    to ClinVar, and AITX-00002 stopped at an empty label search)."""
+
+    class _FDA(BaseTool):
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_fda_labels", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return "FDA Drug Label for eteplirsen: indicated for ... amenable to exon 51 skipping", [
+                EvidenceRecord(url="https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=x")]
+
+    def test_none_reminder_names_each_option_and_the_label_call(self):
+        agent = Agent(None, None, [self._FDA()])
+        notice = agent._none_reminder(["search_clinvar", "search_fda_labels"],
+                                      {"category": "Established_Targeted", "answer_format": "multiple_choice"},
+                                      ["Golodirsen", "Viltolarsen", "Eteplirsen", "Casimersen", "Ataluren", "None"])
+
+        assert "The options name agents: Golodirsen, Viltolarsen, Eteplirsen, Casimersen, Ataluren." in notice
+        assert '{"drug": "Golodirsen"}' in notice
+        assert "if a label search returns nothing, search PubMed for that drug with the gene" in notice
+        assert "None" not in notice.split("The options name agents:")[1].split(".")[0]   # the None option is not an agent
+
+    def test_unverified_term_reminder_names_the_label_call_for_the_term(self):
+        agent = Agent(None, None, [self._FDA()])
+        notice = agent._unverified_term_reminder(["Ataluren"], {"category": "Established_Targeted", "answer_format": "multiple_choice"}, set())
+
+        assert '{"drug": "Ataluren"}' in notice
+        assert "openFDA holds only drugs with a United States label" in notice
+

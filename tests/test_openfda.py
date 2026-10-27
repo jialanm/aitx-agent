@@ -42,3 +42,27 @@ def test_label_is_cited_by_its_own_dailymed_page(recorded):
     assert "Indications:" in summary and "primary hyperoxaluria type 1" in summary
     assert [e.url for e in evidence] == ["https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=16985a31-f5e4-4557-9266-fc78d4bc5055"]
     assert "search.cfm" not in evidence[0].url
+
+
+def test_empty_label_result_states_the_coverage_and_names_pubmed(monkeypatch):
+    """32B run 4, AITX-00002: ataluren has no United States label, and the bare
+    "No FDA drug labels found" was read as evidence that it does not apply."""
+    class _Empty:
+        status_code, text, url = 200, '{"results": []}', "https://api.fda.gov/x"
+
+        def json(self):
+            return {"results": []}
+
+        def raise_for_status(self):
+            pass
+
+    monkeypatch.setattr(openfda.requests, "get", lambda *a, **k: _Empty())
+
+    summary, evidence = OpenFDATool().execute(drug="Ataluren")
+
+    assert summary.startswith("No FDA drug labels found for: Ataluren.")
+    assert "openFDA holds only drugs with a United States label" in summary
+    assert "not evidence that it does not exist" in summary
+    assert "Search PubMed for Ataluren with the gene or condition" in summary
+    assert evidence == []
+
