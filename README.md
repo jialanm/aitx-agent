@@ -67,7 +67,10 @@ uv run python app.py         # Gradio app on http://localhost:7860
 ```
 
 `requirements.txt` duplicates the dependency list because Hugging Face Spaces
-installs from it; `pyproject.toml` is the source of truth.
+installs from it; `pyproject.toml` is the source of truth. A deployment chooses
+the model with two environment variables, `AITX_MODEL` and `AITX_PRECISION`
+(for example `Qwen/Qwen3-32B-FP8` and `fp8`); they default to Qwen3-8B in
+bfloat16. `NCBI_API_KEY` is optional and read from the environment only.
 
 ## API
 

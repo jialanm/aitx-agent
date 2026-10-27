@@ -4,12 +4,13 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import traceback
 
 import gradio as gr
 
 from src.agent import Agent
-from src.model import load_model
+from src.model import MODEL_ID, load_model
 from src.schemas import TaskInput, TaskOutput
 from src.tools.clinvar import ClinVarTool
 from src.tools.clinical_trials import ClinicalTrialsTool
@@ -37,7 +38,13 @@ def get_agent() -> Agent:
     global _agent
     if _agent is None:
         logger.info("Loading model and initializing agent...")
-        model, tokenizer = load_model()
+        # The Space (or any deployment) chooses the model without a code edit:
+        # AITX_MODEL and AITX_PRECISION are read from the environment, and
+        # default to the Phase 1 model and precision.
+        model_id = os.environ.get("AITX_MODEL", MODEL_ID)
+        precision = os.environ.get("AITX_PRECISION", "bf16")
+        logger.info(f"Loading {model_id} ({precision})")
+        model, tokenizer = load_model(model_id=model_id, precision=precision)
         tools = [
             ClinVarTool(),
             EnsemblTool(),
