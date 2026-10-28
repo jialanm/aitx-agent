@@ -1,0 +1,587 @@
+{
+  "meta": {
+    "disclaimer": "Do not rely on openFDA to make decisions regarding medical care. While we make every effort to ensure that data is accurate, you should assume all results are unvalidated. We may limit or otherwise restrict your access to the API in line with our Terms of Service.",
+    "terms": "https://open.fda.gov/terms/",
+    "license": "https://open.fda.gov/license/",
+    "last_updated": "2026-10-27",
+    "results": {
+      "skip": 0,
+      "limit": 5,
+      "total": 3
+    }
+  },
+  "results": [
+    {
+      "spl_product_data_elements": [
+        "Vital Skin Hair Nails L-Alanine, L-Arginine, L-Carnitine, Cysteinum, L-Glutamine, L-Histidine, L-Isoleucine, L-Leucine, L-Lysine, L-Methionine, L-Ornithine, L-Proline, L-Serine, L-Tryptophan, L-Tyrosine, L-Valine, Apis Mellifica, Biotin, Epidermis Suis, Galium Aparine, Hamamelis Virginiana, Hepar Suis, HGH, Hypophysis Suis, Natrum Muriaticum, Pantothenic Acid, Phosphoricum Acidum, Riboflavinum, Thuja Occidentalis ALANINE ALANINE ARGININE ARGININE LEVOCARNITINE LEVOCARNITINE CYSTEINE CYSTEINE GLUTAMINE GLUTAMINE HISTIDINE HISTIDINE ISOLEUCINE ISOLEUCINE LEUCINE LEUCINE LYSINE LYSINE METHIONINE METHIONINE ORNITHINE ORNITHINE PROLINE PROLINE SERINE SERINE TRYPTOPHAN TRYPTOPHAN TYROSINE TYROSINE VALINE VALINE APIS MELLIFERA APIS MELLIFERA BIOTIN BIOTIN SUS SCROFA SKIN SUS SCROFA SKIN GALIUM APARINE WHOLE GALIUM APARINE HAMAMELIS VIRGINIANA ROOT BARK/STEM BARK HAMAMELIS VIRGINIANA ROOT BARK/STEM BARK PORK LIVER PORK LIVER SOMATROPIN SOMATROPIN SUS SCROFA PITUITARY GLAND SUS SCROFA PITUITARY GLAND SODIUM CHLORIDE CHLORIDE ION PANTOTHENIC ACID PANTOTHENIC ACID PHOSPHORIC ACID PHOSPHORIC ACID RIBOFLAVIN RIBOFLAVIN THUJA OCCIDENTALIS LEAFY TWIG THUJA OCCIDENTALIS LEAFY TWIG WATER ALCOHOL"
+      ],
+      "active_ingredient": [
+        "ACTIVE INGREDIENTS: (in each spray) 7.14% of Cysteinum 10X, L-Alanine 10X, L-Arginine 10X, L-Carnitine 10X, L-Glutamine 10X, L-Histidine 10X, L-Isoleucine 10X, L-Leucine 10X, L-Lysine 10X, L-Methionine 10X, L-Ornithine 10X, L-Proline 10X, L-Serine 10X, L-Tryptophan 10X, L-Tyrosine 10X, L-Valine 10X, Apis Mellifica 200C, Biotin 10X, Epidermis Suis 9C, Galium Aparine 5X, Hamamelis Virginiana 3X, Hepar Suis 6X, Human Growth Hormone 60X, Hypophysis Suis 30C, Natrum Muriaticum 200C, Pantothenic Acid 6X, Phosphoricum Acidum 3X, Riboflavinum 6X, Thuja Occidentalis 200C."
+      ],
+      "purpose": [
+        "INDICATIONS: May help revitalize hair, dry skin and nail growth and may temporarily relieve dry, aging skin, brittle nails, slow hair & nail growth, skin blemishes & rashes** **Claims based on traditional homeopathic practice, not accepted medical evidence. Not FDA evaluated."
+      ],
+      "warnings": [
+        "WARNINGS: Do not use if you have ever had an allergic reaction to this product or any of its ingredients. Ask a doctor before use if you have excessive itching, dryness, redness or swelling of the skin. Stop use and ask a doctor if symptoms persist for more than 7 days, worsen, or if new symptoms occur. Keep out of reach of children. In case of overdose, get medical help or call a Poison Control Center right away. If pregnant or breast feeding, ask a health professional before using product. Do not use if TAMPER EVIDENT seal around neck of bottle is missing or broken. Other information: Store at room temperature."
+      ],
+      "keep_out_of_reach_of_children": [
+        "KEEP OUT OF REACH OF CHILDREN: Keep out of reach of children. In case of overdose, get medical help or call a Poison Control Center right away."
+      ],
+      "dosage_and_administration": [
+        "DIRECTIONS: Adults only : Spray twice under the tongue three times a day."
+      ],
+      "indications_and_usage": [
+        "USES: May help revitalize hair, dry skin and nail growth and may temporarily relieve dry, aging skin, brittle nails, slow hair & nail growth, skin blemishes & rashes** **Claims based on traditional homeopathic practice, not accepted medical evidence. Not FDA evaluated."
+      ],
+      "inactive_ingredient": [
+        "INACTIVE INGREDIENTS: Organic alcohol 20% v/v, Purified water."
+      ],
+      "questions": [
+        "QUESTIONS: DIST BY LIDDELL LABORATORIES INC. 201 APPLE BLVD WOODBINE, IA 51579 WWW.LIDDELL.NET 1-800-460-7733"
+      ],
+      "package_label_principal_display_panel": [
+        "PACKAGE LABEL DISPLAY: DOCTOR FORMULATED VITÀL SKIN HAIR NAILS May help promote natural beauty, such as radiant skin, thick, shiny hair and longer, stronger nails. Readily absorbed. Safe. No known side effects. Easy to use. HOMEOPATHIC FAST ACTING ORAL SPRAY LIDDELL 1.0 FL OZ. (30 ml) Vital Skin Hair Nails lbl Vital Skin Hair Nails ctn"
+      ],
+      "set_id": "3e8a9233-6e65-4023-b3f8-8bca369a9c2a",
+      "id": "0a4df381-9054-406f-9134-1946a08e9fa2",
+      "effective_time": "20230615",
+      "version": "2",
+      "openfda": {
+        "brand_name": [
+          "Vital Skin Hair Nails"
+        ],
+        "generic_name": [
+          "L-ALANINE, L-ARGININE, L-CARNITINE, CYSTEINUM, L-GLUTAMINE, L-HISTIDINE, L-ISOLEUCINE, L-LEUCINE, L-LYSINE, L-METHIONINE, L-ORNITHINE, L-PROLINE, L-SERINE, L-TRYPTOPHAN, L-TYROSINE, L-VALINE, APIS MELLIFICA, BIOTIN, EPIDERMIS SUIS, GALIUM APARINE, HAMAMELIS VIRGINIANA, HEPAR SUIS, HGH, HYPOPHYSIS SUIS, NATRUM MURIATICUM, PANTOTHENIC ACID, PHOSPHORICUM ACIDUM, RIBOFLAVINUM, THUJA OCCIDENTALIS"
+        ],
+        "manufacturer_name": [
+          "Liddell Laboratories, Inc."
+        ],
+        "product_ndc": [
+          "50845-0278"
+        ],
+        "product_type": [
+          "HUMAN OTC DRUG"
+        ],
+        "route": [
+          "ORAL"
+        ],
+        "substance_name": [
+          "ALANINE",
+          "ARGININE",
+          "LEVOCARNITINE",
+          "CYSTEINE",
+          "GLUTAMINE",
+          "HISTIDINE",
+          "ISOLEUCINE",
+          "LEUCINE",
+          "LYSINE",
+          "METHIONINE",
+          "ORNITHINE",
+          "PROLINE",
+          "SERINE",
+          "TRYPTOPHAN",
+          "TYROSINE",
+          "VALINE",
+          "APIS MELLIFERA",
+          "BIOTIN",
+          "SUS SCROFA SKIN",
+          "GALIUM APARINE WHOLE",
+          "HAMAMELIS VIRGINIANA ROOT BARK/STEM BARK",
+          "PORK LIVER",
+          "SOMATROPIN",
+          "SUS SCROFA PITUITARY GLAND",
+          "SODIUM CHLORIDE",
+          "PANTOTHENIC ACID",
+          "PHOSPHORIC ACID",
+          "RIBOFLAVIN",
+          "THUJA OCCIDENTALIS LEAFY TWIG"
+        ],
+        "spl_id": [
+          "0a4df381-9054-406f-9134-1946a08e9fa2"
+        ],
+        "spl_set_id": [
+          "3e8a9233-6e65-4023-b3f8-8bca369a9c2a"
+        ],
+        "package_ndc": [
+          "50845-0278-1",
+          "50845-0278-2"
+        ],
+        "is_original_packager": [
+          true
+        ],
+        "upc": [
+          "0363113284966"
+        ],
+        "nui": [
+          "N0000175780",
+          "M0000922",
+          "M0003493",
+          "N0000175903",
+          "N0000185021",
+          "N0000175629",
+          "N0000184306",
+          "N0000185001",
+          "M0000728",
+          "M0002274",
+          "N0000185364",
+          "N0000185377",
+          "N0000175606",
+          "M0028842"
+        ],
+        "pharm_class_epc": [
+          "Amino Acid [EPC]",
+          "Carnitine Analog [EPC]",
+          "Standardized Insect Venom Allergenic Extract [EPC]",
+          "Non-Standardized Animal Skin Allergenic Extract [EPC]",
+          "Recombinant Human Growth Hormone [EPC]"
+        ],
+        "pharm_class_cs": [
+          "Amino Acids [CS]",
+          "Carnitine [CS]",
+          "Allergens [CS]",
+          "Bee Venoms [CS]",
+          "Human Growth Hormone [CS]"
+        ],
+        "pharm_class_pe": [
+          "Increased Histamine Release [PE]",
+          "Cell-mediated Immunity [PE]",
+          "Increased IgG Production [PE]"
+        ],
+        "unii": [
+          "OF5P57N2ZX",
+          "94ZLA3W45F",
+          "0G389FZZ9M",
+          "K848JZ4886",
+          "0RH81L854J",
+          "4QD397987E",
+          "04Y7590D77",
+          "GMW67QNF9C",
+          "K3Z4F929H6",
+          "AE28F7PNPL",
+          "E524N2IXA3",
+          "9DLQ4CIU6V",
+          "452VLY9402",
+          "8DUH1N11BX",
+          "42HK56048U",
+          "HG18B9YRS7",
+          "7S82P3R43Z",
+          "6SO6U10H04",
+          "3EM4VW6TQN",
+          "Z4B6561488",
+          "T7S323PKJS",
+          "6EC706HI7F",
+          "NQX9KB6PCL",
+          "L0PFEMQ1DT",
+          "451W47IQ8X",
+          "19F5HK2737",
+          "E4GA8884NN",
+          "TLM2976OFR",
+          "1NT28V9397"
+        ]
+      }
+    },
+    {
+      "spl_product_data_elements": [
+        "Metabatone Aralia Racemosa, Avena Sativa, Berberis Vulgaris, Capsicum Annuum, Ginkgo Biloba, Phytolacca Decandra, Hypothalamus Suis, Adenosinum Triphosphoricum Dinatrum, Alpha-Ketoglutaricum Acidum, Fel Tauri, Hyaluronidase, Pancreas Suis, Pancreatinum, Papain, Stomach (Suis), L-Alanine, L- Arginine, L-Carnitine, Cysteinum, L-Glutamine, L-Histidine, L-Isoleucine, L-Leucine, L-Lysine, L-Methionine, L-Ornithine, L-Proline, L-Serine, L-Tryptophan, L-Tyrosine, L-Valine, Calcarea Carbonica, Calcarea Phosphorica, Iodium, ARALIA RACEMOSA ROOT ARALIA RACEMOSA ROOT AVENA SATIVA FLOWERING TOP AVENA SATIVA FLOWERING TOP BERBERIS VULGARIS ROOT BARK BERBERIS VULGARIS ROOT BARK CAPSICUM CAPSICUM GINKGO GINKGO PHYTOLACCA AMERICANA ROOT PHYTOLACCA AMERICANA ROOT SUS SCROFA PITUITARY GLAND SUS SCROFA PITUITARY GLAND ADENOSINE TRIPHOSPHATE DISODIUM ADENOSINE TRIPHOSPHATE OXOGLURIC ACID .ALPHA.-KETOGLUTARIC ACID BOS TAURUS BILE BOS TAURUS BILE HYALURONIDASE (BOVINE) HYALURONIDASE (BOVINE) SUS SCROFA PANCREAS SUS SCROFA PANCREAS PANCRELIPASE PANCRELIPASE LIPASE PAPAIN PAPAIN SUS SCROFA STOMACH SUS SCROFA STOMACH ALANINE ALANINE ARGININE ARGININE LEVOCARNITINE LEVOCARNITINE CYSTEINE CYSTEINE GLUTAMINE GLUTAMINE HISTIDINE HISTIDINE ISOLEUCINE ISOLEUCINE LEUCINE LEUCINE LYSINE LYSINE METHIONINE METHIONINE ORNITHINE ORNITHINE PROLINE PROLINE SERINE SERINE TRYPTOPHAN TRYPTOPHAN TYROSINE TYROSINE VALINE VALINE OYSTER SHELL CALCIUM CARBONATE, CRUDE OYSTER SHELL CALCIUM CARBONATE, CRUDE TRIBASIC CALCIUM PHOSPHATE CALCIUM CATION GRAPHITE GRAPHITE CALCIUM SULFIDE CALCIUM SULFIDE IODINE IODINE LYCOPODIUM CLAVATUM SPORE LYCOPODIUM CLAVATUM SPORE MAGNESIUM CARBONATE CARBONATE ION SODIUM CHLORIDE CHLORIDE ION BROMELAINS BROMELAINS WATER ALCOHOL"
+      ],
+      "active_ingredient": [
+        "ACTIVE INGREDIENTS: (in each drop) Alpha-Ketoglutaricum Acidum 9X, 10X, 12X 2.76%, L-Alanine 12X 2.76%, L-Arginine 12X 2.76%, L-Carnitine 12X 2.76%, Cysteinum 12X 2.76%, L-Glutamine 12X 2.76%, L-Histidine 12X 2.76%, L-Isoleucine 12X 2.76%, L-Leucine 12X 2.76%, L-Lysine 12X 2.76%, L-Methionine 12X 2.76%, L-Ornithine 12X 2.76%, L-Proline 12X 2.76%, L-Serine 12X 2.76%, L-Tryptophan 12X 2.76% L-Tyrosine 12X 2.76%, L-Valine 12X 2.76%, Adenosinum Triphosphoricum Dinatrum 9X, 10X, 12X 2.76%, Bromelain 9C, 10C, 12C 2.76%, Calcarea Carbonica 12X 2.76%, Calcarea Phosphorica 12X2.76%, Fel Tauri 10X, 12X 2.76%, Graphites 12X 2.76%, Hepar Sulphuris Calcareum 12X 2.76%, Hyaluronidase 9X, 10X, 12X 2.76%, Hypothalamus Suis 9X 2.76%,Iodium 12X 2.76%, Lycopodium Clavatum 12X 2.76%, Magnesia Carbonica 12X 2.76%, Natrum Muriaticum 12X 2.76%, Pancreas Suis 9X, 10X, 12X 2.76%, Pancreatinum 10X, 12X 2.76%, Papain 9X, 10X, 12X 2.76%, Phytolacca Decandra 5X 2.76%, Stomach (Suis) 9X, 10X, 12X 2.76%, Aralia Racemosa 3X 0.10%, Avena Sativa 3X 0.10%, Berberis Vulgaris 3X 0.10%, Capsicum Annuum 3X 0.10%, Fel Tauri 9X 0.10%, Ginkgo Biloba 3X 0.10%, Pancreatinum 9X 0.10%."
+      ],
+      "purpose": [
+        "PURPOSES: Alpha-Ketoglutaricum Acidum – lassitude**, L-Alanine – weight gain**, L-Arginine - weight gain**, L-Carnitine - weight gain**, Cysteinum - weight gain**, L-Glutamine - weight gain**, L-Histidine - weight gain**, L-Isoleucine - weight gain**, L-Leucine - weight gain**, L-Lysine - weight gain**, L-Methionine - weight gain**, L-Ornithine - weight gain**, L-Proline - weight gain**, L-Serine - weight gain**, L-Tryptophan - weight gain**, L-Tyrosine - weight gain**, L-Valine - weight gain**, Adenosinum Triphosphoricum Dinatrum – increased appetite**, Bromelain – weakness**, Calcarea Carbonica – weight gain**, Calcarea Phosphorica – fat cravings**, Fel Tauri – constipation**, Graphites – weight gain **, Hepar Sulphuris Calcareum – chilliness **, Hyaluronidase – weakness**, Hypothalamus Suis – lowered metabolism **, Iodium – hunger**, Lycopodium Clavatum – sweet cravings**, Magnesia Carbonica – exhaustion**, Natrum Muriaticum – water retention**, Pancreas Suis – weakness for hunger**, Pancreatinum – weakness**, Papain – weakness**, Phytolacca Decandra – sluggishness**, Stomach (Suis) – slow digestion**, Aralia Racemosa – weakness**, Avena Sativa – irritability due to cravings**, Berberis Vulgaris – faintness**, Capsicum Annuum – sluggishness**, Ginkgo Biloba – forgetfulness**. **Claims based on traditional homeopathic practice, not accepted medical evidence. Not FDA evaluated."
+      ],
+      "indications_and_usage": [
+        "USES: May temporarily relieve •tiredness •weakness •general fatigue •exhaustion •weakness of memory** **Claims based on traditional homeopathic practice, not accepted medical evidence. Not FDA evaluated."
+      ],
+      "warnings": [
+        "WARNINGS: Stop use and ask a doctor if symptoms persist for more than 7 days. If pregnant or breastfeeding, ask a health professional before use. Keep out of reach of children. In case of overdose, get medical help or contact a Poison Control Center right away. DO NOT USE IF TAMPER EVIDENT SEAL IS BRODEN OR MISSING Store in a cool, dry place."
+      ],
+      "keep_out_of_reach_of_children": [
+        "KEEP OUT OF REACH OF CHILDREN: Keep out of reach of children. In case of overdose, get medical help or contact a Poison Control Center right away."
+      ],
+      "dosage_and_administration": [
+        "DIRECTIONS: • Adults and children 5 to 10 drops orally, 3 times daily or as otherwise directed by a health care professional. Consult a physician for use in children under 12 years of age."
+      ],
+      "inactive_ingredient": [
+        "INACTIVE INGREDIENTS: Demineralized water, 20% Ethanol."
+      ],
+      "questions": [
+        "QUESTIONS: Dist. by Energique, Inc. 201 Apple Blvd. Woodbine, IA 51579 800.869.8078"
+      ],
+      "package_label_principal_display_panel": [
+        "PACKAGE LABEL DISPLAY: ENERGIQUE SINCE 1987 HOMEOPATHIC REMEDY METABATONE 1 fl. oz. (30 ml) Metabatone"
+      ],
+      "set_id": "9510bb76-b717-407d-b9e8-da7743e4cfc8",
+      "id": "9d62f7de-0276-4f99-b043-b61ae05f61cf",
+      "effective_time": "20260731",
+      "version": "2",
+      "openfda": {
+        "brand_name": [
+          "Metabatone"
+        ],
+        "generic_name": [
+          "ARALIA RACEMOSA, AVENA SATIVA, BERBERIS VULGARIS, CAPSICUM ANNUUM, GINKGO BILOBA, PHYTOLACCA DECANDRA, HYPOTHALAMUS SUIS, ADENOSINUM TRIPHOSPHORICUM DINATRUM, ALPHA-KETOGLUTARICUM ACIDUM, FEL TAURI, HYALURONIDASE, PANCREAS SUIS, PANCREATINUM, PAPAIN, STOMACH (SUIS), L-ALANINE, L- ARGININE, L-CARNITINE, CYSTEINUM, L-GLUTAMINE, L-HISTIDINE, L-ISOLEUCINE, L-LEUCINE, L-LYSINE, L-METHIONINE, L-ORNITHINE, L-PROLINE, L-SERINE, L-TRYPTOPHAN, L-TYROSINE, L-VALINE, CALCAREA CARBONICA, CALCAREA PHOSPHORICA, IODIUM,"
+        ],
+        "manufacturer_name": [
+          "Energique, Inc."
+        ],
+        "product_ndc": [
+          "44911-0665"
+        ],
+        "product_type": [
+          "HUMAN OTC DRUG"
+        ],
+        "route": [
+          "ORAL"
+        ],
+        "substance_name": [
+          "ARALIA RACEMOSA ROOT",
+          "AVENA SATIVA FLOWERING TOP",
+          "BERBERIS VULGARIS ROOT BARK",
+          "CAPSICUM",
+          "GINKGO",
+          "PHYTOLACCA AMERICANA ROOT",
+          "SUS SCROFA PITUITARY GLAND",
+          "ADENOSINE TRIPHOSPHATE DISODIUM",
+          "OXOGLURIC ACID",
+          "BOS TAURUS BILE",
+          "HYALURONIDASE (BOVINE)",
+          "SUS SCROFA PANCREAS",
+          "PANCRELIPASE",
+          "PAPAIN",
+          "SUS SCROFA STOMACH",
+          "ALANINE",
+          "ARGININE",
+          "LEVOCARNITINE",
+          "CYSTEINE",
+          "GLUTAMINE",
+          "HISTIDINE",
+          "ISOLEUCINE",
+          "LEUCINE",
+          "LYSINE",
+          "METHIONINE",
+          "ORNITHINE",
+          "PROLINE",
+          "SERINE",
+          "TRYPTOPHAN",
+          "TYROSINE",
+          "VALINE",
+          "OYSTER SHELL CALCIUM CARBONATE, CRUDE",
+          "TRIBASIC CALCIUM PHOSPHATE",
+          "GRAPHITE",
+          "CALCIUM SULFIDE",
+          "IODINE",
+          "LYCOPODIUM CLAVATUM SPORE",
+          "MAGNESIUM CARBONATE",
+          "SODIUM CHLORIDE",
+          "BROMELAINS"
+        ],
+        "spl_id": [
+          "9d62f7de-0276-4f99-b043-b61ae05f61cf"
+        ],
+        "spl_set_id": [
+          "9510bb76-b717-407d-b9e8-da7743e4cfc8"
+        ],
+        "package_ndc": [
+          "44911-0665-1"
+        ],
+        "is_original_packager": [
+          true
+        ],
+        "nui": [
+          "N0000185375",
+          "N0000185371",
+          "N0000175629",
+          "N0000184306",
+          "M0000728",
+          "M0006342",
+          "M0016962",
+          "M0022575",
+          "N0000175780",
+          "M0000922",
+          "M0003493",
+          "N0000175903"
+        ],
+        "pharm_class_epc": [
+          "Non-Standardized Plant Allergenic Extract [EPC]",
+          "Non-Standardized Food Allergenic Extract [EPC]",
+          "Amino Acid [EPC]",
+          "Carnitine Analog [EPC]"
+        ],
+        "pharm_class_pe": [
+          "Increased Histamine Release [PE]",
+          "Cell-mediated Immunity [PE]"
+        ],
+        "pharm_class_cs": [
+          "Allergens [CS]",
+          "Dietary Proteins [CS]",
+          "Plant Proteins [CS]",
+          "Vegetable Proteins [CS]",
+          "Amino Acids [CS]",
+          "Carnitine [CS]"
+        ],
+        "unii": [
+          "T90W4582DU",
+          "MA9CQJ3F7F",
+          "1TH8Q20J0U",
+          "00UK7646FG",
+          "19FUJ2C58T",
+          "11E6VI8VEG",
+          "L0PFEMQ1DT",
+          "5L51B4DR1G",
+          "8ID597Z82X",
+          "ET3651ZLOU",
+          "8KOG53Z5EM",
+          "9Y3J3362RY",
+          "FQ3DRG0N5K",
+          "A236A06Y32",
+          "T0920P9Z9A",
+          "OF5P57N2ZX",
+          "94ZLA3W45F",
+          "0G389FZZ9M",
+          "K848JZ4886",
+          "0RH81L854J",
+          "4QD397987E",
+          "04Y7590D77",
+          "GMW67QNF9C",
+          "K3Z4F929H6",
+          "AE28F7PNPL",
+          "E524N2IXA3",
+          "9DLQ4CIU6V",
+          "452VLY9402",
+          "8DUH1N11BX",
+          "42HK56048U",
+          "HG18B9YRS7",
+          "2E32821G6I",
+          "91D9GV0Z28",
+          "4QQN74LH4O",
+          "1MBW07J51Q",
+          "9679TC07X4",
+          "C88X29Y479",
+          "0E53J927NA",
+          "451W47IQ8X",
+          "U182GP2CF3"
+        ]
+      }
+    },
+    {
+      "spl_product_data_elements": [
+        "E.O.L. Stillingia Sylvatica, Zincum Gluconicum, Thiaminum Hydrochloricum, Fragaria Vesca, Nicotinamidum, Rheum (Palmatum), Serotonin (Hydrochloride), 5-Hydroxytryptophan, Betainum Muriaticum, Biotin, Cholinum, Cysteinum, DL-Methionine, L-Alanine, L-Cystine, L-Glutamic Acid, L-Glutamine, L-Lysine, L-Methionine, L-Serine, Para-Aminobenzoic Acid, Potassium Gluconate, Thymus (Suis), Thyroidinum (Suis), Ubidecarenonum, Vitamin D3, Dopamine Hydrochloride, Lithium Bromatum, Squalene, Vaccinium Macrocarpon, Oxytocin, STILLINGIA SYLVATICA ROOT STILLINGIA SYLVATICA ROOT ZINC GLUCONATE ZINC CATION THIAMINE HYDROCHLORIDE THIAMINE ION FRAGARIA VESCA FRUIT ALPINE STRAWBERRY NIACINAMIDE NIACINAMIDE RHEUM PALMATUM ROOT RHEUM PALMATUM ROOT SEROTONIN HYDROCHLORIDE SEROTONIN OXITRIPTAN OXITRIPTAN BETAINE HYDROCHLORIDE BETAINE BIOTIN BIOTIN CHOLINE HYDROXIDE CHOLINE CYSTEINE CYSTEINE RACEMETHIONINE RACEMETHIONINE ALANINE ALANINE CYSTINE CYSTINE GLUTAMIC ACID GLUTAMIC ACID GLUTAMINE GLUTAMINE LYSINE LYSINE METHIONINE METHIONINE SERINE SERINE AMINOBENZOIC ACID AMINOBENZOIC ACID POTASSIUM GLUCONATE POTASSIUM CATION SUS SCROFA THYMUS SUS SCROFA THYMUS SUS SCROFA THYROID SUS SCROFA THYROID UBIDECARENONE UBIDECARENONE CHOLECALCIFEROL CHOLECALCIFEROL DOPAMINE HYDROCHLORIDE DOPAMINE LITHIUM BROMIDE LITHIUM CATION SQUALENE SQUALENE CRANBERRY CRANBERRY COPPER COPPER PHENYLALANINE PHENYLALANINE SELENIUM DIOXIDE SELENIUM DIOXIDE SELENIUM SELENIUM BORRELIA BURGDORFERI BORRELIA BURGDORFERI COCONUT OIL COCONUT OIL CANDIDA ALBICANS CANDIDA ALBICANS OXYTOCIN OXYTOCIN PUMPKIN SEED PUMPKIN SEED LEMON JUICE LEMON JUICE BROMELAINS BROMELAINS HIPPEASTRUM PUNICEUM WHOLE HIPPEASTRUM PUNICEUM WHOLE AESCULUS HIPPOCASTANUM FLOWER AESCULUS HIPPOCASTANUM FLOWER ILEX AQUIFOLIUM FLOWERING TOP ILEX AQUIFOLIUM FLOWERING TOP MALUS DOMESTICA FLOWER MALUS DOMESTICA FLOWER WATER ALCOHOL"
+      ],
+      "active_ingredient": [
+        "ACTIVE INGREDIENTS: Stillingia Sylvatica 3X, Zincum Gluconicum 3X, Thiaminum Hydrochloricum 4X, Fragaria Vesca 5X, Nicotinamidum 5X, Rheum (Palmatum) 5X, Serotonin (Hydrochloride) 5X, 5-Hydroxytryptophan 6X, Betainum Muriaticum 6X, Biotin 6X, Cholinum 6X, Cysteinum 6X, DL-Methionine 6X, L-Alanine 6X, L-Cystine 6X, L-Glutamic Acid 6X, L-Glutamine 6X, L-Lysine 6X, L-Methionine 6X, L-Serine 6X, Para-Aminobenzoic Acid 6X, Potassium Gluconate 6X, Thymus (Suis) 6X, Thyroidinum (Suis) 6X, Ubidecarenonum 6X, Vitamin D3 6X, Dopamine Hydrochloride 7X, Lithium Bromatum 7X, Squalene 7X, Vaccinum Macrocarpon 7X, Cuprum Metallicum 8X, L-Phenylalanine 8X, Selenium Dioxide 8X, Selenium Metallicum 8X, Borrelia Burgdorferi Nosode 12X, Coconut Oil 12X, Candida Albicans 12X, 30X, 12C, 30C, Oxytocin 16X, Cucurbita Pepo, Semen 17X, Citrus Limonum 18X, Bromelain 6C, Amaryllis Equestris 9C, Aesculus Hippocastanum, Flos 30C, Ilex Aquifolium, Flos 30C, Malus Pumila, Flos 30C."
+      ],
+      "purpose": [
+        "INDICATIONS: Support of fingernails, hair and skin."
+      ],
+      "warnings": [
+        "WARNINGS: Do not get into eyes. If pregnant or breast-feeding , ask a health care professional before use. Keep out of reach of children. In case of overdose, get medical help or contact a Poison Control Center right away. Do not use if tamper evident seal is broken or missing. Store in cool, dry place."
+      ],
+      "keep_out_of_reach_of_children": [
+        "KEEP OUT OF REACH OF CHILDREN: Keep out of reach of children. In case of overdose, get medical help or contact a Poison Control Center right away."
+      ],
+      "dosage_and_administration": [
+        "DIRECTIONS: 2-4 sprays topically or orally. Contact a physician for use in children under 12 years of age."
+      ],
+      "indications_and_usage": [
+        "INDICATIONS: Support of fingernails, hair and skin."
+      ],
+      "inactive_ingredient": [
+        "INACTIVE INGREDIENTS: Demineralized water, 20% Ethanol."
+      ],
+      "questions": [
+        "QUESTIONS: Dist. by InLight Creation, LLC. 3395 South Jones Blvd, Ste. #25 Las Vegas, NV 89146 775-400-1119 www.inlightcreation.com"
+      ],
+      "package_label_principal_display_panel": [
+        "PACKAGE LABEL DISPALY: InLight Creation E.O.L. HOMEOPATHIC REMEDY 2 fl. oz. (60 ml) E.O.L."
+      ],
+      "set_id": "b317d812-d6ed-4a2f-93f7-08b12261cc99",
+      "id": "990f3193-9ade-49a1-9176-1c84ad637de5",
+      "effective_time": "20260109",
+      "version": "2",
+      "openfda": {
+        "brand_name": [
+          "E.O.L."
+        ],
+        "generic_name": [
+          "STILLINGIA SYLVATICA, ZINCUM GLUCONICUM, THIAMINUM HYDROCHLORICUM, FRAGARIA VESCA, NICOTINAMIDUM, RHEUM (PALMATUM), SEROTONIN (HYDROCHLORIDE), 5-HYDROXYTRYPTOPHAN, BETAINUM MURIATICUM, BIOTIN, CHOLINUM, CYSTEINUM, DL-METHIONINE, L-ALANINE, L-CYSTINE, L-GLUTAMIC ACID, L-GLUTAMINE, L-LYSINE, L-METHIONINE, L-SERINE, PARA-AMINOBENZOIC ACID, POTASSIUM GLUCONATE, THYMUS (SUIS), THYROIDINUM (SUIS), UBIDECARENONUM, VITAMIN D3, DOPAMINE HYDROCHLORIDE, LITHIUM BROMATUM, SQUALENE, VACCINIUM MACROCARPON, OXYTOCIN,"
+        ],
+        "manufacturer_name": [
+          "InLight Creation, LLC."
+        ],
+        "product_ndc": [
+          "53405-0008"
+        ],
+        "product_type": [
+          "HUMAN OTC DRUG"
+        ],
+        "route": [
+          "ORAL"
+        ],
+        "substance_name": [
+          "STILLINGIA SYLVATICA ROOT",
+          "ZINC GLUCONATE",
+          "THIAMINE HYDROCHLORIDE",
+          "FRAGARIA VESCA FRUIT",
+          "NIACINAMIDE",
+          "RHEUM PALMATUM ROOT",
+          "SEROTONIN HYDROCHLORIDE",
+          "OXITRIPTAN",
+          "BETAINE HYDROCHLORIDE",
+          "BIOTIN",
+          "CHOLINE HYDROXIDE",
+          "CYSTEINE",
+          "RACEMETHIONINE",
+          "ALANINE",
+          "CYSTINE",
+          "GLUTAMIC ACID",
+          "GLUTAMINE",
+          "LYSINE",
+          "METHIONINE",
+          "SERINE",
+          "AMINOBENZOIC ACID",
+          "POTASSIUM GLUCONATE",
+          "SUS SCROFA THYMUS",
+          "SUS SCROFA THYROID",
+          "UBIDECARENONE",
+          "CHOLECALCIFEROL",
+          "DOPAMINE HYDROCHLORIDE",
+          "LITHIUM BROMIDE",
+          "SQUALENE",
+          "CRANBERRY",
+          "COPPER",
+          "PHENYLALANINE",
+          "SELENIUM DIOXIDE",
+          "SELENIUM",
+          "BORRELIA BURGDORFERI",
+          "COCONUT OIL",
+          "CANDIDA ALBICANS",
+          "OXYTOCIN",
+          "PUMPKIN SEED",
+          "LEMON JUICE",
+          "BROMELAINS",
+          "HIPPEASTRUM PUNICEUM WHOLE",
+          "AESCULUS HIPPOCASTANUM FLOWER",
+          "ILEX AQUIFOLIUM FLOWERING TOP",
+          "MALUS DOMESTICA FLOWER"
+        ],
+        "spl_id": [
+          "990f3193-9ade-49a1-9176-1c84ad637de5"
+        ],
+        "spl_set_id": [
+          "b317d812-d6ed-4a2f-93f7-08b12261cc99"
+        ],
+        "package_ndc": [
+          "53405-0008-1"
+        ],
+        "is_original_packager": [
+          true
+        ],
+        "nui": [
+          "N0000175780",
+          "M0000922",
+          "M0022792",
+          "N0000175714",
+          "M0022797",
+          "N0000175952",
+          "N0000185371",
+          "N0000185375",
+          "N0000175629",
+          "N0000184306",
+          "M0000728",
+          "M0006342",
+          "M0016962",
+          "N0000185015",
+          "M0005152",
+          "N0000175831",
+          "N0000008595",
+          "N0000008924",
+          "N0000175830",
+          "N0000185372",
+          "N0000185001",
+          "M0008890",
+          "N0000009705",
+          "N0000175828",
+          "M0015703"
+        ],
+        "pharm_class_epc": [
+          "Amino Acid [EPC]",
+          "Vitamin B Complex Member [EPC]",
+          "Vitamin D [EPC]",
+          "Non-Standardized Food Allergenic Extract [EPC]",
+          "Non-Standardized Plant Allergenic Extract [EPC]",
+          "Copper-containing Intrauterine Device [EPC]",
+          "Non-Standardized Fungal Allergenic Extract [EPC]",
+          "Oxytocic [EPC]"
+        ],
+        "pharm_class_cs": [
+          "Amino Acids [CS]",
+          "Vitamin B Complex [CS]",
+          "Vitamin D [CS]",
+          "Allergens [CS]",
+          "Dietary Proteins [CS]",
+          "Plant Proteins [CS]",
+          "Copper [CS]",
+          "Fungal Proteins [CS]",
+          "Oxytocin [CS]"
+        ],
+        "pharm_class_pe": [
+          "Increased Histamine Release [PE]",
+          "Cell-mediated Immunity [PE]",
+          "Decreased Embryonic Implantation [PE]",
+          "Decreased Sperm Motility [PE]",
+          "Inhibit Ovum Fertilization [PE]",
+          "Increased IgG Production [PE]",
+          "Increased Uterine Smooth Muscle Contraction or Tone [PE]"
+        ],
+        "unii": [
+          "QBR70R4FBK",
+          "U6WSN5SQ1Z",
+          "M572600E5P",
+          "CG6IX3GCMU",
+          "25X51I8RD4",
+          "G025DAL7CE",
+          "GKN429M9VS",
+          "C1LJO185Q9",
+          "JK8U8K4D6K",
+          "6SO6U10H04",
+          "7THJ3EG9SY",
+          "K848JZ4886",
+          "73JWT2K6T3",
+          "OF5P57N2ZX",
+          "48TCX9A1VT",
+          "3KX376GY7L",
+          "0RH81L854J",
+          "K3Z4F929H6",
+          "AE28F7PNPL",
+          "452VLY9402",
+          "TL2TJE8QTX",
+          "12H3K5QKN9",
+          "7B69B0BD62",
+          "6RV024OAUQ",
+          "EJ27X76M46",
+          "1C6V77QF41",
+          "7L3E358N9L",
+          "864G646I84",
+          "7QWM220FJH",
+          "0MVO31Q3QS",
+          "789U1901C5",
+          "47E5O17Y3R",
+          "9N3UK29E57",
+          "H6241UJ22B",
+          "0J8NV9V5Q8",
+          "Q9L0O73W7L",
+          "4D7G21HDBC",
+          "1JQS135EYN",
+          "GH30P1VXK2",
+          "AGN709ANTJ",
+          "U182GP2CF3",
+          "025JEQ4O6S",
+          "KK0Z92II8M",
+          "5ENR9SAN1W",
+          "EF626V855K"
+        ]
+      }
+    }
+  ]
+}

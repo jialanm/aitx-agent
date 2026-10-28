@@ -16,6 +16,12 @@ FDA_LABEL_WEB = "https://labels.fda.gov"
 DAILYMED_LABEL_URL = "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid={set_id}"
 
 TIMEOUT = 15
+# Several candidates, then choose. With one result the adapter took whatever
+# openFDA returned first, and for L-serine that is a twenty-nine-ingredient
+# homeopathic preparation whose indications are "may help revitalize hair,
+# dry skin and nail growth" (32B run 5, 2026-10-28, AITX-00012: the model
+# read it as the drug's status and dropped the option).
+SEARCH_LIMIT = 5
 
 
 class OpenFDATool(BaseTool):
@@ -82,8 +88,9 @@ class OpenFDATool(BaseTool):
                     evidence,
                 )
 
-            # Process top result
-            label = results[0]
+            # The candidate whose own names match the drug asked for, and a
+            # prescription label before an over-the-counter one.
+            label = min(results, key=lambda r: self._rank(r, drug))
             openfda = label.get("openfda", {})
 
             # Build evidence URL
@@ -104,6 +111,16 @@ class OpenFDATool(BaseTool):
             if generic_names or brand_names:
                 names = ", ".join(generic_names[:3]) or ", ".join(brand_names[:3])
                 sections.append(f"Drug: {names}")
+
+            # What kind of label this is, and whether the drug asked for is
+            # the product or one ingredient of it. Both are fields openFDA
+            # returns; the reading of them is left to the model.
+            product_type = ", ".join(openfda.get("product_type", []))
+            if product_type:
+                sections.append(f"Product type (openFDA): {product_type}")
+            listed = self._listed_names(label)
+            if len(listed) > 1 and any(n.lower() == drug.lower() for n in listed):
+                sections.append(f"The searched name {drug} is 1 of {len(listed)} ingredient names on this label.")
 
             # Indications
             indications_text = label.get("indications_and_usage", [""])[0]
@@ -142,6 +159,25 @@ class OpenFDATool(BaseTool):
         except requests.RequestException as e:
             return f"OpenFDA API error: {e}", evidence
 
+    @staticmethod
+    def _listed_names(label: dict) -> list[str]:
+        """The ingredient names openFDA prints for this product. A combination
+        product gives them as one comma-joined string, so they are split."""
+        openfda = label.get("openfda", {})
+        names: list[str] = []
+        for value in (openfda.get("generic_name") or []) or (openfda.get("brand_name") or []):
+            names += [n.strip() for n in value.split(",") if n.strip()]
+        return names
+
+    @classmethod
+    def _rank(cls, label: dict, drug: str) -> tuple:
+        """Sort key for one candidate label, lower first: the drug named on
+        its own, then a prescription label, then the fewest ingredients."""
+        listed = cls._listed_names(label)
+        alone = len(listed) == 1 and listed[0].lower() == drug.lower()
+        prescription = any("PRESCRIPTION" in t.upper() for t in (label.get("openfda", {}).get("product_type") or []))
+        return (0 if alone else 1, 0 if prescription else 1, len(listed) or 99)
+
     def _search_drug(self, drug: str) -> list[dict]:
         """Search openFDA for a drug by name."""
         # Try generic name first
@@ -151,7 +187,7 @@ class OpenFDATool(BaseTool):
                     label="openFDA", url=FDA_LABEL_URL,
                     params={
                         "search": f'{field}:"{drug}"',
-                        "limit": 1,
+                        "limit": SEARCH_LIMIT,
                     },
                     timeout=TIMEOUT,
                 )
@@ -169,7 +205,7 @@ class OpenFDATool(BaseTool):
                 label="openFDA", url=FDA_LABEL_URL,
                 params={
                     "search": drug,
-                    "limit": 1,
+                    "limit": SEARCH_LIMIT,
                 },
                 timeout=TIMEOUT,
             )

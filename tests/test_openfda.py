@@ -66,3 +66,57 @@ def test_empty_label_result_states_the_coverage_and_names_pubmed(monkeypatch):
     assert "Search PubMed for Ataluren with the gene or condition" in summary
     assert evidence == []
 
+
+
+class TestCandidateChoice:
+    """openFDA is asked for several labels and the adapter chooses, after a
+    single result gave AITX-00012 a homeopathic preparation for L-serine
+    (32B run 5, 2026-10-28). Fixtures recorded 2026-10-28 from
+    api.fda.gov/drug/label.json, search openfda.generic_name:"<drug>"."""
+
+    def _reply(self, monkeypatch, fixture):
+        seen = []
+
+        def fake_get(url, params=None, timeout=None):
+            seen.append(dict(params or {}))
+            return _Reply(FIXTURES / fixture)
+
+        monkeypatch.setattr(openfda.requests, "get", fake_get)
+        return seen
+
+    def test_several_candidates_are_requested(self, monkeypatch):
+        seen = self._reply(monkeypatch, "openfda_label_memantine.json")
+
+        OpenFDATool().execute(drug="memantine")
+
+        assert seen[0]["limit"] == openfda.SEARCH_LIMIT > 1
+
+    def test_a_combination_label_says_the_drug_is_one_ingredient_of_many(self, monkeypatch):
+        """Every L-serine label on openFDA is an over-the-counter combination
+        product; the summary states both facts instead of presenting it as
+        the drug's own label."""
+        self._reply(monkeypatch, "openfda_label_L-serine.json")
+
+        summary, evidence = OpenFDATool().execute(drug="L-serine")
+
+        assert "Product type (openFDA): HUMAN OTC DRUG" in summary
+        assert "The searched name L-serine is 1 of 29 ingredient names on this label." in summary
+        assert evidence and evidence[0].url.startswith("https://dailymed.nlm.nih.gov/")
+
+    def test_a_single_ingredient_prescription_label_carries_no_ingredient_note(self, monkeypatch):
+        self._reply(monkeypatch, "openfda_label_memantine.json")
+
+        summary, _ = OpenFDATool().execute(drug="memantine")
+
+        assert "Product type (openFDA): HUMAN PRESCRIPTION DRUG" in summary
+        assert "ingredient names on this label" not in summary
+        assert "Indications:" in summary
+
+    def test_the_drug_named_alone_outranks_a_combination_product(self):
+        """Ranking over the recorded records themselves, lower sorts first."""
+        import json
+        combo = json.loads((FIXTURES / "openfda_label_L-serine.json").read_text())["results"][0]
+        single = json.loads((FIXTURES / "openfda_label_memantine.json").read_text())["results"][0]
+
+        assert OpenFDATool._rank(single, "memantine") < OpenFDATool._rank(combo, "memantine")
+        assert OpenFDATool._rank(combo, "L-serine") > OpenFDATool._rank(single, "memantine")
