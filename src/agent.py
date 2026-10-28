@@ -21,6 +21,7 @@ from .prompts import (
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
 from .consequence_check import contradiction, notice as consequence_notice, vep_consequences
+from .live_claims import attempted as tools_attempted, notice as live_notice, sources_held, unsourced as live_unsourced
 from .variant_validation import validate_variant
 from .drug_names import is_drug_name, normalise_drug_names
 
@@ -154,6 +155,7 @@ class Agent:
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
         consequence_told = False   # the description check speaks once
+        live_told = False          # the live-claim check speaks once
 
         lookups = 0       # turns that called at least one tool
         generations = 0   # turns of any kind
@@ -239,6 +241,28 @@ class Agent:
                     continue
                 if none_reminded and self._is_none_answer(response.text, context):
                     self.last_trace["events"].append("none_reminder_ignored")
+
+                # A fact whose truth is a database state at a point in time
+                # cannot come from memory: an approval, a label's limits, a
+                # trial's state, a classification. The model's mechanism and
+                # reasoning are left alone (AITX-00006: "Yes, lumasiran is
+                # approved, and nedosiran was approved in 2023", with both
+                # names appearing only in a chapter's list of therapies).
+                if not live_told and room_to_look:
+                    claims = live_unsourced(
+                        f"{response.thinking}\n{response.text}",
+                        self._drug_candidates(response.text, options),
+                        sources_held(self.last_trace["tool_calls"]),
+                        gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
+                        tried=tools_attempted(self.last_trace["tool_calls"]),
+                    )[:3]
+                    if claims:
+                        live_told = True
+                        self.last_trace["events"].append(
+                            "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in claims))
+                        messages.append({"role": "assistant", "content": response.raw})
+                        messages.append(self._harness_message(live_notice(claims)))
+                        continue
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
@@ -598,6 +622,21 @@ class Agent:
         text = re.sub(r"\s*,\s*,+", ",", text)
         text = text.strip(" ,;\n\t")
         return text or "None"
+
+    def _drug_candidates(self, answer: str, options: list[str] | None) -> list[str]:
+        """Names that may be drugs in this question: the options, the answer's
+        own comma-separated terms, and drugs already looked up. A candidate
+        list rather than free-text extraction, so the check never invents an
+        entity."""
+        names = list(options or [])
+        names += [i.strip(" .;\n\t\"'") for i in (answer or "").split(",")]
+        names += [str((c.get("arguments") or {}).get("drug", "")) for c in self.last_trace.get("tool_calls", [])]
+        out: list[str] = []
+        for n in names:
+            n = n.strip()
+            if len(n) >= 4 and n.lower() not in ("none", "n/a", "none of the above") and n not in out:
+                out.append(n)
+        return out
 
     def _unverified_terms(self, answer: str, context: dict, options: list[str] | None) -> list[str]:
         """Answer terms (string or multiple-choice formats) that no tool text or evidence URL contains."""

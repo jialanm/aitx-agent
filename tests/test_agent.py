@@ -1248,3 +1248,89 @@ class TestConsequenceDescription:
 
         assert not any(e.startswith("consequence_contradiction") for e in trace["events"])
         assert output.response == "Ataluren"
+
+
+class TestLiveClaimInAnswer:
+    """An approval claimed from memory, with the drug named only in a
+    chapter's list of therapies, gets one notice naming the label lookup
+    (AITX-00006, 32B run 5: "Yes, lumasiran is approved, and nedosiran was
+    approved in 2023", three citations down to one, the age bound never
+    read)."""
+
+    CHAPTER = ("GeneReviews: Primary Hyperoxaluria Type 1 (NBK1283)\nMANAGEMENT: (2) RNA interference (RNAi) "
+               "therapeutics (lumasiran and nedosiran) that target specific hepatic enzymes")
+    LABEL = ("FDA Drug Label for nedosiran:\n\nIndications: RIVFLOZA is indicated to lower urinary oxalate levels "
+             "in children 2 years of age and older and adults with primary hyperoxaluria type 1")
+
+    class _Tool(BaseTool):
+        def __init__(self, name, text, url):
+            self._name, self._text, self._url = name, text, url
+            self.calls = []
+
+        def schema(self):
+            return {"type": "function", "function": {"name": self._name, "parameters": {}}}
+
+        def execute(self, **kwargs):
+            self.calls.append(kwargs)
+            return self._text, [EvidenceRecord(url=self._url)]
+
+    def _run(self, monkeypatch, turns):
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000002.12:g.240868898dup", gene_symbol="AGXT"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        gr = self._Tool("search_genereviews", self.CHAPTER, "https://www.ncbi.nlm.nih.gov/books/NBK1283/")
+        fda = self._Tool("search_fda_labels", self.LABEL, "https://dailymed.nlm.nih.gov/dailymed/x")
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00006"
+        task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.33dup",
+                                         "variant_protein": "p.(Lys12GlnfsTer156)", "zygosity": "homozygous"}],
+                           "clinical_context": "7 year old with recurrent nephrocalcinosis and chronic kidney disease"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "What targeted, genetic therapies are approved for this patient in the US?",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[gr, fda])
+        return agent.run(TaskInput(**task)), agent.last_trace, fda
+
+    def test_the_approval_claim_is_sent_back_with_the_label_lookup(self, monkeypatch):
+        from_memory = ModelResponse(text="lumasiran, nedosiran", tool_calls=[], raw="lumasiran, nedosiran",
+                                    thinking="Yes, lumasiran is approved, and nedosiran was approved in 2023.")
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "AGXT"})],
+                          raw="<tool_call>", thinking=""),
+            from_memory,
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
+                          raw="<tool_call>", thinking=""),
+            ModelResponse(text="lumasiran", tool_calls=[], raw="lumasiran", thinking=""),
+            ModelResponse(text="QUOTE: RIVFLOZA is indicated to lower urinary oxalate levels in children 2 years of age and older\nWHY: It gives the age bound.",
+                          tool_calls=[], raw="q", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: nothing", tool_calls=[], raw="q", thinking=""),
+        ]
+
+        output, trace, fda = self._run(monkeypatch, turns)
+
+        assert any(e.startswith("live_claim:") and "lumasiran:status" in e for e in trace["events"])
+        sent = next(m["content"] for m in trace["messages"]
+                    if m["role"] == "system" and "change over time" in m["content"])
+        assert "search_fda_labels" in sent and "not verified against a current source" in sent
+        assert fda.calls == [{"drug": "nedosiran"}]      # the model chose the arguments
+        assert output.response == "lumasiran"
+
+    def test_a_claim_whose_label_was_read_passes(self, monkeypatch):
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
+                          raw="<tool_call>", thinking=""),
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran",
+                          thinking="Nedosiran is approved for PH1 in children 2 years and older."),
+            ModelResponse(text="QUOTE: RIVFLOZA is indicated to lower urinary oxalate levels in children 2 years of age and older\nWHY: It states the approval.",
+                          tool_calls=[], raw="q", thinking=""),
+        ]
+
+        output, trace, _ = self._run(monkeypatch, turns)
+
+        assert not any(e.startswith("live_claim") for e in trace["events"])
+        assert output.response == "nedosiran"
