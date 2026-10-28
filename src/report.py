@@ -25,6 +25,7 @@ from .model import generate
 from .preprocessing import parse_variant
 from .prompts import _format_variant_summary
 from .consequence_check import contradiction, vep_consequences
+from .drug_names import is_drug_name
 from .live_claims import WORDING, sources_held, unsourced as live_unsourced
 from .schemas import ReportInput, ReportOutput
 from .tools.base import BaseTool
@@ -534,12 +535,15 @@ class ReportBuilder:
         difference (AITX-00006: both drugs named only in a chapter's list of
         therapies, their labels never read, the age bound never seen)."""
         held = sources_held(goal_calls)
+        if not hasattr(self, "_drug_cache"):
+            self._drug_cache: dict[str, bool | None] = {}    # one RxNorm answer per name per report
         gene = self.agent.last_trace.get("validation", [{}])
         gene = (gene[0] or {}).get("gene_symbol", "") if gene else ""
         for r in records:
             label = str(r.get(goal["label"]) or "").strip()
             text = " ".join(str(r.get(f) or "") for f in list(goal["fields"]) + ["reasoning"])
-            claims = live_unsourced(text, [label] if label else [], held, gene=gene)
+            claims = live_unsourced(text, [label] if label else [], held, gene=gene,
+                                    confirm=is_drug_name, cache=self._drug_cache)
             if not claims:
                 continue
             r["unverified"] = [f"{name}: {WORDING[category]}" for name, _k, category, _t in claims[:2]]

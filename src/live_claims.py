@@ -49,6 +49,22 @@ SUBJECT_ARGS = {
     "gene": ("gene",),
 }
 TRIAL_ID = re.compile(r"\bNCT\d{8}\b")
+# A name the model introduces that no option, answer or lookup mentions: a
+# capitalised word, a parenthesised one, or the word after "drug called".
+# AITX-00006's thinking offered "a drug called pegalysine (Oxepduo) approved
+# in the US", which the candidate list could not see.
+# The first pattern is the model calling something a drug in as many words,
+# which stands on its own; the others are shapes that need RxNorm to confirm.
+NAMED_AS_DRUG = re.compile(r"\b(?:drugs?|agents?|therap(?:y|ies))\s+(?:called|named)\s+([A-Za-z][A-Za-z-]{3,})", re.I)
+SHAPED_LIKE_A_NAME = [
+    re.compile(r"\(([A-Z][A-Za-z-]{3,})\)"),
+    re.compile(r"\b([A-Z][a-z]{3,}(?:mab|nib|sen|tide|ast|vir|pril|statin|zumab))\b"),
+]
+# Words that look like names but are not drugs; RxNorm would reject them and
+# the call is not worth making.
+NOT_A_NAME = re.compile(r"^(?:The|This|That|These|Those|There|When|While|With|What|Which|However|Because|Since|"
+                        r"Therefore|Patient|Variant|Exon|Gene|Protein|Status|Phase|FDA|EMA|PubMed|GeneReviews|"
+                        r"ClinVar|Ensembl|Indications|Approved|Trial|Study|United|States|Europe)$", re.I)
 # An adapter's own "nothing found" reply is not a source about its subject.
 NOTHING_FOUND = re.compile(r"^\s*(?:no |none |0 )|not found|returned no|no .{0,40}found", re.I)
 
@@ -109,8 +125,69 @@ def entities_in(sentence: str, drugs: list[str], gene: str = "") -> list[tuple[s
     return list(dict.fromkeys(found))
 
 
+def introduced_names(sentence: str) -> list[tuple[str, bool]]:
+    """(name, the model called it a drug) for names this sentence introduces.
+
+    A name the model itself calls a drug needs no confirmation: the claim is
+    the model's either way, and if the name does not exist the lookup is the
+    thing that shows it. A name that merely has the shape of one is confirmed
+    with RxNorm first, so an ordinary capitalised word is never challenged.
+    """
+    out: list[tuple[str, bool]] = []
+    seen: set[str] = set()
+
+    def add(name: str, explicit: bool) -> None:
+        name = name.strip()
+        if len(name) < 4 or NOT_A_NAME.match(name) or name.lower() in seen:
+            return
+        seen.add(name.lower())
+        out.append((name, explicit))
+
+    for name in NAMED_AS_DRUG.findall(sentence):
+        add(name, True)
+    for pattern in SHAPED_LIKE_A_NAME:
+        for name in pattern.findall(sentence):
+            add(name, False)
+    return out
+
+
+def confirmed_drugs(sentence: str, confirm, cache: dict[str, bool | None] | None = None,
+                    limit: int = 3) -> list[str]:
+    """Of the names a sentence introduces, those RxNorm knows as drugs.
+
+    A name the model itself calls a drug is taken as one without asking. For
+    the rest, RxNorm deciding keeps the check from challenging any capitalised
+    word, and its unknown answer yields no candidate, since a notice on a
+    guess is worse than a claim left unchecked.
+
+    RxNorm's silence is never read as the drug not existing: it has no concept
+    for ataluren, which is approved in the European Union, and none for
+    pegalysine, which the model asserted was approved in the United States.
+    Both cases want the same thing, a lookup.
+    """
+    found: list[str] = []
+    for name, explicit in introduced_names(sentence)[:limit]:
+        key = name.lower()
+        if explicit:                               # the model called it a drug
+            found.append(key)
+            continue
+        if cache is not None and key in cache:
+            verdict = cache[key]
+        else:
+            try:
+                verdict = confirm(name)
+            except Exception:                      # a lookup failure is an unknown, not a drug
+                verdict = None
+            if cache is not None:
+                cache[key] = verdict
+        if verdict is True:
+            found.append(key)
+    return found
+
+
 def unsourced(text: str, drugs: list[str], held: dict[tuple[str, str], set[str]],
-              gene: str = "", tried: dict[tuple[str, str], set[str]] | None = None
+              gene: str = "", tried: dict[tuple[str, str], set[str]] | None = None,
+              confirm=None, cache: dict[str, bool | None] | None = None
               ) -> list[tuple[str, str, str, str]]:
     """(entity, kind, category, tool to call) for each live claim in the text
     that no retrieved source of the right kind covers. One entry per entity
@@ -124,11 +201,15 @@ def unsourced(text: str, drugs: list[str], held: dict[tuple[str, str], set[str]]
     carried: list[tuple[str, str]] = []
     for sentence in re.split(r"(?<=[.!?])\s+|\n", text or ""):
         here = entities_in(sentence, drugs, gene)
+        hits = [(category, patterns, by_kind) for category, patterns, by_kind in CATEGORIES
+                if any(re.search(p, sentence, re.I) for p in patterns)]
+        # A live claim about a name the harness has never seen: ask RxNorm
+        # whether that name is a drug, and only then treat it as an entity.
+        if hits and not here and confirm is not None:
+            here = [("drug", name) for name in confirmed_drugs(sentence, confirm, cache)]
         if here:
             carried = here
-        for category, patterns, by_kind in CATEGORIES:
-            if not any(re.search(p, sentence, re.I) for p in patterns):
-                continue
+        for category, patterns, by_kind in hits:
             for kind, name in (here or carried):
                 tools = by_kind.get(kind)
                 if not tools or (name, category) in seen:

@@ -82,3 +82,49 @@ def test_the_notice_names_the_lookup_and_does_not_call_the_claim_false():
     assert "search_pubmed" in text and "ataluren" in text
     assert "not verified against a current source" in text
     assert "false" not in text.lower() or "rather than treating it as false" in text
+
+
+class TestNamesTheModelIntroduces:
+    """A drug the harness has never seen, named in the model's own words
+    (AITX-00006's thinking: "there's a drug called pegalysine (Oxepduo)
+    approved in the US", which RxNorm does not know and which no option,
+    answer or lookup mentioned)."""
+
+    SENTENCE = "Wait, I remember that for PH1, there's a drug called pegalysine (Oxepduo) approved in the US."
+
+    def test_a_name_the_model_calls_a_drug_needs_no_confirmation(self):
+        from src.live_claims import introduced_names
+
+        assert introduced_names(self.SENTENCE) == [("pegalysine", True), ("Oxepduo", False)]
+
+    def test_the_claim_is_reported_and_the_label_lookup_named(self):
+        found = unsourced(self.SENTENCE, [], {}, confirm=lambda name: False, cache={})
+
+        assert found == [("pegalysine", "drug", "status", "search_fda_labels")]
+
+    def test_a_shaped_name_is_reported_only_when_rxnorm_confirms_it(self):
+        sentence = "Eteplirsen is approved for exon 51 skipping."
+        assert unsourced(sentence, [], {}, confirm=lambda name: True, cache={})
+        assert unsourced(sentence, [], {}, confirm=lambda name: False, cache={}) == []
+
+    def test_an_ordinary_capitalised_word_is_not_challenged(self):
+        sentence = "The patient has Duchenne muscular dystrophy and no therapy is approved for exon 74."
+        assert unsourced(sentence, [], {}, confirm=lambda name: False, cache={}) == []
+
+    def test_rxnorm_being_unreachable_yields_no_candidate(self):
+        """Its unknown is not a drug and not a licence to challenge a guess."""
+        sentence = "Golodirsen is approved for exon 53 skipping."
+        assert unsourced(sentence, [], {}, confirm=lambda name: None, cache={}) == []
+
+    def test_one_rxnorm_answer_is_reused_per_name(self):
+        calls = []
+
+        def confirm(name):
+            calls.append(name)
+            return True
+
+        cache: dict[str, bool | None] = {}
+        text = "Golodirsen is approved for exon 53. Golodirsen is indicated for exon 53."
+        unsourced(text, [], {}, confirm=confirm, cache=cache)
+
+        assert calls == ["Golodirsen"]

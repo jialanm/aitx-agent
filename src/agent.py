@@ -157,6 +157,7 @@ class Agent:
         consequence_told = False   # the description check speaks once
         live_told = False          # the live-claim check speaks once
         said: list[str] = []       # the model's own words so far, which its thinking keeps in context
+        drug_cache: dict[str, bool | None] = {}    # one RxNorm answer per name per question
 
         lookups = 0       # turns that called at least one tool
         generations = 0   # turns of any kind
@@ -201,6 +202,7 @@ class Agent:
                     sources_held(self.last_trace["tool_calls"]),
                     gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
                     tried=tools_attempted(self.last_trace["tool_calls"]),
+                    confirm=is_drug_name, cache=drug_cache,
                 )[:3]
             if described and not response.tool_calls:
                 word, _ = described
@@ -358,6 +360,7 @@ class Agent:
                     sources_held(self.last_trace["tool_calls"]),
                     gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
                     tried=tools_attempted(self.last_trace["tool_calls"]),
+                    confirm=is_drug_name, cache=drug_cache,
                 )[:3]
                 if still:
                     live_told = True
