@@ -24,6 +24,7 @@ from .agent import Agent
 from .model import generate
 from .preprocessing import parse_variant
 from .prompts import _format_variant_summary
+from .consequence_check import contradiction, vep_consequences
 from .schemas import ReportInput, ReportOutput
 from .tools.base import BaseTool
 from .tools.bound import BoundTool
@@ -283,6 +284,7 @@ class ReportBuilder:
             goal_calls = agent.last_trace["tool_calls"][calls_before:]
             records = self._check_sources(goal, records, goal_calls)
             records = self._require_fetch(goal, records, calls_before)
+            records = self._check_descriptions(goal, records)
             records = self._evaluate(goal, records)
             records = self._enforce_conditions(goal, records)
             records = self._drop_repeats(goal, records, filled)
@@ -321,6 +323,10 @@ class ReportBuilder:
             if m:
                 position = int(m.group(1))
                 break
+        # VEP's own consequence terms, for the description check on each
+        # record's reasoning. The report prints that reasoning, so a
+        # description the data contradicts would reach the reader.
+        self.vep_terms = vep_consequences(consequences)
         inputs = {
             "gene": first_gene,
             "transcript": first_valid.transcript_variant.split(":")[0] if first_valid else "",
@@ -491,6 +497,32 @@ class ReportBuilder:
                 r["source_url"] = replacement
             kept.append(r)
         return kept
+
+    def _check_descriptions(self, goal: dict, records: list[dict]) -> list[dict]:
+        """A record's reasoning that describes the variant as something VEP did
+        not report loses that sentence. The record stays, so the claim is then
+        judged on its quote alone by the evaluator; what is never printed is a
+        description the retrieved data contradicts (both 32B runs of
+        AITX-00002 called a two-base substitution a frameshift, and the run
+        that did so answered correctly, so this cannot be caught by scoring
+        answers)."""
+        terms = getattr(self, "vep_terms", [])
+        if not terms:
+            return records
+        for r in records:
+            text = r.get("reasoning") or ""
+            found = contradiction(text, terms)
+            if not found:
+                continue
+            word, sentence = found
+            label = r.get(goal["label"])
+            kept = " ".join(p.strip() for p in re.split(r"(?<=[.!?])\s+", text) if p.strip() != sentence)
+            r["reasoning"] = kept.strip()
+            r["description_dropped"] = sentence
+            self.agent.last_trace["events"].append(f"record_description:{label}:{word}")
+            logger.warning(f"Record {label!r}: reasoning called the variant {word!r}, VEP reported "
+                           f"{', '.join(terms)}; the sentence was dropped")
+        return records
 
     def _evaluate(self, goal: dict, records: list[dict]) -> list[dict]:
         """A second model call per record, thinking off: does the quoted

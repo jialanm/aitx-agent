@@ -372,3 +372,36 @@ def test_trial_record_is_kept_when_the_trial_was_fetched_by_id(scripted):
     assert "**NCT00000001**" in md
     assert not any(e.startswith(("fetch_reminder", "record_dropped:not_fetched")) for e in agent.last_trace["events"])
 
+
+
+class TestDescriptionCheckOnRecords:
+    """A record's reasoning that calls the variant something VEP did not
+    report loses that sentence, so the report never prints a description the
+    retrieved data contradicts. The claim then stands or falls on its quote."""
+
+    def test_the_contradicted_sentence_is_dropped_from_the_reasoning(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": []}
+        builder.vep_terms = ["frameshift_variant"]
+        goal = {"label": "therapy", "key": "goal1_existing_targeted"}
+        records = [{"therapy": "ataluren",
+                    "reasoning": "This variant is a missense change. Read-through agents raise protein output."}]
+
+        kept = builder._check_descriptions(goal, records)
+
+        assert kept[0]["reasoning"] == "Read-through agents raise protein output."
+        assert kept[0]["description_dropped"] == "This variant is a missense change."
+        assert "record_description:ataluren:missense" in agent.last_trace["events"]
+
+    def test_a_description_vep_reported_is_left_alone(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": []}
+        builder.vep_terms = ["frameshift_variant"]
+        goal = {"label": "therapy", "key": "goal1_existing_targeted"}
+        reasoning = "The patient's variant is a frameshift, so little protein is made."
+        records = [{"therapy": "lumasiran", "reasoning": reasoning}]
+
+        kept = builder._check_descriptions(goal, records)
+
+        assert kept[0]["reasoning"] == reasoning
+        assert not any(e.startswith("record_description") for e in agent.last_trace["events"])
