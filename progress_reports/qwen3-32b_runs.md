@@ -357,9 +357,17 @@ and that is the first finding: the rules a consequence calls for attached in
 step 1c, the repeated-call guard, and the FDA label of every drug option
 attached in step 1d. Two questions regressed, and the traces below show the
 attached label set being read as the whole world in both, but with three
-changes in the pass the attribution is partial, not established. Both
-regressed questions also had rules attached in 1c that they had fetched for
-themselves in run 4, which is an untested second candidate. The code was
+changes in the pass the attribution is partial, not established. Both regressed questions also had the decay and
+read-through rules attached in 1c, chosen by triggers that key on the
+variant's mechanism rather than on the question, and that is an untested
+second candidate. In run 4 neither question called the reference at all, so
+the difference is not a lost lookup of their own; it is two rules they did
+not ask for sitting in the prompt. 00002's own words are the one piece of
+support for it: "This explains that read-through therapies like Ataluren are
+ineffective for frameshift-induced premature stop codons." That reasoning is
+also wrong on the data, since the variant is a two-base delins that VEP
+reports as stop_gained with no change in length, not a frameshift, so the
+attached rule was true and misapplied. The code was
 therefore reverted to run 4's state at 488fa62 and the three changes will go
 back in one at a time.
 
