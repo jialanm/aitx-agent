@@ -7,7 +7,7 @@ These tests focus on the non-model parts.
 import json
 import pytest
 
-from src.agent import Agent
+from src.agent import UNSUPPORTED_JUSTIFICATION, Agent
 from src.model import ToolCall, ModelResponse, parse_response
 from src.schemas import TaskInput, TaskOutput
 from src.tools.base import BaseTool, EvidenceRecord
@@ -484,7 +484,7 @@ class TestGroundedJustifications:
         def execute(self, **kwargs):
             return TestGroundedJustifications.SOURCE, [EvidenceRecord(url="https://www.ncbi.nlm.nih.gov/books/NBK1283/")]
 
-    def _run(self, monkeypatch, justification_reply):
+    def _run(self, monkeypatch, justification_reply, reask_reply=None):
         import src.agent as agent_module
         from src.variant_validation import ValidatedVariant
         monkeypatch.setattr(agent_module, "validate_variant",
@@ -494,6 +494,9 @@ class TestGroundedJustifications:
             ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "AGXT"})], raw="<tool_call>", thinking=""),
             ModelResponse(text="Pyridoxine", tool_calls=[], raw="Pyridoxine", thinking=""),
             ModelResponse(text=justification_reply, tool_calls=[], raw=justification_reply, thinking=""),
+            # Used only when the first quote fails the citation check and is re-asked.
+            ModelResponse(text=reask_reply or justification_reply, tool_calls=[],
+                          raw=reask_reply or justification_reply, thinking=""),
         ]
         monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
         monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))  # no RxNorm network in tests
@@ -1093,3 +1096,48 @@ class TestRepeatedCallGuard:
 
         assert tool.calls == 2
         assert agent.last_trace["events"] == []
+
+
+class TestCitationReask:
+    """A quote that cannot be cited is sent back once with the reason (32B run
+    5, 2026-10-28, AITX-00009: the model quoted the bare trial identifier for
+    both sources, the answer was right, and the run lost two citations with no
+    second attempt)."""
+
+    def test_a_too_short_quote_is_re_asked_and_the_second_quote_is_kept(self, monkeypatch):
+        first = "1. QUOTE: NBK1283\n   WHY: It is the chapter."
+        second = ('1. QUOTE: "RNA interference (RNAi) therapeutics (lumasiran and nedosiran)"\n'
+                  '   WHY: It names the therapies.')
+
+        output, trace = TestGroundedJustifications()._run(monkeypatch, first, reask_reply=second)
+
+        assert output.evidence[0].justification.startswith('"RNA interference (RNAi) therapeutics')
+        assert "citation_reask:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert "citation_reask_recovered:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert not any(e.startswith("citation_unsupported") for e in trace["events"])
+        assert trace["model_turns"][-1]["kind"] == "justification_reask"
+
+    def test_a_second_failure_keeps_the_unsupported_mark(self, monkeypatch):
+        invented = ('1. QUOTE: "Pyridoxine is first-line therapy for all AGXT patients regardless of genotype"\n'
+                    '   WHY: It supports the answer.')
+
+        output, trace = TestGroundedJustifications()._run(monkeypatch, invented)
+
+        assert output.evidence[0].justification == UNSUPPORTED_JUSTIFICATION
+        assert "citation_reask:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert "citation_unsupported:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert not any(e.startswith("citation_reask_recovered") for e in trace["events"])
+
+    def test_a_declined_source_is_not_re_asked(self, monkeypatch):
+        """NOT SUPPORTED is the model's honest judgment, not a failed quote."""
+        output, trace = TestGroundedJustifications()._run(monkeypatch, "1. QUOTE: NOT SUPPORTED\n   WHY: nothing relevant")
+
+        assert "citation_declined:https://www.ncbi.nlm.nih.gov/books/NBK1283/" in trace["events"]
+        assert not any(e.startswith("citation_reask") for e in trace["events"])
+
+    def test_the_reason_names_what_was_wrong(self):
+        text = "GOLODIRSEN is indicated for patients amenable to exon 53 skipping."
+        assert "shorter than 15 characters" in Agent._quote_failure("NCT05402384", text)
+        assert "do not occur" in Agent._quote_failure("indicated for patients amenable to exon 51 skipping", text)
+        assert Agent._quote_failure("indicated for patients amenable to exon 53 skipping", text) is None
+        assert "nothing found" in Agent._quote_failure("No FDA drug labels found for: Ataluren.", text)

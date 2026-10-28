@@ -29,6 +29,10 @@ MAX_ITERATIONS = 5
 # How much of a source's retrieved text the justification step is shown.
 SOURCE_TEXT_CHARS = 1500
 UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
+# Shortest quote that can stand as a citation. A bare identifier (NCT05402384,
+# 11 characters) is not evidence of what the record says (32B run 5, 2026-10-28,
+# AITX-00009: both citations lost to this, the answer itself correct).
+MIN_QUOTE_CHARS = 15
 
 
 class Agent:
@@ -836,11 +840,7 @@ class Agent:
                     source=record.url, time_accessed=record.time_accessed, justification=UNSUPPORTED_JUSTIFICATION,
                 ))
                 continue
-            supported = (
-                bool(quote)
-                and self._quote_in_text(quote, source_texts[i])
-                and not self._is_adapter_boilerplate(quote)
-            )
+            supported = self._quote_failure(quote, source_texts[i]) is None
             if supported:
                 justification = f'"{quote}" {sentence}'.strip()
             else:
@@ -886,6 +886,24 @@ class Agent:
         """True if the quote is an adapter's own 'nothing found' sentence rather than a record."""
         return bool(cls._BOILERPLATE.match(quote.strip()))
 
+    @classmethod
+    def _quote_failure(cls, quote: str, text: str) -> str | None:
+        """Why this quote cannot be cited, in words the model can act on, or
+        None when it can. One place decides, so the re-ask and the citation
+        gate cannot disagree."""
+        q = (quote or "").strip()
+        if not q:
+            return "you did not write a quote"
+        if cls._is_adapter_boilerplate(q):
+            return ("you quoted the tool's own \"nothing found\" sentence, which reports an empty search "
+                    "rather than stating a fact")
+        if len(re.sub(r"\s+", "", q).strip('"\'').rstrip(".,;: ")) < MIN_QUOTE_CHARS:
+            return (f"your quote is shorter than {MIN_QUOTE_CHARS} characters. An identifier or a fragment on "
+                    "its own does not state anything; quote the sentence that contains it")
+        if not cls._quote_in_text(q, text):
+            return "those words do not occur in this source's text"
+        return None
+
     @staticmethod
     def _quote_in_text(quote: str, text: str) -> bool:
         """True if the quote occurs in the text, ignoring case, spacing and quote marks."""
@@ -899,7 +917,7 @@ class Agent:
         # past (32B run 2, 2026-10-13, AITX-00006: the lumasiran indication
         # sentence runs into "[see Clinical Pharmacology ...]" in the label).
         q = norm(quote).strip('"\'').rstrip(".,;: ")
-        return bool(q) and len(q) >= 15 and q in norm(text)
+        return bool(q) and len(q) >= MIN_QUOTE_CHARS and q in norm(text)
 
     def _generate_justifications(
         self,
@@ -940,7 +958,35 @@ class Agent:
                 out.append(("", ""))
                 continue
             self._record_turn("justifications", len(out) + 1, response)
-            out.append(self._parse_justification(response.text))
+            quote, why = self._parse_justification(response.text)
+            # One re-ask when the quote cannot be cited, naming the reason.
+            # A malformed answer already gets a retry; a failed citation got
+            # none, so a recoverable source was lost in silence (32B run 5,
+            # AITX-00009: the model quoted the bare trial identifier twice
+            # while the record's own title and status line were in view).
+            if quote is not None:
+                reason = self._quote_failure(quote, text)
+                if reason is not None:
+                    self.last_trace["events"].append(f"citation_reask:{record.url}")
+                    retry = messages + [
+                        {"role": "assistant", "content": response.text},
+                        {"role": "user", "content": (
+                            f"That quote cannot be used: {reason}. Copy a different sentence VERBATIM from the "
+                            "source text above, or write exactly NOT SUPPORTED if nothing in it supports the "
+                            "answer.\n\nFormat:\nQUOTE: <verbatim sentence or NOT SUPPORTED>\nWHY: <one sentence>")},
+                    ]
+                    try:
+                        second = generate(self.model, self.tokenizer, retry, tools=None,
+                                          max_new_tokens=300, enable_thinking=False)
+                    except Exception as e:
+                        logger.error(f"Failed to re-ask for a citation of {record.url}: {e}")
+                        second = None
+                    if second is not None:
+                        self._record_turn("justification_reask", len(out) + 1, second)
+                        quote, why = self._parse_justification(second.text)
+                        if quote is not None and self._quote_failure(quote, text) is None:
+                            self.last_trace["events"].append(f"citation_reask_recovered:{record.url}")
+            out.append((quote, why))
         return out
 
     @staticmethod
