@@ -348,3 +348,70 @@ count in the failure taxonomy. The step is therefore a flag, not a fixture.
 and the flag's value is written into each run's metadata as
 `step1_option_labels`, so no two runs can be compared without it being
 visible.
+
+## 7. Run 5 (2026-10-28, commit 5b4e6f8, VM file name run6): the label prefetch is a regression
+
+Run 5 is the first pass with step 1d, the harness fetching the FDA label of
+every option RxNorm confirms is a drug. It scored 10 of 16 exactly, 12 of 16
+counting 00011 and 00014 as before, against run 4's 12 and 14, in 74 minutes.
+It fixed nothing and broke two questions, both by the same mechanism: the
+attached label set was read as the whole world.
+
+| Patient | Expected | Run 5 | Run 4 | Labels attached |
+|---|---|---|---|---|
+| 00001 | Eteplirsen | None | None | Golodirsen, Viltolarsen, Eteplirsen, Casimersen |
+| 00002 | Ataluren | **None** | Ataluren | the same four |
+| 00003 | None | None | None | the same four |
+| 00012 | L-Serine | **Memantine** | L-serine | Memantine, L-serine |
+
+**00002, the missing label became a verdict.** The question's options are the
+four exon-skipping drugs plus ataluren, and RxNorm does not return a concept
+for ataluren, so four labels were attached and the fifth option had none. The
+model's thinking turned that gap into the answer: "the FDA labels provided
+don't include Ataluren, so according to the given information, it's not
+listed", then "without the FDA label, we can't confirm its approval". It did
+call the label tool for ataluren itself at turn 5 and received our coverage
+note, which says in as many words that an empty reply is not evidence of
+absence and to search PubMed. It restated that as "the FDA label search for
+Ataluren didn't return any results. That means it's not FDA-approved in the
+US for DMD", never searched PubMed, and answered None. Run 4 reached Ataluren
+from the same empty reply under reminder pressure.
+
+**00012, a bad label match beat the mechanism.** openFDA's best match for
+L-serine is a homeopathic product listing. The model read it and dropped the
+option: "The FDA label here is for homeopathic use, not for genetic
+disorders. It's less likely to be relevant here." In run 4 it reached
+L-serine from the mechanism-direction rule, a loss-of-function receptor
+needing an agonist. Prefetching put a weak retrieval in front of a sound
+piece of reasoning, and the retrieval won.
+
+**00001 failed differently but for the same reason as before.** The model now
+reads the labels correctly and names the exons they cover, 53, 51 and 45. It
+then requires the drug to target an exon inside the deletion: "the deletion
+is from exon 52-63, none of the existing drugs target that range". Underneath
+is the premise that survived every run: "1743 bases, which is a multiple of
+three. This means the deletion is in-frame", taken from the VEP block's
+as-written line, with the whole-exon reading never reached. A label states
+indications, not frame, so no label could have fixed this.
+
+**My wording caused part of it.** The attached block said a label "is the
+evidence that admits or rules out that option", which is an instruction to
+treat the set as closed, and it is the reading the model gave in both
+regressions.
+
+### What this says
+
+Attaching evidence is not neutral. The consequence in 1b and the rules in 1c
+helped because both are complete for their claim: VEP's output is the
+variant's consequence, and the reference rule is the whole rule. A label set
+is not complete for "which therapy is this variant amenable to", because a
+drug can be amenable and unapproved, and because an option's absence from the
+set carries no information. Prefetch is safe for a source that answers the
+question in full and unsafe for one that answers part of it, and the model
+does not supply the missing part by itself.
+
+Step 1d therefore defaults off at 3f6b729. The code and the flag stay so the
+pass is reproducible: `--step1-labels` turns it on, and run metadata records
+`step1_option_labels` either way. Next for 00001 is the frame premise, not the
+labels: the VEP block still offers the as-written number first, and that is
+the sentence every failing run quotes.
