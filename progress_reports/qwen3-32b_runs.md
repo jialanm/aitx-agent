@@ -369,17 +369,32 @@ also wrong on the data, since the variant is a two-base delins that VEP
 reports as stop_gained with no change in length, not a frameshift, so the
 attached rule was true and misapplied.
 
-Run 4's trace sharpens this. The model described the same variant both ways
-in a single turn, "a frameshifting insertion/deletion leading to a stop
-codon" and then "since the variant is a nonsense mutation, Ataluren might be
-a candidate", and the nonsense reading won, giving the right answer. The
-contradiction was there before 1c existed. What the attached read-through
-rule added in run 5 was a decision procedure that fires on the wrong half of
-it: the rule excludes frameshift-derived stops, the model had already called
-this one a frameshift, and the exclusion settled the question without anyone
-rechecking VEP's own stop_gained line. A rule in the prompt does not only
-supply knowledge, it picks which of the model's competing descriptions
-becomes load-bearing. The code was
+Corrected 2026-10-28, after reading every turn rather than the citation.
+I first wrote that the attached read-through rule supplied the exclusion that
+decided this question. It did not. The word frameshift appears in run 5 only
+in the citation written after the answer, turn 9, while run 5's reasoning
+turns reject ataluren entirely on the missing label: "The FDA label for
+Ataluren isn't in the provided data, so according to the given information,
+it's not listed", and "without the FDA label, we can't confirm its approval".
+The rule exclusion is post-hoc rationalisation, not the cause.
+
+The frameshift description belongs to run 4, the run that answered correctly.
+Each of its five reasoning turns says "The patient's variant is a
+frameshifting insertion/deletion leading to a stop codon", beside "since the
+variant is a nonsense mutation, Ataluren might be a candidate", and the
+nonsense half won. So the wrong description does not predict the wrong
+answer, and for 00002 the supported cause of the regression is the label
+prefetch, not 1c. 1c remains a candidate for 00012 alone, where the
+read-through framing does appear in a reasoning turn.
+
+An offline audit now measures the description itself
+(scripts/audit_consequence_claims.py): sentences that assert something about
+this patient's variant, excluding negations, hypotheticals and the name of
+the decay mechanism, checked against the terms VEP reported. One question of
+sixteen in run 4, none in run 5. A description that contradicts the data is
+therefore rare, and in the one case we have it sits behind a correct answer,
+which is why it is measured and not acted on: an in-loop notice would have
+fired on the run that was right and stayed silent on the run that was wrong. The code was
 therefore reverted to run 4's state at 488fa62 and the three changes will go
 back in one at a time.
 
