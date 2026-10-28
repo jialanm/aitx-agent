@@ -351,11 +351,17 @@ visible.
 
 ## 7. Run 5 (2026-10-28, commit 5b4e6f8, VM file name run6): the label prefetch is a regression
 
-Run 5 is the first pass with step 1d, the harness fetching the FDA label of
-every option RxNorm confirms is a drug. It scored 10 of 16 exactly, 12 of 16
-counting 00011 and 00014 as before, against run 4's 12 and 14, in 74 minutes.
-It fixed nothing and broke two questions, both by the same mechanism: the
-attached label set was read as the whole world.
+Run 5 scored 10 of 16 exactly, 12 of 16 counting 00011 and 00014 as before,
+against run 4's 12 and 14, in 74 minutes. It carried three changes, not one,
+and that is the first finding: the rules a consequence calls for attached in
+step 1c, the repeated-call guard, and the FDA label of every drug option
+attached in step 1d. Two questions regressed, and the traces below show the
+attached label set being read as the whole world in both, but with three
+changes in the pass the attribution is partial, not established. Both
+regressed questions also had rules attached in 1c that they had fetched for
+themselves in run 4, which is an untested second candidate. The code was
+therefore reverted to run 4's state at 488fa62 and the three changes will go
+back in one at a time.
 
 | Patient | Expected | Run 5 | Run 4 | Labels attached |
 |---|---|---|---|---|
@@ -410,8 +416,14 @@ set carries no information. Prefetch is safe for a source that answers the
 question in full and unsafe for one that answers part of it, and the model
 does not supply the missing part by itself.
 
-Step 1d therefore defaults off at 3f6b729. The code and the flag stay so the
-pass is reproducible: `--step1-labels` turns it on, and run metadata records
-`step1_option_labels` either way. Next for 00001 is the frame premise, not the
-labels: the VEP block still offers the as-written number first, and that is
-the sentence every failing run quotes.
+What was done about it: step 1d first defaulted off at 3f6b729, and then the
+whole of src, scripts and tests went back to run 4's state, because a pass
+that moves three things cannot tell us which one cost the two questions. The
+reverted work is recoverable from c12a7b7, 3bcbfaa and 5b4e6f8. The order to
+reinstate is the repeated-call guard, which no regression here points at,
+then the rules attachment alone with a pass behind it, and the label prefetch
+only if a reason appears to expect it to help.
+
+Next for 00001 is the frame premise, not the labels: the VEP block still
+offers the as-written number first, and that is the sentence every failing
+run quotes.

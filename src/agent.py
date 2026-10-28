@@ -26,9 +26,6 @@ from .drug_names import is_drug_name, normalise_drug_names
 logger = logging.getLogger(__name__)
 
 MAX_ITERATIONS = 5
-# How many option labels the harness fetches in step 1d. Five covers the
-# validator's longest drug-option question; the cap keeps the prompt bounded.
-MAX_OPTION_LABELS = 5
 # How much of a source's retrieved text the justification step is shown.
 SOURCE_TEXT_CHARS = 1500
 UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
@@ -44,7 +41,6 @@ class Agent:
         tools: list[BaseTool],
         schema_order_seed: int | None = None,
         show_thinking: bool = False,
-        step1_labels: bool = False,
     ):
         self.model = model
         self.tokenizer = tokenizer
@@ -56,21 +52,6 @@ class Agent:
         # Echo each model turn's thinking and text to stdout as the turn
         # ends, for watching a run live. The trace keeps them regardless.
         self.show_thinking = show_thinking
-        # Step 1d on or off, off by default. Measured on 2026-10-28 (32B run
-        # 5, 5b4e6f8): prefetching the option labels fixed nothing and lost
-        # two questions, because the model read the attached set as the whole
-        # world. AITX-00002's answer, ataluren, has no RxNorm concept and so
-        # no label, and its absence from the set became "not approved";
-        # AITX-00012's L-serine matched a homeopathic product listing, which
-        # the model used to drop the option it had reasoned its way to in the
-        # run before. A prefetch is safe for a source that answers the
-        # question in full (VEP's consequence, a reference rule) and unsafe
-        # for one that answers part of it. Kept behind the flag so the pass
-        # is reproducible.
-        self.step1_labels = step1_labels
-        # Repeated-call guard scope: one conversation. The report chain sets
-        # it per goal; the question answerer leaves it at 0.
-        self.call_segment = 0
         self.last_trace: dict = {}
 
     def run(self, task_input: TaskInput) -> TaskOutput:
@@ -115,11 +96,6 @@ class Agent:
         # it does not count as the model having looked anything up.
         step1_evidence: list[EvidenceRecord] = []
         consequences = [self._predict_consequence(g.gene, v, step1_evidence) for g, v in zip(task_input.patient.genotype, validated)]
-        # Step 1c: the rules that consequence calls for, attached rather than
-        # left to the model to request (AITX-00001, five runs: it read VEP's
-        # "1743 bases, a multiple of three" and ruled out every exon-skipping
-        # drug from memory, never reading the splicing or exon-skipping rule).
-        rules_text = self._rules_for(consequences, step1_evidence)
 
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
@@ -128,14 +104,6 @@ class Agent:
         options: list[str] = []
         if context["answer_format"] == "multiple_choice":
             options = self._extract_options(context["prompt"])
-
-        # Step 1d: when the options are drug names, the labels that decide the
-        # answer are fetched here too. Naming the tool was not enough: in five
-        # 32B runs of AITX-00001 the model ruled out all five drugs from
-        # memory, and the notice that listed every option with the exact call
-        # was ignored twice. RxNorm decides which options are drugs, so a
-        # mechanism class or "None of the above" fetches nothing.
-        labels_text = self._option_labels(options, step1_evidence) if self.step1_labels else ""
 
         # Step 3: Build initial messages
         system_prompt = build_system_prompt(
@@ -147,8 +115,6 @@ class Agent:
             options=options,
             validated=validated,
             consequences=consequences,
-            rules=rules_text,
-            labels=labels_text,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
@@ -165,7 +131,6 @@ class Agent:
         tried: set[str] = set()
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
-        rule_reminded = False
 
         for iteration in range(MAX_ITERATIONS):
             logger.info(f"Agent iteration {iteration + 1}/{MAX_ITERATIONS}")
@@ -198,15 +163,6 @@ class Agent:
                     # Told once, still no lookup: accept the answer, record it, no loop.
                     self.last_trace["events"].append("reminder_ignored")
                     logger.warning("Model answered without a tool call after the evidence reminder")
-
-                # The answer turns on a general rule the model never read.
-                unread = self._unread_rules(f"{response.text}\n{response.thinking}", {c["tool"] for c in self.last_trace["tool_calls"]})
-                if unread and not rule_reminded and iteration < MAX_ITERATIONS - 1:
-                    rule_reminded = True
-                    self.last_trace["events"].append("rule_reminder:" + ",".join(unread))
-                    messages.append({"role": "assistant", "content": response.raw})
-                    messages.append(self._harness_message(self._rule_reminder(unread)))
-                    continue
 
                 # A name in the answer that no tool text contains came from
                 # memory (32B run, 2026-10-13: ataluren on AITX-00002 and
@@ -421,121 +377,6 @@ class Agent:
         evidence.extend(found)
         return "Predicted consequence (Ensembl VEP, fetched automatically):\n" + summary
 
-    # Which rule a fact in the retrieved consequence calls for. The trigger is
-    # in the data, not in the model's judgment: pointing at the reference from
-    # the tool text was ignored in every run to 2026-10-27, and the NOTES
-    # instruction in 28 of 28 turns, so the rules are attached rather than
-    # waited for.
-    _RULE_TRIGGERS = [
-        ("Splice sites removed", ["splicing", "exon-skipping"]),
-        ("frameshift_variant", ["reading-frame", "nonsense-mediated-decay"]),
-        ("stop_gained", ["nonsense-mediated-decay", "read-through"]),
-        ("inframe_deletion", ["reading-frame"]),
-        ("start_lost", ["reading-frame"]),
-    ]
-    # Wording in the model's own answer or thinking that rests on a general
-    # rule; if the reference was never read, one notice names the topic.
-    _RULE_WORDING = [
-        (r"\bin[- ]frame\b|\bout of frame\b|\bframeshift\b|\breading frame\b", "reading-frame"),
-        (r"\bexon skipping\b|\bskip(?:ping)? exon\b", "exon-skipping"),
-        (r"\bnonsense[- ]mediated decay\b|\bNMD\b", "nonsense-mediated-decay"),
-        (r"\bread[- ]through\b", "read-through"),
-        (r"\bgain of function\b|\bloss of function\b|\bantagonist\b|\bagonist\b", "mechanism-direction"),
-        (r"\bspliced?\b|\bsplice site\b", "splicing"),
-    ]
-
-    def _rules_for(self, consequences: list[str], evidence: list[EvidenceRecord]) -> str:
-        """The reference rules the retrieved consequence calls for, as prompt
-        text with their sources, fetched in step 1 like the consequence."""
-        tool = self.tools.get("genetics_reference")
-        if tool is None:
-            return ""
-        text = "\n".join(consequences)
-        topics: list[str] = []
-        for trigger, rules in self._RULE_TRIGGERS:
-            if trigger in text:
-                topics += [r for r in rules if r not in topics]
-        parts = []
-        for topic in topics[:3]:
-            try:
-                summary, found = self._call_tool(tool, "genetics_reference", {"topic": topic}, "step1")
-            except Exception as e:
-                logger.error(f"Step-1 rule lookup failed for {topic}: {e}")
-                continue
-            evidence.extend(found)
-            parts.append(summary)
-        if not parts:
-            return ""
-        self.last_trace["events"].append("rules_attached:" + ",".join(topics[:3]))
-        return ("These rules of molecular genetics apply to the consequence above and are quotable "
-                "evidence; read them before judging the variant's effect.\n\n" + "\n\n".join(parts))
-
-    @staticmethod
-    def _indications_only(summary: str) -> str:
-        """A label's drug names and what it is indicated for. The rest of the
-        label (contraindications, warnings, dosing) stays behind the tool, so
-        five options do not crowd out the question; the model can still call
-        search_fda_labels for the same drug to read it."""
-        parts = summary.split("\n\n")
-        if not parts or not parts[0].startswith("FDA Drug Label"):
-            # openFDA's no-US-label coverage note; it goes in whole, because
-            # its point is that silence is not evidence of absence.
-            return summary
-        return "\n\n".join([parts[0]] + [p for p in parts[1:] if p.startswith(("Drug:", "Indications"))])
-
-    def _option_labels(self, options: list[str], evidence: list[EvidenceRecord]) -> str:
-        """The FDA label of every option RxNorm knows as a drug, as prompt
-        text with its source, fetched in step 1 like the consequence."""
-        tool = self.tools.get("search_fda_labels")
-        if tool is None or not options:
-            return ""
-        parts: list[str] = []
-        fetched: list[str] = []
-        for option in options:
-            name = option.strip()
-            if len(name) < 4 or name.lower() in ("none", "n/a", "none of the above"):
-                continue
-            # True only: RxNorm unreachable (None) must not fetch a label for
-            # a protein domain or a GOF/LOF code.
-            if is_drug_name(name) is not True:
-                continue
-            try:
-                summary, found = self._call_tool(tool, "search_fda_labels", {"drug": name}, "step1")
-            except Exception as e:
-                logger.error(f"Step-1 label lookup failed for {name}: {e}")
-                continue
-            evidence.extend(found)
-            parts.append(self._indications_only(summary))
-            fetched.append(name)
-            if len(fetched) >= MAX_OPTION_LABELS:
-                break
-        if not parts:
-            return ""
-        self.last_trace["events"].append("labels_attached:" + ",".join(fetched))
-        return ("The options name drugs, and each label below was fetched automatically for one of them. "
-                "A label states which variants, ages and conditions the drug is approved for, so it is the "
-                "evidence that admits or rules out that option, and it is quotable. Call search_fda_labels "
-                "for the same drug to read its contraindications, warnings and dosing.\n\n"
-                + "\n\n".join(parts))
-
-    def _unread_rules(self, text: str, called: set[str]) -> list[str]:
-        """Rules the model's own wording rests on that it never read."""
-        if "genetics_reference" in called or "genetics_reference" not in self.tools:
-            return []
-        topics = []
-        for pattern, topic in self._RULE_WORDING:
-            if re.search(pattern, text or "", re.I) and topic not in topics:
-                topics.append(topic)
-        return topics[:2]
-
-    def _rule_reminder(self, topics: list[str]) -> str:
-        return (
-            f"Your answer turns on a general rule of molecular genetics ({', '.join(topics)}), and the "
-            "genetics reference has not been read in this conversation. Call genetics_reference with "
-            f"{{\"topic\": \"{topics[0]}\"}} and check your reasoning against the rule and its source, "
-            "then answer."
-        )
-
     def _record_turn(self, kind: str, iteration: int, response: ModelResponse) -> None:
         """Keep one model turn in the trace: kind is loop, empty_answer_retry or validation_retry."""
         self.last_trace["model_turns"].append({
@@ -632,27 +473,7 @@ class Agent:
         An exception is recorded, then re-raised so each call site keeps
         its own handling.
         """
-        # A call the model has already made returns its first result with a
-        # note, instead of being made again (32B run 4, 2026-10-27, AITX-00012:
-        # the same three PharmGKB lookups were repeated four times because each
-        # returned an empty record, spending four turns on nothing).
-        repeat = self._earlier_identical_call(name, kwargs)
-        if repeat is not None:
-            self.last_trace["events"].append(f"repeated_call:{name}")
-            logger.info(f"Repeated call to {name}({kwargs}); returning the first result")
-            self.last_trace["tool_calls"].append({"tool": name, "arguments": kwargs, "origin": origin,
-                                                 "segment": self.call_segment,
-                                                 "seconds": 0.0, "repeat_of": repeat["seconds"],
-                                                 "evidence_urls": repeat.get("evidence_urls", []),
-                                                 "summary": repeat.get("summary", "")})
-            return (
-                f"{repeat.get('summary', '')}\n\n[This is the result of the identical earlier call to {name}; "
-                "it has not changed. A result that lacks the fact you need is not evidence of absence: try a "
-                "different tool or different arguments.]",
-                [],
-            )
-
-        entry = {"tool": name, "arguments": kwargs, "origin": origin, "segment": self.call_segment}
+        entry = {"tool": name, "arguments": kwargs, "origin": origin}
         start = time.time()
         try:
             summary, evidence = tool.execute(**kwargs)
@@ -665,17 +486,6 @@ class Agent:
         entry["evidence_urls"] = [r.url for r in evidence]
         entry["summary"] = summary
         return summary, evidence
-
-    def _earlier_identical_call(self, name: str, kwargs: dict) -> dict | None:
-        """The first call to this tool with these arguments in this
-        conversation. Scoped to the segment: the report chain bumps it per
-        goal, because a later goal legitimately re-reads the same chapter and
-        its records are checked against its own calls."""
-        for call in self.last_trace.get("tool_calls", []):
-            if (call["tool"] == name and call.get("arguments") == kwargs and "summary" in call
-                    and "repeat_of" not in call and call.get("segment") == self.call_segment):
-                return call
-        return None
 
     # Identifier shapes the check recognises. Drug names are not shaped and
     # are left to the citation check that follows later.
