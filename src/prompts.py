@@ -171,7 +171,7 @@ Recommended tool order for this category: {tool_order_str}
 
 Start by calling the first recommended tool above. After receiving tool results, you may answer or call additional tools.
 
-Your thinking is not kept between turns; only what you write outside it is. So before each tool call, write one line outside your thinking that starts with NOTES: and states what is established so far and what you will check next, then make the call. You may call more than one tool in the same turn when you already know what you need.
+You may call more than one tool in the same turn when you already know what you need.
 
 ## Answer Format
 {format_instruction}

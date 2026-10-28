@@ -113,15 +113,20 @@ class TestMemoryRule:
         assert "must appear in a tool result of this conversation" in prompt
 
 
-class TestNotesInstruction:
-    def test_prompt_asks_for_a_notes_line_and_allows_several_calls_per_turn(self):
+class TestNotesInstructionIsGone:
+    """The prompt asked for a NOTES line because tool results sent as user
+    messages made Qwen's template drop earlier thinking. The tool role fixed
+    that on 2026-10-15, so the premise was false and the instruction was
+    ignored in all 60 tool-call turns of 32B runs 4 and 5."""
+
+    def test_prompt_does_not_ask_for_notes_but_still_allows_several_calls(self):
         from src.preprocessing import ParsedVariant
         from src.prompts import build_system_prompt
         v = ParsedVariant(gene="DMD", transcript="NM_004006.3", variant_cdna="c.70T>C", variant_protein="p.(Trp24Arg)",
                           zygosity="hemizygous", variant_type="missense", cdna_position="70", protein_position="24",
                           amino_acid_change="Trp24Arg")
         prompt = build_system_prompt("Established_Targeted", [v], "Progressive muscle weakness", "string_match", "2025-08-01")
-        assert "Your thinking is not kept between turns" in prompt
-        assert "starts with NOTES:" in prompt
+        assert "Your thinking is not kept between turns" not in prompt
+        assert "NOTES:" not in prompt
         assert "more than one tool in the same turn" in prompt
 

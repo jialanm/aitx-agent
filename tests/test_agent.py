@@ -969,14 +969,16 @@ class TestFinalAnswerTurn:
         assert "No further tool calls are possible" in agent.last_trace["messages"][-1]["content"]
 
 
-class TestNotesPersist:
-    """The NOTES line the model writes before a tool call stays in the conversation it
-    sees next turn (the thinking does not), and is kept in the trace."""
+class TestAssistantTextPersists:
+    """Text the model writes outside its thinking stays in the conversation it
+    sees next turn and in the trace. Its thinking is kept too, since tool
+    results carry the tool role (see tests/test_tool_role.py), which is why
+    the prompt no longer asks for a NOTES line."""
 
-    def test_notes_line_is_in_the_history_and_the_trace(self, monkeypatch):
+    def test_text_outside_thinking_is_in_the_history_and_the_trace(self, monkeypatch):
         import src.agent as agent_module
         from src.variant_validation import ValidatedVariant
-        notes = "NOTES: nonsense variant in exon 74, no listed ASO targets it; next: confirm ataluren via search_pubmed."
+        notes = "Nonsense variant in exon 74, no listed ASO targets it; next: confirm ataluren via search_pubmed."
         turns = [
             ModelResponse(text=notes, tool_calls=[ToolCall(name="search_pubmed", arguments={"query": "DMD nonsense ataluren"})],
                           raw=f"<think>long reasoning</think>\n{notes}\n<tool_call>{{}}</tool_call>", thinking="long reasoning"),
