@@ -1334,3 +1334,48 @@ class TestLiveClaimInAnswer:
 
         assert not any(e.startswith("live_claim") for e in trace["events"])
         assert output.response == "nedosiran"
+
+    def test_a_claim_made_while_calling_a_tool_is_still_caught_later(self, monkeypatch):
+        """The thinking persists across tool turns, so the check reads
+        everything the model has said, not just the latest turn (AITX-00002,
+        run 5: "if it's not FDA-approved for this specific mutation" three
+        turns before the answer). Here the claim is made while calling
+        GeneReviews, no label is ever read, and the notice arrives with the
+        answer."""
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_genereviews", arguments={"gene": "AGXT"})],
+                          raw="<tool_call>",
+                          thinking="GeneReviews will say. Nedosiran is approved for this patient anyway."),
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
+                          raw="<tool_call>", thinking=""),
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: the chapter lists it only.", tool_calls=[], raw="q", thinking=""),
+            ModelResponse(text="QUOTE: RIVFLOZA is indicated to lower urinary oxalate levels in children 2 years of age and older\nWHY: It states the approval.",
+                          tool_calls=[], raw="q", thinking=""),
+        ]
+
+        output, trace, fda = self._run(monkeypatch, turns)
+
+        assert any(e.startswith("live_claim:") and "nedosiran" in e for e in trace["events"])
+        notices = [m["content"] for m in trace["messages"]
+                   if m["role"] == "system" and "change over time" in m["content"]]
+        assert len(notices) == 1 and "search_fda_labels" in notices[0]
+        assert fda.calls == [{"drug": "nedosiran"}]     # the notice sent it to the label
+        assert output.response == "nedosiran"
+
+    def test_a_claim_settled_by_the_same_turn_s_lookup_is_not_challenged(self, monkeypatch):
+        """A claim made while fetching the very source that settles it needs
+        no notice; the index is recomputed after the turn's results."""
+        turns = [
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
+                          raw="<tool_call>", thinking="Nedosiran is approved for PH1, let me confirm on the label."),
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            ModelResponse(text="QUOTE: RIVFLOZA is indicated to lower urinary oxalate levels in children 2 years of age and older\nWHY: It states the approval.",
+                          tool_calls=[], raw="q", thinking=""),
+        ]
+
+        output, trace, _ = self._run(monkeypatch, turns)
+
+        assert not any(e.startswith("live_claim") for e in trace["events"])
+        assert output.response == "nedosiran"

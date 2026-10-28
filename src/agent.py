@@ -156,6 +156,7 @@ class Agent:
         none_reminded = False
         consequence_told = False   # the description check speaks once
         live_told = False          # the live-claim check speaks once
+        said: list[str] = []       # the model's own words so far, which its thinking keeps in context
 
         lookups = 0       # turns that called at least one tool
         generations = 0   # turns of any kind
@@ -186,6 +187,21 @@ class Agent:
             described = None
             if not consequence_told and generations < MAX_GENERATIONS:
                 described = contradiction(f"{response.thinking}\n{response.text}", vep_terms)
+            # Live claims are checked on every turn, not only on the turn that
+            # answers: the thinking persists across tool turns, so a claim
+            # formed early goes on shaping the rest (AITX-00002, run 5: "if
+            # it's not FDA-approved for this specific mutation" appears in a
+            # turn that called GeneReviews, three turns before the answer).
+            said.append(f"{response.thinking}\n{response.text}")
+            live_claims: list = []
+            if not live_told and room_to_look:
+                live_claims = live_unsourced(
+                    "\n".join(said),
+                    self._drug_candidates(response.text, options),
+                    sources_held(self.last_trace["tool_calls"]),
+                    gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
+                    tried=tools_attempted(self.last_trace["tool_calls"]),
+                )[:3]
             if described and not response.tool_calls:
                 word, _ = described
                 consequence_told = True
@@ -248,21 +264,13 @@ class Agent:
                 # reasoning are left alone (AITX-00006: "Yes, lumasiran is
                 # approved, and nedosiran was approved in 2023", with both
                 # names appearing only in a chapter's list of therapies).
-                if not live_told and room_to_look:
-                    claims = live_unsourced(
-                        f"{response.thinking}\n{response.text}",
-                        self._drug_candidates(response.text, options),
-                        sources_held(self.last_trace["tool_calls"]),
-                        gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
-                        tried=tools_attempted(self.last_trace["tool_calls"]),
-                    )[:3]
-                    if claims:
-                        live_told = True
-                        self.last_trace["events"].append(
-                            "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in claims))
-                        messages.append({"role": "assistant", "content": response.raw})
-                        messages.append(self._harness_message(live_notice(claims)))
-                        continue
+                if live_claims and not live_told:
+                    live_told = True
+                    self.last_trace["events"].append(
+                        "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in live_claims))
+                    messages.append({"role": "assistant", "content": response.raw})
+                    messages.append(self._harness_message(live_notice(live_claims)))
+                    continue
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
                 if not response.text and response.thinking and all_evidence:
@@ -339,6 +347,23 @@ class Agent:
                 consequence_told = True
                 self.last_trace["events"].append(f"consequence_contradiction:{word}")
                 messages.append(self._harness_message(consequence_notice(word, vep_terms)))
+
+            # Claims this turn made from memory, now that its own lookups are
+            # in. Those its results settled are no longer unsourced, so the
+            # list is recomputed against the index as it now stands.
+            if live_claims and not live_told:
+                still = live_unsourced(
+                    "\n".join(said),
+                    self._drug_candidates(response.text, options),
+                    sources_held(self.last_trace["tool_calls"]),
+                    gene=context["parsed_variants"][0].gene if context["parsed_variants"] else "",
+                    tried=tools_attempted(self.last_trace["tool_calls"]),
+                )[:3]
+                if still:
+                    live_told = True
+                    self.last_trace["events"].append(
+                        "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in still))
+                    messages.append(self._harness_message(live_notice(still)))
 
             turn_calls = self.last_trace["tool_calls"][calls_before:]
             # Only when the results are the adapters' own "nothing found"
