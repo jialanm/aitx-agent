@@ -1031,3 +1031,65 @@ class TestRemindersNameTheDrugLookup:
         assert '{"drug": "Ataluren"}' in notice
         assert "openFDA holds only drugs with a United States label" in notice
 
+
+
+class TestRepeatedCallGuard:
+    """An identical repeat returns the first result with a note instead of
+    being made again (32B run 4: twelve PharmGKB calls, three arguments
+    repeated four times, each returning an empty record)."""
+
+    class _Counting(BaseTool):
+        def __init__(self):
+            self.calls = 0
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_pharmgkb", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            self.calls += 1
+            return "PharmGKB Gene: GRIN2B (PA28980)", [EvidenceRecord(url="https://www.clinpgx.org/gene/PA28980")]
+
+    def test_identical_repeat_is_not_executed_again(self):
+        tool = self._Counting()
+        agent = Agent(None, None, [tool])
+        agent.last_trace = {"tool_calls": [], "events": []}
+        args = {"gene": "GRIN2B", "drug": "Memantine"}
+        assert agent.call_segment == 0
+
+        first, ev1 = agent._call_tool(tool, "search_pharmgkb", args, "model")
+        second, ev2 = agent._call_tool(tool, "search_pharmgkb", args, "model")
+
+        assert tool.calls == 1
+        assert first.startswith("PharmGKB Gene: GRIN2B")
+        assert second.startswith("PharmGKB Gene: GRIN2B")
+        assert "identical earlier call to search_pharmgkb" in second
+        assert "not evidence of absence" in second
+        assert ev2 == []                                   # no duplicate evidence record
+        assert agent.last_trace["events"] == ["repeated_call:search_pharmgkb"]
+        assert len(agent.last_trace["tool_calls"]) == 2     # both are recorded, the second as a repeat
+
+    def test_different_arguments_still_call_the_tool(self):
+        tool = self._Counting()
+        agent = Agent(None, None, [tool])
+        agent.last_trace = {"tool_calls": [], "events": []}
+
+        agent._call_tool(tool, "search_pharmgkb", {"gene": "GRIN2B", "drug": "Memantine"}, "model")
+        agent._call_tool(tool, "search_pharmgkb", {"gene": "GRIN2B", "drug": "L-serine"}, "model")
+
+        assert tool.calls == 2
+        assert agent.last_trace["events"] == []
+
+    def test_a_new_segment_may_call_the_same_tool_again(self):
+        """The report chain bumps the segment per goal, so a later goal reads
+        the same chapter into its own conversation."""
+        tool = self._Counting()
+        agent = Agent(None, None, [tool])
+        agent.last_trace = {"tool_calls": [], "events": []}
+        args = {"gene": "GRIN2B"}
+
+        agent._call_tool(tool, "search_pharmgkb", args, "model")
+        agent.call_segment += 1
+        agent._call_tool(tool, "search_pharmgkb", args, "model")
+
+        assert tool.calls == 2
+        assert agent.last_trace["events"] == []

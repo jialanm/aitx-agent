@@ -271,6 +271,7 @@ class ReportBuilder:
         filled: dict[str, list[dict]] = {}
         for goal in GOALS:
             agent.last_trace["events"].append(f"goal_start:{goal['key']}")
+            agent.call_segment += 1   # the repeated-call guard is scoped to one goal
             calls_before = len(agent.last_trace["tool_calls"])
             try:
                 records = self._run_goal(goal, patient_block, inputs, filled)
