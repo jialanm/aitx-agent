@@ -349,7 +349,7 @@ and the flag's value is written into each run's metadata as
 `step1_option_labels`, so no two runs can be compared without it being
 visible.
 
-## 7. Run 5 (2026-10-28, commit 5b4e6f8, VM file name run6): the label prefetch is a regression
+## 7. Run 5 (2026-10-28, commit 5b4e6f8, VM file name run6): three changes at once, two questions lost
 
 Run 5 scored 10 of 16 exactly, 12 of 16 counting 00011 and 00014 as before,
 against run 4's 12 and 14, in 74 minutes. It carried three changes, not one,
