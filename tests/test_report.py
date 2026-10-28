@@ -405,3 +405,54 @@ class TestDescriptionCheckOnRecords:
 
         assert kept[0]["reasoning"] == reasoning
         assert not any(e.startswith("record_description") for e in agent.last_trace["events"])
+
+
+class TestLiveClaimsOnRecords:
+    """A record claiming approval or applicability needs a source about that
+    entity in this goal's lookups. The record is kept and the gap is printed,
+    since a fact we could not retrieve may still be true."""
+
+    GOAL = {"label": "therapy", "key": "goal1_existing_targeted",
+            "fields": {"therapy": "", "status": "", "indication": ""}}
+    CHAPTER_CALL = {"tool": "search_genereviews", "arguments": {"gene": "AGXT"},
+                    "summary": "GeneReviews: RNA interference therapeutics (lumasiran and nedosiran)"}
+    LABEL_CALL = {"tool": "search_fda_labels", "arguments": {"drug": "nedosiran"},
+                  "summary": "FDA Drug Label for nedosiran:\n\nIndications: children 2 years of age and older"}
+
+    def _builder(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        return builder, agent
+
+    def test_an_approval_claim_with_only_a_chapter_mention_is_marked(self, scripted):
+        builder, agent = self._builder(scripted)
+        records = [{"therapy": "nedosiran", "status": "approved",
+                    "indication": "indicated for primary hyperoxaluria type 1", "reasoning": ""}]
+
+        kept = builder._check_live_claims(self.GOAL, records, [self.CHAPTER_CALL])
+
+        # "approved" and "indicated for" are two live claims about the same drug
+        assert kept[0]["unverified"] == ["nedosiran: whether it is approved, authorised or withdrawn",
+                                         "nedosiran: whether it applies to this patient"]
+        assert any(e.startswith("record_unverified:nedosiran:") for e in agent.last_trace["events"])
+
+    def test_the_mark_is_printed_with_the_citation(self, scripted):
+        builder, _ = self._builder(scripted)
+        record = {"quote": "RNA interference therapeutics (lumasiran and nedosiran)",
+                  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK1283/",
+                  "unverified": ["nedosiran: whether it is approved, authorised or withdrawn"]}
+
+        line = builder._cite(record)
+
+        assert line.endswith("Not verified against a current source: nedosiran: whether it is approved, "
+                             "authorised or withdrawn.")
+
+    def test_a_claim_whose_label_this_goal_read_is_not_marked(self, scripted):
+        builder, agent = self._builder(scripted)
+        records = [{"therapy": "nedosiran", "status": "approved",
+                    "indication": "indicated for primary hyperoxaluria type 1", "reasoning": ""}]
+
+        kept = builder._check_live_claims(self.GOAL, records, [self.CHAPTER_CALL, self.LABEL_CALL])
+
+        assert "unverified" not in kept[0]
+        assert not any(e.startswith("record_unverified") for e in agent.last_trace["events"])

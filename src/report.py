@@ -25,6 +25,7 @@ from .model import generate
 from .preprocessing import parse_variant
 from .prompts import _format_variant_summary
 from .consequence_check import contradiction, vep_consequences
+from .live_claims import WORDING, sources_held, unsourced as live_unsourced
 from .schemas import ReportInput, ReportOutput
 from .tools.base import BaseTool
 from .tools.bound import BoundTool
@@ -285,6 +286,7 @@ class ReportBuilder:
             records = self._check_sources(goal, records, goal_calls)
             records = self._require_fetch(goal, records, calls_before)
             records = self._check_descriptions(goal, records)
+            records = self._check_live_claims(goal, records, goal_calls)
             records = self._evaluate(goal, records)
             records = self._enforce_conditions(goal, records)
             records = self._drop_repeats(goal, records, filled)
@@ -524,6 +526,27 @@ class ReportBuilder:
                            f"{', '.join(terms)}; the sentence was dropped")
         return records
 
+    def _check_live_claims(self, goal: dict, records: list[dict], goal_calls: list[dict]) -> list[dict]:
+        """A record's claim about approval, applicability, a trial's state or a
+        classification needs a source about that entity among this goal's
+        lookups. The record is kept and the gap is printed, because a fact we
+        could not retrieve may still be true and the reader is owed the
+        difference (AITX-00006: both drugs named only in a chapter's list of
+        therapies, their labels never read, the age bound never seen)."""
+        held = sources_held(goal_calls)
+        gene = self.agent.last_trace.get("validation", [{}])
+        gene = (gene[0] or {}).get("gene_symbol", "") if gene else ""
+        for r in records:
+            label = str(r.get(goal["label"]) or "").strip()
+            text = " ".join(str(r.get(f) or "") for f in list(goal["fields"]) + ["reasoning"])
+            claims = live_unsourced(text, [label] if label else [], held, gene=gene)
+            if not claims:
+                continue
+            r["unverified"] = [f"{name}: {WORDING[category]}" for name, _k, category, _t in claims[:2]]
+            self.agent.last_trace["events"].append(
+                "record_unverified:" + ",".join(f"{n}:{c}" for n, _k, c, _t in claims[:2]))
+        return records
+
     def _evaluate(self, goal: dict, records: list[dict]) -> list[dict]:
         """A second model call per record, thinking off: does the quoted
         sentence, with the reasoning given if any, support the claim? NOT
@@ -609,6 +632,8 @@ class ReportBuilder:
         text = f"Source: \"{r.get('quote')}\" [{r.get('source_url')}]({r.get('source_url')})"
         if r.get("reasoning"):
             text += f" Reasoning: {r.get('reasoning')}"
+        if r.get("unverified"):
+            text += (" Not verified against a current source: " + "; ".join(r["unverified"]) + ".")
         return text
 
     def _render_records(self, records: list[dict], goal: dict) -> str:
