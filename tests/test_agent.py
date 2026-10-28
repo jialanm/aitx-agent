@@ -1175,3 +1175,76 @@ class TestLookupBudget:
         assert agent_module.MAX_GENERATIONS > agent_module.MAX_LOOKUP_TURNS
         assert agent_module.MAX_GENERATIONS == 10
 
+
+
+class TestConsequenceDescription:
+    """See the docstring below; the fake Ensembl tool supplies step 1's block."""
+
+    class _VEP(BaseTool):
+        BLOCK = ("VEP (Ensembl, GRCh38) for NC_000023.11:g.31169542_31169543delinsTA on transcript NM_004006.3:\n"
+                 "Frame (VEP): stop_gained; no change in length\n"
+                 "Consequence: stop_gained\n"
+                 "Exon: 74/79")
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "query_ensembl", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            return self.BLOCK, [EvidenceRecord(url="https://www.ensembl.org/x")]
+
+    def _run(self, monkeypatch, turns):
+        helper = TestUnverifiedTerms()
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000023.11:g.31169542_31169543delinsTA",
+                                                          gene_symbol="DMD"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: name.lower() == "ataluren")
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00002"
+        task["patient"] = {"genotype": [{"gene": "DMD", "transcript": "NM_004006.3",
+                                         "variant_cdna": "c.10453_10454delinsTA",
+                                         "variant_protein": "p.(Leu3485Ter)", "zygosity": "hemizygous"}],
+                           "clinical_context": "Progressive muscle weakness"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "To which targeted therapy is this variant most likely amenable?",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[self._VEP(), helper._PubMed()])
+        return agent.run(TaskInput(**task)), agent.last_trace
+
+
+    """A description of the variant that VEP's own terms contradict is sent
+    back once, with VEP's values (both 32B runs of AITX-00002 called a
+    two-base substitution a frameshift; the run that did so answered
+    correctly, so this is checked for soundness, not for accuracy)."""
+
+    def test_the_claim_is_sent_back_with_vep_s_terms(self, monkeypatch):
+        helper = TestUnverifiedTerms()
+        wrong = ModelResponse(text="Ataluren", tool_calls=[],
+                              raw="Ataluren",
+                              thinking="The patient's variant is a frameshifting insertion/deletion.")
+        turns = [helper._call("search_pubmed", query="DMD nonsense ataluren"), wrong, helper._say("Ataluren"),
+                 helper._say("QUOTE: Ataluren promotes read-through of premature stop codons in dystrophin.\nWHY: It names the drug.")]
+
+        output, trace = self._run(monkeypatch, turns)
+
+        assert "consequence_contradiction:frameshifting" in trace["events"]
+        sent = next(m["content"] for m in trace["messages"]
+                    if m["role"] == "system" and "described this variant" in m["content"])
+        assert "stop_gained" in sent
+        assert output.response == "Ataluren"      # the answer is the model's to keep
+
+    def test_a_description_vep_reported_is_not_challenged(self, monkeypatch):
+        helper = TestUnverifiedTerms()
+        right = ModelResponse(text="Ataluren", tool_calls=[], raw="Ataluren",
+                              thinking="This variant is a nonsense mutation.")
+        turns = [helper._call("search_pubmed", query="DMD nonsense ataluren"), right,
+                 helper._say("QUOTE: Ataluren promotes read-through of premature stop codons in dystrophin.\nWHY: It names the drug.")]
+
+        output, trace = self._run(monkeypatch, turns)
+
+        assert not any(e.startswith("consequence_contradiction") for e in trace["events"])
+        assert output.response == "Ataluren"

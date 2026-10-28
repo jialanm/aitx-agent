@@ -20,6 +20,7 @@ from .prompts import (
 )
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
+from .consequence_check import contradiction, notice as consequence_notice, vep_consequences
 from .variant_validation import validate_variant
 from .drug_names import is_drug_name, normalise_drug_names
 
@@ -114,6 +115,10 @@ class Agent:
         step1_evidence: list[EvidenceRecord] = []
         consequences = [self._predict_consequence(g.gene, v, step1_evidence) for g, v in zip(task_input.patient.genotype, validated)]
 
+        # VEP's own consequence terms, kept as data: the model's description
+        # of the variant is checked against them in the loop below.
+        vep_terms = vep_consequences(consequences)
+
         # Step 2: For multiple choice, learn the options up front. They go
         # into the system prompt and later check the final answer. Empty
         # list means extraction was rejected: the model gets the generic
@@ -148,6 +153,7 @@ class Agent:
         tried: set[str] = set()
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
+        consequence_told = False   # the description check speaks once
 
         lookups = 0       # turns that called at least one tool
         generations = 0   # turns of any kind
@@ -169,6 +175,22 @@ class Agent:
             logger.debug(f"Tool calls: {len(response.tool_calls)}")
             logger.debug(f"Text output: {response.text[:200]}...")
             self._record_turn("loop", iteration + 1, response)
+
+            # The model's description of this variant against VEP's own
+            # terms. It is checked for soundness, not for accuracy: in both
+            # runs of AITX-00002 the model called a two-base substitution a
+            # frameshift, and the run that did so answered correctly. On a
+            # report the derivation is what the reader gets.
+            described = None
+            if not consequence_told and generations < MAX_GENERATIONS:
+                described = contradiction(f"{response.thinking}\n{response.text}", vep_terms)
+            if described and not response.tool_calls:
+                word, _ = described
+                consequence_told = True
+                self.last_trace["events"].append(f"consequence_contradiction:{word}")
+                messages.append({"role": "assistant", "content": response.raw})
+                messages.append(self._harness_message(consequence_notice(word, vep_terms)))
+                continue
 
             if not response.tool_calls:
                 if not all_evidence and not reminded:
@@ -286,6 +308,14 @@ class Agent:
             # a gene entry for a trial question and a consequence for a domain
             # question). It says so and names the next recommended tool; the
             # model decides and writes the arguments.
+            # A turn that also called tools keeps its results; the notice
+            # follows them.
+            if described and not consequence_told:
+                word, _ = described
+                consequence_told = True
+                self.last_trace["events"].append(f"consequence_contradiction:{word}")
+                messages.append(self._harness_message(consequence_notice(word, vep_terms)))
+
             turn_calls = self.last_trace["tool_calls"][calls_before:]
             # Only when the results are the adapters' own "nothing found"
             # replies: a reply with no evidence links can still be an answer,
