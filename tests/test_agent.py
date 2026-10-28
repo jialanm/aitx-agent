@@ -849,11 +849,12 @@ class TestUnverifiedTerms:
         reminder = next(m["content"] for m in trace["messages"] if m["role"] == "system" and "appears in no tool result" in m["content"])
         assert "abbreviation or a code" in reminder and "search PubMed for it together with the gene" in reminder
 
-    def test_drug_named_on_the_last_turn_is_settled_without_a_reminder(self, monkeypatch):
-        # Five loop turns, the fifth answers with a drug no tool text names: no turn is
-        # left for a reminder, so the settlement alone applies and removes it.
+    def test_drug_named_once_the_lookup_budget_is_gone_is_settled_without_a_reminder(self, monkeypatch):
+        # The retrieval budget is spent on five tool-calling turns, so the
+        # answer-only turn that follows cannot be sent back for a lookup: the
+        # settlement alone applies and removes the unsourced drug name.
         import src.agent as agent_module
-        turns = [self._call("search_genereviews", gene="DMD")] * (agent_module.MAX_ITERATIONS - 1) + [self._say("Ataluren")]
+        turns = [self._call("search_genereviews", gene="DMD")] * agent_module.MAX_LOOKUP_TURNS + [self._say("Ataluren")]
         output, trace = self._run(monkeypatch, turns)
 
         assert output.response == "None"
@@ -1143,3 +1144,34 @@ class TestCitationReask:
         assert "do not occur" in Agent._quote_failure("indicated for patients amenable to exon 51 skipping", text)
         assert Agent._quote_failure("indicated for patients amenable to exon 53 skipping", text) is None
         assert "nothing found" in Agent._quote_failure("No FDA drug labels found for: Ataluren.", text)
+
+
+class TestLookupBudget:
+    """The budget counts turns that call tools, not turns of any kind (32B run
+    5, 2026-10-28, AITX-00002: two of five iterations were answers of None
+    that the harness sent back, so the ataluren label call landed on the last
+    turn and the PubMed search its empty reply asked for was impossible)."""
+
+    def test_a_reminder_cycle_does_not_spend_a_lookup(self, monkeypatch):
+        import src.agent as agent_module
+        helper = TestUnverifiedTerms()
+        # Turn 1 answers with nothing retrieved, which the evidence reminder
+        # sends back; five tool-calling turns must still be available after it.
+        turns = ([helper._say("Ataluren")]
+                 + [helper._call("search_genereviews", gene="DMD")] * agent_module.MAX_LOOKUP_TURNS
+                 + [helper._say("antisense oligonucleotide")])
+
+        output, trace = helper._run(monkeypatch, turns)
+
+        model_calls = [c for c in trace["tool_calls"] if c.get("origin") == "model"]
+        assert len(model_calls) == agent_module.MAX_LOOKUP_TURNS
+        assert "evidence_reminder" in trace["events"]
+        assert "final_answer_turn" in trace["events"]
+        assert output.response == "antisense oligonucleotide"
+
+    def test_the_hard_ceiling_stops_a_reminder_loop(self):
+        """Reminders cost generations, so the ceiling bounds the whole turn."""
+        import src.agent as agent_module
+        assert agent_module.MAX_GENERATIONS > agent_module.MAX_LOOKUP_TURNS
+        assert agent_module.MAX_GENERATIONS == 10
+
