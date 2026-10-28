@@ -7,7 +7,8 @@ These tests focus on the non-model parts.
 import json
 import pytest
 
-from src.agent import Agent
+from src.agent import MAX_OPTION_LABELS, Agent
+from src.prompts import build_system_prompt
 from src.model import ToolCall, ModelResponse, parse_response
 from src.schemas import TaskInput, TaskOutput
 from src.tools.base import BaseTool, EvidenceRecord
@@ -1182,3 +1183,118 @@ class TestRepeatedCallGuard:
         assert tool.calls == 2
         assert agent.last_trace["events"] == []
 
+
+
+class TestOptionLabels:
+    """Step 1d: the label of every drug option is fetched before the model's
+    first turn (32B runs 1 to 5, AITX-00001: all five drugs ruled out from
+    memory; the notice naming each option and the exact call was ignored)."""
+
+    class _Labels(BaseTool):
+        def __init__(self, found=True):
+            self.asked: list[str] = []
+            self.found = found
+
+        def schema(self):
+            return {"type": "function", "function": {"name": "search_fda_labels", "parameters": {}}}
+
+        def execute(self, **kwargs):
+            drug = kwargs.get("drug", "")
+            self.asked.append(drug)
+            if not self.found:
+                return (f"No FDA drug labels found for: {drug}. openFDA holds only drugs with a United "
+                        f"States label; ... not evidence that it does not exist", [])
+            return (
+                f"FDA Drug Label for {drug}:\n\n"
+                f"Drug: {drug.lower()}\n\n"
+                "Indications: indicated for Duchenne muscular dystrophy in patients who have a confirmed "
+                "mutation amenable to exon 51 skipping\n\n"
+                "Contraindications: none\n\n"
+                "Warnings: hypersensitivity\n\n"
+                "Dosing: 30 mg/kg once weekly",
+                [EvidenceRecord(url="https://dailymed.nlm.nih.gov/dailymed/x")],
+            )
+
+    def _agent(self, tool, monkeypatch, drugs=("Eteplirsen",)):
+        monkeypatch.setattr("src.agent.is_drug_name", lambda name: name in drugs)
+        agent = Agent(None, None, [tool])
+        agent.last_trace = {"tool_calls": [], "events": []}
+        return agent
+
+    def test_a_drug_option_label_is_fetched_and_trimmed_to_its_indications(self, monkeypatch):
+        tool = self._Labels()
+        agent = self._agent(tool, monkeypatch)
+        evidence: list[EvidenceRecord] = []
+
+        text = agent._option_labels(["Eteplirsen", "None of the above"], evidence)
+
+        assert tool.asked == ["Eteplirsen"]          # RxNorm rejected the other option
+        assert "amenable to exon 51 skipping" in text
+        assert "Dosing" not in text and "Warnings" not in text
+        assert "search_fda_labels for the same drug" in text    # the rest is still reachable
+        assert [e.url for e in evidence] == ["https://dailymed.nlm.nih.gov/dailymed/x"]
+        assert agent.last_trace["events"] == ["labels_attached:Eteplirsen"]
+
+    def test_an_option_rxnorm_does_not_know_fetches_nothing(self, monkeypatch):
+        """A mechanism class or domain code is an option too; RxNorm, not the
+        answer format, decides what gets a label."""
+        tool = self._Labels()
+        agent = self._agent(tool, monkeypatch)
+
+        text = agent._option_labels(["Gain of function", "Loss of function"], [])
+
+        assert tool.asked == [] and text == ""
+        assert agent.last_trace["events"] == []
+
+    def test_rxnorm_unreachable_fetches_nothing(self, monkeypatch):
+        """is_drug_name returns None when RxNorm cannot be reached; an unknown
+        is not treated as a drug."""
+        tool = self._Labels()
+        monkeypatch.setattr("src.agent.is_drug_name", lambda name: None)
+        agent = Agent(None, None, [tool])
+        agent.last_trace = {"tool_calls": [], "events": []}
+
+        assert agent._option_labels(["Eteplirsen"], []) == ""
+        assert tool.asked == []
+
+    def test_a_drug_with_no_united_states_label_keeps_the_coverage_note(self, monkeypatch):
+        """Ataluren returns nothing from openFDA; the empty reply is attached
+        in full so the model does not read silence as absence (AITX-00002)."""
+        tool = self._Labels(found=False)
+        agent = self._agent(tool, monkeypatch, drugs=("Ataluren",))
+
+        text = agent._option_labels(["Ataluren"], [])
+
+        assert "not evidence that it does not exist" in text
+        assert agent.last_trace["events"] == ["labels_attached:Ataluren"]
+
+    def test_the_cap_limits_how_many_labels_are_fetched(self, monkeypatch):
+        tool = self._Labels()
+        drugs = [f"Drug{i}" for i in range(8)]
+        agent = self._agent(tool, monkeypatch, drugs=tuple(drugs))
+
+        agent._option_labels(drugs, [])
+
+        assert len(tool.asked) == MAX_OPTION_LABELS
+
+    def test_the_labels_appear_in_the_system_prompt(self):
+        prompt = build_system_prompt(
+            category="therapeutic_selection",
+            parsed_variants=[],
+            clinical_context="Duchenne muscular dystrophy",
+            answer_format="multiple_choice",
+            date_submitted="2026-01-01",
+            options=["Eteplirsen", "None of the above"],
+            labels="FDA Drug Label for Eteplirsen:\n\nIndications: amenable to exon 51 skipping",
+        )
+
+        assert "### Labels of the drugs named in the options" in prompt
+        assert "amenable to exon 51 skipping" in prompt
+
+    def test_the_flag_turns_step_1d_off(self, monkeypatch):
+        """The control run: the model must choose the label tool itself."""
+        tool = self._Labels()
+        monkeypatch.setattr("src.agent.is_drug_name", lambda name: True)
+        agent = Agent(None, None, [tool], step1_labels=False)
+
+        assert agent.step1_labels is False

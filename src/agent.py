@@ -26,6 +26,9 @@ from .drug_names import is_drug_name, normalise_drug_names
 logger = logging.getLogger(__name__)
 
 MAX_ITERATIONS = 5
+# How many option labels the harness fetches in step 1d. Five covers the
+# validator's longest drug-option question; the cap keeps the prompt bounded.
+MAX_OPTION_LABELS = 5
 # How much of a source's retrieved text the justification step is shown.
 SOURCE_TEXT_CHARS = 1500
 UNSUPPORTED_JUSTIFICATION = "This record was retrieved and consulted; its returned text does not state the answer."
@@ -41,6 +44,7 @@ class Agent:
         tools: list[BaseTool],
         schema_order_seed: int | None = None,
         show_thinking: bool = False,
+        step1_labels: bool = True,
     ):
         self.model = model
         self.tokenizer = tokenizer
@@ -52,6 +56,10 @@ class Agent:
         # Echo each model turn's thinking and text to stdout as the turn
         # ends, for watching a run live. The trace keeps them regardless.
         self.show_thinking = show_thinking
+        # Step 1d on or off. Off is the control run: the model has to choose
+        # the label tool itself, which is what the routing-error count in the
+        # failure taxonomy measures.
+        self.step1_labels = step1_labels
         # Repeated-call guard scope: one conversation. The report chain sets
         # it per goal; the question answerer leaves it at 0.
         self.call_segment = 0
@@ -113,6 +121,14 @@ class Agent:
         if context["answer_format"] == "multiple_choice":
             options = self._extract_options(context["prompt"])
 
+        # Step 1d: when the options are drug names, the labels that decide the
+        # answer are fetched here too. Naming the tool was not enough: in five
+        # 32B runs of AITX-00001 the model ruled out all five drugs from
+        # memory, and the notice that listed every option with the exact call
+        # was ignored twice. RxNorm decides which options are drugs, so a
+        # mechanism class or "None of the above" fetches nothing.
+        labels_text = self._option_labels(options, step1_evidence) if self.step1_labels else ""
+
         # Step 3: Build initial messages
         system_prompt = build_system_prompt(
             category=context["category"],
@@ -124,6 +140,7 @@ class Agent:
             validated=validated,
             consequences=consequences,
             rules=rules_text,
+            labels=labels_text,
         )
         user_message = build_user_message(context["prompt"], parsed_variants)
 
@@ -444,6 +461,54 @@ class Agent:
         self.last_trace["events"].append("rules_attached:" + ",".join(topics[:3]))
         return ("These rules of molecular genetics apply to the consequence above and are quotable "
                 "evidence; read them before judging the variant's effect.\n\n" + "\n\n".join(parts))
+
+    @staticmethod
+    def _indications_only(summary: str) -> str:
+        """A label's drug names and what it is indicated for. The rest of the
+        label (contraindications, warnings, dosing) stays behind the tool, so
+        five options do not crowd out the question; the model can still call
+        search_fda_labels for the same drug to read it."""
+        parts = summary.split("\n\n")
+        if not parts or not parts[0].startswith("FDA Drug Label"):
+            # openFDA's no-US-label coverage note; it goes in whole, because
+            # its point is that silence is not evidence of absence.
+            return summary
+        return "\n\n".join([parts[0]] + [p for p in parts[1:] if p.startswith(("Drug:", "Indications"))])
+
+    def _option_labels(self, options: list[str], evidence: list[EvidenceRecord]) -> str:
+        """The FDA label of every option RxNorm knows as a drug, as prompt
+        text with its source, fetched in step 1 like the consequence."""
+        tool = self.tools.get("search_fda_labels")
+        if tool is None or not options:
+            return ""
+        parts: list[str] = []
+        fetched: list[str] = []
+        for option in options:
+            name = option.strip()
+            if len(name) < 4 or name.lower() in ("none", "n/a", "none of the above"):
+                continue
+            # True only: RxNorm unreachable (None) must not fetch a label for
+            # a protein domain or a GOF/LOF code.
+            if is_drug_name(name) is not True:
+                continue
+            try:
+                summary, found = self._call_tool(tool, "search_fda_labels", {"drug": name}, "step1")
+            except Exception as e:
+                logger.error(f"Step-1 label lookup failed for {name}: {e}")
+                continue
+            evidence.extend(found)
+            parts.append(self._indications_only(summary))
+            fetched.append(name)
+            if len(fetched) >= MAX_OPTION_LABELS:
+                break
+        if not parts:
+            return ""
+        self.last_trace["events"].append("labels_attached:" + ",".join(fetched))
+        return ("The options name drugs, and each label below was fetched automatically for one of them. "
+                "A label states which variants, ages and conditions the drug is approved for, so it is the "
+                "evidence that admits or rules out that option, and it is quotable. Call search_fda_labels "
+                "for the same drug to read its contraindications, warnings and dosing.\n\n"
+                + "\n\n".join(parts))
 
     def _unread_rules(self, text: str, called: set[str]) -> list[str]:
         """Rules the model's own wording rests on that it never read."""

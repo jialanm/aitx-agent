@@ -330,3 +330,21 @@ attaches the frame and decay rules), and an answer whose own wording turns on
 a rule the model never read gets one notice naming the topic to call. The
 trigger is a fact in the retrieved data or the model's own words, not its
 judgment of what it needs.
+
+The same reading applies to the options themselves. The drugs in 00001 were
+ruled out from memory before any lookup, and the notice that named all five
+with the exact call changed nothing, so step 1 now also fetches the FDA label
+of every option RxNorm confirms is a drug, trimmed to the drug names and the
+indications, with openFDA's coverage note kept whole when a drug has no
+United States label. RxNorm decides, so a mechanism class such as "Gain of
+function" or an option reading "None of the above" fetches nothing, and the
+cap is five labels.
+
+What this costs is measurable and is recorded here rather than absorbed:
+prefetching the labels removes the model's opportunity to fail at choosing
+the label tool, so these questions no longer contribute to the routing-error
+count in the failure taxonomy. The step is therefore a flag, not a fixture.
+`--no-step1-labels` is the control run, from which routing errors are read,
+and the flag's value is written into each run's metadata as
+`step1_option_labels`, so no two runs can be compared without it being
+visible.
