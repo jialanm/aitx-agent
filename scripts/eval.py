@@ -58,7 +58,7 @@ def trace_path_for(output_path: str) -> str:
     return str(path.with_name(f"{path.stem}_trace{path.suffix}"))
 
 
-def run_metadata(questions_path: str, answers_path: str | None, precision: str = "bf16", prompt_variant: str = "none", model_id: str = MODEL_ID, decoding: str = "greedy (do_sample=False)", step1_labels: bool = True) -> dict:
+def run_metadata(questions_path: str, answers_path: str | None, precision: str = "bf16", prompt_variant: str = "none", model_id: str = MODEL_ID, decoding: str = "greedy (do_sample=False)", step1_labels: bool = False) -> dict:
     """What is needed to reproduce or compare this run."""
     try:
         commit = subprocess.check_output(
@@ -143,7 +143,7 @@ def run_evaluation(
     show_thinking: bool = False,
     decoding: str = "greedy",
     thinking_budget: int | None = None,
-    step1_labels: bool = True,
+    step1_labels: bool = False,
 ):
     """Run evaluation on validation set.
 
@@ -345,9 +345,10 @@ if __name__ == "__main__":
                         help="greedy everywhere (default), or qwen_thinking: thinking sampled at Qwen's published settings, answer greedy; recorded in run metadata")
     parser.add_argument("--thinking-budget", type=int, default=None,
                         help="Cap on thinking tokens per turn; when hit the model is told to answer from what it has (recorded in run metadata)")
-    parser.add_argument("--no-step1-labels", dest="step1_labels", action="store_false",
-                        help="Do not fetch the FDA label of each drug option in step 1; the model must choose "
-                             "the label tool itself (the control run for routing errors). Recorded in run metadata")
+    parser.add_argument("--step1-labels", action="store_true",
+                        help="Fetch the FDA label of each drug option in step 1 and attach it to the prompt. Off "
+                             "by default: measured in 32B run 5 (5b4e6f8) it fixed nothing and lost two questions, "
+                             "the model reading the attached label set as the whole world. Recorded in run metadata")
     parser.add_argument("--prompt-variant", default="none", choices=PROMPT_VARIANTS,
                         help="Prompt-sensitivity control: reword two headings, or shuffle the schema order (seeded)")
     args = parser.parse_args()

@@ -1298,3 +1298,9 @@ class TestOptionLabels:
         agent = Agent(None, None, [tool], step1_labels=False)
 
         assert agent.step1_labels is False
+
+    def test_step_1d_is_off_by_default(self):
+        """Measured in 32B run 5: the prefetch lost AITX-00002 and 00012 and
+        fixed nothing, so the default is off and the flag turns it on."""
+        assert Agent(None, None, []).step1_labels is False
+        assert Agent(None, None, [], step1_labels=True).step1_labels is True

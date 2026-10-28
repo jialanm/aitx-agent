@@ -44,7 +44,7 @@ class Agent:
         tools: list[BaseTool],
         schema_order_seed: int | None = None,
         show_thinking: bool = False,
-        step1_labels: bool = True,
+        step1_labels: bool = False,
     ):
         self.model = model
         self.tokenizer = tokenizer
@@ -56,9 +56,17 @@ class Agent:
         # Echo each model turn's thinking and text to stdout as the turn
         # ends, for watching a run live. The trace keeps them regardless.
         self.show_thinking = show_thinking
-        # Step 1d on or off. Off is the control run: the model has to choose
-        # the label tool itself, which is what the routing-error count in the
-        # failure taxonomy measures.
+        # Step 1d on or off, off by default. Measured on 2026-10-28 (32B run
+        # 5, 5b4e6f8): prefetching the option labels fixed nothing and lost
+        # two questions, because the model read the attached set as the whole
+        # world. AITX-00002's answer, ataluren, has no RxNorm concept and so
+        # no label, and its absence from the set became "not approved";
+        # AITX-00012's L-serine matched a homeopathic product listing, which
+        # the model used to drop the option it had reasoned its way to in the
+        # run before. A prefetch is safe for a source that answers the
+        # question in full (VEP's consequence, a reference rule) and unsafe
+        # for one that answers part of it. Kept behind the flag so the pass
+        # is reproducible.
         self.step1_labels = step1_labels
         # Repeated-call guard scope: one conversation. The report chain sets
         # it per goal; the question answerer leaves it at 0.
