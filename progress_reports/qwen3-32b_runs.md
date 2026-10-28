@@ -367,7 +367,19 @@ support for it: "This explains that read-through therapies like Ataluren are
 ineffective for frameshift-induced premature stop codons." That reasoning is
 also wrong on the data, since the variant is a two-base delins that VEP
 reports as stop_gained with no change in length, not a frameshift, so the
-attached rule was true and misapplied. The code was
+attached rule was true and misapplied.
+
+Run 4's trace sharpens this. The model described the same variant both ways
+in a single turn, "a frameshifting insertion/deletion leading to a stop
+codon" and then "since the variant is a nonsense mutation, Ataluren might be
+a candidate", and the nonsense reading won, giving the right answer. The
+contradiction was there before 1c existed. What the attached read-through
+rule added in run 5 was a decision procedure that fires on the wrong half of
+it: the rule excludes frameshift-derived stops, the model had already called
+this one a frameshift, and the exclusion settled the question without anyone
+rechecking VEP's own stop_gained line. A rule in the prompt does not only
+supply knowledge, it picks which of the model's competing descriptions
+becomes load-bearing. The code was
 therefore reverted to run 4's state at 488fa62 and the three changes will go
 back in one at a time.
 
