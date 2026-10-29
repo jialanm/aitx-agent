@@ -499,3 +499,38 @@ class TestRejectedRecordKeptConditional:
 
         assert kept == []
         assert "record_verdict:Nedosiran:NOT_SUPPORTED" in agent.last_trace["events"]
+
+
+class TestMissingMeasurementsAndNextSteps:
+    """A condition names the value it needs, and the summary lists what would
+    change a decision. Patient 6 is 7 years old with chronic kidney disease
+    and no eGFR, so nedosiran's condition turns on a value nobody measured."""
+
+    CONTEXT = "7 year old with recurrent nephrocalcinosis and chronic kidney disease"
+    GOAL = TestRejectedRecordKeptConditional.GOAL
+
+    def test_the_condition_names_the_value_the_patient_record_lacks(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = self.CONTEXT
+
+        kept = builder._enforce_conditions(self.GOAL, [dict(TestRejectedRecordKeptConditional.NEDOSIRAN)])
+
+        field = kept[0]["applies_to_patient"]
+        assert "Not in the patient record: an eGFR measurement." in field
+        assert "the patient's age" not in field          # the age is in the clinical context
+        assert kept[0]["needs"] == ["an eGFR measurement"]
+
+    def test_the_summary_lists_what_would_change_a_decision(self):
+        from src.report import ReportBuilder
+        from src.schemas import Patient, ReportInput, Variant
+        report_input = ReportInput(id="RPT-00006", patient=Patient(
+            genotype=[Variant(gene="AGXT", transcript="NM_000030.3", variant_cdna="c.33dup",
+                              variant_protein="p.(Lys12GlnfsTer156)", zygosity="homozygous")],
+            clinical_context=self.CONTEXT))
+        record = dict(TestRejectedRecordKeptConditional.NEDOSIRAN,
+                      applies_to_patient="conditional: ...", needs=["an eGFR measurement"])
+
+        summary = ReportBuilder._summary(report_input, {"Existing Targeted Therapies": [record]})
+
+        assert "What would change a decision: an eGFR measurement." in summary

@@ -240,6 +240,31 @@ RESTRICTION_PATTERNS = [
 ]
 
 
+# What settles each restriction, and how to tell whether the patient record
+# already states it. The report is scored on whether uncertainties are
+# acknowledged and findings turned into next steps, and patient 6's v5 report
+# did neither: nedosiran's condition on kidney function was dropped, and no
+# section said which value was missing or how to get it.
+RESTRICTION_MEASURES = {
+    "age": ("the patient's age", r"\b\d+\s*(?:year|month)s?[- ]old\b|\baged?\s+\d+"),
+    "kidney function": ("an eGFR measurement", r"\beGFR\b|\bcreatinine clearance\b"),
+    "liver function": ("liver function tests", r"\bALT\b|\bAST\b|\bbilirubin\b|\bliver function\b"),
+    "variant type": ("the variant's consequence, which the variant block gives", r"$^"),
+    "model system, not patients": ("evidence in patients rather than a model system", r"$^"),
+}
+
+
+def missing_measures(hits: list[str], clinical_context: str) -> list[str]:
+    """Of the restrictions a quote carries, the measurements the patient
+    record does not state."""
+    out = []
+    for name in hits:
+        measure, present = RESTRICTION_MEASURES.get(name, (None, None))
+        if measure and not re.search(present, clinical_context or "", re.I):
+            out.append(measure)
+    return out
+
+
 _SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 
 
@@ -330,6 +355,7 @@ class ReportBuilder:
         # record's reasoning. The report prints that reasoning, so a
         # description the data contradicts would reach the reader.
         self.vep_terms = vep_consequences(consequences)
+        self.clinical_context = report_input.patient.clinical_context or ""
         inputs = {
             "gene": first_gene,
             "transcript": first_valid.transcript_variant.split(":")[0] if first_valid else "",
@@ -611,6 +637,8 @@ class ReportBuilder:
             kept.append(r)
         return kept
 
+    clinical_context = ""     # set in _prepare_patient; read by the condition step
+
     def _enforce_conditions(self, goal: dict, records: list[dict]) -> list[dict]:
         """A record that says "applies: yes" (or "likely eligible") while its
         own quote carries a restriction the patient record may not satisfy
@@ -623,7 +651,12 @@ class ReportBuilder:
             hits = self._restrictions(quote)
             label = r.get(goal["label"])
             if field and hits and str(r.get(field, "")).strip().lower() in ("yes", "likely eligible"):
-                r[field] = f"conditional: If the patient meets the source's restriction on {', '.join(hits)} (\"{quote[:160]}\"), then yes; otherwise no"
+                missing = missing_measures(hits, self.clinical_context)
+                nexts = (" Not in the patient record: " + ", ".join(missing) + "." ) if missing else ""
+                r[field] = (f"conditional: If the patient meets the source's restriction on {', '.join(hits)} "
+                            f"(\"{quote[:160]}\"), then yes; otherwise no.{nexts}")
+                if missing:
+                    r["needs"] = missing
                 self.agent.last_trace["events"].append(f"record_made_conditional:{label}:{','.join(hits)}")
             if goal["key"] == "goal5_bespoke" and "model system, not patients" in hits and str(r.get("verdict", "")).lower() in ("eligible", "likely eligible"):
                 r["verdict"] = "unable to assess"
@@ -774,4 +807,12 @@ class ReportBuilder:
                         conditional.append(f"{sub}, {r.get(by_sub_label(sub))}: {val.split(':', 1)[-1].strip()}")
         if conditional:
             lines.append("Conditional actions, depending on information not in the patient record: " + " ".join(sorted(set(conditional))))
+        needed: list[str] = []
+        for recs in filled.values():
+            for r in recs:
+                for measure in r.get("needs", []):
+                    if measure not in needed:
+                        needed.append(measure)
+        if needed:
+            lines.append("What would change a decision: " + "; ".join(needed) + ".")
         return "\n".join(lines)
