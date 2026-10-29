@@ -25,7 +25,7 @@ from .model import generate
 from .preprocessing import parse_variant
 from .prompts import _format_variant_summary
 from .consequence_check import contradiction, vep_consequences
-from .drug_names import is_drug_name, normalise_drug_names
+from .drug_names import drug_concept, is_drug_name, normalise_drug_names
 from .live_claims import WORDING, sources_held, unsourced as live_unsourced
 from .schemas import ReportInput, ReportOutput
 from .tools.base import BaseTool
@@ -661,6 +661,11 @@ class ReportBuilder:
             # asking for a drug label about them put false caveats on two
             # bespoke records (patient 6, v9).
             candidates = [label] if label and self._is_drug(label) else []
+            if label:
+                note = self._not_current_note(label)
+                if note:
+                    r["registry_note"] = note
+                    self.agent.last_trace["events"].append(f"record_not_current:{label}")
             claims = live_unsourced(text, candidates, held, gene=gene,
                                     confirm=is_drug_name, cache=self._drug_cache)
             if not claims:
@@ -762,19 +767,37 @@ class ReportBuilder:
                     f"record_patient_fact:{label}:{','.join(sorted(set(unstated)))}")
         return records
 
-    def _is_drug(self, name: str) -> bool:
-        """RxNorm's answer for this name, cached per report. Unknown counts as
-        not a drug: a missing caveat is better than a false one."""
+    def _concept(self, name: str) -> dict | None:
+        """RxNorm's concept for this name, cached per report."""
         if not hasattr(self, "_drug_cache"):
-            self._drug_cache: dict[str, bool | None] = {}
+            self._drug_cache: dict[str, dict | None] = {}
         key = name.strip().lower()
         if key not in self._drug_cache:
             try:
-                self._drug_cache[key] = is_drug_name(name)
+                self._drug_cache[key] = drug_concept(name)
             except Exception as e:
                 logger.error(f"RxNorm lookup failed for {name}: {e}")
                 self._drug_cache[key] = None
-        return self._drug_cache[key] is True
+        return self._drug_cache[key]
+
+    def _is_drug(self, name: str) -> bool:
+        """Whether RxNorm has a concept for this name, current or not."""
+        return self._concept(name) is not None
+
+    def _not_current_note(self, name: str) -> str:
+        """One line when RxNorm has the drug but does not call it current, so
+        a reader knows the name was checked and what the register says.
+        Ataluren is the case: concept 1030912 from the World Health
+        Organization's ATC classification, which RxNorm keeps but does not
+        include in its current release, the subset NLM describes as an
+        approximation of drugs currently marketed in the United States."""
+        concept = self._concept(name)
+        if not concept or concept.get("current"):
+            return ""
+        source = concept.get("source") or "a classification source"
+        return (f"RxNorm has {name} as concept {concept['rxcui']} from {source} but does not list it in its "
+                "current release, the subset that approximates drugs marketed in the United States; a United "
+                "States label search will therefore return nothing for it.")
 
     @staticmethod
     def _restrictions(quote: str) -> list[str]:
@@ -856,6 +879,8 @@ class ReportBuilder:
             text += (" Not verified against a current source: " + "; ".join(r["unverified"]) + ".")
         if r.get("unstated_patient_facts"):
             text += (" Not stated in the patient record: " + ", ".join(r["unstated_patient_facts"]) + ".")
+        if r.get("registry_note"):
+            text += " " + r["registry_note"]
         return text
 
     def _render_records(self, records: list[dict], goal: dict) -> str:

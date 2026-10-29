@@ -50,13 +50,47 @@ def is_drug_name(name: str) -> bool | None:
     that no tool text contains is a drug name (removed) or a code such as a
     protein domain or GOF/LOF (kept): the lookup, not the answer format,
     decides."""
+    return drug_concept(name) is not None if _reachable(name) else None
+
+
+def _reachable(name: str) -> bool:
+    """Whether a lookup was attempted at all; a name RxNorm cannot be asked
+    about returns None from is_drug_name."""
     if not name or len(name) < 3 or _SKIP.match(name):
-        return False
+        return True            # answered without a lookup: not a drug
+    return _get(f"{RXNORM_API}/rxcui.json", {"name": name, "search": 2}) is not None
+
+
+def drug_concept(name: str) -> dict | None:
+    """RxNorm's concept for this name, or None.
+
+    Two lookups. The default one returns only concepts in the current
+    release, which NLM intends as an approximation of drugs currently
+    marketed in the United States. The second passes allsrc=1, which also
+    returns a concept RxNorm keeps but does not call current, and ataluren is
+    one: concept 1030912, sourced from the World Health Organization's ATC
+    classification, released 11/2015, isCurrent NO. Its absence from the
+    first lookup made the harness treat an approved European therapy as not a
+    drug (32B runs, AITX-00002).
+
+    The returned dict carries "current", so a caller can say which lookup
+    found it; pegalysine, which the model invented, is found by neither.
+    """
+    if not name or len(name) < 3 or _SKIP.match(name):
+        return None
     found = _get(f"{RXNORM_API}/rxcui.json", {"name": name, "search": 2})
     if found is None:
         return None
     ids = (found.get("idGroup") or {}).get("rxnormId") or []
-    return bool(ids)
+    if ids:
+        return {"rxcui": ids[0], "current": True, "source": ""}
+    wider = _get(f"{RXNORM_API}/rxcui.json", {"name": name, "search": 2, "allsrc": 1})
+    ids = ((wider or {}).get("idGroup") or {}).get("rxnormId") or []
+    if not ids:
+        return None
+    history = _get(f"{RXNORM_API}/rxcui/{ids[0]}/historystatus.json", {}) or {}
+    meta = (history.get("rxcuiStatusHistory") or {}).get("metaData") or {}
+    return {"rxcui": ids[0], "current": False, "source": meta.get("source", "")}
 
 
 def _ingredient_for(name: str) -> dict | None:

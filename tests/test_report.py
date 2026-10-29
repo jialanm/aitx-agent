@@ -85,6 +85,9 @@ def scripted(monkeypatch):
         # No RxNorm over the network in the unit suite; one test patches it back.
         monkeypatch.setattr(report_module, "normalise_drug_names", lambda name: (name, []))
         monkeypatch.setattr(report_module, "is_drug_name", lambda name: name.lower() in ("lumasiran", "nedosiran"))
+        monkeypatch.setattr(report_module, "drug_concept",
+                            lambda name: {"rxcui": "1", "current": True, "source": ""}
+                            if name.lower() in ("lumasiran", "nedosiran") else None)
         gr_calls, up_calls = [], []
         tools = [
             # step 1 of the chain fetches the consequence; the protein position it prints is bound into UniProt
@@ -740,3 +743,43 @@ class TestHeadingInlineAndStrategyLabels:
         kept = builder._check_live_claims(goal, [record], [])
 
         assert "unverified" not in kept[0]
+
+
+class TestNotCurrentInRxNorm:
+    """Ataluren is in RxNorm as concept 1030912 from the World Health
+    Organization's ATC classification, which RxNorm keeps but does not call
+    current, so the plain name lookup missed it and the harness treated an
+    approved European therapy as not a drug."""
+
+    def test_the_report_says_what_the_register_holds(self, scripted, monkeypatch):
+        import src.report as report_module
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = "boy with Duchenne muscular dystrophy"
+        monkeypatch.setattr(report_module, "drug_concept",
+                            lambda name: {"rxcui": "1030912", "current": False, "source": "ATC"}
+                            if name.lower() == "ataluren" else None)
+        goal = {"label": "therapy", "key": "goal1_existing_targeted",
+                "fields": {"therapy": "", "status": "", "indication": ""}}
+        record = {"therapy": "Ataluren", "status": "approved in the European Union",
+                  "indication": "nonsense mutation Duchenne muscular dystrophy", "reasoning": "",
+                  "quote": "ataluren slows disease progression", "source_url": "https://pubmed.ncbi.nlm.nih.gov/32851872/"}
+
+        kept = builder._check_live_claims(goal, [record], [])
+
+        assert "record_not_current:Ataluren" in agent.last_trace["events"]
+        assert "concept 1030912 from ATC" in kept[0]["registry_note"]
+        assert "approximates drugs marketed in the United States" in kept[0]["registry_note"]
+        assert kept[0]["registry_note"] in builder._cite(kept[0])
+
+    def test_a_current_drug_gets_no_note(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = "7 year old"
+        goal = {"label": "therapy", "key": "goal1_existing_targeted",
+                "fields": {"therapy": "", "status": "", "indication": ""}}
+
+        kept = builder._check_live_claims(goal, [{"therapy": "Lumasiran", "status": "approved",
+                                                  "indication": "PH1", "reasoning": ""}], [])
+
+        assert "registry_note" not in kept[0]
