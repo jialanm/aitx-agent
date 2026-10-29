@@ -283,6 +283,14 @@ def missing_measures(hits: list[str], clinical_context: str) -> list[str]:
 _SUPERSCRIPTS = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
 
 
+def _sentence(value) -> str:
+    """One full stop, not two: a condition the harness extended already ends
+    in one (patient 6, v7: "...otherwise no. Not in the patient record: an
+    eGFR measurement..")."""
+    text = str(value or "").strip()
+    return text if text.endswith((".", "!", "?")) else text + "."
+
+
 def _norm(t: str) -> str:
     """Text for verbatim comparison: quote marks unified, superscript digits
     plain, all whitespace removed (a label prints "m 2" where the model
@@ -523,6 +531,27 @@ class ReportBuilder:
         hay = _norm(text)
         return all(_norm(f).rstrip(".,;: ") in hay for f in frags)
 
+    @classmethod
+    def _heading_above(cls, quote: str, text: str) -> str:
+        """The nearest line ending in a colon before the quote, if any."""
+        frags = cls._quote_fragments(quote)
+        if not frags:
+            return ""
+        hay, needle = _norm(text), _norm(frags[0]).rstrip(".,;: ")
+        at = hay.find(needle)
+        if at < 0:
+            return ""
+        # Walk the source's own lines, keeping the last heading seen before
+        # the line the quote starts in.
+        seen, heading = "", ""
+        for line in (text or "").splitlines():
+            if _norm(seen) and len(_norm(seen)) > at:
+                break
+            if line.strip().endswith(":") and len(line.strip()) <= 120:
+                heading = line.strip()
+            seen += line
+        return heading
+
     def _check_sources(self, goal: dict, records: list[dict], goal_calls: list[dict]) -> list[dict]:
         """Keep a record only if its quote is verbatim in the text of a tool
         call made in this goal. The source is identified by the quote, not by
@@ -552,6 +581,11 @@ class ReportBuilder:
                 self.agent.last_trace["events"].append(f"record_url_replaced:{label}:{url}->{replacement}")
                 logger.info(f"Record {label!r}: cited {url}, quote found under {replacement}; URL replaced")
                 r["source_url"] = replacement
+            # The heading a list item sits under carries what the list means:
+            # the chapter's "Agents/circumstances to avoid:" is what makes
+            # "Loop diuretics" a precaution, and without it the evaluator
+            # rejected two real precautions (patient 6, v7).
+            r["quote_heading"] = self._heading_above(quote, match.get("summary", ""))
             trimmed = self.without_insertions(quote)
             if trimmed != quote:
                 self.agent.last_trace["events"].append(f"record_quote_trimmed:{label}")
@@ -599,6 +633,13 @@ class ReportBuilder:
         gene = (gene[0] or {}).get("gene_symbol", "") if gene else ""
         for r in records:
             label = str(r.get(goal["label"]) or "").strip()
+            # A record that says something does not apply, or is not eligible,
+            # claims nothing that needs a current source; asking for one put a
+            # false caveat on "transcript knockdown: not eligible" (patient 6,
+            # v7).
+            verdicts = " ".join(str(r.get(f) or "") for f in ("applies_to_patient", "eligibility", "verdict", "status"))
+            if re.search(r"\bnot\b|\bno\b|\bineligible\b|\bcontraindicated\b", verdicts, re.I):
+                continue
             text = " ".join(str(r.get(f) or "") for f in list(goal["fields"]) + ["reasoning"])
             claims = live_unsourced(text, [label] if label else [], held, gene=gene,
                                     confirm=is_drug_name, cache=self._drug_cache)
@@ -618,6 +659,9 @@ class ReportBuilder:
             label = r.get(goal["label"])
             claim = goal["claim"].format(**{k: r.get(k, "?") for k in goal["fields"]})
             user = f"Claim: {claim}\nSource: {r.get('source_url')}\nQuote: \"{r.get('quote')}\""
+            heading = r.get("quote_heading")
+            if heading:
+                user += f"\nThe quote sits under this heading in the source: \"{heading}\""
             generic = self._generic_name(str(label or ""), str(r.get("quote") or ""))
             if generic:
                 user += f"\nSame drug under another name: {generic}"
@@ -785,10 +829,10 @@ class ReportBuilder:
         for r in records:
             if key == "goal1_existing_targeted":
                 lines.append(f"- **{r.get('therapy')}** ({r.get('status')}). {r.get('indication')} "
-                             f"Applies to this patient: {r.get('applies_to_patient')}. {self._cite(r)}")
+                             f"Applies to this patient: {_sentence(r.get('applies_to_patient'))} {self._cite(r)}")
             elif key == "goal2_supportive_and_precautions":
                 lines.append(f"- **{r.get('agent')}**: {r.get('purpose')} "
-                             f"Applies to this patient: {r.get('applies_to_patient')}. {self._cite(r)}")
+                             f"Applies to this patient: {_sentence(r.get('applies_to_patient'))} {self._cite(r)}")
             elif key == "goal3_trials":
                 lines.append(f"- **{r.get('nct_id')}**, {r.get('title')} ({r.get('status')}). "
                              f"Eligibility: {r.get('eligibility')}. {self._cite(r)}")

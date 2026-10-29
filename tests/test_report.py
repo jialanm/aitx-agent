@@ -638,3 +638,55 @@ class TestBracketedInsertions:
         assert len(kept) == 1
         assert "[should be avoided]" not in kept[0]["quote"]
         assert "record_quote_trimmed:Loop diuretics" in agent.last_trace["events"]
+
+
+class TestHeadingAndNegativeRecords:
+    """Two findings from patient 6's v7 build."""
+
+    CHAPTER = ("GeneReviews: Primary Hyperoxaluria Type 1 (NBK1283)\n"
+               "Agents/circumstances to avoid:\n"
+               "Loop diuretics\n"
+               "Intake of vitamin C exceeding the recommended daily allowance\n")
+
+    def test_the_evaluator_is_given_the_heading_the_quote_sits_under(self, scripted, monkeypatch):
+        """The chapter's heading is what makes "Loop diuretics" a precaution;
+        without it the evaluator rejected two real ones."""
+        import src.report as report_module
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        goal = {"label": "agent", "key": "goal2_supportive_and_precautions",
+                "fields": {"agent": "", "kind": "", "purpose": ""},
+                "claim": "{agent} should be avoided"}
+        call = {"tool": "search_genereviews", "arguments": {"section": "management"},
+                "summary": self.CHAPTER, "evidence_urls": ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]}
+        record = {"agent": "Loop diuretics", "kind": "avoid", "purpose": "kidney injury",
+                  "quote": "Loop diuretics", "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK1283/"}
+        kept = builder._check_sources(goal, [record], [call])
+        assert kept[0]["quote_heading"] == "Agents/circumstances to avoid:"
+
+        seen = {}
+
+        def capture(model, tokenizer, messages, tools=None, **kwargs):
+            seen["prompt"] = messages[-1]["content"]
+            return say("SUPPORTED\nThe heading says these are to be avoided.")
+
+        monkeypatch.setattr(report_module, "generate", capture)
+        builder._evaluate(goal, kept)
+
+        assert 'under this heading in the source: "Agents/circumstances to avoid:"' in seen["prompt"]
+
+    def test_a_record_that_denies_applicability_is_not_asked_for_a_source(self, scripted):
+        """"transcript knockdown: not eligible" claims nothing that a current
+        source must confirm, and was given a false caveat."""
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = "7 year old"
+        goal = {"label": "strategy", "key": "goal5_bespoke",
+                "fields": {"strategy": "", "verdict": "", "basis": ""}}
+        record = {"strategy": "transcript knockdown", "verdict": "not eligible",
+                  "basis": "AGXT is haploinsufficient", "reasoning": ""}
+
+        kept = builder._check_live_claims(goal, [record], [])
+
+        assert "unverified" not in kept[0]
+        assert not any(e.startswith("record_unverified") for e in agent.last_trace["events"])
