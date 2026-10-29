@@ -579,7 +579,22 @@ class ReportBuilder:
             self.agent.last_trace["events"].append(f"record_verdict:{label}:{'SUPPORTED' if supported else 'NOT_SUPPORTED'}")
             if supported:
                 kept.append(r)
+                continue
+            # A rejection that rests on a restriction in the record's own
+            # quote is not a reason to lose the therapy: the restriction is
+            # the finding. Patient 6's v5 report dropped nedosiran, an
+            # approved PH1 drug, whose label limits it by age and kidney
+            # function, so the report named neither the drug nor the limit.
+            # The record stays and _enforce_conditions states the condition.
+            if self._restrictions(str(r.get("quote") or "")):
+                self.agent.last_trace["events"].append(f"record_kept_conditional:{label}")
+                kept.append(r)
         return kept
+
+    @staticmethod
+    def _restrictions(quote: str) -> list[str]:
+        """The restrictions a quote carries, by name; empty if none."""
+        return [name for pat, name in RESTRICTION_PATTERNS if re.search(pat, quote, re.I)]
 
     def _require_fetch(self, goal: dict, records: list[dict], calls_before: int) -> list[dict]:
         """Drop a record whose item the goal never fetched by id, after the reminder."""
@@ -605,7 +620,7 @@ class ReportBuilder:
         field = "applies_to_patient" if "applies_to_patient" in goal["fields"] else ("eligibility" if "eligibility" in goal["fields"] else None)
         for r in records:
             quote = str(r.get("quote") or "")
-            hits = [name for pat, name in RESTRICTION_PATTERNS if re.search(pat, quote, re.I)]
+            hits = self._restrictions(quote)
             label = r.get(goal["label"])
             if field and hits and str(r.get(field, "")).strip().lower() in ("yes", "likely eligible"):
                 r[field] = f"conditional: If the patient meets the source's restriction on {', '.join(hits)} (\"{quote[:160]}\"), then yes; otherwise no"

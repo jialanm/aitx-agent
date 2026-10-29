@@ -456,3 +456,46 @@ class TestLiveClaimsOnRecords:
 
         assert "unverified" not in kept[0]
         assert not any(e.startswith("record_unverified") for e in agent.last_trace["events"])
+
+
+class TestRejectedRecordKeptConditional:
+    """A rejection that rests on a restriction in the record's own quote keeps
+    the record: patient 6's v5 report dropped nedosiran, an approved PH1 drug
+    whose label limits it by age and kidney function, so the report named
+    neither the drug nor the limit."""
+
+    NEDOSIRAN = {
+        "therapy": "Nedosiran", "status": "approved",
+        "indication": "lower urinary oxalate levels in PH1 with preserved kidney function",
+        "applies_to_patient": "yes",
+        "source_url": "https://dailymed.nlm.nih.gov/dailymed/drugInfo.cfm?setid=ace9d4bc",
+        "quote": ("RIVFLOZA is indicated to lower urinary oxalate levels in children 2 years of age and older "
+                  "and adults with primary hyperoxaluria type 1 (PH1) and relatively preserved kidney function, "
+                  "e.g., eGFR ≥30 mL/min/1.73 m²."),
+        "reasoning": "",
+    }
+    GOAL = {"label": "therapy", "key": "goal1_existing_targeted",
+            "fields": {"therapy": "", "status": "", "indication": "", "applies_to_patient": ""},
+            "claim": "{therapy} is {status} for {indication} and applies to this patient: {applies_to_patient}"}
+
+    def test_the_record_stays_and_the_condition_is_stated(self, scripted):
+        builder, agent, _, _ = scripted([say("NOT SUPPORTED\nThe quote restricts use by kidney function.")])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+
+        kept = builder._evaluate(self.GOAL, [dict(self.NEDOSIRAN)])
+        kept = builder._enforce_conditions(self.GOAL, kept)
+
+        assert [r["therapy"] for r in kept] == ["Nedosiran"]
+        assert "record_kept_conditional:Nedosiran" in agent.last_trace["events"]
+        assert kept[0]["applies_to_patient"].startswith("conditional: If the patient meets the source's restriction")
+        assert "kidney function" in kept[0]["applies_to_patient"]
+
+    def test_a_rejection_with_no_restriction_still_drops(self, scripted):
+        builder, agent, _, _ = scripted([say("NOT SUPPORTED\nThe quote names the drug only.")])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        record = dict(self.NEDOSIRAN, quote="OXLUMO is a HAO1-directed small interfering RNA.")
+
+        kept = builder._evaluate(self.GOAL, [record])
+
+        assert kept == []
+        assert "record_verdict:Nedosiran:NOT_SUPPORTED" in agent.last_trace["events"]
