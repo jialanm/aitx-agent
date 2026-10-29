@@ -21,7 +21,7 @@ from .prompts import (
 from .schemas import EvidenceItem, TaskInput, TaskOutput
 from .tools.base import BaseTool, EvidenceRecord
 from .consequence_check import contradiction, notice as consequence_notice, vep_consequences
-from .live_claims import attempted as tools_attempted, notice as live_notice, sources_held, unsourced as live_unsourced
+from .live_claims import all_tried as live_all_tried, answered as live_answered, attempted as tools_attempted, empty_note as live_empty_note, notice as live_notice, sources_held, unsourced as live_unsourced
 from .variant_validation import validate_variant
 from .drug_names import is_drug_name, normalise_drug_names
 
@@ -156,6 +156,13 @@ class Agent:
         none_reminded = False
         consequence_told = False   # the description check speaks once
         repeat_turns = 0           # consecutive turns whose every call was a repeat
+        # The live-claim notice and the entities it named. Once a lookup has
+        # settled them the notice is taken out of the conversation: it says to
+        # call a tool, and nothing in the context marks an instruction done,
+        # so AITX-00003 of run 6 read it as outstanding and re-issued the same
+        # five label calls on four turns.
+        notice_msg: dict | None = None
+        notice_claims: list = []
         live_told = False          # the live-claim check speaks once
         said: list[str] = []       # the model's own words so far, which its thinking keeps in context
         drug_cache: dict[str, bool | None] = {}    # one RxNorm answer per name per question
@@ -272,7 +279,9 @@ class Agent:
                     self.last_trace["events"].append(
                         "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in live_claims))
                     messages.append({"role": "assistant", "content": response.raw})
-                    messages.append(self._harness_message(live_notice(live_claims)))
+                    notice_msg = self._harness_message(live_notice(live_claims))
+                    notice_claims = list(live_claims)
+                    messages.append(notice_msg)
                     continue
 
                 # Empty-answer retry: model spent all tokens thinking, produced no text
@@ -373,7 +382,9 @@ class Agent:
                     live_told = True
                     self.last_trace["events"].append(
                         "live_claim:" + ",".join(f"{n}:{c}" for n, _k, c, _t in still))
-                    messages.append(self._harness_message(live_notice(still)))
+                    notice_msg = self._harness_message(live_notice(still))
+                    notice_claims = list(still)
+                    messages.append(notice_msg)
 
             turn_calls = self.last_trace["tool_calls"][calls_before:]
             # A turn whose every call repeated an earlier one retrieved
@@ -408,6 +419,23 @@ class Agent:
                 self.last_trace["events"].append("empty_result_notice")
                 tried.update(tc.name for tc in response.tool_calls)
                 messages.append(self._harness_message(self._empty_result_notice(context, tried)))
+
+            # The notice asked for lookups; if they have arrived, it goes.
+            # The notice goes once each lookup it named has been tried,
+            # whether or not anything came back; an empty lookup gets its own
+            # line, so the model is never left reading an old instruction.
+            tried_now = tools_attempted(self.last_trace["tool_calls"])
+            if notice_msg is not None and live_all_tried(notice_claims, tried_now):
+                got = live_answered(notice_claims, sources_held(self.last_trace["tool_calls"]))
+                missing = [c for c in notice_claims if c not in got]
+                messages = [m for m in messages if m is not notice_msg]
+                self.last_trace["events"].append(
+                    "live_claim_tried:" + ",".join(c[0] for c in notice_claims))
+                if missing:
+                    self.last_trace["events"].append(
+                        "live_claim_empty:" + ",".join(c[0] for c in missing))
+                    messages.append(self._harness_message(live_empty_note(missing, tried_now)))
+                notice_msg, notice_claims = None, []
 
             # The last iteration ended in a tool call, so its result would go
             # unread (32B rerun, 2026-10-13, AITX-00001: the eteplirsen label

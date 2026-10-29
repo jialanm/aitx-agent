@@ -223,6 +223,49 @@ def unsourced(text: str, drugs: list[str], held: dict[tuple[str, str], set[str]]
     return out
 
 
+def answered(claims: list[tuple[str, str, str, str]],
+             held: dict[tuple[str, str], set[str]]) -> list[tuple[str, str, str, str]]:
+    """The claims that now have a source of the right kind."""
+    by_category = {category: by_kind for category, _patterns, by_kind in CATEGORIES}
+    out = []
+    for claim in claims:
+        name, kind, category, _tool = claim
+        tools = by_category.get(category, {}).get(kind, [])
+        if held.get((kind, name), set()) & set(tools):
+            out.append(claim)
+    return out
+
+
+def all_tried(claims: list[tuple[str, str, str, str]],
+              tried: dict[tuple[str, str], set[str]]) -> bool:
+    """True when the tool named for each claim has been called, whatever it
+    returned. The notice goes once this holds: it says to call a tool, and
+    nothing in the conversation marks an instruction done, so AITX-00003 of
+    run 6 read it as outstanding and made the same five calls on four turns.
+    An empty reply is reported separately, never left for the model to infer
+    from a notice still standing."""
+    for name, kind, _category, tool in claims:
+        if tool not in tried.get((kind, name), set()):
+            return False
+    return bool(claims)
+
+
+def empty_note(unanswered: list[tuple[str, str, str, str]],
+               tried: dict[tuple[str, str], set[str]]) -> str:
+    """One line for the lookups that came back with nothing, naming what is
+    left to try. Silence from a source is not evidence about the claim."""
+    parts = []
+    by_category = {category: by_kind for category, _patterns, by_kind in CATEGORIES}
+    for name, kind, category, _tool in unanswered:
+        done = tried.get((kind, name), set())
+        rest = [t for t in by_category.get(category, {}).get(kind, []) if t not in done]
+        left = f"; {rest[0]} has not been tried" if rest else ""
+        parts.append(f'"{name}" ({WORDING[category]}): the lookups returned nothing{left}')
+    return ("The lookups you made did not settle everything: " + "; ".join(parts) +
+            ". A source holding nothing about a claim says nothing for or against it, so report the "
+            "claim as not verified against a current source rather than as false.")
+
+
 WORDING = {
     "status": "whether it is approved, authorised or withdrawn",
     "applicability": "whether it applies to this patient",

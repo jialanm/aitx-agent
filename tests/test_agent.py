@@ -1361,10 +1361,12 @@ class TestLiveClaimInAnswer:
         output, trace, fda = self._run(monkeypatch, turns)
 
         assert any(e.startswith("live_claim:") and "nedosiran" in e for e in trace["events"])
-        notices = [m["content"] for m in trace["messages"]
-                   if m["role"] == "system" and "change over time" in m["content"]]
-        assert len(notices) == 1 and "search_fda_labels" in notices[0]
         assert fda.calls == [{"drug": "nedosiran"}]     # the notice sent it to the label
+        # Once the label arrived the notice was taken out of the conversation,
+        # so it cannot be read as a standing order on later turns.
+        assert "live_claim_tried:nedosiran" in trace["events"]
+        assert not any(m["role"] == "system" and "change over time" in m["content"]
+                       for m in trace["messages"])
         assert output.response == "nedosiran"
 
     def test_a_claim_settled_by_the_same_turn_s_lookup_is_not_challenged(self, monkeypatch):
@@ -1440,3 +1442,45 @@ class TestRepeatedTurns:
 
         assert agent._drug_candidates("18 months", []) == []
         assert agent._drug_candidates("lumasiran, nedosiran", []) == ["lumasiran", "nedosiran"]
+
+    def test_a_lookup_that_returns_nothing_still_retires_the_notice(self, monkeypatch):
+        """The ataluren shape: the label search comes back empty, so the
+        notice goes and one line says so and names what is left."""
+        empty = TestLiveClaimInAnswer._Tool("search_fda_labels",
+                           "No FDA drug labels found for: nedosiran. openFDA holds only drugs with a "
+                           "United States label", "https://dailymed.nlm.nih.gov/dailymed/x")
+        turns = [
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran",
+                          thinking="Nedosiran is approved for this patient."),
+            ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
+                          raw="<tool_call>", thinking=""),
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: nothing", tool_calls=[], raw="q", thinking=""),
+        ]
+        import src.agent as agent_module
+        from src.variant_validation import ValidatedVariant
+        monkeypatch.setattr(agent_module, "validate_variant",
+                            lambda t, c: ValidatedVariant(submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
+                                                          genomic_variant="NC_000002.12:g.240868898dup", gene_symbol="AGXT"))
+        monkeypatch.setattr(agent_module, "generate", lambda *a, **k: turns.pop(0))
+        monkeypatch.setattr(agent_module, "normalise_drug_names", lambda a: (a, []))
+        monkeypatch.setattr(agent_module, "is_drug_name", lambda name: False)
+        task = dict(TestFabricatedIdentifierCheck.TASK)
+        task["id"] = "AITX-00006"
+        task["patient"] = {"genotype": [{"gene": "AGXT", "transcript": "NM_000030.3", "variant_cdna": "c.33dup",
+                                         "variant_protein": "p.(Lys12GlnfsTer156)", "zygosity": "homozygous"}],
+                           "clinical_context": "7 year old with chronic kidney disease"}
+        task["question"] = {"category": "Established_Targeted", "answer_format": "string_match",
+                            "prompt": "What targeted, genetic therapies are approved for this patient in the US?",
+                            "date_submitted": "2025-08-01"}
+        agent = Agent(model=None, tokenizer=None, tools=[empty])
+
+        agent.run(TaskInput(**task))
+        trace = agent.last_trace
+
+        assert "live_claim_tried:nedosiran" in trace["events"]
+        assert "live_claim_empty:nedosiran" in trace["events"]
+        assert not any(m["role"] == "system" and "change over time" in m["content"] for m in trace["messages"])
+        note = next(m["content"] for m in trace["messages"]
+                    if m["role"] == "system" and "did not settle everything" in m["content"])
+        assert "search_pubmed has not been tried" in note and "not verified against a current source" in note
