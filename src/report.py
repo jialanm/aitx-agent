@@ -538,26 +538,34 @@ class ReportBuilder:
         hay = _norm(text)
         return all(_norm(f).rstrip(".,;: ") in hay for f in frags)
 
+    # A heading is only passed on when it says what the list under it is for.
+    # Without this a nearby colon could lend a quote context the source does
+    # not give it.
+    HEADING_WORDS = re.compile(r"avoid|contraindicat|precaution|criteria|indications?|dosing|monitor", re.I)
+
     @classmethod
     def _heading_above(cls, quote: str, text: str) -> str:
-        """The nearest line ending in a colon before the quote, if any."""
+        """The label the quote sits under, which in GeneReviews runs inline:
+        "Agents/circumstances to avoid: Intravascular volume depletion; ...;
+        loop diuretics; ...". Without it the evaluator rejected two real
+        precautions, because "Loop diuretics" alone says nothing (patient 6
+        reports, v7 and v9)."""
         frags = cls._quote_fragments(quote)
-        if not frags:
+        if not frags or not text:
             return ""
-        hay, needle = _norm(text), _norm(frags[0]).rstrip(".,;: ")
-        at = hay.find(needle)
+        needle = frags[0].strip().rstrip(".,;: ").lower()[:40]
+        at = text.lower().find(needle)
         if at < 0:
             return ""
-        # Walk the source's own lines, keeping the last heading seen before
-        # the line the quote starts in.
-        seen, heading = "", ""
-        for line in (text or "").splitlines():
-            if _norm(seen) and len(_norm(seen)) > at:
-                break
-            if line.strip().endswith(":") and len(line.strip()) <= 120:
-                heading = line.strip()
-            seen += line
-        return heading
+        before = text[:at]
+        colon = before.rfind(":")
+        if colon < 0:
+            return ""
+        start = max(before.rfind(". ", 0, colon), before.rfind("; ", 0, colon), before.rfind("\n", 0, colon))
+        heading = before[start + 1:colon + 1].strip()
+        if 3 <= len(heading) <= 120 and cls.HEADING_WORDS.search(heading):
+            return heading
+        return ""
 
     def _check_sources(self, goal: dict, records: list[dict], goal_calls: list[dict]) -> list[dict]:
         """Keep a record only if its quote is verbatim in the text of a tool
@@ -648,7 +656,12 @@ class ReportBuilder:
             if re.search(r"\bnot\b|\bno\b|\bineligible\b|\bcontraindicated\b", verdicts, re.I):
                 continue
             text = " ".join(str(r.get(f) or "") for f in list(goal["fields"]) + ["reasoning"])
-            claims = live_unsourced(text, [label] if label else [], held, gene=gene,
+            # A record's label is a drug only when RxNorm says so. "gene
+            # replacement" and "transcript knockdown" are strategies, and
+            # asking for a drug label about them put false caveats on two
+            # bespoke records (patient 6, v9).
+            candidates = [label] if label and self._is_drug(label) else []
+            claims = live_unsourced(text, candidates, held, gene=gene,
                                     confirm=is_drug_name, cache=self._drug_cache)
             if not claims:
                 continue
@@ -748,6 +761,20 @@ class ReportBuilder:
                 self.agent.last_trace["events"].append(
                     f"record_patient_fact:{label}:{','.join(sorted(set(unstated)))}")
         return records
+
+    def _is_drug(self, name: str) -> bool:
+        """RxNorm's answer for this name, cached per report. Unknown counts as
+        not a drug: a missing caveat is better than a false one."""
+        if not hasattr(self, "_drug_cache"):
+            self._drug_cache: dict[str, bool | None] = {}
+        key = name.strip().lower()
+        if key not in self._drug_cache:
+            try:
+                self._drug_cache[key] = is_drug_name(name)
+            except Exception as e:
+                logger.error(f"RxNorm lookup failed for {name}: {e}")
+                self._drug_cache[key] = None
+        return self._drug_cache[key] is True
 
     @staticmethod
     def _restrictions(quote: str) -> list[str]:

@@ -84,6 +84,7 @@ def scripted(monkeypatch):
         monkeypatch.setattr(report_module, "generate", fake_generate)
         # No RxNorm over the network in the unit suite; one test patches it back.
         monkeypatch.setattr(report_module, "normalise_drug_names", lambda name: (name, []))
+        monkeypatch.setattr(report_module, "is_drug_name", lambda name: name.lower() in ("lumasiran", "nedosiran"))
         gr_calls, up_calls = [], []
         tools = [
             # step 1 of the chain fetches the consequence; the protein position it prints is bound into UniProt
@@ -703,3 +704,39 @@ def test_a_quote_copied_from_escaped_criteria_text_is_verbatim():
         "Estimated GFR at Screening <30mL/min normalized to 1.73m\u00b2 BSA", source)
     assert not ReportBuilder._fragments_in_text(
         "Estimated GFR at Screening below 30mL/min per 1.73m\u00b2", source)
+
+
+class TestHeadingInlineAndStrategyLabels:
+    """Two findings from patient 6's v9 build."""
+
+    CHAPTER = ("GeneReviews: Primary Hyperoxaluria Type 1 (NBK1283)\nMANAGEMENT: ... assessments is based on "
+               "the individual's kidney function. Agents/circumstances to avoid: Intravascular volume "
+               "depletion; high doses of nonsteroidal anti-inflammatory drugs; intake of vitamin C exceeding "
+               "the recommended daily allowance; loop diuretics; large intake of foods high in oxalate.")
+
+    def test_an_inline_heading_is_found(self):
+        from src.report import ReportBuilder
+
+        assert ReportBuilder._heading_above("Loop diuretics [should be avoided].",
+                                            self.CHAPTER) == "Agents/circumstances to avoid:"
+
+    def test_a_nearby_colon_that_says_nothing_is_not_passed_on(self):
+        from src.report import ReportBuilder
+
+        assert ReportBuilder._heading_above("assessments is based on the individual's kidney function",
+                                            self.CHAPTER) == ""
+
+    def test_a_strategy_label_is_not_asked_for_a_drug_source(self, scripted, monkeypatch):
+        import src.report as report_module
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = "7 year old"
+        monkeypatch.setattr(report_module, "is_drug_name", lambda name: False)   # RxNorm: not a drug
+        goal = {"label": "strategy", "key": "goal5_bespoke",
+                "fields": {"strategy": "", "verdict": "", "basis": ""}}
+        record = {"strategy": "gene replacement", "verdict": "unable to assess",
+                  "basis": "base editing corrected Agxt in rats", "reasoning": "It is indicated for PH1."}
+
+        kept = builder._check_live_claims(goal, [record], [])
+
+        assert "unverified" not in kept[0]
