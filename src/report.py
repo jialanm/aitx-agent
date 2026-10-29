@@ -495,17 +495,29 @@ class ReportBuilder:
 
     # ----- the checks -----
 
-    @staticmethod
-    def _quote_fragments(quote: str) -> list[str]:
+    # Words the model adds inside square brackets. Patient 6's v6 report lost
+    # three real precautions this way: the chapter's list reads "Loop
+    # diuretics" under the heading "Agents/circumstances to avoid", and the
+    # model quoted "Loop diuretics [should be avoided]", which is not
+    # verbatim. The insertion is dropped and the rest must still be verbatim,
+    # so the report prints the source's words only.
+    INSERTION = re.compile(r"\s*\[[^\]]{0,120}\]")
+
+    @classmethod
+    def without_insertions(cls, quote: str) -> str:
+        return cls.INSERTION.sub("", quote or "").strip()
+
+    @classmethod
+    def _quote_fragments(cls, quote: str) -> list[str]:
         """A quote may be several verbatim fragments joined by '...' or ' / '
         (a trial's criteria, a chapter's list items); each must occur in the
         source. Fragments shorter than 8 characters are ignored."""
-        parts = re.split(r"\s*(?:\.\.\.|…|\s/\s)\s*", quote or "")
+        parts = re.split(r"\s*(?:\.\.\.|…|\s/\s)\s*", cls.without_insertions(quote))
         return [f.strip().strip('"\u201c\u201d') for f in parts if len(f.strip()) >= 8]
 
     @classmethod
     def _fragments_in_text(cls, quote: str, text: str) -> bool:
-        frags = cls._quote_fragments(quote)
+        frags = cls._quote_fragments(cls.without_insertions(quote))
         if not frags or Agent._is_adapter_boilerplate(quote):
             return False
         hay = _norm(text)
@@ -540,6 +552,10 @@ class ReportBuilder:
                 self.agent.last_trace["events"].append(f"record_url_replaced:{label}:{url}->{replacement}")
                 logger.info(f"Record {label!r}: cited {url}, quote found under {replacement}; URL replaced")
                 r["source_url"] = replacement
+            trimmed = self.without_insertions(quote)
+            if trimmed != quote:
+                self.agent.last_trace["events"].append(f"record_quote_trimmed:{label}")
+                r["quote"] = trimmed
             kept.append(r)
         return kept
 
@@ -715,7 +731,16 @@ class ReportBuilder:
             quote = str(r.get("quote") or "")
             hits = self._restrictions(quote)
             label = r.get(goal["label"])
-            if field and hits and str(r.get(field, "")).strip().lower() in ("yes", "likely eligible"):
+            value = str(r.get(field, "")).strip() if field else ""
+            if field and hits and value.lower().startswith("conditional"):
+                # The model wrote the condition itself (patient 6, v6), so the
+                # harness adds only what is missing from the patient record.
+                missing = missing_measures(hits, self.clinical_context)
+                if missing and "Not in the patient record" not in value:
+                    r[field] = value.rstrip(".") + ". Not in the patient record: " + ", ".join(missing) + "."
+                    r["needs"] = missing
+                    self.agent.last_trace["events"].append(f"record_condition_needs:{label}:{','.join(missing)}")
+            elif field and hits and value.lower() in ("yes", "likely eligible"):
                 missing = missing_measures(hits, self.clinical_context)
                 nexts = (" Not in the patient record: " + ", ".join(missing) + "." ) if missing else ""
                 r[field] = (f"conditional: If the patient meets the source's restriction on {', '.join(hits)} "

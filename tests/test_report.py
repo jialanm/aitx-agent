@@ -185,7 +185,10 @@ def test_summary_states_conditional_actions_and_outcome_measures_rank_tier3(scri
 
     assert "Tier 1: established targeted therapy: lumasiran (applies: yes)." in summary
     assert "Avoid or modify: loop diuretics." in summary
-    assert "NCT00000001 (conditional: If eGFR is 30 or above, then eligible; otherwise excluded)" in summary
+    # the harness appends the value the patient record lacks
+    assert ("NCT00000001 (conditional: If eGFR is 30 or above, then eligible; otherwise excluded. "
+            "Not in the patient record: an eGFR measurement.)") in summary
+    assert "What would change a decision: an eGFR measurement." in summary
     assert "Conditional actions, depending on information not in the patient record: Clinical Trial Eligibility, NCT00000001: If eGFR is 30 or above" in summary
     assert "Ranking rule:" in outcomes
     assert "1. compound-x (repurposing; no human precedent). Outcome measures: efficacy: urinary oxalate excretion;" in outcomes
@@ -594,3 +597,44 @@ class TestPatientFactsAndBrandNames:
 
         assert "RIVFLOZA is nedosiran" in seen["prompt"]
         assert "Patient record: 7 year old" in seen["prompt"]
+
+
+class TestBracketedInsertions:
+    """Patient 6's v6 report lost three real precautions: the chapter lists
+    "Loop diuretics" under "Agents/circumstances to avoid", and the model
+    quoted "Loop diuretics [should be avoided]", which is not verbatim."""
+
+    CHAPTER = ("GeneReviews: Primary Hyperoxaluria Type 1 (NBK1283)\nAgents/circumstances to avoid: "
+               "High doses of nonsteroidal anti-inflammatory drugs or any pharmacologic agent that can "
+               "compromise kidney function; Loop diuretics; Intake of vitamin C exceeding the recommended "
+               "daily allowance")
+
+    def test_a_quote_with_the_models_insertion_is_still_verbatim(self):
+        from src.report import ReportBuilder
+
+        quote = "Loop diuretics [should be avoided]."
+        assert ReportBuilder._fragments_in_text(quote, self.CHAPTER)
+        assert ReportBuilder.without_insertions(quote) == "Loop diuretics."
+
+    def test_an_invented_quote_is_still_refused(self):
+        from src.report import ReportBuilder
+
+        assert not ReportBuilder._fragments_in_text("Loop diuretics are first-line therapy [per guidance].",
+                                                    self.CHAPTER)
+
+    def test_the_printed_quote_keeps_only_the_sources_words(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        goal = {"label": "agent", "key": "goal2_supportive_and_precautions",
+                "fields": {"agent": "", "kind": "", "purpose": ""}}
+        call = {"tool": "search_genereviews", "arguments": {"section": "management"},
+                "summary": self.CHAPTER, "evidence_urls": ["https://www.ncbi.nlm.nih.gov/books/NBK1283/"]}
+        record = {"agent": "Loop diuretics", "kind": "avoid", "purpose": "kidney injury",
+                  "quote": "Loop diuretics [should be avoided].",
+                  "source_url": "https://www.ncbi.nlm.nih.gov/books/NBK1283/"}
+
+        kept = builder._check_sources(goal, [record], [call])
+
+        assert len(kept) == 1
+        assert "[should be avoided]" not in kept[0]["quote"]
+        assert "record_quote_trimmed:Loop diuretics" in agent.last_trace["events"]
