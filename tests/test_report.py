@@ -82,6 +82,8 @@ def scripted(monkeypatch):
             return queue.pop(0)
         monkeypatch.setattr(agent_module, "generate", fake_generate)
         monkeypatch.setattr(report_module, "generate", fake_generate)
+        # No RxNorm over the network in the unit suite; one test patches it back.
+        monkeypatch.setattr(report_module, "normalise_drug_names", lambda name: (name, []))
         gr_calls, up_calls = [], []
         tools = [
             # step 1 of the chain fetches the consequence; the protein position it prints is bound into UniProt
@@ -534,3 +536,61 @@ class TestMissingMeasurementsAndNextSteps:
         summary = ReportBuilder._summary(report_input, {"Existing Targeted Therapies": [record]})
 
         assert "What would change a decision: an eGFR measurement." in summary
+
+
+class TestPatientFactsAndBrandNames:
+    """Patient 6's v5 report: a trial record's eligibility rested on "The
+    patient is already on Lumasiran", which the patient record nowhere states
+    and the evaluator accepted; and nedosiran was rejected because its own
+    label says RIVFLOZA."""
+
+    CONTEXT = "7 year old with recurrent nephrocalcinosis and chronic kidney disease"
+    GOAL = {"label": "nct_id", "key": "goal3_trials",
+            "fields": {"nct_id": "", "title": "", "status": "", "eligibility": ""},
+            "claim": "{nct_id} is {status} and the patient is {eligibility}"}
+
+    def test_an_unstated_patient_fact_is_marked_and_printed(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = self.CONTEXT
+        record = {"nct_id": "NCT06225882", "eligibility": "likely eligible",
+                  "reasoning": "The patient is already on Lumasiran and is 7 years old.",
+                  "quote": "Inclusion Criteria: patient with PH1 treated with Lumasiran",
+                  "source_url": "https://clinicaltrials.gov/study/NCT06225882"}
+
+        kept = builder._check_patient_facts(self.GOAL, [record])
+
+        assert kept[0]["unstated_patient_facts"] == ["Lumasiran"]
+        assert "record_patient_fact:NCT06225882:Lumasiran" in agent.last_trace["events"]
+        assert builder._cite(kept[0]).endswith("Not stated in the patient record: Lumasiran.")
+
+    def test_a_patient_fact_the_record_states_is_not_marked(self, scripted):
+        builder, agent, _, _ = scripted([])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = "7 year old with chronic kidney disease, treated with lumasiran since 2024"
+        record = {"nct_id": "NCT06225882", "eligibility": "likely eligible",
+                  "reasoning": "The patient is already on Lumasiran."}
+
+        kept = builder._check_patient_facts(self.GOAL, [record])
+
+        assert "unstated_patient_facts" not in kept[0]
+
+    def test_the_evaluator_is_given_the_patient_record_and_the_generic_name(self, scripted, monkeypatch):
+        import src.report as report_module
+        builder, agent, _, _ = scripted([say("SUPPORTED\nThe quote states the indication.")])
+        agent.last_trace = {"events": [], "tool_calls": [], "messages": [], "model_turns": [], "validation": []}
+        builder.clinical_context = self.CONTEXT
+        monkeypatch.setattr(report_module, "normalise_drug_names",
+                            lambda name: ("nedosiran", [{"from": name, "to": "nedosiran"}]))
+        seen = {}
+
+        def capture(model, tokenizer, messages, tools=None, **kwargs):
+            seen["prompt"] = messages[-1]["content"]
+            return say("SUPPORTED\nThe quote states the indication.")
+
+        monkeypatch.setattr(report_module, "generate", capture)
+        goal = TestRejectedRecordKeptConditional.GOAL
+        builder._evaluate(goal, [dict(TestRejectedRecordKeptConditional.NEDOSIRAN, quote="RIVFLOZA is indicated for PH1.")])
+
+        assert "RIVFLOZA is nedosiran" in seen["prompt"]
+        assert "Patient record: 7 year old" in seen["prompt"]

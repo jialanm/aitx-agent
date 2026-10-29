@@ -25,7 +25,7 @@ from .model import generate
 from .preprocessing import parse_variant
 from .prompts import _format_variant_summary
 from .consequence_check import contradiction, vep_consequences
-from .drug_names import is_drug_name
+from .drug_names import is_drug_name, normalise_drug_names
 from .live_claims import WORDING, sources_held, unsourced as live_unsourced
 from .schemas import ReportInput, ReportOutput
 from .tools.base import BaseTool
@@ -224,8 +224,23 @@ EVALUATOR_INSTRUCTION = (
     "names a specific agent, measure or verdict the quote does not name and the reasoning does not derive; "
     "the quote is a general statement of goals rather than a statement about the claimed item. Reply with "
     "SUPPORTED or NOT SUPPORTED on the first line, then one sentence naming the part of the claim the "
-    "quote does or does not cover."
+    "quote does or does not cover.\n"
+    "The patient record is given. Reply NOT SUPPORTED if the reasoning rests on something about this "
+    "patient that the record does not state, such as a treatment they are already taking. A brand name "
+    "and its generic name are the same drug; both are given where they differ."
 )
+
+# A claim about the patient, not about the source. The patient record is short
+# and is given to us, so what it does not say is checkable (patient 6 report,
+# v5: a trial record's eligibility rested on "The patient is already on
+# Lumasiran", which the record nowhere states, and the evaluator accepted it).
+PATIENT_FACT_PATTERNS = [
+    # One word, not the rest of the sentence: the match is case-insensitive,
+    # so a second word would take "and" as part of the name.
+    r"\b(?:the patient|they|he|she) (?:is|was|has been) (?:already )?(?:on|taking|receiving|treated with)\s+([A-Za-z][A-Za-z\-]{2,30})",
+    r"\b(?:already|currently) (?:on|taking|receiving)\s+([A-Za-z][A-Za-z\-]{2,30})",
+    r"\bthe patient's\s+(eGFR|creatinine|weight|age)\b",
+]
 
 # Restrictions a quote can carry that make "applies: yes" an overstatement
 # unless the patient record settles them. Found by pattern in the quote;
@@ -313,6 +328,7 @@ class ReportBuilder:
             records = self._require_fetch(goal, records, calls_before)
             records = self._check_descriptions(goal, records)
             records = self._check_live_claims(goal, records, goal_calls)
+            records = self._check_patient_facts(goal, records)
             records = self._evaluate(goal, records)
             records = self._enforce_conditions(goal, records)
             records = self._drop_repeats(goal, records, filled)
@@ -586,6 +602,10 @@ class ReportBuilder:
             label = r.get(goal["label"])
             claim = goal["claim"].format(**{k: r.get(k, "?") for k in goal["fields"]})
             user = f"Claim: {claim}\nSource: {r.get('source_url')}\nQuote: \"{r.get('quote')}\""
+            generic = self._generic_name(str(label or ""), str(r.get("quote") or ""))
+            if generic:
+                user += f"\nSame drug under another name: {generic}"
+            user += f"\nPatient record: {self.clinical_context}"
             if r.get("reasoning"):
                 user += f"\nReasoning given: {r.get('reasoning')}"
             messages = [
@@ -616,6 +636,51 @@ class ReportBuilder:
                 self.agent.last_trace["events"].append(f"record_kept_conditional:{label}")
                 kept.append(r)
         return kept
+
+    def _generic_name(self, label: str, quote: str) -> str:
+        """A brand name in the quote and its ingredient, when RxNorm maps one
+        to the other, so the evaluator does not reject nedosiran because its
+        label says RIVFLOZA (patient 6 report, v5)."""
+        if not hasattr(self, "_brand_cache"):
+            self._brand_cache: dict[str, str] = {}   # one RxNorm answer per name per report
+        for word in re.findall(r"\b[A-Z][A-Z0-9]{3,}\b", quote):
+            if word.lower() == label.lower():
+                continue
+            if word in self._brand_cache:
+                if self._brand_cache[word]:
+                    return self._brand_cache[word]
+                continue
+            try:
+                ingredient, changes = normalise_drug_names(word)
+            except Exception as e:
+                logger.error(f"RxNorm lookup failed for {word}: {e}")
+                return ""
+            self._brand_cache[word] = (f"{word} is {ingredient}"
+                                       if changes and ingredient.lower() == label.lower() else "")
+            if self._brand_cache[word]:
+                return self._brand_cache[word]
+        return ""
+
+    def _check_patient_facts(self, goal: dict, records: list[dict]) -> list[dict]:
+        """A record whose reasoning rests on something about this patient that
+        the patient record does not state is marked, not dropped: the therapy
+        may still be right, but the reader must not read an invented history
+        as given."""
+        context = (self.clinical_context or "").lower()
+        for r in records:
+            text = str(r.get("reasoning") or "")
+            unstated = []
+            for pattern in PATIENT_FACT_PATTERNS:
+                for found in re.findall(pattern, text, re.I):
+                    item = found.strip(" .,;")
+                    if item and item.lower() not in context:
+                        unstated.append(item)
+            if unstated:
+                label = r.get(goal["label"])
+                r["unstated_patient_facts"] = sorted(set(unstated))
+                self.agent.last_trace["events"].append(
+                    f"record_patient_fact:{label}:{','.join(sorted(set(unstated)))}")
+        return records
 
     @staticmethod
     def _restrictions(quote: str) -> list[str]:
@@ -686,6 +751,8 @@ class ReportBuilder:
             text += f" Reasoning: {r.get('reasoning')}"
         if r.get("unverified"):
             text += (" Not verified against a current source: " + "; ".join(r["unverified"]) + ".")
+        if r.get("unstated_patient_facts"):
+            text += (" Not stated in the patient record: " + ", ".join(r["unstated_patient_facts"]) + ".")
         return text
 
     def _render_records(self, records: list[dict], goal: dict) -> str:
