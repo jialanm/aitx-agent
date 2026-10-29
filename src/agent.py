@@ -302,7 +302,6 @@ class Agent:
                 break
 
             # Execute tool calls
-            lookups += 1
             calls_before = len(self.last_trace["tool_calls"])
             for tc in response.tool_calls:
                 tool = self.tools.get(tc.name)
@@ -369,6 +368,21 @@ class Agent:
                     messages.append(self._harness_message(live_notice(still)))
 
             turn_calls = self.last_trace["tool_calls"][calls_before:]
+            # A turn whose every call repeated an earlier one retrieved
+            # nothing, so it does not spend a lookup; the generation ceiling
+            # still bounds the question. Run 6, 2026-10-29: AITX-00001 and
+            # 00003 re-issued the same five label calls on every turn, 25
+            # repeats between them, each turn costing a lookup it did not use.
+            executed = [c for c in turn_calls if "repeat_of" not in c]
+            if turn_calls and not executed:
+                if "all_calls_repeated" not in self.last_trace["events"]:
+                    self.last_trace["events"].append("all_calls_repeated")
+                    messages.append(self._harness_message(
+                        "Every tool call in that turn repeated a call you had already made, so nothing new was "
+                        "retrieved and nothing will be. Answer now from the results above, or call a different "
+                        "tool with different arguments."))
+            else:
+                lookups += 1
             # Only when the results are the adapters' own "nothing found"
             # replies: a reply with no evidence links can still be an answer,
             # such as GeneReviews' list of chapters to choose from (run 4,
@@ -662,6 +676,10 @@ class Agent:
         out: list[str] = []
         for n in names:
             n = n.strip()
+            # A quantity is not an entity: "18 months" became a candidate on
+            # AITX-00007 and the word "approved" beside it raised a notice.
+            if not re.fullmatch(r"[A-Za-z][A-Za-z\-' ]{2,}", n):
+                continue
             if len(n) >= 4 and n.lower() not in ("none", "n/a", "none of the above") and n not in out:
                 out.append(n)
         return out

@@ -854,7 +854,8 @@ class TestUnverifiedTerms:
         # answer-only turn that follows cannot be sent back for a lookup: the
         # settlement alone applies and removes the unsourced drug name.
         import src.agent as agent_module
-        turns = [self._call("search_genereviews", gene="DMD")] * agent_module.MAX_LOOKUP_TURNS + [self._say("Ataluren")]
+        turns = [self._call("search_genereviews", gene="DMD", nbk=f"NBK{i}")
+                 for i in range(agent_module.MAX_LOOKUP_TURNS)] + [self._say("Ataluren")]
         output, trace = self._run(monkeypatch, turns)
 
         assert output.response == "None"
@@ -941,7 +942,8 @@ class TestFinalAnswerTurn:
         import src.agent as agent_module
         call, say = TestUnverifiedTerms._call, TestUnverifiedTerms._say
         seen = []
-        turns = [call("search_genereviews", gene="DMD")] * agent_module.MAX_ITERATIONS + [say("antisense oligonucleotide")]
+        turns = [call("search_genereviews", gene="DMD", nbk=f"NBK{i}")
+                 for i in range(agent_module.MAX_LOOKUP_TURNS)] + [say("antisense oligonucleotide")]
         monkeypatch.setattr(agent_module, "validate_variant",
                             lambda t, c: __import__("src.variant_validation", fromlist=["ValidatedVariant"]).ValidatedVariant(
                                 submitted=f"{t}:{c}", valid=True, transcript_variant=f"{t}:{c}",
@@ -1158,7 +1160,8 @@ class TestLookupBudget:
         # Turn 1 answers with nothing retrieved, which the evidence reminder
         # sends back; five tool-calling turns must still be available after it.
         turns = ([helper._say("Ataluren")]
-                 + [helper._call("search_genereviews", gene="DMD")] * agent_module.MAX_LOOKUP_TURNS
+                 + [helper._call("search_genereviews", gene="DMD", nbk=f"NBK{i}")
+                    for i in range(agent_module.MAX_LOOKUP_TURNS)]
                  + [helper._say("antisense oligonucleotide")])
 
         output, trace = helper._run(monkeypatch, turns)
@@ -1379,3 +1382,39 @@ class TestLiveClaimInAnswer:
 
         assert not any(e.startswith("live_claim") for e in trace["events"])
         assert output.response == "nedosiran"
+
+
+class TestRepeatedTurns:
+    """A turn whose every call repeated an earlier one retrieved nothing, so
+    it does not spend a lookup and the model is told once (run 6, 2026-10-29:
+    AITX-00001 and 00003 re-issued the same five label calls on every turn,
+    25 repeats between them)."""
+
+    def test_a_turn_of_pure_repeats_does_not_spend_a_lookup(self, monkeypatch):
+        import src.agent as agent_module
+        helper = TestUnverifiedTerms()
+        same = helper._call("search_genereviews", gene="DMD")
+        # one real lookup, then three turns of nothing but repeats, then four
+        # more real lookups: all five must still be available.
+        turns = ([same] + [helper._call("search_genereviews", gene="DMD") for _ in range(3)]
+                 + [helper._call("search_genereviews", gene="DMD", nbk=f"NBK{i}") for i in range(4)]
+                 + [helper._say("antisense oligonucleotide")])
+
+        output, trace = helper._run(monkeypatch, turns)
+
+        executed = [c for c in trace["tool_calls"] if c.get("origin") == "model" and "repeat_of" not in c]
+        assert len(executed) == agent_module.MAX_LOOKUP_TURNS
+        assert "all_calls_repeated" in trace["events"]
+        told = [m["content"] for m in trace["messages"]
+                if m["role"] == "system" and "repeated a call you had already made" in m["content"]]
+        assert len(told) == 1          # said once, not every turn
+        assert output.response == "antisense oligonucleotide"
+
+    def test_a_quantity_is_not_a_drug_candidate(self):
+        """AITX-00007 answered "18 months" and the word approved beside it
+        raised a live-claim notice about "18 months"."""
+        agent = Agent(None, None, [])
+        agent.last_trace = {"tool_calls": [], "events": []}
+
+        assert agent._drug_candidates("18 months", []) == []
+        assert agent._drug_candidates("lumasiran, nedosiran", []) == ["lumasiran", "nedosiran"]
