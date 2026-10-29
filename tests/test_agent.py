@@ -1443,9 +1443,10 @@ class TestRepeatedTurns:
         assert agent._drug_candidates("18 months", []) == []
         assert agent._drug_candidates("lumasiran, nedosiran", []) == ["lumasiran", "nedosiran"]
 
-    def test_a_lookup_that_returns_nothing_still_retires_the_notice(self, monkeypatch):
-        """The ataluren shape: the label search comes back empty, so the
-        notice goes and one line says so and names what is left."""
+    def test_an_empty_lookup_retires_the_notice_and_names_the_next_tool(self, monkeypatch):
+        """The ataluren shape: the label search comes back empty, so the first
+        notice goes and the next one names PubMed, which is what run 4 called
+        to settle ataluren."""
         empty = TestLiveClaimInAnswer._Tool("search_fda_labels",
                            "No FDA drug labels found for: nedosiran. openFDA holds only drugs with a "
                            "United States label", "https://dailymed.nlm.nih.gov/dailymed/x")
@@ -1455,6 +1456,9 @@ class TestRepeatedTurns:
             ModelResponse(text="", tool_calls=[ToolCall(name="search_fda_labels", arguments={"drug": "nedosiran"})],
                           raw="<tool_call>", thinking=""),
             ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            # spare replies: the answer may be re-asked and each source gets a justification call
+            ModelResponse(text="nedosiran", tool_calls=[], raw="nedosiran", thinking=""),
+            ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: nothing", tool_calls=[], raw="q", thinking=""),
             ModelResponse(text="QUOTE: NOT SUPPORTED\nWHY: nothing", tool_calls=[], raw="q", thinking=""),
         ]
         import src.agent as agent_module
@@ -1478,9 +1482,9 @@ class TestRepeatedTurns:
         agent.run(TaskInput(**task))
         trace = agent.last_trace
 
-        assert "live_claim_tried:nedosiran" in trace["events"]
-        assert "live_claim_empty:nedosiran" in trace["events"]
-        assert not any(m["role"] == "system" and "change over time" in m["content"] for m in trace["messages"])
-        note = next(m["content"] for m in trace["messages"]
-                    if m["role"] == "system" and "did not settle everything" in m["content"])
-        assert "search_pubmed has not been tried" in note and "not verified against a current source" in note
+        notices = [m["content"] for m in trace["messages"]
+                   if m["role"] == "system" and "change over time" in m["content"]]
+        assert len(notices) == 1                                    # one standing notice, not two
+        # The label search had already returned nothing, so the notice names
+        # the lookup that run 4 used to settle ataluren instead.
+        assert "search_pubmed" in notices[0] and "search_fda_labels" not in notices[0]

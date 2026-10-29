@@ -201,6 +201,23 @@ class Agent:
             # formed early goes on shaping the rest (AITX-00002, run 5: "if
             # it's not FDA-approved for this specific mutation" appears in a
             # turn that called GeneReviews, three turns before the answer).
+            # The notice asked for lookups. Once each has been tried, whatever
+            # it returned, the notice leaves the conversation: it reads as an
+            # instruction and nothing in the conversation marks one done, so
+            # AITX-00003 of run 6 made the same five calls on four turns.
+            tried_now = tools_attempted(self.last_trace["tool_calls"])
+            if notice_msg is not None and live_all_tried(notice_claims, tried_now):
+                got = live_answered(notice_claims, sources_held(self.last_trace["tool_calls"]))
+                missing = [c for c in notice_claims if c not in got]
+                messages = [m for m in messages if m is not notice_msg]
+                self.last_trace["events"].append(
+                    "live_claim_tried:" + ",".join(c[0] for c in notice_claims))
+                if missing:
+                    self.last_trace["events"].append(
+                        "live_claim_empty:" + ",".join(c[0] for c in missing))
+                    messages.append(self._harness_message(live_empty_note(missing, tried_now)))
+                notice_msg, notice_claims = None, []
+
             said.append(f"{response.thinking}\n{response.text}")
             live_claims: list = []
             if not live_told and room_to_look:
@@ -421,22 +438,6 @@ class Agent:
                 messages.append(self._harness_message(self._empty_result_notice(context, tried)))
 
             # The notice asked for lookups; if they have arrived, it goes.
-            # The notice goes once each lookup it named has been tried,
-            # whether or not anything came back; an empty lookup gets its own
-            # line, so the model is never left reading an old instruction.
-            tried_now = tools_attempted(self.last_trace["tool_calls"])
-            if notice_msg is not None and live_all_tried(notice_claims, tried_now):
-                got = live_answered(notice_claims, sources_held(self.last_trace["tool_calls"]))
-                missing = [c for c in notice_claims if c not in got]
-                messages = [m for m in messages if m is not notice_msg]
-                self.last_trace["events"].append(
-                    "live_claim_tried:" + ",".join(c[0] for c in notice_claims))
-                if missing:
-                    self.last_trace["events"].append(
-                        "live_claim_empty:" + ",".join(c[0] for c in missing))
-                    messages.append(self._harness_message(live_empty_note(missing, tried_now)))
-                notice_msg, notice_claims = None, []
-
             # The last iteration ended in a tool call, so its result would go
             # unread (32B rerun, 2026-10-13, AITX-00001: the eteplirsen label
             # was fetched in turn 5 and never seen). One more generation with
