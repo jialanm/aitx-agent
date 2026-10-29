@@ -155,6 +155,7 @@ class Agent:
         term_reminded: list[str] = []  # answer terms the model was told no tool text contains
         none_reminded = False
         consequence_told = False   # the description check speaks once
+        repeat_turns = 0           # consecutive turns whose every call was a repeat
         live_told = False          # the live-claim check speaks once
         said: list[str] = []       # the model's own words so far, which its thinking keeps in context
         drug_cache: dict[str, bool | None] = {}    # one RxNorm answer per name per question
@@ -329,7 +330,14 @@ class Agent:
                     summary = f"Error executing {tc.name}: {e}"
                     evidence = []
 
-                # Append assistant message (with tool call) and tool result
+                # A repeat does not paste the earlier result into the
+                # conversation again: question 3 of run 6 reached 86,000
+                # characters this way and question 1 ran the GPU out of
+                # memory. The model is pointed at the result it already has.
+                entry = self.last_trace["tool_calls"][-1] if self.last_trace["tool_calls"] else {}
+                if entry.get("tool") == tc.name and "repeat_of" in entry:
+                    summary = (f"[This repeats your earlier identical call to {tc.name}. Its result is above "
+                               "and has not changed.]")
                 messages.append({
                     "role": "assistant",
                     "content": response.raw,
@@ -375,13 +383,20 @@ class Agent:
             # repeats between them, each turn costing a lookup it did not use.
             executed = [c for c in turn_calls if "repeat_of" not in c]
             if turn_calls and not executed:
-                if "all_calls_repeated" not in self.last_trace["events"]:
+                repeat_turns += 1
+                if repeat_turns == 1:
                     self.last_trace["events"].append("all_calls_repeated")
                     messages.append(self._harness_message(
                         "Every tool call in that turn repeated a call you had already made, so nothing new was "
                         "retrieved and nothing will be. Answer now from the results above, or call a different "
                         "tool with different arguments."))
+                else:
+                    # Told once and repeating still: the lookups end here and
+                    # the answer-only turn follows, which cannot call a tool.
+                    self.last_trace["events"].append("lookups_ended:repeating")
+                    lookups = MAX_LOOKUP_TURNS
             else:
+                repeat_turns = 0
                 lookups += 1
             # Only when the results are the adapters' own "nothing found"
             # replies: a reply with no evidence links can still be an answer,

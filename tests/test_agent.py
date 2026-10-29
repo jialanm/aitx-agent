@@ -1390,25 +1390,47 @@ class TestRepeatedTurns:
     AITX-00001 and 00003 re-issued the same five label calls on every turn,
     25 repeats between them)."""
 
-    def test_a_turn_of_pure_repeats_does_not_spend_a_lookup(self, monkeypatch):
+    def test_one_turn_of_pure_repeats_costs_no_lookup(self, monkeypatch):
         import src.agent as agent_module
         helper = TestUnverifiedTerms()
-        same = helper._call("search_genereviews", gene="DMD")
-        # one real lookup, then three turns of nothing but repeats, then four
-        # more real lookups: all five must still be available.
-        turns = ([same] + [helper._call("search_genereviews", gene="DMD") for _ in range(3)]
+        turns = ([helper._call("search_genereviews", gene="DMD")]            # a real lookup
+                 + [helper._call("search_genereviews", gene="DMD")]           # all repeats, told once
                  + [helper._call("search_genereviews", gene="DMD", nbk=f"NBK{i}") for i in range(4)]
                  + [helper._say("antisense oligonucleotide")])
 
         output, trace = helper._run(monkeypatch, turns)
 
         executed = [c for c in trace["tool_calls"] if c.get("origin") == "model" and "repeat_of" not in c]
-        assert len(executed) == agent_module.MAX_LOOKUP_TURNS
+        assert len(executed) == agent_module.MAX_LOOKUP_TURNS       # the repeat turn spent nothing
         assert "all_calls_repeated" in trace["events"]
-        told = [m["content"] for m in trace["messages"]
-                if m["role"] == "system" and "repeated a call you had already made" in m["content"]]
-        assert len(told) == 1          # said once, not every turn
         assert output.response == "antisense oligonucleotide"
+
+    def test_a_second_repeat_turn_ends_the_lookups(self, monkeypatch):
+        """Told once and repeating still: the answer-only turn follows, which
+        cannot call a tool, so the conversation stops growing."""
+        helper = TestUnverifiedTerms()
+        turns = [helper._call("search_genereviews", gene="DMD"),
+                 helper._call("search_genereviews", gene="DMD"),
+                 helper._call("search_genereviews", gene="DMD"),
+                 helper._say("antisense oligonucleotide")]
+
+        output, trace = helper._run(monkeypatch, turns)
+
+        assert "lookups_ended:repeating" in trace["events"]
+        assert "final_answer_turn" in trace["events"]
+        assert output.response == "antisense oligonucleotide"
+
+    def test_a_repeated_result_is_not_pasted_into_the_conversation_again(self, monkeypatch):
+        helper = TestUnverifiedTerms()
+        turns = [helper._call("search_genereviews", gene="DMD"),
+                 helper._call("search_genereviews", gene="DMD"),
+                 helper._say("antisense oligonucleotide")]
+
+        _, trace = helper._run(monkeypatch, turns)
+
+        results = [m["content"] for m in trace["messages"] if m["role"] == "tool"]
+        assert sum(helper.CHAPTER[:40] in c for c in results) == 1      # the chapter text appears once
+        assert any("repeats your earlier identical call" in c for c in results)
 
     def test_a_quantity_is_not_a_drug_candidate(self):
         """AITX-00007 answered "18 months" and the word approved beside it
