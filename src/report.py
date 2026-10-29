@@ -294,8 +294,15 @@ def _sentence(value) -> str:
 def _norm(t: str) -> str:
     """Text for verbatim comparison: quote marks unified, superscript digits
     plain, all whitespace removed (a label prints "m 2" where the model
-    writes "m²"; first live report, 2026-10-20), lower case."""
+    writes "m²"; first live report, 2026-10-20),
+    markdown escapes dropped (ClinicalTrials.gov returns criteria as
+    "\\<30mL/min normalized to 1.73m\\^2 BSA", and a correctly copied quote
+    failed on the backslashes; patient 6 report, v7), a caret before a digit
+    read as a superscript,
+    lower case."""
     t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'").translate(_SUPERSCRIPTS)
+    t = re.sub(r"\\([<>^*_\[\]()~`#+\-.!|])", r"\1", t)     # markdown escapes
+    t = re.sub(r"\^(\d)", r"\1", t)                          # 1.73m^2 is 1.73m2
     return re.sub(r"\s+", "", t).lower()
 
 

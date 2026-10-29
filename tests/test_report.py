@@ -690,3 +690,16 @@ class TestHeadingAndNegativeRecords:
 
         assert "unverified" not in kept[0]
         assert not any(e.startswith("record_unverified") for e in agent.last_trace["events"])
+
+
+def test_a_quote_copied_from_escaped_criteria_text_is_verbatim():
+    """ClinicalTrials.gov returns criteria with markdown escapes, so a
+    correctly copied quote failed on the backslashes (patient 6, v7)."""
+    from src.report import ReportBuilder
+    source = ("NCT ID: NCT04580420\nEligibility criteria:\nExclusion Criteria:\n"
+              "3. Estimated GFR at Screening \\<30mL/min normalized to 1.73m\\^2 BSA")
+
+    assert ReportBuilder._fragments_in_text(
+        "Estimated GFR at Screening <30mL/min normalized to 1.73m\u00b2 BSA", source)
+    assert not ReportBuilder._fragments_in_text(
+        "Estimated GFR at Screening below 30mL/min per 1.73m\u00b2", source)

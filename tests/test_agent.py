@@ -1488,3 +1488,11 @@ class TestRepeatedTurns:
         # The label search had already returned nothing, so the notice names
         # the lookup that run 4 used to settle ataluren instead.
         assert "search_pubmed" in notices[0] and "search_fda_labels" not in notices[0]
+
+
+def test_a_citation_quote_from_escaped_criteria_text_is_supported():
+    """The same escapes reach the answering path's citation check."""
+    source = "Exclusion Criteria:\n3. Estimated GFR at Screening \\<30mL/min normalized to 1.73m\\^2 BSA"
+
+    assert Agent._quote_in_text("Estimated GFR at Screening <30mL/min normalized to 1.73m\u00b2 BSA", source)
+    assert not Agent._quote_in_text("Estimated GFR at Screening under 30", source)

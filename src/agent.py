@@ -1088,6 +1088,11 @@ class Agent:
             # "m 2" where the model writes "m²" (first live report, 2026-10-20).
             t = t.replace("\u201c", '"').replace("\u201d", '"').replace("\u2019", "'")
             t = t.translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789"))
+            # ClinicalTrials.gov returns criteria with markdown escapes, so a
+            # correctly copied quote failed on the backslashes (patient 6
+            # report, v7); a caret before a digit is a superscript.
+            t = re.sub(r"\\([<>^*_\[\]()~`#+\-.!|])", r"\1", t)
+            t = re.sub(r"\^(\d)", r"\1", t)
             return re.sub(r"\s+", "", t).lower()
         # A quote may end its sentence with a full stop the source continues
         # past (32B run 2, 2026-10-13, AITX-00006: the lumasiran indication
