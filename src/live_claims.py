@@ -49,6 +49,11 @@ SUBJECT_ARGS = {
     "gene": ("gene",),
 }
 TRIAL_ID = re.compile(r"\bNCT\d{8}\b")
+# An identifier is never a drug name. The report's goal 3 passes a record's
+# own label as the candidate, which for a trial is its identifier, and
+# NCT06225882 was then looked for among drug labels and reported unsourced
+# (patient 6 report, v5, 2026-10-29).
+IDENTIFIER = re.compile(r"^(?:NCT\d+|rs\d+|NBK\d+|(?:NM|NP|NR|NC)_\d+(?:\.\d+)?|ENS[GT]\d+|PA\d+)$", re.I)
 # A name the model introduces that no option, answer or lookup mentions: a
 # capitalised word, a parenthesised one, or the word after "drug called".
 # AITX-00006's thinking offered "a drug called pegalysine (Oxepduo) approved
@@ -116,8 +121,9 @@ def entities_in(sentence: str, drugs: list[str], gene: str = "") -> list[tuple[s
     found: list[tuple[str, str]] = []
     low = sentence.lower()
     for drug in drugs:
-        if drug and drug.strip() and drug.strip().lower() in low:
-            found.append(("drug", drug.strip().lower()))
+        name = (drug or "").strip()
+        if name and not IDENTIFIER.match(name) and name.lower() in low:
+            found.append(("drug", name.lower()))
     for nct in TRIAL_ID.findall(sentence):
         found.append(("trial", nct.lower()))
     if gene and re.search(r"\bthis variant\b|\bthe variant\b", sentence, re.I):

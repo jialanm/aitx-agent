@@ -128,3 +128,14 @@ class TestNamesTheModelIntroduces:
         unsourced(text, [], {}, confirm=confirm, cache=cache)
 
         assert calls == ["Golodirsen"]
+
+
+def test_an_identifier_is_not_treated_as_a_drug_name():
+    """The report passes a record's own label as the drug candidate, which for
+    a trial is its identifier; NCT06225882 was looked for among drug labels
+    and reported unsourced (patient 6 report, v5, 2026-10-29)."""
+    held = sources_held([{"tool": "search_clinical_trials", "arguments": {"nct_id": "NCT06225882"},
+                          "summary": "NCT ID: NCT06225882\nStatus: RECRUITING\nEligibility criteria: ..."}])
+    text = "NCT06225882 is recruiting and the patient is likely eligible."
+
+    assert unsourced(text, ["NCT06225882"], held) == []
