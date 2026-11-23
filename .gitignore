@@ -22,6 +22,8 @@ __pycache__/
 data/eval_outputs*.json
 data/eval_results*.json
 data/eval_trace*.json
+# Homework 12 pairs are rebuilt from the public dataset by hw12/build_trec_pairs.py
+data/hw12/
 data/cache/
 
 # Stale snapshots
