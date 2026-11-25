@@ -15,6 +15,8 @@
 #              LOCAL_DIR (default data/hw12), POLL (seconds between checks, default 60).
 # The instance is started first, retrying every 15 seconds while AWS reports no capacity, and its
 # address is read from AWS, so HOST need not be given; set HOST=user@address to skip the start.
+# Set ATTACH=1 (with HOST) to skip starting the job and only poll, copy and stop, for a job
+# that is already running on the instance.
 set -euo pipefail
 
 NAME=${1:?name}; JOB=${2:?job command}; RESULT_DIR=${3:?result dir on the instance}
@@ -45,8 +47,14 @@ echo "$(date +%H:%M:%S) starting $NAME on $HOST"
 # A non-interactive shell skips .bashrc, so uv and the NCBI key are not there by default:
 # put uv's install dirs on the PATH and import the key line from .bashrc before the job.
 SETUP='export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"; eval "$(grep -E "^export NCBI_API_KEY=" ~/.bashrc 2>/dev/null)"; cd ~/aitx-agent'
-"${SSH[@]}" "$SETUP && mkdir -p logs && rm -f logs/$NAME.done && \
-  nohup bash -c '$SETUP; $JOB; echo \$? > logs/$NAME.done' > logs/$NAME.log 2>&1 &"
+if [ -z "${ATTACH:-}" ]; then
+  # setsid detaches the job from the ssh session and </dev/null closes its input, so this
+  # ssh call returns at once instead of holding the connection open for the job's lifetime.
+  "${SSH[@]}" "$SETUP && mkdir -p logs && rm -f logs/$NAME.done && \
+    setsid nohup bash -c '$SETUP; $JOB; echo \$? > logs/$NAME.done' > logs/$NAME.log 2>&1 < /dev/null &"
+else
+  echo "$(date +%H:%M:%S) ATTACH set: not starting the job, polling for logs/$NAME.done"
+fi
 
 while ! "${SSH[@]}" "test -f ~/aitx-agent/logs/$NAME.done" 2>/dev/null; do
   echo "$(date +%H:%M:%S) running... $("${SSH[@]}" "tail -n 1 ~/aitx-agent/logs/$NAME.log" 2>/dev/null | cut -c1-110)"
