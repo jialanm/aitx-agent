@@ -22,8 +22,11 @@ LOCAL_DIR=${LOCAL_DIR:-data/hw12}; POLL=${POLL:-60}
 SSH=(ssh -i "$KEY" -o StrictHostKeyChecking=accept-new -o ServerAliveInterval=30 "$HOST")
 
 echo "$(date +%H:%M:%S) starting $NAME on $HOST"
-"${SSH[@]}" "cd ~/aitx-agent && mkdir -p logs && rm -f logs/$NAME.done && \
-  nohup bash -c '$JOB; echo \$? > logs/$NAME.done' > logs/$NAME.log 2>&1 &"
+# A non-interactive shell skips .bashrc, so uv and the NCBI key are not there by default:
+# put uv's install dirs on the PATH and import the key line from .bashrc before the job.
+SETUP='export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$PATH"; eval "$(grep -E "^export NCBI_API_KEY=" ~/.bashrc 2>/dev/null)"; cd ~/aitx-agent'
+"${SSH[@]}" "$SETUP && mkdir -p logs && rm -f logs/$NAME.done && \
+  nohup bash -c '$SETUP; $JOB; echo \$? > logs/$NAME.done' > logs/$NAME.log 2>&1 &"
 
 while ! "${SSH[@]}" "test -f ~/aitx-agent/logs/$NAME.done" 2>/dev/null; do
   echo "$(date +%H:%M:%S) running... $("${SSH[@]}" "tail -n 1 ~/aitx-agent/logs/$NAME.log" 2>/dev/null | cut -c1-110)"
@@ -37,6 +40,11 @@ scp -i "$KEY" -r "$HOST:~/aitx-agent/$RESULT_DIR" "$LOCAL_DIR/"
 scp -i "$KEY" "$HOST:~/aitx-agent/logs/$NAME.log" "$LOCAL_DIR/"
 echo "$(date +%H:%M:%S) copied $RESULT_DIR and logs/$NAME.log to $LOCAL_DIR/"
 
-aws ec2 stop-instances --instance-ids "$INSTANCE" --region "$REGION" >/dev/null
-echo "$(date +%H:%M:%S) stop requested for $INSTANCE"
+if [ "$EXIT" = "0" ]; then
+  aws ec2 stop-instances --instance-ids "$INSTANCE" --region "$REGION" >/dev/null
+  echo "$(date +%H:%M:%S) stop requested for $INSTANCE"
+else
+  echo "$(date +%H:%M:%S) job failed (exit $EXIT); instance left running for a retry. Last log lines:"
+  tail -n 5 "$LOCAL_DIR/$NAME.log"
+fi
 exit "$EXIT"
