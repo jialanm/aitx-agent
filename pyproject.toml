@@ -20,7 +20,7 @@ dependencies = [
 [dependency-groups]
 dev = ["pytest>=8.0"]
 # Homework 12 evaluator work; not needed to run the agent.
-hw12 = ["datasets>=3.0"]
+hw12 = ["datasets>=3.0", "peft>=0.13"]
 
 [tool.pytest.ini_options]
 markers = [
