@@ -121,7 +121,9 @@ def main() -> None:
     targs = TrainingArguments(
         output_dir=str(out / "checkpoints"), num_train_epochs=args.epochs, learning_rate=args.lr,
         per_device_train_batch_size=1, per_device_eval_batch_size=2, gradient_accumulation_steps=args.grad_accum,
-        optim="paged_adamw_8bit", lr_scheduler_type="cosine", warmup_ratio=0.03, weight_decay=0.0,
+        # transformers 5 dropped warmup_ratio; 3% of the optimizer steps, computed here.
+        optim="paged_adamw_8bit", lr_scheduler_type="cosine", weight_decay=0.0,
+        warmup_steps=max(1, int(0.03 * args.epochs * len(train_ex) / args.grad_accum)),
         bf16=True, logging_steps=10, eval_strategy="steps", eval_steps=50, save_strategy="steps", save_steps=50,
         save_total_limit=2, load_best_model_at_end=True, metric_for_best_model="eval_loss", greater_is_better=False,
         report_to=[], seed=args.seed, gradient_checkpointing=True, remove_unused_columns=False,
